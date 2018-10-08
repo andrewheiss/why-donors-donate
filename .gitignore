@@ -22,6 +22,7 @@ manuscript/vc*
 # Other folders
 sandbox/*
 private/*
+admin/*
 
 # R stuff
 .Rproj.user
