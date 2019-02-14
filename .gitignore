@@ -16,9 +16,8 @@ manuscript/tex_out/*
 manuscript/vc*
 
 # Other folders
-sandbox/*
-private/*
 admin/*
+private/*
 readings/*
 submissions/*
 
