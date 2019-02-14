@@ -19,6 +19,8 @@ manuscript/vc*
 sandbox/*
 private/*
 admin/*
+readings/*
+submissions/*
 
 # R stuff
 .Rproj.user
