@@ -39,6 +39,7 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     - Print 
     - Online (excluding social media) 
     - Social media
+    - Radio
 
 *Q2.3*: How often do you follow international news? 
 
