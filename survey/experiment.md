@@ -137,13 +137,14 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
 **Organizational practices:**
 
 - *Financial transparency*: Timely and reliable disclosure regarding donations and financial allocations. 
-- *Accountability*: SOMETHING ABOUT THAT HERE
+- *Accountability*: An obligation or willingness to accept responsibility or to account for one's actions.
+
 
 **Funding sources:**
 
-- *Funded primarily by many small private donations*: EXPLAIN
-- *Funded primarily by a handful of wealthy private donors*: EXPLAIN
-- *Funded primarily by government grants*: EXPLAIN
+- *Funded primarily by many small private donations*: Individuals who make small independent contributions.
+- *Funded primarily by a handful of wealthy private donors*: Funds by wealthy individuals or families, who receive tax deductions for donations.
+- *Funded primarily by government grants*: Non-repayable funds gifted by a government department.
 
 **Relationship with host government:**
 
