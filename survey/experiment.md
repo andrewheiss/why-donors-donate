@@ -31,7 +31,15 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     - Hardly ever
     - Never
 
-*Q2.2*: Which mediums do you use to follow national news? (Select all that apply.)
+*Q2.2*: How often do you follow international news? 
+
+:   Single answer
+
+    - Always
+    - Sometimes
+    - Never
+    
+*Q2.3*: Which mediums do you use to follow news? (Select all that apply.)
 
 :   Multiple answers allowed
 
@@ -40,14 +48,7 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     - Online (excluding social media) 
     - Social media
     - Radio
-
-*Q2.3*: How often do you follow international news? 
-
-:   Single answer
-
-    - Always
-    - Sometimes
-    - Never
+    - Email Newsletter
 
 *Q2.4*: Some people seem to follow what's going on in government and public affairs most of the time, whether there's an election going on or not. Others aren't that interested. How often would you say you follow what's going on in government and public affairs?
 
@@ -141,7 +142,7 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
 **Funding sources:**
 
 - *Funded primarily by many small private donations*: EXPLAIN
-- *Funded primarily by a handful of rich private donors*: EXPLAIN
+- *Funded primarily by a handful of wealthy private donors*: EXPLAIN
 - *Funded primarily by government grants*: EXPLAIN
 
 **Relationship with host government:**
@@ -199,19 +200,8 @@ Attributes and levels
     - Yes
     - No
 
-*Q5.2*: How would you describe your political views?
 
-:   Single answer
-
-    - Very liberal
-    - Liberal
-    - Independent, leaning liberal
-    - Independent
-    - Independent, leaning conservative
-    - Conservative
-    - Very conservative 
-
-*Q5.3*: Here is a 7-point scale on which the political views that people might hold are arranged from extremely liberal (left) to extremely conservative (right). Where would you place yourself on this scale?
+*Q5.3*: Here is a 7-point scale on which the political views that people might hold are arranged from extremely liberal (0) to extremely conservative (7). Where would you place yourself on this scale?
 
 :   Numeric slider
 
@@ -256,7 +246,7 @@ Attributes and levels
     - Slightly involved
     - Never involved
 
-*Q5.7*: Here is a 7-point scale on which you trust political institutions and the state. The scale is arranged from no trust (left) to complete trust (right). Where would you place yourself on this scale?
+*Q5.7*: Here is a 7-point scale on which you trust political institutions and the state. The scale is arranged from no trust (0) to complete trust (7). Where would you place yourself on this scale?
 
 :   Numeric slider
 
@@ -308,7 +298,7 @@ Attributes and levels
     - Atheist (do not believe in God)
     - Other: _________
 
-*Q5.12*: Here is a 7-point scale of your prosocial views. The scale is arranged from equality (left) to altruism (right). Where would you place yourself on this scale?
+*Q5.12*: Here is a 7-point scale of your prosocial views. The scale is arranged from equality (0) to altruism (7). Where would you place yourself on this scale?
 
 :   Numeric slider
 
