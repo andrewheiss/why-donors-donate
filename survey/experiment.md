@@ -48,7 +48,7 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     - Online (excluding social media) 
     - Social media
     - Radio
-    - Email Newsletters
+    - Email newsletters
 
 *Q2.4*: Some people seem to follow what's going on in government and public affairs most of the time, whether there's an election going on or not. Others aren't that interested. How often would you say you follow what's going on in government and public affairs?
 
