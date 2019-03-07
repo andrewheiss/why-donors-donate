@@ -48,7 +48,7 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     - Online (excluding social media) 
     - Social media
     - Radio
-    - Email Newsletter
+    - Email newsletters
 
 *Q2.4*: Some people seem to follow what's going on in government and public affairs most of the time, whether there's an election going on or not. Others aren't that interested. How often would you say you follow what's going on in government and public affairs?
 
@@ -139,10 +139,9 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
 - *Financial transparency*: Timely and reliable disclosure regarding donations and financial allocations. 
 - *Accountability*: An obligation or willingness to accept responsibility or to account for one's actions.
 
-
 **Funding sources:**
 
-- *Funded primarily by many small private donations*: Individuals who make small independent contributions.
+- *Funded primarily by many small private donations*: Funds by individuals who make small independent contributions.
 - *Funded primarily by a handful of wealthy private donors*: Funds by wealthy individuals or families, who receive tax deductions for donations.
 - *Funded primarily by government grants*: Non-repayable funds gifted by a government department.
 
@@ -201,8 +200,7 @@ Attributes and levels
     - Yes
     - No
 
-
-*Q5.3*: Here is a 7-point scale on which the political views that people might hold are arranged from extremely liberal (0) to extremely conservative (7). Where would you place yourself on this scale?
+*Q5.2*: Here is a 7-point scale on which the political views that people might hold are arranged from extremely liberal (0) to extremely conservative (7). Where would you place yourself on this scale?
 
 :   Numeric slider
 
@@ -210,7 +208,7 @@ Attributes and levels
     | ------------------ | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
     | Political ideology |  •  |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
 
-*Q5.4*: Here is a list of differenty types of voluntary organizations. For each organization, indicate whether you are an active member, an inactive member, or not a member of that type of organization:
+*Q5.3*: Here is a list of differenty types of voluntary organizations. For each organization, indicate whether you are an active member, an inactive member, or not a member of that type of organization:
 
 :   Matrix table
 
@@ -227,7 +225,7 @@ Attributes and levels
     | Consumer organization                   |       •       |        •        |      •       |
     | Other organization                      |       •       |        •        |      •       |
 
-*Q5.5*: Historically, how involved have you been in activist causes?
+*Q5.4*: Historically, how involved have you been in activist causes?
 
 :   Single answer
 
@@ -237,7 +235,7 @@ Attributes and levels
     - Slightly involved
     - Never involved
 
-*Q5.6*: Historically, how involved has your family been in activist causes?
+*Q5.5*: Historically, how involved has your family been in activist causes?
 
 :   Single answer
 
@@ -247,7 +245,7 @@ Attributes and levels
     - Slightly involved
     - Never involved
 
-*Q5.7*: Here is a 7-point scale on which you trust political institutions and the state. The scale is arranged from no trust (0) to complete trust (7). Where would you place yourself on this scale?
+*Q5.6*: Here is a 7-point scale on which you trust political institutions and the state. The scale is arranged from no trust (0) to complete trust (7). Where would you place yourself on this scale?
 
 :   Numeric slider
 
@@ -255,14 +253,14 @@ Attributes and levels
     | --------------------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
     | Trust in political institutions and the state |  •  |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
  
-*Q5.8*: Have you ever traveled to a developing country? 
+*Q5.7*: Have you ever traveled to a developing country? 
 
 :   Single answer
 
     - Yes
     - No
 
-*Q5.9*: How often do you attend religious or worship services, not including weddings and funerals?
+*Q5.8*: How often do you attend religious or worship services, not including weddings and funerals?
 
 :   Single answer
 
@@ -274,7 +272,7 @@ Attributes and levels
     - Never
     - Don't know
 
-*Q5.10*: How important is religion in your life?
+*Q5.9*: How important is religion in your life?
 
 :   Single answer
 
@@ -284,7 +282,7 @@ Attributes and levels
     - Slightly important
     - Not at all important
 
-*Q5.11*: What is your current religion, if any?
+*Q5.10*: What is your current religion, if any?
 
 :   Single answer
 
@@ -299,7 +297,7 @@ Attributes and levels
     - Atheist (do not believe in God)
     - Other: _________
 
-*Q5.12*: Here is a 7-point scale of your prosocial views. The scale is arranged from equality (0) to altruism (7). Where would you place yourself on this scale?
+*Q5.11*: Here is a 7-point scale of your prosocial views. The scale is arranged from equality (0) to altruism (7). Where would you place yourself on this scale?
 
 :   Numeric slider
 
@@ -307,7 +305,7 @@ Attributes and levels
     | --------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
     | Prosocial views |  •  |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
 
-*Q5.13*: What is your gender?
+*Q5.12*: What is your gender?
 
 :   Single answer
 
@@ -317,7 +315,7 @@ Attributes and levels
     - Prefer not to say
     - Other: _________
 
-*Q5.14*: Are you now married, widowed, divorced, separated or never married?
+*Q5.13*: Are you now married, widowed, divorced, separated or never married?
 
 :   Single answer
 
@@ -327,7 +325,7 @@ Attributes and levels
     - Separated
     - Never married
 
-*Q5.15*: What is the highest degree or level of school you have completed?
+*Q5.14*: What is the highest degree or level of school you have completed?
 
 :   Single answer
 
@@ -339,7 +337,7 @@ Attributes and levels
     - Graduate or professional degree
     - Doctorate
 
-*Q5.16*: What is your annual household income before taxes?
+*Q5.15*: What is your annual household income before taxes?
 
 :   Single answer
 
@@ -356,7 +354,7 @@ Attributes and levels
     - \$100,000 to \$149,999
     - \$150,000 or more
 
-*Q5.17*: Choose one or more races that you consider yourself to be:
+*Q5.16*: Choose one or more races that you consider yourself to be:
 
 :   Multiple answers allowed
 
@@ -367,7 +365,7 @@ Attributes and levels
     - Native Hawaiian or Pacific Islander
     - Other: _________
 
-*Q5.18*: How old are you?
+*Q5.17*: How old are you?
 
 :   Single answer
 
@@ -381,6 +379,6 @@ Attributes and levels
     - 75 - 84
     - 85 or older
 
-*Q5.19*: What is your ZIP code?
+*Q5.18*: What is your ZIP code?
 
 :   Text field
