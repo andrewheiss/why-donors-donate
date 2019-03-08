@@ -1,12 +1,12 @@
 ## Consent 
 
-***Q1.1***: You have been invited to participate in an academic research survey about XXXX. This study is being conducted by Suparna Chaudhry from Christopher Newport University and Andrew Heiss from Brigham Young University. The experiment should take about **XXXX minutes** to complete. You will be paid **\$XXXX** for your participation.
- 
+***Q1.1***: You have been invited to participate in an academic research survey about XXXX. This study is being conducted by Suparna Chaudhry from Christopher Newport University and Andrew Heiss from Brigham Young University. If you qualify to complete the survey, it should take about **XXXX minutes** to complete and you will be paid **\$XXXX** for your participation.
+
 Your participation in this study is entirely voluntary and you are free to skip any question or withdraw from the experiment at any time. You will not be asked to provide any personal information, and your answers will remain anonymous. There are no reasonably foreseeable risks or discomforts associated with participating in this study. **There will be questions designed to check that you're paying attention to the details of the experiment. If you answer these incorrectly, the survey will end early and you may not receive compensation.**
 
 Beyond your payment, you will receive no direct benefits from participating in this research study, but your responses may reveal important and useful insights about XXXX.
  
-If you have any questions at any time about the study or the procedures, you can contact Suparna Chaudhry (suparna.chaudhry@cnu.edu; Reiff Center for Human Rights and Conflict Resolution, Christopher Newport University, Newport News, VA 23606) or Andrew Heiss (andrew_heiss@byu.edu; Romney Institute of Public Management, Brigham Young University, Provo, UT 84602) at andrew_heiss@byu.edu. This research has been reviewed by the Institutional Review Board at Christopher Newport University (757-594-7461; IRB@cnu.edu) and the IRB administrator at Brigham Young University (801-422-1461; irb@byu.edu).
+If you have any questions at any time about the study or the procedures, you can contact Suparna Chaudhry (suparna.chaudhry@cnu.edu; Reiff Center for Human Rights and Conflict Resolution, Christopher Newport University, Newport News, VA 23606) or Andrew Heiss (andrew_heiss@byu.edu; Romney Institute of Public Management, Brigham Young University, Provo, UT 84602) at andrew_heiss@byu.edu. This research has been reviewed by the Institutional Review Board (IRB) at Christopher Newport University (757-594-7461; IRB@cnu.edu) and the IRB administrator at Brigham Young University (801-422-1461; irb@byu.edu).
  
 By clicking "I agree" below you are indicating that you are at least 18 years old, have read and understood this consent form and agree to participate in this research study. Please print a copy of this page for your records.
 
@@ -71,18 +71,9 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     - Once every few years
     - Never
 
-**Skip to Q2.8 if Q2.5 == "Never"**
+**Terminate if Q2.5 == "Once every few years" OR Q2.5 == "Never"**
 
-*Q2.6*: Did you donate to charity in the last year?
-
-:   Single answer
-
-    - Yes
-    - No
-
-**Display Q2.7 if Q2.6 == "Yes"**
-
-*Q2.7*: How much did you donate to charity in the last year?
+*Q2.6*: How much did you donate to charity last year?
 
 :   Single answer
 
@@ -94,16 +85,16 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     - \$5000-\$9,999
     - \$10,000+
 
-*Q2.8*: Have you volunteered in the past 12 months?
+*Q2.7*: Have you volunteered in the past 12 months?
 
 :   Single answer
 
     - Yes
     - No
 
-**Display Q2.9 if Q2.8 == "Yes"**
+**Display Q2.8 if Q2.7 == "Yes"**
 
-*Q2.9*: How often do you volunteer?
+*Q2.8*: How often do you volunteer?
 
 :   Single answer
 
@@ -118,21 +109,21 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
 
 ## Conjoint explanation
 
-*Q3.1*: In the following set of questions, we will ask you to select organizations you would donate to. The following terms will be important. Please read through this list carefully. 
+*Q3.1*: In the following set of questions, we will ask you to select organizations you would donate to. The following terms will be important. Please read through this list carefully.
    
 **Organizations:**
 
-- *Amnesty International*: A London-based non-governmental organization focused on human rights.
-- *Greenpeace*: An independent, nonprofit, global campaigning organization that uses non-violent, creative confrontation to expose global environmental problems and their causes.
-- *Oxfam*: An international group that provides help to poor countries and disaster areas. Their purpose is to help create lasting solutions to the injustice of poverty. 
-- *Red Cross*: An international organization that cares for the wounded, sick, and homeless in wartime and following natural disasters.
+- *Amnesty International*: A London-based non-governmental organization known for its focus on human rights.
+- *Greenpeace*: An independent, nonprofit, global campaigning organization known for using non-violent, creative confrontation to expose global environmental problems and their causes.
+- *Oxfam*: An international group known for providing help to poor countries and disaster areas, with a focus on helping create lasting solutions to the injustice of poverty. 
+- *Red Cross*: An international organization known for caring for the wounded, sick, and homeless in wartime and following natural disasters.
  
 **Issue areas:**
 
-- *Emergency Response*: Respond to situations that pose an immediate risk to health, life, property, or the environment.
+- *Emergency response*: Respond to situations that pose an immediate risk to health, life, property, or the environment.
 - *Environment*: Protecting the natural world and the impact of human activity on its condition.
-- *Human Rights*: Protect the inalienable fundamental rights to which a person is inherently entitled simply because he or she is a human being.
-- *Refugee Relief*: Provide relief for those who have been forced to flee his or her country because of persecution, war or violence.  
+- *Human rights*: Protect the inalienable fundamental rights to which a person is inherently entitled simply because he or she is a human being.
+- *Refugee relief*: Provide relief for those who have been forced to flee his or her country because of persecution, war or violence.  
  
 **Organizational practices:**
 
@@ -147,7 +138,7 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
 
 **Relationship with host government:**
 
-- *Friendly relationship with government*: Organization has a friendly relationship with its host government
+- *Friendly relationship with government*: Organization has a friendly relationship with its host government.
 - *Criticized by government*: Organization faces public condemnation from the government.
 - *Under government crackdown*: Host government has undertaken official action to limit or stop the organization. 
 
@@ -155,31 +146,21 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
 
 ## Conjoint questions
 
-Attributes and levels
+*Q4.1*: For each of the next 12 questions, imagine you are selecting an organization you will donate to and that each of the listed organizations exists. Which of the following organizations would you donate to?
 
-- Organizations
-    - Amnesty International
-    - Greenpeace
-    - Oxfam
-    - Red Cross
-- Issue area
-    - Emergency response
-    - Environment
-    - Human rights
-    - Refugee relief
-- Organizational practices
-    - Financial transparency
-    - Accountability
-- Funding sources
-    - Funded primarily by many small private donations
-    - Funded primarily by a handful of rich private donors
-    - Funded primarily by government grants
-- Relationship with host government
-    - Friendly relationship with government
-    - Criticized by government
-    - Under government crackdown
+:   Single option or "none" selected
 
-*Q4.1–12*: **Repeat conjoint table question 12 times**
+|                                   | Option 1 | Option 2 | Option 3 | None |
+| --------------------------------- | :------: | :------: | :------: | :--: |
+| Organization                      |  Random  |  Random  |  Random  |  —   |
+| Issue area                        |  Random  |  Random  |  Random  |  —   |
+| Organizational practices          |  Random  |  Random  |  Random  |  —   |
+| Funding sources                   |  Random  |  Random  |  Random  |  —   |
+| Relationship with host government |  Random  |  Random  |  Random  |  —   |
+
+*Q4.2–12*: Which of the following organizations would you donate to?
+
+:   Single option or "none" selected
 
 |                                   | Option 1 | Option 2 | Option 3 | None |
 | --------------------------------- | :------: | :------: | :------: | :--: |
@@ -200,15 +181,15 @@ Attributes and levels
     - Yes
     - No
 
-*Q5.2*: Here is a 7-point scale on which the political views that people might hold are arranged from extremely liberal (0) to extremely conservative (7). Where would you place yourself on this scale?
+*Q5.2*: Here is a 7-point scale on which the political views that people might hold are arranged from extremely liberal (left) to extremely conservative (right). Where would you place yourself on this scale?
 
-:   Numeric slider
+:   Single answer
 
     |                    |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
     | ------------------ | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
     | Political ideology |  •  |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
 
-*Q5.3*: Here is a list of differenty types of voluntary organizations. For each organization, indicate whether you are an active member, an inactive member, or not a member of that type of organization:
+*Q5.3*: Here is a list of different types of voluntary organizations. For each organization, indicate whether you are an active member, an inactive member, or not a member of that type of organization:
 
 :   Matrix table
 
@@ -216,8 +197,8 @@ Attributes and levels
     | --------------------------------------- | :-----------: | :-------------: | :----------: |
     | Church or religious organization        |       •       |        •        |      •       |
     | Sport or recreational organization      |       •       |        •        |      •       |
-    | Art, music or educational organization  |       •       |        •        |      •       |
-    | Labor Union                             |       •       |        •        |      •       |
+    | Art, music, or educational organization |       •       |        •        |      •       |
+    | Labor union                             |       •       |        •        |      •       |
     | Political party                         |       •       |        •        |      •       |
     | Environmental organization              |       •       |        •        |      •       |
     | Professional association                |       •       |        •        |      •       |
@@ -230,7 +211,7 @@ Attributes and levels
 :   Single answer
 
     - Extremely involved
-    - Very invovled
+    - Very involved
     - Moderately involved
     - Slightly involved
     - Never involved
@@ -245,9 +226,9 @@ Attributes and levels
     - Slightly involved
     - Never involved
 
-*Q5.6*: Here is a 7-point scale on which you trust political institutions and the state. The scale is arranged from no trust (0) to complete trust (7). Where would you place yourself on this scale?
+*Q5.6*: Here is a 7-point scale on which you trust political institutions and the state. The scale is arranged from no trust (left) to complete trust (right). Where would you place yourself on this scale?
 
-:   Numeric slider
+:   Single answer
 
     |                                               |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
     | --------------------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
@@ -287,7 +268,7 @@ Attributes and levels
 :   Single answer
 
     - Catholic (including Roman Catholic and Orthodox)
-    - Protestant (United Church of Canada, Angelican, Orthodox, Baptist, Lutheran)
+    - Protestant (United Church of Canada, Anglican, Orthodox, Baptist, Lutheran)
     - Christian Orthodox
     - Jewish
     - Muslim
@@ -297,9 +278,9 @@ Attributes and levels
     - Atheist (do not believe in God)
     - Other: _________
 
-*Q5.11*: Here is a 7-point scale of your prosocial views. The scale is arranged from equality (0) to altruism (7). Where would you place yourself on this scale?
+*Q5.11*: Here is a 7-point scale of your prosocial views. The scale is arranged from equality (left) to altruism (right). Where would you place yourself on this scale?
 
-:   Numeric slider
+:   Single answer
 
     |                 |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
     | --------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
@@ -315,7 +296,7 @@ Attributes and levels
     - Prefer not to say
     - Other: _________
 
-*Q5.13*: Are you now married, widowed, divorced, separated or never married?
+*Q5.13*: Are you now married, widowed, divorced, separated, or never married?
 
 :   Single answer
 
@@ -352,7 +333,9 @@ Attributes and levels
     - \$80,000 to \$89,999
     - \$90,000 to \$99,999
     - \$100,000 to \$149,999
-    - \$150,000 or more
+    - \$150,000 to \$199,999
+    - \$200,000 to \$299,999
+    - \$300,000 or more
 
 *Q5.16*: Choose one or more races that you consider yourself to be:
 
