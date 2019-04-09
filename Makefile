@@ -1,14 +1,24 @@
-remote_host = cloud
-remote_dir = ~/sites/stats/public_html/why-donors-donate
-remote_dest = $(remote_host):$(remote_dir)
+.PHONY: build serve html tex docx paper
 
-.PHONY: clean html upload
+build:
+	Rscript -e "rmarkdown::render_site(input = 'analysis', encoding = 'UTF-8')"
+
+serve:
+	$(MAKE) -C analysis serve
 
 html:
-	Rscript -e "rmarkdown::render_site(encoding = 'UTF-8')"
+	$(MAKE) -C manuscript html
 
-clean:
-	Rscript -e "rmarkdown::clean_site()"
+tex:
+	$(MAKE) -C manuscript tex
 
-upload:
-	rsync -crvP --delete _site/ $(remote_dest)
+docx:
+	$(MAKE) -C manuscript docx
+
+paper:
+	$(MAKE) -C manuscript html tex
+
+# Anything that doesn't match one of the targets in this file gets passed on to
+# the manuscript Makefile
+#%:
+#	$(MAKE) -C manuscript $@

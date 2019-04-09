@@ -1,23 +1,20 @@
-# Colors ------------------------------------------------------------------
-
-# This palette was generated with 7 values from scico's "roma" palette, but
-# ignoring the extra light greenish 4th color
-# https://github.com/thomasp85/scico
-#
-# scico(7, palette = "roma")
-ngo_red <- "#7E1900"
-ngo_orange <- "#AC7825"
-ngo_yellow <- "#D9D26A"
-ngo_blue_lt <- "#60C3D4"
-ngo_blue <- "#3877B6"
-ngo_blue_dk <- "#1A3399"
-
-
 # ggplot themes -----------------------------------------------------------
 
-update_geom_defaults("label", list(family = "Roboto Condensed Light"))
-update_geom_defaults("text", list(family = "Roboto Condensed Light"))
-
+#' theme_ngo
+#'
+#' A custom ggplot2 theme used throughout this project
+#'
+#' @param base_size base font size (default is 9)
+#' @param base_family base font family (default is Roboto Condensed)
+#'
+#' @export
+#'
+#' @examples
+#' library(ggplot2)
+#'
+#' ggplot(mtcars, aes(x = mpg, y = wt)) +
+#'   geom_point() +
+#'   theme_ngo()
 theme_ngo <- function(base_size = 9, base_family = "Roboto Condensed") {
   ret <- theme_bw(base_size, base_family) +
     theme(plot.title = element_text(size = rel(1.4), face = "bold",
@@ -42,16 +39,29 @@ theme_ngo <- function(base_size = 9, base_family = "Roboto Condensed") {
           legend.box.margin = margin(t = -0.5, unit = "lines"),
           legend.margin = margin(t = 0),
           legend.position = "bottom")
-  
+
   ret
 }
 
-theme_ngo_map <- function(base_size = 11, base_family = "Roboto Condensed") {
-  ret <- theme_void(base_size, base_family) +
-    theme(legend.position = "bottom",
-          legend.text = element_text(size = rel(1), family = "Roboto Condensed Light", face = "plain"),
-          legend.title = element_text(family = "Roboto Condensed", face = "bold"),
-          legend.key.size = unit(0.7, "lines"))
-  
-  ret
+
+# Conversion and formatting help ------------------------------------------
+
+#' Convert mms to pts
+#'
+#' Convert units specified in millimeters to typographic points. This is especially helpful when working with ggplot geoms that use size parameters
+#'
+#' @param x a numeric value (in millimeters)
+#'
+#' @return A numeric value (in points)
+#' @export
+#'
+#' @examples
+#' library(ggplot2)
+#'
+#' ggplot(mtcars, aes(x = mpg, y = wt)) +
+#'   geom_point() +
+#'   annotate(geom = "text", x = 20, y = 4,
+#'            label = "Here's a label", size = pts(11))
+pts <- function(x) {
+  as.numeric(grid::convertUnit(grid::unit(x, "pt"), "mm"))
 }

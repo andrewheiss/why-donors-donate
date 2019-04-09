@@ -1,0 +1,39 @@
+Package: donorheuristics
+Title: Why Donors Donate
+Version: 0.0.0.9000
+Authors@R: c(
+    person(given = "Andrew", 
+           family = "Heiss", 
+           email = "andrewheiss@gmail.com",
+           role = c("aut", "cre")),
+    person(given = "Suparna", 
+           family = "Chaudhry", 
+           email = "suparna.chaudhry@cnu.edu", 
+           role = "aut"),
+    person(given = "Marc", 
+           family = "Dotson", 
+           email = "marc_dotson@byu.edu", 
+           role = "aut"))
+Description: Research on how donors respond to organizational and structural NGO characteristics
+License: MIT + file LICENSE
+URL: https://github.com/andrewheiss/why-donors-donate
+BugReports: https://github.com/andrewheiss/why-donors-donate/issues
+ByteCompile: true
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 3.4.0)
+Imports: bookdown,
+    devtools (>= 2.0.1),
+    ggdag (>= 0.1.0),
+    ggplot2 (>= 3.1.1),
+    ggraph (>= 1.0.2),
+    here (>= 0.1),
+    knitr (>= 1.22),
+    pander (>= 0.6.3),
+    rvest (>= 0.3.2),
+    scales (>= 1.0.0),
+    stringi (>= 1.4.3),
+    tidyverse (>= 1.2.1)
+SystemRequirements: GNU make
+RoxygenNote: 6.1.1
