@@ -85,16 +85,32 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     - \$5000-\$9,999
     - \$10,000+
 
-*Q2.7*: Have you volunteered in the past 12 months?
+*Q2.7*: Here is a 7-point scale on which the importance of trusting charities is arranged from not at all important (left) to essential (right). Where would you place yourself on this scale?
+
+:   Single answer
+
+    |                                                                   |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
+    | ----------------------------------------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+    | How important is it that you trust a charity before giving to it? |  •  |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
+
+*Q2.8*: Here is a 7-point scale on which your level of trust in charities is arranged from no trust at all (left) to complete trust (right). Where would you place yourself on this scale?
+
+:   Single answer
+
+    |                                  |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
+    | -------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+    | How much do you trust charities? |  •  |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
+
+*Q2.9*: Have you volunteered in the past 12 months?
 
 :   Single answer
 
     - Yes
     - No
 
-**Display Q2.8 if Q2.7 == "Yes"**
+**Display Q2.10 if Q2.9 == "Yes"**
 
-*Q2.8*: How often do you volunteer?
+*Q2.10*: How often do you volunteer?
 
 :   Single answer
 
@@ -104,6 +120,15 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     - Once every six months
     - Once a year
     - Once every few years
+
+*Q2.11*: Please select blue from the following list:
+
+:   Single answer
+
+    - Red
+    - Yellow
+    - Blue
+    - Green
 
 ---
 
@@ -150,25 +175,25 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
 
 :   Single option or "none" selected
 
-|                                   | Option 1 | Option 2 | Option 3 | None |
-| --------------------------------- | :------: | :------: | :------: | :--: |
-| Organization                      |  Random  |  Random  |  Random  |  —   |
-| Issue area                        |  Random  |  Random  |  Random  |  —   |
-| Organizational practices          |  Random  |  Random  |  Random  |  —   |
-| Funding sources                   |  Random  |  Random  |  Random  |  —   |
-| Relationship with host government |  Random  |  Random  |  Random  |  —   |
+    |                                   | Option 1 | Option 2 | Option 3 | None |
+    | --------------------------------- | :------: | :------: | :------: | :--: |
+    | Organization                      |  Random  |  Random  |  Random  |  —   |
+    | Issue area                        |  Random  |  Random  |  Random  |  —   |
+    | Organizational practices          |  Random  |  Random  |  Random  |  —   |
+    | Funding sources                   |  Random  |  Random  |  Random  |  —   |
+    | Relationship with host government |  Random  |  Random  |  Random  |  —   |
 
 *Q4.2–12*: Which of the following organizations would you donate to?
 
 :   Single option or "none" selected
 
-|                                   | Option 1 | Option 2 | Option 3 | None |
-| --------------------------------- | :------: | :------: | :------: | :--: |
-| Organization                      |  Random  |  Random  |  Random  |  —   |
-| Issue area                        |  Random  |  Random  |  Random  |  —   |
-| Organizational practices          |  Random  |  Random  |  Random  |  —   |
-| Funding sources                   |  Random  |  Random  |  Random  |  —   |
-| Relationship with host government |  Random  |  Random  |  Random  |  —   |
+    |                                   | Option 1 | Option 2 | Option 3 | None |
+    | --------------------------------- | :------: | :------: | :------: | :--: |
+    | Organization                      |  Random  |  Random  |  Random  |  —   |
+    | Issue area                        |  Random  |  Random  |  Random  |  —   |
+    | Organizational practices          |  Random  |  Random  |  Random  |  —   |
+    | Funding sources                   |  Random  |  Random  |  Random  |  —   |
+    | Relationship with host government |  Random  |  Random  |  Random  |  —   |
 
 ---
 
