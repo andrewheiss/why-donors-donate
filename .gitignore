@@ -14,6 +14,7 @@ manuscript/*.pdf
 manuscript/*.tex
 manuscript/tex_out/*
 manuscript/vc*
+manuscript/submissions/*
 
 # Other folders
 admin/*
