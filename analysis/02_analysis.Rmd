@@ -1,0 +1,91 @@
+---
+title: "Results"
+author: "Andrew Heiss, Marc Dotson, and Suparna Chaudhry"
+date: "Last run: `r format(Sys.time(), '%F')`"
+output: 
+  html_document:
+    code_folding: hide
+    pandoc_args:
+      - "--default-image-extension=png"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r load-libraries-data, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(donorheuristics)
+library(ggraph)
+library(ggdag)
+library(here)
+
+# General settings
+source(here("analysis", "options.R"))
+
+# Make all the randomness reproducible
+set.seed(1234)
+
+# Load data
+# results <- readRDS(here("data", "derived_data", "results.rds"))
+```
+
+
+# Causal pathway
+
+Our theory and hypotheses are laid out in the causal pathway below. Our outcomes (Y: % likely to donate and amount donated) "listen to" or respond to C (crackdown), which is our main treatment or exposure. Funding (F) and issue (I) serve as heuristics for donation and influence a government's decision to crack down on NGOs, hence the dual arrows to C and Y. 
+
+```{r causal-dag, fig.width=13/3, fig.height=2}
+node_colors <- tribble(
+  ~name, ~type,
+  "D", "Outcome",
+  "I", "Organizational factor",
+  "F", "Organizational factor",
+  "O", "Organizational factor",
+  "G", "Structural factor"
+)
+
+# Set up DAG structure
+theory_dag <- dagify(D ~ I + F + O + G,
+                     G ~ I + F,
+                     outcome = "D",
+                     exposure = "C") %>% 
+  tidy_dagitty(layout = "dh", seed = 1234) 
+
+# Add node types/colors to DAG data
+theory_dag$data <- theory_dag$data %>% 
+  left_join(node_colors, by = "name")
+
+# Make DAG plot
+plot_dag <- ggplot(theory_dag, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_point(size = 6, mapping = aes(color = type)) +
+  geom_dag_edges(start_cap = circle(4, "mm"),
+                 end_cap = circle(4, "mm")) +
+  geom_dag_text(size = pts(6), family = "Roboto Condensed", fontface = "bold") +
+  scale_dag() +
+  theme_ngo() +
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.title = element_blank(),
+        axis.text = element_blank())
+
+# Show and save plot
+plot_dag
+ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.pdf"),
+       width = 13/3, height = 2, units = "in", device = cairo_pdf)
+ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.png"),
+       width = 13/3, height = 2, units = "in", type = "cairo", dpi = 300)
+```
+
+
+# Original computing environment
+
+<button data-toggle="collapse" data-target="#sessioninfo" class="btn btn-primary btn-md btn-info">Here's what we used the last time we built this page</button>
+
+<div id="sessioninfo" class="collapse">
+
+```{r show-session-info, echo=TRUE, width=100}
+writeLines(readLines(file.path(Sys.getenv("HOME"), ".R/Makevars")))
+
+devtools::session_info()
+```
+
+</div> 

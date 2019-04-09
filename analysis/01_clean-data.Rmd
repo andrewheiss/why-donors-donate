@@ -1,0 +1,44 @@
+---
+title: "Clean data"
+author: "Andrew Heiss, Marc Dotson, and Suparna Chaudhry"
+date: "Last run: `r format(Sys.time(), '%B %e, %Y')`"
+output: 
+  html_document:
+    code_folding: show
+editor_options: 
+  chunk_output_type: console
+---
+
+# Load and clean data
+
+```{r clean-data, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(donorheuristics)
+library(here)
+
+# Load data
+# results_raw <- read_csv(here("data", "raw_data", "whatever.csv"))
+
+# Do stuff to results_raw
+# results <- results_raw %>% 
+#   do() %>% stuff() %>% here()
+
+# Save cleaned data
+# saveRDS(results, here("data", "derived_data", "results.rds"))
+# write_csv(results, here("data", "derived_data", "results.csv"))
+```
+
+
+# Original computing environment
+
+<button data-toggle="collapse" data-target="#sessioninfo" class="btn btn-primary btn-md btn-info">Here's what we used the last time we built this page</button>
+
+<div id="sessioninfo" class="collapse">
+
+```{r show-session-info, echo=TRUE, width=90}
+writeLines(readLines(file.path(Sys.getenv("HOME"), ".R/Makevars")))
+
+devtools::session_info()
+```
+
+</div>  

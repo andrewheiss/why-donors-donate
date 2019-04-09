@@ -1,0 +1,9 @@
+---
+title: "Experiment"
+date: "Last run: `r format(Sys.time(), '%F')`"
+---
+
+# Survey experiment {.survey}
+
+```{r child = "survey/experiment.md"}
+```

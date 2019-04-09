@@ -1,34 +1,26 @@
 name: why-donors-donate
 exclude:
-- data
-- Icon?
-- manuscript
-- sandbox
-- lib
-- private
-- submissions
-- bib
 - Makefile
-- LICENSE.html
-- README.html
+- options.R
+- Icon?
 navbar:
   title: Why Donors Donate
   right:
   - text: Preregistration, design, IRB
     icon: fa-pencil-square
-    href: "#"
+    href: preregistration.html
   - text: Experiment
     icon: fa-flask
-    href: "#"
+    href: experiment.html
   - text: Data cleaning
     icon: fa-table
-    href: "#"
+    href: 01_clean-data.html
   - text: Results
     icon: fa-bar-chart
-    href: "#"
+    href: 02_analysis.html
   - text: Additional analysis
     icon: fa-bar-chart
-    href: "#"
+    href: 03_additional-analysis.html
 output:
   html_document:
     theme: journal

@@ -1,0 +1,9 @@
+---
+title: "Why Donors Donate"
+author: "Suparna Chaudhry, Marc Dotson, and Andrew Heiss"
+date: "Last run: `r format(Sys.time(), '%F')`"
+---
+
+## Abstract
+
+As space for civil society has closed around the world, transnational NGOs have faced a crisis of funding. We explore how NGOs have shifted from traditionally Northern funding sources toward grassroots private philanthropic money. How do individual donors in the US feel about donating to legally besieged NGOs abroad? Do legal restrictions on NGOs influence donors’ decision to donate? We use a conjoint survey experiment to argue that domestic political environments of NGO host countries influence preferences of private donors and that legal crackdowns on NGOs serve as a heuristic of organizational deservingness.

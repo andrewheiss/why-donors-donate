@@ -1,7 +1,0 @@
----
-title: "Why Donors Donate"
-author: "Suparna Chaudhry, Marc Dotson, and Andrew Heiss"
-date: "Last run: `r format(Sys.time(), '%F')`"
----
-
-\\(•◡•)/

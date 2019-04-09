@@ -1,6 +1,5 @@
 # Site output
-_site/*
-site_libs/*
+analysis/_site/*
 
 # knitr and caching stuff
 *_files/*
