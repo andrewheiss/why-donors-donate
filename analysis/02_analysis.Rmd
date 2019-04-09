@@ -31,7 +31,7 @@ set.seed(1234)
 
 # Causal pathway
 
-Our theory and hypotheses are laid out in the causal pathway below. Our outcomes (Y: % likely to donate and amount donated) "listen to" or respond to C (crackdown), which is our main treatment or exposure. Funding (F) and issue (I) serve as heuristics for donation and influence a government's decision to crack down on NGOs, hence the dual arrows to C and Y. 
+Our theory and hypotheses are laid out in the causal pathway below. Organizational factors (**O**, or organizational practices like financial disclosure and accountability practices; **I**, or issue area; and **F**, or funding) all influence the decision to donate (**D**). Structural factors like an NGO's relationship with its host government (**G**) also influence donation behavior, but the relationship itself is shaped by both funding and issue area. 
 
 ```{r causal-dag, fig.width=13/3, fig.height=2}
 node_colors <- tribble(
