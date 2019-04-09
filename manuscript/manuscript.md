@@ -1,5 +1,5 @@
 ---
-title: "Why Donors Donate"
+title: "Why Donors Donate: Disentangling Organizational and Structural Heuristics for International Philanthropy"
 author:
 - name: Suparna Chaudhry
   affiliation: Christopher Newport University
@@ -12,12 +12,28 @@ author:
   affiliation: Brigham Young University
   url: https://www.andrewheiss.com/
   email: andrew_heiss@byu.edu
-date: September 7, 2018
-published: Please do not cite without permission.
+date: March 24, 2019
 git-repo: https://github.com/andrewheiss/why-donors-donate
 reference-section-title: References
-sansfont: Roboto Condensed
 toc: false
 ---
 
-Stuff goes here.
+# Brief note on our overarching project
+
+We are interested in the organizational and structural factors that influence donors to contribute money to international nongovernmental organizations (INGOs) and other nonprofit organizations. Existing research has found that donors respond to a host of heuristics and signals when deciding whether to donate to an NGO, since seeking out complete information about an organization's deservingness and efficiency is costly and time-consuming. 
+
+One common signal for donors is organizational efficiency, such as the amount an organization spends on overhead costs, whether an organization makes its finances public, or whether an organization participates in voluntary accountability practices, such as listing organizational details on websites like GuideStar and Charity Navigator. Another heuristic for deservingness is the issue area an NGO engages in. Organizations that address humanitarian issues such as disaster relief and international aid and development have broader appeal to donors who might shy away from NGOs dealing with more political causes like human rights. Finally, the source of NGO funding can also serve as a helpful signal of how effective and useful an individual donor's action might be. Donors are likely to not contribute to NGOs that rely heavily on government grants since their donation might feel more impersonal and less needed, while donors are likely to give to organizations that rely primarily on private donations given that they may feel personally invested in the organization. Each of these signals is *organizational*. NGOs typically have direct control over its organizational practices, mission and issue area, and funding sources. 
+
+NGOs have less control over *structural* issues, and the role of political and legal institutions in donor decision making has been understudied. However, over the past decade international NGOs have become increasingly politicized and legally restricted around the world. Dozens of countries have imposed legal restrictions on international NGO funding, missions, and programs, and in many countries, NGOs have been forced to close down operations and leave. How do individual donors respond when NGOs are kicked out of their host countries? How does legal crackdown abroad affect perceptions of an NGO's deservingness or efficiency?
+
+In our larger project (which has unfortunately faced some substantial delays), we will use a conjoint survey experiment to disentangle these different questions. We theorize that organizational characteristics like managerial practices, issue area, and funding sources all influence the decision to donate to an NGO (see @fig:big-dag). At the same time, however, we propose that structural characteristics like an NGO's host-country political and legal environment can also serve as donor heuristics. Donors who see that an NGO has been kicked out of a country or that an NGO faces general legal trouble abroad will use that knowledge to decide whether or not to donate. 
+
+![Causal diagram showing causes of donor behavior. D = donation to NGO (outcome); G = NGO-government relationship, I = NGO issue area, F = NGO funding source, O = NGO organizational and managerial practices.](output/figures/causal-path-full.pdf){#fig:big-dag}
+
+Identifying the causal link between structural factors and donor behavior is trickier than measuring the link between organizational factors and donor behavior, however, because (1) NGOs have less direct control over their political environments, and (2) organizational characteristics like issue area and funding can both sour the NGO-government relationship (as we explain in further detail below, governments are more likely to crack down on NGOs that address human rights and that receive government funding). @fig:big-dag helps disentangle this complex relationship. Organizational factors (**O**, or organizational practices like financial disclosure and accountability practices; **I**, or issue area; and **F**, or funding) all influence the decision to donate (**D**). Structural factors like an NGO's relationship with its host government (**G**) also influence donation behavior, but the relationship itself is shaped by both funding and issue area. 
+
+Through our conjoint survey experiment, we will be able to measure how strongly each of these factors shapes the propensity to donate and discover how much donors are swayed by the political and legal environments of NGO host countries.
+
+What follows here is a smaller foray into one aspect of this causal diagram. We use a vignette-based survey experiment to measure donor response to just crackdown, issue area, and funding. 
+
+We will field our larger conjoint survey experiment very soon and we look forward to your comments and suggestions before we launch it!

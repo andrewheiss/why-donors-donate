@@ -45,7 +45,7 @@ PREFIX = /Users/andrew/.pandoc
 PNG_CONVERT = --no-convert
 
 # Location of your working bibliography file
-BIB_FILE = ../bib/bibliography.bib
+BIB_FILE = ../bib/references.bib
 
 # CSL stylesheet (located in the csl folder of the PREFIX directory).
 # Common CSLs:
