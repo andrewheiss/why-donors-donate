@@ -1,10 +1,10 @@
 ## Consent 
 
-***Q1.1***: You have been invited to participate in an academic research survey about XXXX. This study is being conducted by Suparna Chaudhry from Christopher Newport University and Andrew Heiss from Brigham Young University. If you qualify to complete the survey, it should take about **XXXX minutes** to complete and you will be paid **\$XXXX** for your participation.
+***Q1.1***: You have been invited to participate in an academic research survey about international nongovernmental organizations. This study is being conducted by Suparna Chaudhry from Christopher Newport University and Andrew Heiss and Marc Dotson from Brigham Young University. If you qualify to complete the survey, it should take about **10 minutes** to complete.
 
 Your participation in this study is entirely voluntary and you are free to skip any question or withdraw from the experiment at any time. You will not be asked to provide any personal information, and your answers will remain anonymous. There are no reasonably foreseeable risks or discomforts associated with participating in this study. **There will be questions designed to check that you're paying attention to the details of the experiment. If you answer these incorrectly, the survey will end early and you may not receive compensation.**
 
-Beyond your payment, you will receive no direct benefits from participating in this research study, but your responses may reveal important and useful insights about XXXX.
+You will receive no direct benefits from participating in this research study.
  
 If you have any questions at any time about the study or the procedures, you can contact Suparna Chaudhry (suparna.chaudhry@cnu.edu; Reiff Center for Human Rights and Conflict Resolution, Christopher Newport University, Newport News, VA 23606) or Andrew Heiss (andrew_heiss@byu.edu; Romney Institute of Public Management, Brigham Young University, Provo, UT 84602) at andrew_heiss@byu.edu. This research has been reviewed by the Institutional Review Board (IRB) at Christopher Newport University (757-594-7461; IRB@cnu.edu) and the IRB administrator at Brigham Young University (801-422-1461; irb@byu.edu).
  
