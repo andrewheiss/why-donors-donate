@@ -17,7 +17,7 @@ We are also interested in the effect of organizational characteristics on donor 
 To test possible confounding and mediating effects, we also plan to see how donor characteristics influence the decision to donate, including political ideology, political knowledge, religious attendance, involvement in charitable activities, involvement in activism, and other demographic characteristics. 
 
 
-### Hypotheses
+## Hypotheses
 
 We theorize that structural characteristics like an NGO's host-country political and legal environment can serve as heuristics and shortcuts for donors. Donors who see that an NGO faces general legal trouble abroad will use that knowledge to decide whether or not to donate. We also theorize that non-structural organizational characteristics like managerial practices, funding sources, and issue area also serve as heuristics and influence donation patterns. 
 
