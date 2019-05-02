@@ -307,101 +307,101 @@ We collapse several of our variables into dichotomous and trichotomous versions,
 
 *Q2.1*: How often do you follow national news? 
 
-    - Multiple times a day → At least once a day
-    - Every day → At least once a day
-    - Once a week → Once a week
-    - Hardly ever → Rarely (base case)
-    - Never → Rarely
+- Multiple times a day → At least once a day
+- Every day → At least once a day
+- Once a week → Once a week
+- Hardly ever → Rarely (base case)
+- Never → Rarely
 
 *Q2.4*: How often would you say you follow what's going on in government and public affairs?
 
-    - Most of the time → Often
-    - Some of the time → Often
-    - Only now and then → Not often (base case)
-    - Hardly at all → Not often (base case)
+- Most of the time → Often
+- Some of the time → Often
+- Only now and then → Not often (base case)
+- Hardly at all → Not often (base case)
 
 *Q2.5*: How often do you donate to charity (with either cash or in-kind)?
 
-    - Once a week → At least once a month
-    - Once a month → At least once a month
-    - Once every three months → More than once a month, less than once a year
-    - Once every six months → More than once a month, less than once a year
-    - Once a year → More than once a month, less than once a year
-    - Once every few years → Rarely (base case)
-    - Never → Rarely
+- Once a week → At least once a month
+- Once a month → At least once a month
+- Once every three months → More than once a month, less than once a year
+- Once every six months → More than once a month, less than once a year
+- Once a year → More than once a month, less than once a year
+- Once every few years → Rarely (base case)
+- Never → Rarely
 
 *Q2.10*: How often do you volunteer?
 
-    - Once a week → At least once a month
-    - Once a month → At least once a month
-    - Once every three months → More than once a month, less than once a year
-    - Once every six months → More than once a month, less than once a year
-    - Once a year → More than once a month, less than once a year
-    - Once every few years → Rarely (base case)
-    - Never → Rarely
+- Once a week → At least once a month
+- Once a month → At least once a month
+- Once every three months → More than once a month, less than once a year
+- Once every six months → More than once a month, less than once a year
+- Once a year → More than once a month, less than once a year
+- Once every few years → Rarely (base case)
+- Never → Rarely
 
 *Q5.4*: Historically, how involved have you been in activist causes?
 
-    - Extremely involved → Involved
-    - Very involved → Involved
-    - Moderately involved → Involved
-    - Slightly involved → Not involved (base case)
-    - Never involved → Not involved
+- Extremely involved → Involved
+- Very involved → Involved
+- Moderately involved → Involved
+- Slightly involved → Not involved (base case)
+- Never involved → Not involved
 
 *Q5.5*: Historically, how involved has your family been in activist causes?
 
-    - Extremely involved → Involved
-    - Very involved → Involved
-    - Moderately involved → Involved
-    - Slightly involved → Not involved (base case)
-    - Never involved → Not involved
+- Extremely involved → Involved
+- Very involved → Involved
+- Moderately involved → Involved
+- Slightly involved → Not involved (base case)
+- Never involved → Not involved
 
 *Q5.8*: How often do you attend religious or worship services, not including weddings and funerals?
 
-    - More than once a week → At least once a month
-    - Once a week → At least once a month
-    - Once or twice a month → At least once a month
-    - A few times a year → Rarely (base case)
-    - Seldom → Rarely
-    - Never → Rarely
-    - Don't know → NULL
+- More than once a week → At least once a month
+- Once a week → At least once a month
+- Once or twice a month → At least once a month
+- A few times a year → Rarely (base case)
+- Seldom → Rarely
+- Never → Rarely
+- Don't know → NULL
 
 *Q5.9*: How important is religion in your life?
 
-    - Extremely important → Important
-    - Very important → Important
-    - Moderately important → Important
-    - Slightly important → Not important (base case)
-    - Not at all important → Not important
+- Extremely important → Important
+- Very important → Important
+- Moderately important → Important
+- Slightly important → Not important (base case)
+- Not at all important → Not important
 
 *Q5.15*: What is your annual household income before taxes?
 
-    - Less than $10,000 → More/less than median (base case = less than median)
-    - \$10,000 to \$19,999 → More/less than median
-    - \$20,000 to \$29,999 → More/less than median
-    - \$30,000 to \$39,999 → More/less than median
-    - \$40,000 to \$49,999 → More/less than median
-    - \$50,000 to \$59,999 → More/less than median
-    - \$60,000 to \$69,999 → More/less than median
-    - \$70,000 to \$79,999 → More/less than median
-    - \$80,000 to \$89,999 → More/less than median
-    - \$90,000 to \$99,999 → More/less than median
-    - \$100,000 to \$149,999 → More/less than median
-    - \$150,000 to \$199,999 → More/less than median
-    - \$200,000 to \$299,999 → More/less than median
-    - \$300,000 or more → More/less than median
+- Less than $10,000 → More/less than median (base case = less than median)
+- \$10,000 to \$19,999 → More/less than median
+- \$20,000 to \$29,999 → More/less than median
+- \$30,000 to \$39,999 → More/less than median
+- \$40,000 to \$49,999 → More/less than median
+- \$50,000 to \$59,999 → More/less than median
+- \$60,000 to \$69,999 → More/less than median
+- \$70,000 to \$79,999 → More/less than median
+- \$80,000 to \$89,999 → More/less than median
+- \$90,000 to \$99,999 → More/less than median
+- \$100,000 to \$149,999 → More/less than median
+- \$150,000 to \$199,999 → More/less than median
+- \$200,000 to \$299,999 → More/less than median
+- \$300,000 or more → More/less than median
 
 *Q5.17*: How old are you?
 
-    - Under 18 → More/less than median (base case = less than median)
-    - 18 - 24 → More/less than median
-    - 25 - 34 → More/less than median
-    - 35 - 44 → More/less than median
-    - 45 - 54 → More/less than median
-    - 55 - 64 → More/less than median
-    - 65 - 74 → More/less than median
-    - 75 - 84 → More/less than median
-    - 85 or older → More/less than median
+- Under 18 → More/less than median (base case = less than median)
+- 18 - 24 → More/less than median
+- 25 - 34 → More/less than median
+- 35 - 44 → More/less than median
+- 45 - 54 → More/less than median
+- 55 - 64 → More/less than median
+- 65 - 74 → More/less than median
+- 75 - 84 → More/less than median
+- 85 or older → More/less than median
 
 
 ## Follow-up analyses
