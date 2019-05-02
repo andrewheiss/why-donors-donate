@@ -3,6 +3,75 @@ title: "Experiment"
 date: "Last run: `r format(Sys.time(), '%F')`"
 ---
 
+# Design
+
+We use a partial fractional factorial design using the following organizational attributes:
+
+**Organizations**
+
+- Amnesty International
+- Greenpeace
+- Oxfam
+- Red Cross
+
+**Issue areas**
+
+- Emergency response
+- Environment
+- Human rights
+- Refugee relief
+
+**Organizational practices**
+
+- Financial transparency
+- Accountability
+
+**Funding sources**
+
+- Funded primarily by many small private donations
+- Funded primarily by a handful of wealthy private donors
+- Funded primarily by government grants
+
+**Relationship with host government**
+
+- Friendly relationship with government
+- Criticized by government
+- Under government crackdown
+
+\ 
+
+Participants are then presented with random combinations of these attributes and asked to select which hypothetical organization they'd be willing to donate to. Participants see 12 iterations of a question that looks like this:
+
+> *Q4.x*: For each of the next 12 questions, imagine you are selecting an organization you will donate to and that each of the listed organizations exists. Which of the following organizations would you donate to?
+
+```{r conjoint-table, echo=FALSE, results="asis", warning=FALSE, message=FALSE}
+library(dplyr)
+library(pander)
+set.seed(12345)
+
+orgs <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")
+issues <- c("Emergency response", "Environment", "Human rights", "Refugee relief")
+orgal_practices <- c("Financial transparency", "Accountability")
+funding <- c("Many small private donations", "Handful of wealthy private donors", "Government grants")
+govt <- c("Friendly relationship", "Criticized", "Under crackdown")
+
+tribble(
+  ~Attribute, ~`Option 1`, ~`Option 2`, ~`Option 3`, ~None,
+  "Organization", sample(orgs, 1), sample(orgs, 1), sample(orgs, 1), "—",
+  "Issue area", sample(issues, 1), sample(issues, 1), sample(issues, 1), "—",
+  "Organizational practices", sample(orgal_practices, 1), sample(orgal_practices, 1), sample(orgal_practices, 1), "—",
+  "Funding sources", sample(funding, 1), sample(funding, 1), sample(funding, 1), "—",
+  "Relationship with host government", sample(govt, 1), sample(govt, 1), sample(govt, 1), "—"
+) %>% 
+  mutate(Attribute = pandoc.strong.return(Attribute)) %>% 
+  pandoc.table(justify = "lcccc", split.tables = Inf)
+```
+
+\ 
+
+Our sample size is 1,000, which constitutes a sufficient size for model estimation. A sample size of at least 500 respondents is typical for estimating a hierarchical Bayesian model based on conjoint data. We double this amount because we are interested in analyzing subpopulations of respondents, which requires a larger sample. We present respondents with 4 hypothetical organizations that have 4 randomly assigned features. Respondents will be shown 12 sets of hypothetical organizations. This partial fractional factorial design results in 288 (4 × 4 × 2 × 3 × 3) possible combinations of organization features, and no single respondent will be offered every combination. To provide better coverage and arrive at better individual-level estimates, we use a larger sample size.
+
+
 # Survey experiment {.survey}
 
 ```{r child = "survey/experiment.md"}
