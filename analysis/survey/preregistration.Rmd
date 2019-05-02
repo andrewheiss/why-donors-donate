@@ -294,7 +294,7 @@ y &\sim \text{MNL}(X \beta, \varepsilon)
 \end{aligned}
 $$
 
-where $y$ = choice to donate, $X$ = design matrix of attribute levels, $\beta$ = latent individual preferences, $\Z$ = SOMETHING, $\Gamma$ = individual covariates, and $\varepsilon$ and $\xi$ = errors.
+where $y$ = choice to donate, $X$ = design matrix of attribute levels, $\beta$ = latent individual preferences, $Z$ = SOMETHING, $\Gamma$ = individual covariates, and $\varepsilon$ and $\xi$ = errors.
 
 
 ## Transformations
