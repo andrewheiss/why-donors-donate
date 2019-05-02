@@ -239,6 +239,8 @@ We measure several other covariates that inform and predict an individual's choi
 
 TODO: The paper at <https://osf.io/u43yg> uses Bayesian hierarchical stuff and they talk a lot about index stuff. I'm not familiar with the model, though, so I don't know what applies here.
 
+COMMENT: I don't see a need to index (i.e., use dimension reduction). We should just be collapsing covariates via Transformations in a way motivated by your experience and theory with respect to the "competing sets of covariates in the distribution of heterogeneity" that we'd like to use to compare effects on the marginal posteriors of the preference parameters.
+
 
 ---
 
@@ -295,6 +297,8 @@ where $y$ = which alternative the respondent chooses to donate, $X$ = design mat
 > If you plan on transforming, centering, recoding the data, or will require a coding scheme for categorical variables, please describe that process.
 
 TODO: Are there any others we should collapse?
+
+COMMENT: See comment for Indices.
 
 We collapse several of our variables into dichotomous and trichotomous versions, following this system:
 
@@ -403,6 +407,8 @@ We collapse several of our variables into dichotomous and trichotomous versions,
 
 TODO: Do we do this?
 
+COMMENT: No, it's really just looking at/comparing the posterior marginals on their own vs. the posterior marginals with different covariates includes, plus the market simulation.
+
 
 ## Inference criteria
 
@@ -410,7 +416,7 @@ TODO: Do we do this?
 
 NOTE: Here's a preregistration from another Bayesian hierarchical multinomial logit for reference: <https://osf.io/u43yg>
 
-TODO: Specify what the "competing sets of covariates" are that we'll include in the distribution of heterogeneity.
+COMMENT: Specify what the "competing sets of covariates" are that we'll include in the distribution of heterogeneity. This should be the motivation of the collapses specified in Transformations.
 
 We will examine the aggregate marginal posterior distributions of the attribute levels and utilize 95% credible intervals to establish "significance." Effects are "significant" if the 95% credible intervals don't include 0. Similarly, marginal posterior distributions are "significantly" different if the 95% credible intervals don't overlap.
 
@@ -442,7 +448,7 @@ Because all survey questions are required, we do not anticipate issues with inco
 
 > If you plan to explore your data set to look for unexpected differences or relationships, you may describe those tests here. An exploratory test is any test where a prediction is not made up front, or there are multiple possible tests that you are going to use. A statistically significant finding in an exploratory test is a great way to form a new confirmatory hypothesis, which could be registered at a later time. 
 
-TODO: NA?
+NA.
 
 
 ---
