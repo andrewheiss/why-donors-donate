@@ -2,6 +2,7 @@ name: why-donors-donate
 exclude:
 - Makefile
 - options.R
+- survey
 - Icon?
 navbar:
   title: Why Donors Donate
