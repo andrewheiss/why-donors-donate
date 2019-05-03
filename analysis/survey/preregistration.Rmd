@@ -405,9 +405,7 @@ We collapse several of our variables into dichotomous and trichotomous versions,
 
 > If not specified previously, will you be conducting any confirmatory analyses to follow up on effects in your statistical model, such as subgroup analyses, pairwise or complex contrasts, or follow-up tests from interactions? Remember that any analyses not specified in this research plan must be noted as exploratory.
 
-TODO: Do we do this?
-
-COMMENT: No, it's really just looking at/comparing the posterior marginals on their own vs. the posterior marginals with different covariates includes, plus the market simulation.
+NA.
 
 
 ## Inference criteria
