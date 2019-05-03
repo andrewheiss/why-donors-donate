@@ -34,7 +34,7 @@ We use a conjoint survey experiment to examine the impact of organizational and 
 
 2. How those interact with individual characteristics
 
-3. What is the optimal mix of attributes?
+3. What is the optimal mix of attribute levels?
 
 We are interested in whether the contentiousness of an NGO’s relationship with its host government influences donor decision making. Do donors care if nonprofits they care about are criticized by or kicked out of the countries they work in?
 
@@ -86,9 +86,7 @@ Our target sample size is 1,000 participants.
 
 > This could include a power analysis or an arbitrary constraint such as time, money, or personnel.
 
-TODO: Add citation here maybe, or clarify the language so it's accurate
-
-1,000 respondents constitutes a sufficient size for model estimation. A sample size of at least 500 respondents is typical for estimating a hierarchical Bayesian model based on conjoint data. We double this amount because we are interested in analyzing subpopulations of respondents, which requires a larger sample.
+A sample size of at least 500 respondents is typical for estimating a hierarchical Bayesian model based on conjoint data. We double this amount because we are interested in analyzing subpopulations of respondents, which requires a larger sample, and we had sufficient budget to acquire up to 1,000 respondents.
 
 
 ## Stopping rule
@@ -241,6 +239,8 @@ We measure several other covariates that inform and predict an individual's choi
 
 TODO: The paper at <https://osf.io/u43yg> uses Bayesian hierarchical stuff and they talk a lot about index stuff. I'm not familiar with the model, though, so I don't know what applies here.
 
+COMMENT: I don't see a need to index (i.e., use dimension reduction). We should just be collapsing covariates via Transformations in a way motivated by your experience and theory with respect to the "competing sets of covariates in the distribution of heterogeneity" that we'd like to use to compare effects on the marginal posteriors of the preference parameters.
+
 
 ---
 
@@ -261,13 +261,14 @@ For studies that involve human subjects, they will not know the treatment group 
 
 > Describe your study design. Examples include two-group, factorial, randomized block, and repeated measures. Is it a between (unpaired), within-subject (paired), or mixed design? Describe any counterbalancing required. Typical study designs for observation studies include cohort, cross sectional, and case-control studies. 
 
-TODO: Explain conjoint design
+We use a fractional factorial design. Since no single respondent can possibly see all possible combinations of the attribute levels, we create a number of different versions of the experimental design. We utilize a hierarchical Bayesian model in part to allow for information sharing across like respondents when estimating individual-level preferences for the attribute levels.
+
 
 ## Randomization
 
 > If you are doing a randomized study, how will you randomize, and at what level? 
 
-TODO: Explain randomization
+Every respondent will be randomly assigned a version of the fractional factorial experimental design.
 
 
 ---
@@ -279,13 +280,7 @@ TODO: Explain randomization
 
 > What statistical model will you use to test each hypothesis? Please include the type of model (e.g. ANOVA, multiple regression, SEM, etc) and the specification of the model (this includes each variable that will be included as predictors, outcomes, or covariates). Please specify any interactions that will be tested and remember that any test not included here must be noted as an exploratory test in your final article.
 
-TODO: Explain statistical model
-
-TODO: Make sure all this mathy stuff is right
-
-TODO: Maybe specify priors?
-
-Bayesian hierarchical multinomial logit
+We will use a hierarchical Bayesian multinomial logit model with conjugate or otherwise typical priors. The individual-level model is the multinomial logit and the upper-level model of heterogeneity is multivariate normal,
 
 $$
 \begin{aligned}
@@ -294,7 +289,7 @@ y &\sim \text{MNL}(X \beta, \varepsilon)
 \end{aligned}
 $$
 
-where $y$ = choice to donate, $X$ = design matrix of attribute levels, $\beta$ = latent individual preferences, $Z$ = SOMETHING, $\Gamma$ = individual covariates, and $\varepsilon$ and $\xi$ = errors.
+where $y$ = which alternative the respondent chooses to donate, $X$ = design matrix of attribute levels, $\beta$ = latent individual preferences for the attribute levels, $Z$ = matrix of individual-level covariates, $\Gamma$ = matrix of coefficients mapping individual-level covariates onto the latent individual-level preferences, and $\varepsilon$ and $\xi$ = errors.
 
 
 ## Transformations
@@ -302,6 +297,8 @@ where $y$ = choice to donate, $X$ = design matrix of attribute levels, $\beta$ =
 > If you plan on transforming, centering, recoding the data, or will require a coding scheme for categorical variables, please describe that process.
 
 TODO: Are there any others we should collapse?
+
+COMMENT: See comment for Indices.
 
 We collapse several of our variables into dichotomous and trichotomous versions, following this system:
 
@@ -410,6 +407,8 @@ We collapse several of our variables into dichotomous and trichotomous versions,
 
 TODO: Do we do this?
 
+COMMENT: No, it's really just looking at/comparing the posterior marginals on their own vs. the posterior marginals with different covariates includes, plus the market simulation.
+
 
 ## Inference criteria
 
@@ -417,13 +416,16 @@ TODO: Do we do this?
 
 NOTE: Here's a preregistration from another Bayesian hierarchical multinomial logit for reference: <https://osf.io/u43yg>
 
-TODO: What criteria do we use?
+COMMENT: Specify what the "competing sets of covariates" are that we'll include in the distribution of heterogeneity. This should be the motivation of the collapses specified in Transformations.
 
-Possibilities: 
+We will examine the aggregate marginal posterior distributions of the attribute levels and utilize 95% credible intervals to establish "significance." Effects are "significant" if the 95% credible intervals don't include 0. Similarly, marginal posterior distributions are "significantly" different if the 95% credible intervals don't overlap.
 
-- Market simulation based on the β - determines the optimal policies
-- Or look at the posteriors of the βs
-- β importance - we find most important attribute + most important levels inside 
+We will examine the marginal posterior distributions of the following models:
+
+- Organizational and structural attribute levels with an intercept-only distribution of heterogeneity
+- Organizational and structural attribute levels with competing sets of covariates in the distribution of heterogeneity
+
+Finally, we will employ the posterior distribution of model parameters to conduct counterfactual analyses via a market simulator to determine optimal policies.
 
 
 ## Data exclusion
@@ -446,7 +448,7 @@ Because all survey questions are required, we do not anticipate issues with inco
 
 > If you plan to explore your data set to look for unexpected differences or relationships, you may describe those tests here. An exploratory test is any test where a prediction is not made up front, or there are multiple possible tests that you are going to use. A statistically significant finding in an exploratory test is a great way to form a new confirmatory hypothesis, which could be registered at a later time. 
 
-TODO: NA?
+NA.
 
 
 ---
