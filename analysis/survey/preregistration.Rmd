@@ -239,9 +239,7 @@ We measure several other covariates that inform and predict an individual's choi
 
 > If any measurements are  going to be combined into an index (or even a mean), what measures will you use and how will they be combined? Include either a formula or a precise description of your method. If your are using a more complicated statistical method to combine measures (e.g. a factor analysis), you can note that here but describe the exact method in the analysis plan section.
 
-TODO: The paper at <https://osf.io/u43yg> uses Bayesian hierarchical stuff and they talk a lot about index stuff. I'm not familiar with the model, though, so I don't know what applies here.
-
-COMMENT: I don't see a need to index (i.e., use dimension reduction). We should just be collapsing covariates via Transformations in a way motivated by your experience and theory with respect to the "competing sets of covariates in the distribution of heterogeneity" that we'd like to use to compare effects on the marginal posteriors of the preference parameters.
+We will not combine any measures to create indicies. 
 
 
 ---
