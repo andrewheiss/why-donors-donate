@@ -284,8 +284,8 @@ We will use a hierarchical Bayesian multinomial logit model with conjugate or ot
 
 $$
 \begin{aligned}
-\beta &\sim \text{MVN}(Z \Gamma, \xi) \\
-y &\sim \text{MNL}(X \beta, \varepsilon)
+\beta &\sim \operatorname{Multivariate} \mathcal{N}(Z \Gamma, \xi) \\
+y &\sim \operatorname{Multinomial logit}(X \beta, \varepsilon)
 \end{aligned}
 $$
 
