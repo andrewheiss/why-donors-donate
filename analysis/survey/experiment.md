@@ -179,7 +179,8 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     | --------------------------------- | :------: | :------: | :------: | :--: |
     | Organization                      |  Random  |  Random  |  Random  |  —   |
     | Issue area                        |  Random  |  Random  |  Random  |  —   |
-    | Organizational practices          |  Random  |  Random  |  Random  |  —   |
+    | Financial transparency            |  Random  |  Random  |  Random  |  —   |
+    | Accountability                    |  Random  |  Random  |  Random  |  —   |
     | Funding sources                   |  Random  |  Random  |  Random  |  —   |
     | Relationship with host government |  Random  |  Random  |  Random  |  —   |
 
@@ -191,7 +192,8 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     | --------------------------------- | :------: | :------: | :------: | :--: |
     | Organization                      |  Random  |  Random  |  Random  |  —   |
     | Issue area                        |  Random  |  Random  |  Random  |  —   |
-    | Organizational practices          |  Random  |  Random  |  Random  |  —   |
+    | Financial transparency            |  Random  |  Random  |  Random  |  —   |
+    | Accountability                    |  Random  |  Random  |  Random  |  —   |
     | Funding sources                   |  Random  |  Random  |  Random  |  —   |
     | Relationship with host government |  Random  |  Random  |  Random  |  —   |
 

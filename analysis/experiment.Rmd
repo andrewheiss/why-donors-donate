@@ -51,7 +51,8 @@ set.seed(12345)
 
 orgs <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")
 issues <- c("Emergency response", "Environment", "Human rights", "Refugee relief")
-orgal_practices <- c("Financial transparency", "Accountability")
+transparency <- c("Engages in transparency", "Doesn't engage in transparency")
+accountability <- c("Engages in accountability", "Doesn't engage in accountability")
 funding <- c("Many small private donations", "Handful of wealthy private donors", "Government grants")
 govt <- c("Friendly relationship", "Criticized", "Under crackdown")
 
@@ -59,7 +60,8 @@ tribble(
   ~Attribute, ~`Option 1`, ~`Option 2`, ~`Option 3`, ~None,
   "Organization", sample(orgs, 1), sample(orgs, 1), sample(orgs, 1), "—",
   "Issue area", sample(issues, 1), sample(issues, 1), sample(issues, 1), "—",
-  "Organizational practices", sample(orgal_practices, 1), sample(orgal_practices, 1), sample(orgal_practices, 1), "—",
+  "Transparency", sample(transparency, 1), sample(transparency, 1), sample(transparency, 1), "—",
+  "Accountability", sample(accountability, 1), sample(accountability, 1), sample(accountability, 1), "—",
   "Funding sources", sample(funding, 1), sample(funding, 1), sample(funding, 1), "—",
   "Relationship with host government", sample(govt, 1), sample(govt, 1), sample(govt, 1), "—"
 ) %>% 
