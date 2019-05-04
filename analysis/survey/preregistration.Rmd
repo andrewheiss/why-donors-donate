@@ -44,9 +44,15 @@ We use a conjoint survey experiment to examine the impact of organizational and 
 
 > For each of the research questions listed in the previous section, provide one or multiple specific and testable hypotheses. Please state if the hypotheses are directional or non-directional. If directional, state the direction. A predicted effect is also appropriate here.
 
-ANDREW TODO: write these
+For our first set of questions, we predict that: (TODO: finish these)
 
----
+- Donors will be more likely to donate to NGOs facing government criticism and crackdown
+- Donors will be more likely to donate to less contentious NGOs (i.e. those focused on emergency response and refugee relief)
+- Donors will be more likely to donate to NGOs that are privately funded and that many small private donations will have a larger effect than a handful of wealthy donors.
+- Donors will be more likely to donate to NGOs that engage in financial transparency
+- Donors will be more likely to donate to NGOs that engage in accountability
+
+Because of the nature of our statistical methods, we do not have exact hypotheses for the second and third set of questions. We describe how we answer these questions in the "Follow-up analyses" section below.
 
 
 # Sampling Plan
