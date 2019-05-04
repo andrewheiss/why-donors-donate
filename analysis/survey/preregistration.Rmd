@@ -406,7 +406,21 @@ We collapse several of our variables into dichotomous and trichotomous versions,
 
 > If not specified previously, will you be conducting any confirmatory analyses to follow up on effects in your statistical model, such as subgroup analyses, pairwise or complex contrasts, or follow-up tests from interactions? Remember that any analyses not specified in this research plan must be noted as exploratory.
 
-NA.
+In our second set of research questions, we explore how individual-level donor characteristics interact with structural and organizational heuristics. We are interested in finding which kinds of people are more or less likely to consider an NGO's host country political environment, managerial practices, funding sources, or issue area when deciding to donate. 
+
+There is substantial literature regarding individual factors that motivate people to donate to charities, and a full test of each of these factors goes beyond the scope of this research. In general, those who trust charities, are more involved in philanthropy, advocacy, and other voluntary associations, and are more religious tend to be more likely to donate to charity. In this study, however, we are less interested in the effects of single characteristics and more interested in how constellations of characteristics interact with specific heuristics. For instance, we suspect that politically conservative, religiously active donors who have a history of volunteering would be more likely to donate to a disaster relief organization facing government crackdown. 
+
+Specifying every possible combination of individual- and organization-level attributes, however, would result in hundreds of hypotheses. The statistical method we are using lends itself to this kind of analysis. Rather than look at the effects of specific coefficients, we measure the difference in the marginal posterior distribution before and after including collections of covariates, which allows us to see which sets of individual characteristics shape the propensity to donate given organizational and structural heuristics. 
+
+We will run the upper level of our model using these sets of covariates: (TODO)
+
+- Public affairs stuff: `donation preferences ~ public affairs knowledge + public affairs trust + public affairs activity`
+- Ideology: `donation preferences ~ political ideology + social ideology + (religiosity?)`
+- Charity and voluntarism: `donation preferences ~ charity trust + charity activity + volunteer activity + activism activity + association membership`
+- Demographics: `donation preferences ~ gender + marital status + education + income + race + age`
+- Kitchen sink model??: `donation preferences ~ EVERYTHING??`
+
+In our third research question, we are interested in finding the optimal mix of attribute levels for NGOs interested in maximizing donations. This is an exercise of prediction, based on the organizational- and individual-level results of our first two sets of research questions. We answer this question using marketing simulations and suggesting direct policies for specific segments of the population (hypothetical example: NGOs should signal that they engage in financial transparency when they face government criticism if they want to reach religious liberals with a history of activism). We do not know *a priori* what the results of these simulations might be, so we do not state precise hypotheses.
 
 
 ## Inference criteria
