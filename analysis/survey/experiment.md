@@ -152,8 +152,8 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
  
 **Organizational practices:**
 
-- *Financial transparency*: Timely and reliable disclosure regarding donations and financial allocations. 
-- *Accountability*: An obligation or willingness to accept responsibility or to account for one's actions.
+- *Financial transparency*: Organization discloses information regarding its donations and financial allocations in a timely and reliable manner.
+- *Accountability*: Organization undergoes a regular third-party audit to ensure that it is meeting its program goals and obligations. 
 
 **Funding sources:**
 
