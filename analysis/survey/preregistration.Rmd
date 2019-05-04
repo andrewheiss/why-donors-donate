@@ -1,12 +1,7 @@
 ---
-title: "Results"
+title: "Preregistration"
 author: "Andrew Heiss, Marc Dotson, and Suparna Chaudhry"
 ---
-
-See Chaudhry and Heiss (2019) preregistration for reference: <https://osf.io/dx973>
-
----
-
 
 # Study Information
 
