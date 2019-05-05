@@ -1,5 +1,7 @@
 # Site output
 analysis/_site/*
+analysis/survey/*.pdf
+analysis/survey/*.html
 
 # knitr and caching stuff
 *_files/*
