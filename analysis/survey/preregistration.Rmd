@@ -52,7 +52,7 @@ For our first set of questions, we predict that: (TODO: finish these)
 - Donors will be more likely to donate to NGOs that engage in financial transparency
 - Donors will be more likely to donate to NGOs that engage in accountability
 
-Because of the nature of our statistical methods, we do not have exact hypotheses for the second and third set of questions. We describe how we answer these questions in the "Follow-up analyses" section below.
+Because of the nature of our statistical methods, we do not have exact hypotheses for the second and third set of questions. We describe how we answer these questions in the "Follow-up analyses" and "Exploratory analysis" sections below.
 
 
 # Sampling Plan
@@ -297,10 +297,6 @@ where $y$ = which alternative the respondent chooses to donate, $X$ = design mat
 
 > If you plan on transforming, centering, recoding the data, or will require a coding scheme for categorical variables, please describe that process.
 
-TODO: Are there any others we should collapse?
-
-COMMENT: See comment for Indices.
-
 We collapse several of our variables into dichotomous and trichotomous versions, following this system:
 
 *Q2.1*: How often do you follow national news? 
@@ -412,26 +408,25 @@ There is substantial literature regarding individual factors that motivate peopl
 
 Specifying every possible combination of individual- and organization-level attributes, however, would result in hundreds of hypotheses. The statistical method we are using lends itself to this kind of analysis. Rather than look at the effects of specific coefficients, we measure the difference in the marginal posterior distribution before and after including collections of covariates, which allows us to see which sets of individual characteristics shape the propensity to donate given organizational and structural heuristics. 
 
-We will run the upper level of our model using these sets of covariates: (TODO)
+We will run the upper level of our model using these sets of covariates:
 
-- Public affairs stuff: `donation preferences ~ public affairs knowledge + public affairs trust + public affairs activity`
-- Ideology: `donation preferences ~ political ideology + social ideology + (religiosity?)`
-- Charity and voluntarism: `donation preferences ~ charity trust + charity activity + volunteer activity + activism activity + association membership`
-- Demographics: `donation preferences ~ gender + marital status + education + income + race + age`
-- Kitchen sink model??: `donation preferences ~ EVERYTHING??`
+- Public affairs: `Donation preferences ~ Public affairs knowledge + Public affairs trust + Public affairs activity`
+- Ideology: `Dnation preferences ~ Political ideology + Social ideology + Religiosity`
+- Charity and voluntarism: `Donation preferences ~ Charity trust + Charity activity + Volunteer activity + Activism activity + Association membership`
+- Demographics: `Donation preferences ~ Gender + Marital status + Education + Income + Race + Age`
 
-In our third research question, we are interested in finding the optimal mix of attribute levels for NGOs interested in maximizing donations. This is an exercise of prediction, based on the organizational- and individual-level results of our first two sets of research questions. We answer this question using marketing simulations and suggesting direct policies for specific segments of the population (hypothetical example: NGOs should signal that they engage in financial transparency when they face government criticism if they want to reach religious liberals with a history of activism). We do not know *a priori* what the results of these simulations might be, so we do not state precise hypotheses.
+We will also include these groups of variables simultaneously as we check the performance of different models:
+
+- `Donation preferences ~ Public affairs + Ideology`
+- `Donation preferences ~ Public affairs + Ideology + Charity and voluntarism`
+- `Donation preferences ~ Public affairs + Ideology + Charity and voluntarism + Demographics`
 
 
 ## Inference criteria
 
 > What criteria will you use to make inferences? Please describe the information you’ll use (e.g. specify the p-values, Bayes factors, specific model fit indices), as well as cut-off criterion, where appropriate. Will you be using one or two tailed tests for each of your analyses? If you are comparing multiple conditions or testing multiple hypotheses, will you account for this? 
 
-NOTE: Here's a preregistration from another Bayesian hierarchical multinomial logit for reference: <https://osf.io/u43yg>
-
-COMMENT: Specify what the "competing sets of covariates" are that we'll include in the distribution of heterogeneity. This should be the motivation of the collapses specified in Transformations.
-
-We will examine the aggregate marginal posterior distributions of the attribute levels and utilize 95% credible intervals to establish "significance." Effects are "significant" if the 95% credible intervals don't include 0. Similarly, marginal posterior distributions are "significantly" different if the 95% credible intervals don't overlap.
+We will examine the aggregate marginal posterior distributions of the attribute levels and use 95% credible intervals to establish "significance." Effects are "significant" if the 95% credible intervals don't include 0. Similarly, marginal posterior distributions are "significantly" different if the 95% credible intervals don't overlap.
 
 We will examine the marginal posterior distributions of the following models:
 
@@ -461,7 +456,7 @@ Because all survey questions are required, we do not anticipate issues with inco
 
 > If you plan to explore your data set to look for unexpected differences or relationships, you may describe those tests here. An exploratory test is any test where a prediction is not made up front, or there are multiple possible tests that you are going to use. A statistically significant finding in an exploratory test is a great way to form a new confirmatory hypothesis, which could be registered at a later time. 
 
-NA.
+In our third research question, we are interested in finding the optimal mix of attribute levels for NGOs interested in maximizing donations. This is an exercise of prediction, based on the organizational- and individual-level results of our first two sets of research questions. We answer this question using marketing simulations and suggesting direct policies for specific segments of the population (hypothetical example: NGOs should signal that they engage in financial transparency when they face government criticism if they want to reach religious liberals with a history of activism). We do not know *a priori* what the results of these simulations might be, so we do not state precise hypotheses.
 
 
 ---
