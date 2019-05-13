@@ -8,9 +8,9 @@ bibliography: ../manuscript/references.bib
 
 We preregistered this study with the [Center for Open Science's](https://cos.io/) [Open Science Framework](https://osf.io/).
 
-<p><a href="https://osf.io/dx973/register/565fb3678c5e4a66b5582f67" class="btn btn-md btn-success disabled" target="_blank" role="button">
+<p><a href="https://osf.io/hsbyd" class="btn btn-md btn-success" target="_blank" role="button">
 <i class="fa fa-pencil-square" aria-hidden="true"></i>&nbsp;
-OSF preregistration protocol &raquo;
+OSF preregistered pre-analysis plan &raquo;
 </a></p>
 
 \ 
