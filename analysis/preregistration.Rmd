@@ -19,7 +19,7 @@ OSF preregistration protocol &raquo;
 
 # Human subjects and IRB approval
 
-This project has received IRB approval from the human subjects research committees at BYU, Georgia State, and Christopher Newport. We have included a generic version of our protocol below.
+This project has received IRB approval from the human subjects research committees at BYU, ~~Christopher Newport, and Georgia State~~. We have included a generic version of our protocol below.
 
 <p><a href="files/byu-irb-approval.pdf" class="btn btn-md btn-success" target="_blank" role="button">
 <i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;
