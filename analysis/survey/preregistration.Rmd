@@ -21,36 +21,59 @@ Why Donors Donate: Disentangling Organizational and Structural Heuristics for In
 
 > Please list each research question included in this study.
 
-We use a conjoint survey experiment to examine the impact of organizational and structural features of nongovernmental organizations (NGOs) on their donors’ decisions to engage in philanthropy. We explore three research questions in this study:
+We use a conjoint survey experiment to examine the impact of organizational features of nongovernmental organizations (NGOs) and the structural factors in target countries in which they operate on donors’ decisions to engage in philanthropy. We explore three research questions in this study:
 
 1. **Do donors rely on structural characteristics of NGOs as heuristics when deciding to donate? How do structural heuristics compare to organizational heuristics?**
 
-	Donors rely on shortcuts, signals, and heuristics to determine the trustworthiness of NGOs, since seeking out complete information about an organization's deservingness and efficiency is costly and time-consuming. Previous research has found that an NGO's organizational characteristics commonly serve as heuristics for donors. Donors use an organization's overhead costs, the issues it works on, its transparency and accountability practices, and a host of other organizational practices as signals of an organization's efficiency and deservingness, which then influences their decision to make a donation. These kinds of heuristics are attributes that organizations can typically control—NGOs can publish annual reports, restructure their management, and engage in other strategies to appear more worthy of donation.
+    Donors rely on shortcuts, signals, and heuristics to determine the trustworthiness of NGOs, since seeking out complete information about an organization's deservingness and efficiency is costly and time-consuming. Previous research has found that an NGO's organizational characteristics commonly serve as heuristics for donors. Donors use an organization's overhead costs, the issues it works on, its transparency and accountability practices, and a host of other organizational practices as signals of an organization's efficiency and deservingness, which then influences their decision to make a donation. These kinds of heuristics are attributes that organizations can typically control—NGOs can publish annual reports, restructure their management, and engage in other strategies to appear more worthy of donation.
 
-	Structural characteristics, such as the political and legal environment an NGO faces in its host country, may also serve as signals to donors of NGO deservingness. We are interested in whether the contentiousness of an NGO’s relationship with its host government influences donor decision making. Do donors care if nonprofits they care about are criticized by, persecuted by, or expelled from the countries they work in?
+    Structural characteristics, such as the political and legal environment an NGO faces in its host country, may also serve as signals to donors of NGO deservingness. We are interested in whether the contentiousness of an NGO’s relationship with its host government influences donor decision making. Do donors care if nonprofits they care about are criticized by, persecuted by, or expelled from the countries they work in?
 
-	We are also interested in the effect of organizational characteristics on donor decision making. How do managerial practices (financial transparency and accountability systems), funding sources (private donations and government grants), and issue areas (emergency response, environmental issues, human rights, and refugee relief) compare to structural characteristics when deciding to donate? Which heuristics are more influential?
+    We are also interested in the effect of organizational characteristics on donor decision making. How do managerial practices (financial transparency and accountability systems), funding sources (private donations and government grants), and issue areas (emergency response, environmental issues, human rights, and refugee relief) compare to structural characteristics when deciding to donate? Which heuristics are more influential?
 	
 2. **How do individual-level donor characteristics interact with structural and organizational heuristics? Which kinds of people are more or less likely to consider an NGO's host country political environment, managerial practices, funding sources, or issue area?**  
 
-	The decision to donate to an NGO is not determined solely by an organization's characteristics. Donors themselves have personality traits, preferences, and experiences that make them more or less likely to engage in philanthropy. We are interested in how individual donor characteristics, such as political ideology, political knowledge, religious attendance, involvement in charitable activities, involvement in activism, and demographic attributes interact with organizational- and structural-level factors. 
+    The decision to donate to an NGO is not determined solely by an organization's characteristics. Donors themselves have personality traits, preferences, and experiences that make them more or less likely to engage in philanthropy. We are interested in how individual donor characteristics, such as political ideology, political knowledge, religious attendance, involvement in charitable activities, involvement in activism, and demographic attributes interact with organizational- and structural-level factors. 
 
 3. **What is the optimal mix of attribute levels for NGOs interested in maximizing donations?**
 
-	Finally, given individual donor characteristics and preferences, we are interested in finding the optimal mix of organizational and structural attributes. What might an NGO try to emphasize in its marketing campaigns? Should it highlight its funding sources, managerial practices, issue area, or relationship with its host governments (even if that relationship is negative)?
+    Finally, given individual donor characteristics and preferences, we are interested in finding the optimal mix of organizational and structural attributes. What might an NGO try to emphasize in its marketing campaigns? Should it highlight its funding sources, managerial practices, issue area, or relationship with its host governments (even if that relationship is negative)?
 
 
 ## Hypotheses
 
 > For each of the research questions listed in the previous section, provide one or multiple specific and testable hypotheses. Please state if the hypotheses are directional or non-directional. If directional, state the direction. A predicted effect is also appropriate here.
 
-For our first set of questions, we predict that: (TODO: finish these)
+For our first set of questions, we predict that: 
 
-- Donors will be more likely to donate to NGOs facing government criticism and crackdown
-- Donors will be more likely to donate to less contentious NGOs (i.e. those focused on emergency response and refugee relief)
-- Donors will be more likely to donate to NGOs that are privately funded and that many small private donations will have a larger effect than a handful of wealthy donors.
-- Donors will be more likely to donate to NGOs that engage in financial transparency
-- Donors will be more likely to donate to NGOs that engage in accountability
+1. **Branding**
+
+    - Donors will be more likely to donate to Oxfam and Red Cross compared to Amnesty International and Greenpeace [Mechanism: awareness of need and contentiousness of issue area]
+
+2. **Government crackdown**
+
+    - Donors will show increased willingness to donate to NGOs that are facing government crackdown or criticism [Mechanism: Governments wouldn't be cracking down on them if they didn't perceive a threat from them which means organizations implementing their missions effectively. This perception of efficacy leads to increased donations.]
+    - Donors will show increased willingness to donate to Oxfam and Red Cross when they are facing government crackdown or criticism compared to when Amnesty or Greenpeace is facing crackdown.
+
+3. **Issue area**
+
+    - Donors will show increased willingness to donate to NGOs working in less contentious issue areas (emergency response and refugee relief) over more contentious issue areas (environment and human rights) 
+    - Donors will show increased willingness to donate to NGOs facing government crackdown/criticism working in less contentious issue areas (emergency response and refugee relief) over more contentious issue areas (environment and human rights) [Mechanisms: Perceptions of deservingness of NGOs dealing with emergency response and refugee relief. Donors are also more likely to donate to programs that are compatible with government preferences and have easily measurable outputs, which environment and human rights programs often lack. NGOs working on more contentious issue areas may be expelled or shut down, which would be a waste of donor resources, make it less likely that they donate to these groups.]
+
+4. **Funding sources**
+
+    - Donors will show increased willingness to donate to NGOs that are funded primarily by numerous small private donors compared to NGOs that are funded by a handful of wealhty private donors and government grants [Mechanism: Perception of efficacy - your contribution matters as a small donor. Government funding may also imply lack of independence of government which can reduce the efficiency of an organization.]
+    - Donors will show increased willingness to donate to NGOs that are facing government crackdown and are funded primarily by numerous small private donors
+    - Donors will show increased willingness to donate to NGOs that are facing government crackdown and are funded primarily by numerous small private donors and work in less contentious areas (emergency response and refugee relief) 
+
+5. **Organizational practices**
+
+    - Donors will show increased willingness to donate to NGOs that are financially transparent [Mechanism: Perception of efficacy]
+    - Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent
+    - Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent and are funded primarily by numerous small private donors
+    - Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent and work in less contentious areas (emergency response and refugee relief) 
+    - Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent and work in less contentious areas (emergency response and refugee relief) and are funded by numerous small donors
+    - Donors should be no more or less likely to donate to NGOs that are accountable and hold regular third party audits [Mechanism: Donors don't necessarily seek assurance through third-party programs/audits and charity watchdogs, but rather through word of mouth, personal scrutiny and local networks]
 
 Because of the nature of our statistical methods, we do not have exact hypotheses for the second and third set of questions. We describe how we answer these questions in the "Follow-up analyses" and "Exploratory analysis" sections below.
 
@@ -410,16 +433,18 @@ Specifying every possible combination of individual- and organization-level attr
 
 We will run the upper level of our model using these sets of covariates:
 
-- Public affairs: `Donation preferences ~ Public affairs knowledge + Public affairs trust + Public affairs activity`
-- Ideology: `Dnation preferences ~ Political ideology + Social ideology + Religiosity`
+- Public affairs: `Donation preferences ~ Public affairs knowledge + Public affairs activity`
+- Political ideology: `Donation preferences ~ Political ideology`
+- Social views: `Donation preferences ~ Public affairs trust + Social ideology + Religiosity`
 - Charity and voluntarism: `Donation preferences ~ Charity trust + Charity activity + Volunteer activity + Activism activity + Association membership`
 - Demographics: `Donation preferences ~ Gender + Marital status + Education + Income + Race + Age`
 
 We will also include these groups of variables simultaneously as we check the performance of different models:
 
-- `Donation preferences ~ Public affairs + Ideology`
-- `Donation preferences ~ Public affairs + Ideology + Charity and voluntarism`
-- `Donation preferences ~ Public affairs + Ideology + Charity and voluntarism + Demographics`
+- `Donation preferences ~ (Public affairs) + (Political ideology)`
+- `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views)`
+- `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views) + (Charity and voluntarism)`
+- `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views) + (Charity and voluntarism) + (Demographics)`
 
 
 ## Inference criteria
