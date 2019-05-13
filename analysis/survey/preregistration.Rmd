@@ -94,6 +94,8 @@ We will not use any existing data.
 
 > Please describe the process by which you will collect your data. If you are using human subjects, this should include the population from which you obtain subjects, recruitment efforts, payment for participation, how subjects will be selected for eligibility from the initial pool (e.g. inclusion and exclusion rules), and your study timeline. For studies that don’t include human subjects, include information about how you will collect samples, duration of data gathering efforts, source or location of samples, or batch numbers you will use.
 
+Participants will complete a 10-minute survey on Qualtrics. A static version of the survey is accessible at <https://stats.andrewheiss.com/why-donors-donate/experiment.html>.
+
 Participants of the survey experiment will be recruited through Centiment, a commercial online provider of high quality nonprobability opt-in survey panels. Centiment ensures panel quality by actively recruiting representative samples of the US population and provides monetary incentives and rewards to participants.
 
 To see how varying NGO characteristics influence the decision to donate, our sample will be representative of a population of people who are likely to donate to charity. We ask potential participants a screening question early in the survey (“Q2.5: How often do you donate to charity”). If a participant responds that they give to once every few years or never, they will be disqualified from the study and the survey will end early.
