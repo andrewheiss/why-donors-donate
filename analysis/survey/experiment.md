@@ -8,9 +8,9 @@ You will receive no direct benefits from participating in this research study.
  
 If you have any questions at any time about the study or the procedures, you can contact Suparna Chaudhry (suparna.chaudhry@cnu.edu; Reiff Center for Human Rights and Conflict Resolution, Christopher Newport University, Newport News, VA 23606) or Andrew Heiss (andrew_heiss@byu.edu; Romney Institute of Public Management, Brigham Young University, Provo, UT 84602). This research has been reviewed by the Institutional Review Board (IRB) at Christopher Newport University (757-594-7461; IRB@cnu.edu) and the IRB administrator at Brigham Young University (801-422-1461; irb@byu.edu).
  
-By clicking "I agree" below you are indicating that you are at least 18 years old, have read and understood this consent form and agree to participate in this research study. Please print a copy of this page for your records.
+By clicking "Yes" below you are indicating that you are at least 18 years old, have read and understood this consent form and agree to participate in this research study. Please print a copy of this page for your records.
 
-*Q1.2*: I have read the above information, and I consent to take part in the study.
+I have read the above information, and I consent to take part in the study.
 
 :   Single answer
 
@@ -49,6 +49,7 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     - Social media
     - Radio
     - Email newsletters
+    - News app
 
 *Q2.4*: Some people seem to follow what's going on in government and public affairs most of the time, whether there's an election going on or not. Others aren't that interested. How often would you say you follow what's going on in government and public affairs?
 
@@ -89,17 +90,17 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
 
 :   Single answer
 
-    |                                                                   |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-    | ----------------------------------------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-    | How important is it that you trust a charity before giving to it? |  •  |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
+    |                                                                   |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
+    | ----------------------------------------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+    | How important is it that you trust a charity before giving to it? |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
 
 *Q2.8*: Here is a 7-point scale on which your level of trust in charities is arranged from no trust at all (left) to complete trust (right). Where would you place yourself on this scale?
 
 :   Single answer
 
-    |                                  |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-    | -------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-    | How much do you trust charities? |  •  |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
+    |                                  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
+    | -------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+    | How much do you trust charities? |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
 
 *Q2.9*: Have you volunteered in the past 12 months?
 
@@ -129,6 +130,8 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
     - Yellow
     - Blue
     - Green
+
+**Terminate if Q2.11 != "Blue"**
 
 ---
 
@@ -167,24 +170,13 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
 - *Criticized by government*: Organization faces public condemnation from the government.
 - *Under government crackdown*: Host government has undertaken official action to limit or stop the organization. 
 
+*Q3.2*: For each of the next 12 questions, imagine you are selecting an organization you will donate to and that each of the listed organizations exists.
+
 ---
 
 ## Conjoint questions
 
-*Q4.1*: For each of the next 12 questions, imagine you are selecting an organization you will donate to and that each of the listed organizations exists. Which of the following organizations would you donate to?
-
-:   Single option or "none" selected
-
-    |                                   | Option 1 | Option 2 | Option 3 | None |
-    | --------------------------------- | :------: | :------: | :------: | :--: |
-    | Organization                      |  Random  |  Random  |  Random  |  —   |
-    | Issue area                        |  Random  |  Random  |  Random  |  —   |
-    | Financial transparency            |  Random  |  Random  |  Random  |  —   |
-    | Accountability                    |  Random  |  Random  |  Random  |  —   |
-    | Funding sources                   |  Random  |  Random  |  Random  |  —   |
-    | Relationship with host government |  Random  |  Random  |  Random  |  —   |
-
-*Q4.2–12*: Which of the following organizations would you donate to?
+*Q4.1–12*: Which of the following organizations would you donate to?
 
 :   Single option or "none" selected
 
@@ -212,9 +204,9 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
 
 :   Single answer
 
-    |                    |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-    | ------------------ | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-    | Political ideology |  •  |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
+    |                    |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
+    | ------------------ | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+    | Political ideology |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
 
 *Q5.3*: Here is a list of different types of voluntary organizations. For each organization, indicate whether you are an active member, an inactive member, or not a member of that type of organization:
 
@@ -257,9 +249,9 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
 
 :   Single answer
 
-    |                                               |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-    | --------------------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-    | Trust in political institutions and the state |  •  |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
+    |                                               |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
+    | --------------------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+    | Trust in political institutions and the state |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
  
 *Q5.7*: Have you ever traveled to a developing country? 
 
@@ -309,9 +301,9 @@ By clicking "I agree" below you are indicating that you are at least 18 years ol
 
 :   Single answer
 
-    |                 |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-    | --------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-    | Prosocial views |  •  |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
+    |                 |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
+    | --------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+    | Prosocial views |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
 
 *Q5.12*: What is your gender?
 

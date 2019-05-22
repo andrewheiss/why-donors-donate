@@ -1,0 +1,29 @@
+---
+title: "Run models"
+author: "Andrew Heiss, Marc Dotson, and Suparna Chaudhry"
+date: "Last run: `r format(Sys.time(), '%F')`"
+output: 
+  html_document:
+    code_folding: hide
+    pandoc_args:
+      - "--default-image-extension=png"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r load-libraries-data, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(donorheuristics)
+library(ggraph)
+library(ggdag)
+library(here)
+
+# General settings
+source(here("analysis", "options.R"))
+
+# Make all the randomness reproducible
+set.seed(1234)
+```
+
+# Run models
+

@@ -1,0 +1,63 @@
+---
+title: "Check experimental design"
+author: "Andrew Heiss, Marc Dotson, and Suparna Chaudhry"
+date: "Last run: `r format(Sys.time(), '%B %e, %Y')`"
+output: 
+  html_document:
+    code_folding: show
+editor_options: 
+  chunk_output_type: console
+---
+
+# Load the design and check level balance
+
+```{r clean-data, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(donorheuristics)
+library(here)
+
+# Load design
+design <- read_csv(here("data", "design.csv"))
+
+# Check to make sure there is a balance across levels
+as_tibble(design) %>%
+  select(Organization:`Relationship with host government`) %>%
+  gather(key = atts, value = lvls) %>%
+  ggplot(aes(x = lvls)) +
+  geom_bar() +
+  facet_wrap(~ atts, scales = "free", nrow = 2)
+```
+
+# Dummy-code the design
+
+```{r}
+# Convert the attributes in design into factors
+dummy_design <- as.data.frame(design)
+for(i in 4:ncol(dummy_design)) {
+  dummy_design[,i] <- as.factor(dummy_design[,i])
+}
+
+# Use the output of lm to get a dummy-coded version of the design
+dummy_design$y <- matrix(rnorm(nrow(dummy_design)), ncol=1)
+out <- lm(y ~ ., dummy_design, x = TRUE)
+dummy_design <- out$x[,-1]
+rownames(dummy_design) <- NULL
+
+# Save dummy-coded design output
+write.csv(dummy_design, here("data", "dummy_design.csv"))
+```
+
+
+# Original computing environment
+
+<button data-toggle="collapse" data-target="#sessioninfo" class="btn btn-primary btn-md btn-info">Here's what we used the last time we built this page</button>
+
+<div id="sessioninfo" class="collapse">
+
+```{r show-session-info, echo=TRUE, width=90}
+writeLines(readLines(file.path(Sys.getenv("HOME"), ".R/Makevars")))
+
+devtools::session_info()
+```
+
+</div>  
