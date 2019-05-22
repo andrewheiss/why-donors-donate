@@ -11,7 +11,7 @@ editor_options:
 
 # Load the design and check level balance
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r check-design, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(donorheuristics)
 library(here)
@@ -30,7 +30,7 @@ as_tibble(design) %>%
 
 # Dummy-code the design
 
-```{r}
+```{r check-design, warning=FALSE, message=FALSE}
 # Convert the attributes in design into factors
 dummy_design <- as.data.frame(design)
 for(i in 4:ncol(dummy_design)) {

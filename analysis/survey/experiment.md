@@ -78,15 +78,15 @@ I have read the above information, and I consent to take part in the study.
 
 :   Single answer
 
-    - \$1-\$49
-    - \$50-\$99
-    - \$100-\$499
-    - \$500-\$999
-    - \$1000-\$4,999
-    - \$5000-\$9,999
-    - \$10,000+
+    - \$1 to \$49
+    - \$50 to \$99
+    - \$100 to \$499
+    - \$500 to \$999
+    - \$1000 to \$4,999
+    - \$5000 to \$9,999
+    - \$10,000 or more
 
-*Q2.7*: Here is a 7-point scale on which the importance of trusting charities is arranged from not at all important (left) to essential (right). Where would you place yourself on this scale?
+*Q2.7*: Here is a 7-point scale on which the importance of trusting charities is arranged from not at all important (1) to essential (7). Where would you place yourself on this scale?
 
 :   Single answer
 
@@ -94,7 +94,7 @@ I have read the above information, and I consent to take part in the study.
     | ----------------------------------------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
     | How important is it that you trust a charity before giving to it? |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
 
-*Q2.8*: Here is a 7-point scale on which your level of trust in charities is arranged from no trust at all (left) to complete trust (right). Where would you place yourself on this scale?
+*Q2.8*: Here is a 7-point scale on which your level of trust in charities is arranged from no trust at all (1) to complete trust (7). Where would you place yourself on this scale?
 
 :   Single answer
 
@@ -200,7 +200,7 @@ I have read the above information, and I consent to take part in the study.
     - Yes
     - No
 
-*Q5.2*: Here is a 7-point scale on which the political views that people might hold are arranged from extremely liberal (left) to extremely conservative (right). Where would you place yourself on this scale?
+*Q5.2*: Here is a 7-point scale on which the political views that people might hold are arranged from extremely liberal (1) to extremely conservative (7). Where would you place yourself on this scale?
 
 :   Single answer
 
@@ -245,7 +245,7 @@ I have read the above information, and I consent to take part in the study.
     - Slightly involved
     - Never involved
 
-*Q5.6*: Here is a 7-point scale on which you trust political institutions and the state. The scale is arranged from no trust (left) to complete trust (right). Where would you place yourself on this scale?
+*Q5.6*: Here is a 7-point scale on which you trust political institutions and the state. The scale is arranged from no trust (1) to complete trust (7). Where would you place yourself on this scale?
 
 :   Single answer
 
@@ -297,7 +297,7 @@ I have read the above information, and I consent to take part in the study.
     - Atheist (do not believe in God)
     - Other: _________
 
-*Q5.11*: Here is a 7-point scale of your prosocial views. The scale is arranged from equality (left) to altruism (right). Where would you place yourself on this scale?
+*Q5.11*: Here is a 7-point scale of your prosocial views. The scale is arranged from equality (1) to altruism (7). Where would you place yourself on this scale?
 
 :   Single answer
 
