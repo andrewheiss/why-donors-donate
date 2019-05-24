@@ -98,14 +98,6 @@ I have read the above information, and I consent to take part in the study.
     - 6
     - 7 (Essential)
 
-# *Q2.7*: Here is a 7-point scale on which the importance of trusting charities is arranged from not at all important (1) to essential (7). Where would you place yourself on this scale?
-# 
-# :   Single answer
-# 
-#     |                                                                   |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-#     | ----------------------------------------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-#     | How important is it that you trust a charity before giving to it? |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
-
 *Q2.8*: On a scale of no trust at all (1) to complete trust (7), how much do you trust charities?
 
 :   Single answer
@@ -117,14 +109,6 @@ I have read the above information, and I consent to take part in the study.
     - 5
     - 6
     - 7 (Complete trust)
-
-# *Q2.8*: Here is a 7-point scale on which your level of trust in charities is arranged from no trust at all (1) to complete trust (7). Where would you place yourself on this scale?
-# 
-# :   Single answer
-# 
-#     |                                  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-#     | -------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-#     | How much do you trust charities? |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
 
 *Q2.9*: Have you volunteered in the past 12 months?
 
@@ -236,14 +220,6 @@ I have read the above information, and I consent to take part in the study.
     - 6
     - 7 (Extremely conservative)
 
-# *Q5.2*: Here is a 7-point scale on which the political views that people might hold are arranged from extremely liberal (1) to extremely conservative (7). Where would you place yourself on this scale?
-# 
-# :   Single answer
-# 
-#     |                    |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-#     | ------------------ | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-#     | Political ideology |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
-
 *Q5.3*: Here is a list of different types of voluntary organizations. For each organization, indicate whether you are an active member, an inactive member, or not a member of that type of organization:
 
 :   Matrix table
@@ -292,14 +268,6 @@ I have read the above information, and I consent to take part in the study.
     - 5
     - 6
     - 7 (Complete trust)
-
-# *Q5.6*: Here is a 7-point scale on which you trust political institutions and the state. The scale is arranged from no trust (1) to complete trust (7). Where would you place yourself on this scale?
-# 
-# :   Single answer
-# 
-#     |                                               |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-#     | --------------------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-#     | Trust in political institutions and the state |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
  
 *Q5.7*: Have you ever traveled to a developing country? 
 
@@ -345,25 +313,17 @@ I have read the above information, and I consent to take part in the study.
     - Atheist (do not believe in God)
     - Other: _________
 
-*Q5.11*: On a scale of equality (1) to altruism (7), how would you describe your prosocial views?
+*Q5.11*: On a scale of strongly agree (1) to strongly disagree (7), rate your response to the following statement: People should be more charitable towards others in society.
 
 :   Single answer
 
-    - 1 (Equality)
+    - 1 (Strongly agree)
     - 2
     - 3
     - 4
     - 5
     - 6
-    - 7 (Altruism)
-
-# *Q5.11*: Here is a 7-point scale of your prosocial views. The scale is arranged from equality (1) to altruism (7). Where would you place yourself on this scale?
-# 
-# :   Single answer
-# 
-#     |                 |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-#     | --------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-#     | Prosocial views |  •  |  •  |  •  |  •  |  •  |  •  |  •  |
+    - 7 (Strongly disagree)
 
 *Q5.12*: What is your gender?
 
