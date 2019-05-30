@@ -17,6 +17,8 @@ I have read the above information, and I consent to take part in the study.
     - Yes
     - No
 
+**Terminate if Q1.1 == "No"**
+
 ---
 
 ## First demographic section
