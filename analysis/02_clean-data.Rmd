@@ -9,24 +9,195 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Load and clean data
+# Check data
+
+## Load data
 
 ```{r clean-data, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(donorheuristics)
 library(here)
 
-# Load data
-# results_raw <- read_csv(here("data", "raw_data", "whatever.csv"))
-
-# Do stuff to results_raw
-# results <- results_raw %>% 
-#   do() %>% stuff() %>% here()
-
-# Save cleaned data
-# saveRDS(results, here("data", "derived_data", "results.rds"))
-# write_csv(results, here("data", "derived_data", "results.csv"))
+col_names <- names(read_csv(here::here("data", "conjointqsf_final.csv")))
+data <- read_csv(
+  here::here("data", "conjointqsf_final.csv"),
+  skip = 2,
+  col_names = col_names
+)
 ```
+
+## Respondents who finished
+
+```{r clean-data, warning=FALSE, message=FALSE}
+data %>%
+  summarize(
+    total = n(),
+    finished = sum(V10)
+  )
+```
+
+Out of 1508 respondents, 1437 "finished" the survey and 71 didn't.
+
+## Consent
+
+```{r clean-data, warning=FALSE, message=FALSE}
+data %>%
+  count(Q1.1)
+
+data %>%
+  count(Q1.1, Q2.1)
+```
+
+30 respondents didn't give consent while 3 respondents gave consent and didn't respond starting in Q2.1.
+
+## Screening
+
+```{r clean-data, warning=FALSE, message=FALSE}
+data %>%
+  count(Q2.5)
+
+data %>%
+  count(Q2.5, Q2.6) %>% 
+  filter(is.na(Q2.6) == TRUE)
+```
+
+An additional 12 respondents drop out by Q2.5 (a total of 45). 385 respondents are screened at Q2.5. 2 more respondents drop off by Q2.6 (a total of 47).
+
+## Check display logic
+
+```{r clean-data, warning=FALSE, message=FALSE}
+data %>%
+  count(Q2.9)
+
+data %>%
+  count(Q2.9, Q2.10)
+```
+
+8 more respondents have dropped out (a total of 55). The 445 people who don't volunteer in the past 12 months properly skip Q2.10.
+
+## Attention check
+
+```{r clean-data, warning=FALSE, message=FALSE}
+data %>%
+  count(Q2.11)
+```
+
+6 respondents don't make the attention check.
+
+## Confirm ages
+
+```{r clean-data, warning=FALSE, message=FALSE}
+data %>%
+  count(Q5.17)
+```
+
+By the end of the survey, 44 more respondents have dropped out (a total of 99) but no one is under 18, as they indicated as part of the consent.
+
+# Clean data
+
+## Clean based on initial criteria
+
+```{r clean-data, warning=FALSE, message=FALSE}
+data_clean <- data %>%
+  filter(V10 == 1) %>%         # Keep respondents who completed the entire survey
+  filter(Q1.1 == 1) %>%        # Keep respondents who gave consent
+  filter(Q2.5 %in% c(1:5)) %>% # Keep respondents who passed the screener
+  filter(Q2.11 == 3)           # Keep respondents who passed the attention check
+```
+
+## Confirm the data is clean
+
+```{r clean-data, warning=FALSE, message=FALSE}
+# Finished respondents
+data_clean %>% 
+  summarize(
+    total = n(),
+    finished = sum(V10)
+  )
+
+# Consent
+data_clean %>%
+  count(Q1.1)
+
+# Screening
+data_clean %>%
+  count(Q2.5)
+
+# Attention check
+data_clean %>% 
+  count(Q2.11)
+```
+
+We have 1016 total respondents who have finished the entire survey, given consent, and passed the screening and attention check.
+
+## Confirm the choice data is clean
+
+```{r clean-data, warning=FALSE, message=FALSE}
+data_clean %>%
+  count(vers_CBCONJOINT) %>%
+  count(n)
+```
+
+The design version appears to be properly assigned at random.
+
+```{r clean-data, warning=FALSE, message=FALSE}
+data_clean %>%
+  select(Q4.1:Q4.12) %>%
+  gather(key = "task", value = "choice") %>%
+  count(choice)
+```
+
+Everyone in the clean data responds to every choice task and the "none of the above" option doesn't appear to be abused.
+
+```{r clean-data, warning=FALSE, message=FALSE}
+levels_check <- data_clean %>% 
+  select(contains("CBCONJOINT"), -revision_CBCONJOINT) %>% 
+  gather(key = "temp", value = "level_name", -vers_CBCONJOINT) %>% 
+  separate(temp, into = c("atts", "task", "alt"), sep = "\\.") %>% 
+  separate(alt, into = c("alt", "temp")) %>% 
+  select(vers_CBCONJOINT, task, alt, atts, level_name) %>% 
+  rename(version = vers_CBCONJOINT) %>% 
+  mutate(
+    task = as.numeric(task),
+    alt = as.numeric(task),
+    atts = recode(
+      atts,
+      "732d72a6-25a3-4194-8416-461acae30837" = "Organization",
+      "bd54b90a-efb3-4ac8-b65a-1ebeefcaf703" = "Issue area",
+      "a6836e28-fd7a-4b71-b65e-f6269e5c883f" = "Financial transparency",
+      "c2249c1a-11fa-4395-a0a3-61d9648a2e55" = "Accountability",
+      "db44c406-390e-4fc4-875b-65796aa95ffa" = "Funding sources",
+      "85f14c50-61cc-461c-8e77-19453b83d76d" = "Relationship with host government"
+    )
+  ) %>% 
+  left_join(
+    read_csv(here("data", "design.csv")) %>% 
+      rename(
+        version = question_set,
+        task = question,
+        alt = choice
+      ) %>% 
+      gather(key = "atts", value = "levels", -c(version:alt)),
+    by = c("version", "task", "alt", "atts")
+  )
+
+levels_check %>% 
+  count(atts)
+
+levels_check %>% 
+  count(levels, level_name) %>% 
+  arrange(desc(n))
+```
+
+Why are there NAs?
+
+<!-- select(-c("732d72a6-25a3-4194-8416-461acae30837.1.1_CBCONJOINT":"revision_CBCONJOINT")) -->
+<!-- design <- read_csv( -->
+<!--   here::here("data", "conjointqsf_final.csv"), -->
+<!--   skip = 2, -->
+<!--   col_names = col_names -->
+<!-- ) %>%  -->
+<!--   select(contains("CBCONJOINT")) -->
 
 
 # Original computing environment
