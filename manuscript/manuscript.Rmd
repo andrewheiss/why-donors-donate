@@ -37,3 +37,8 @@ Through our conjoint survey experiment, we will be able to measure how strongly 
 What follows here is a smaller foray into one aspect of this causal diagram. We use a vignette-based survey experiment to measure donor response to just crackdown, issue area, and funding. 
 
 We will field our larger conjoint survey experiment very soon and we look forward to your comments and suggestions before we launch it!
+
+# Methods
+
+# Results
+
