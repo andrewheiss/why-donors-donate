@@ -150,16 +150,24 @@ data_clean %>%
 Everyone in the clean data responds to every choice task and the "none of the above" option doesn't appear to be abused.
 
 ```{r clean-data, warning=FALSE, message=FALSE}
-levels_check <- data_clean %>% 
+design_orig <- read_csv(here("data", "design.csv")) %>% 
+  rename(
+    version = question_set,
+    task = question,
+    alt = choice
+  ) %>% 
+  gather(key = "atts", value = "levels", -c(version:alt))
+
+design_surv <- data_clean %>% 
   select(contains("CBCONJOINT"), -revision_CBCONJOINT) %>% 
-  gather(key = "temp", value = "level_name", -vers_CBCONJOINT) %>% 
+  gather(key = "temp", value = "level_names", -vers_CBCONJOINT) %>% 
   separate(temp, into = c("atts", "task", "alt"), sep = "\\.") %>% 
   separate(alt, into = c("alt", "temp")) %>% 
-  select(vers_CBCONJOINT, task, alt, atts, level_name) %>% 
+  select(vers_CBCONJOINT, task, alt, atts, level_names) %>% 
   rename(version = vers_CBCONJOINT) %>% 
   mutate(
     task = as.numeric(task),
-    alt = as.numeric(task),
+    alt = as.numeric(alt),
     atts = recode(
       atts,
       "732d72a6-25a3-4194-8416-461acae30837" = "Organization",
@@ -169,27 +177,35 @@ levels_check <- data_clean %>%
       "db44c406-390e-4fc4-875b-65796aa95ffa" = "Funding sources",
       "85f14c50-61cc-461c-8e77-19453b83d76d" = "Relationship with host government"
     )
-  ) %>% 
+  ) %>%
+  distinct() %>% 
+  arrange(version, task, alt)
+
+design_orig %>% 
+  count(atts, levels) %>% 
+  mutate(prop = n/sum(n))
+
+design_surv %>% 
+  count(atts, level_names) %>% 
+  mutate(prop = n/sum(n))
+
+design_surv %>% 
   left_join(
-    read_csv(here("data", "design.csv")) %>% 
-      rename(
-        version = question_set,
-        task = question,
-        alt = choice
-      ) %>% 
-      gather(key = "atts", value = "levels", -c(version:alt)),
+    design_orig,
     by = c("version", "task", "alt", "atts")
-  )
-
-levels_check %>% 
-  count(atts)
-
-levels_check %>% 
-  count(levels, level_name) %>% 
-  arrange(desc(n))
+  ) %>% 
+  count(atts, levels, level_names)
 ```
 
-Why are there NAs?
+The design matrix as reported in the survey is correct. We can use the separate design file matched by design version for estimation.
+
+## Save clean data
+
+```{r clean-data, warning=FALSE, message=FALSE}
+data <- data_clean
+
+write_csv(data, here("data", "final_data.csv"))
+```
 
 <!-- select(-c("732d72a6-25a3-4194-8416-461acae30837.1.1_CBCONJOINT":"revision_CBCONJOINT")) -->
 <!-- design <- read_csv( -->
