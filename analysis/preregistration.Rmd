@@ -19,19 +19,19 @@ OSF preregistered pre-analysis plan &raquo;
 
 # Human subjects and IRB approval
 
-This project has received IRB approval from the human subjects research committees at BYU, Christopher Newport, ~~and Georgia State~~. We have included a generic version of our protocol below.
+This project has received IRB approval from the human subjects research committees at BYU, Christopher Newport, and Georgia State. We have included a generic version of our protocol below.
 
 <p><a href="files/byu-irb-approval.pdf" class="btn btn-md btn-success" target="_blank" role="button">
 <i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;
 BYU IRB approval
 </a> 
 &nbsp;
-<a href="files/cnu-irb-approval.pdf" class="btn btn-md btn-success" target="_blank">
-<i class="fa fa-check-circle" aria-hidden="true" role="button"></i>&nbsp;
+<a href="files/cnu-irb-approval.pdf" class="btn btn-md btn-success" target="_blank" role="button">
+<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;
 Christopher Newport IRB approval
 </a>
 &nbsp;
-<a href="files/gsu-irb-approval.pdf" class="btn btn-success btn-md disabled" target="_blank" role="button">
+<a href="files/gsu-irb-approval.pdf" class="btn btn-success btn-md" target="_blank" role="button">
 <i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;
 Georgia State IRB approval
 </a></p>
