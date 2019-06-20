@@ -202,7 +202,8 @@ The design matrix as reported in the survey is correct. We can use the separate 
 ## Save clean data
 
 ```{r clean-data, warning=FALSE, message=FALSE}
-data <- data_clean
+data <- data_clean %>% 
+  select(-c("732d72a6-25a3-4194-8416-461acae30837.1.1_CBCONJOINT":"revision_CBCONJOINT"))
 
 write_csv(data, here("data", "final_data.csv"))
 ```
