@@ -17,13 +17,16 @@ manuscript/tex_out/*
 manuscript/vc*
 manuscript/submissions/*
 
-# Data (temporarily)
-data/*.csv
+# Data output (temporarily)
 data/derived_data/*.csv
 data/raw_data/*.csv
 
+# Data output
+data/private_data/*
+
 # Other folders
 admin/*
+analysis/output/model_runs/*
 private/*
 readings/*
 submissions/*
