@@ -31,6 +31,9 @@ private/*
 readings/*
 submissions/*
 
+# TBH, not sure why there are RDS files here.
+src/stan_files/*.rds
+
 # R stuff
 .Rproj.user
 .Rhistory

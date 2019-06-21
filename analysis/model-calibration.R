@@ -2,59 +2,28 @@
 # Load packages.
 library(tidyverse)
 library(rstan)
-# library(mvtnorm)
-# library(bayesm)
+library(mvtnorm)
+library(bayesm)
 
 # Load data and design.
-final_data <- read_csv(here::here("data", "218329_Final_Excel_050619.csv"))
-survey_design <- read_csv(here::here("Data", "survey_design.csv")) %>% select(-X1)
-dummy_design <- read_csv(here::here("Data", "dummy_design.csv")) %>% select(-X1)
+final_data <- read_csv(here::here("data", "derived_data", "final_data.csv"))
+design <- read_csv(here::here("data", "derived_data", "dummy_design.csv")) %>%
+  select(-X1) %>%
+  rename(
+    version = question_set,
+    task = question,
+    alt = choice
+  )
 
-intercept <- 0 # Intercept-only.
-geo_locat <- 1 # Geolocation covariates.
-demo_vars <- 0 # Demographic covariates.
-geo_demos <- 0 # Geolocation and demographic covariates.
-bnd_demos <- 0 # Brand covariates.
-all_three <- 0 # Geolocation, demographic, and brand covariates.
+# Specify the model to load.
+intercept <- 1 # Intercept-only.
 
 # Restructure choice data Y.
 Y <- final_data %>%
-  select(record, contains("Q3")) %>%
-  select(-c(record, Q3_Version)) %>%
+  select(contains("Q4")) %>%
   as.matrix()
 
-# Recode price in the design X.
-price_scale <- 10000
-design <- dummy_design %>%
-  select(-contains("price")) %>%
-  left_join(
-    survey_design %>%
-      select(version, task, alt, price)
-  ) %>%
-  mutate(
-    price = recode(
-      price,
-      `1` = 20000/price_scale,
-      `2` = 25000/price_scale,
-      `3` = 30000/price_scale,
-      `4` = 35000/price_scale,
-      `5` = 40000/price_scale,
-      `6` = 45000/price_scale,
-      `7` = 50000/price_scale,
-      `8` = 55000/price_scale,
-      `9` = 60000/price_scale,
-      `10` = 65000/price_scale,
-      `11` = 70000/price_scale,
-      `12` = 75000/price_scale,
-      `13` = 80000/price_scale,
-      `14` = 85000/price_scale,
-      `15` = 90000/price_scale,
-      `16` = 95000/price_scale,
-      `17` = 100000/price_scale
-    )
-  )
-
-# Restructure the design X.
+# Create the array for design X.
 X <- array(
   data = NA,
   dim = c(
@@ -64,24 +33,25 @@ X <- array(
     (ncol(design) - 3 + 1)  # Number of (estimable) attribute levels.
   )
 )
+
 # Add the outside option coded as all zeros.
 for (n in 1:dim(X)[1]) {
   # Filter for respondent n.
-  X_n <- design %>% filter(version == final_data$Q3_Version[n])
+  X_n <- design %>% filter(version == final_data$version[n])
   for (s in 1:dim(X)[2]) {
     # Filter for task s.
     X_s <- X_n %>%
       filter(task == s) %>%
-      mutate(brand1 = 0) %>%
-      select(brand1, brand2:price)
+      mutate(org1 = 0) %>%
+      select(org1, org2:gov_rel3)
     for (p in 1:(dim(X)[3]-1)) {
-      # Filter for task s and alt p brands.
+      # Filter for task s and alt p orgs.
       X_p <- X_n %>%
         filter(task == s, alt == p) %>%
-        select(brand2:brand16) %>%
+        select(org2:org4) %>%
         as_vector()
-      # Fill in brand1
-      X_s[p, "brand1"] <- ifelse(sum(X_p) == 1, 0, 1)
+      # Fill in org1.
+      X_s[p, "org1"] <- ifelse(sum(X_p) == 1, 0, 1)
     }
     # Save modified design, including outside option.
     X[n, s,,] <- rbind(X_s, rep(0, ncol(X_s))) %>% as.matrix()
@@ -90,85 +60,6 @@ for (n in 1:dim(X)[1]) {
 
 # Restructure covariates Z.
 if (intercept == 1) Z <- matrix(data = 1, nrow = dim(X)[1], ncol = 1)
-if (geo_locat == 1) {
-  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
-    bind_cols(
-      final_data %>%
-        select(Acura:Volkswagen)
-        # mutate(
-        #   dealer_visit = Acura	+ BMW	+ Chevrolet + Chrysler + Ferrari + `Ford Motor Company` +
-        #     `GMC (General Motors Company)` + Honda + `Hyundai Motor` + Infiniti	+ `Kia Motors` +
-        #     Lexus	+ Lincoln	+ Mazda	+ `Mercedes Benz`	+ `Mitsubishi Motors`	+ `Nissan North America` +
-        #     Subaru + `Tesla Motors`	+ Toyota + Volkswagen
-        # ) %>%
-        # select(dealer_visit) %>%
-        # mutate(dealer_visit = ifelse(dealer_visit >= 1, 1, 0))
-    ) %>%
-    as.matrix()
-  Z <- ifelse(Z > 5, 1, Z)
-}
-if (demo_vars == 1) {
-  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
-    bind_cols(
-      final_data %>%
-        select(Q4x1, Q4x4:Q4x6, Q4x9, Q4x10, Q4x12r1:Q4x12r4)
-    ) %>%
-    as.matrix()
-}
-if (geo_demos == 1) {
-  Z_geo <- tibble(intercept = rep(1, dim(X)[1])) %>%
-    bind_cols(
-      final_data %>%
-        select(Acura:Volkswagen)
-        # mutate(
-        #   dealer_visit = Acura	+ BMW	+ Chevrolet + Chrysler + Ferrari + `Ford Motor Company` +
-        #     `GMC (General Motors Company)` + Honda + `Hyundai Motor` + Infiniti	+ `Kia Motors` +
-        #     Lexus	+ Lincoln	+ Mazda	+ `Mercedes Benz`	+ `Mitsubishi Motors`	+ `Nissan North America` +
-        #     Subaru + `Tesla Motors`	+ Toyota + Volkswagen
-        # ) %>%
-        # select(dealer_visit) %>%
-        # mutate(dealer_visit = ifelse(dealer_visit >= 1, 1, 0))
-    ) %>%
-    as.matrix()
-  Z_geo <- ifelse(Z_geo > 5, 1, Z_geo)
-  Z_demo <- final_data %>%
-    select(Q4x1, Q4x4:Q4x6, Q4x9, Q4x10, Q4x12r1:Q4x12r4) %>%
-    as.matrix()
-  Z <- cbind(Z_geo, Z_demo)
-}
-if (bnd_demos == 1) {
-  Z_bnd <- final_data %>%
-    select(contains("Q1x2"), contains("Q2x3"), Q2x1, Q2x2, Q2x8) %>%
-    as.matrix()
-  Z_demo <- final_data %>%
-    select(Q4x1, Q4x4:Q4x6, Q4x9, Q4x10, Q4x12r1:Q4x12r4) %>%
-    as.matrix()
-  Z <- cbind(Z_bnd, Z_demo)
-}
-if (all_three == 1) {
-  Z_geo <- tibble(intercept = rep(1, dim(X)[1])) %>%
-    bind_cols(
-      final_data %>%
-        select(Acura:Volkswagen)
-      # mutate(
-      #   dealer_visit = Acura	+ BMW	+ Chevrolet + Chrysler + Ferrari + `Ford Motor Company` +
-      #     `GMC (General Motors Company)` + Honda + `Hyundai Motor` + Infiniti	+ `Kia Motors` +
-      #     Lexus	+ Lincoln	+ Mazda	+ `Mercedes Benz`	+ `Mitsubishi Motors`	+ `Nissan North America` +
-      #     Subaru + `Tesla Motors`	+ Toyota + Volkswagen
-      # ) %>%
-      # select(dealer_visit) %>%
-      # mutate(dealer_visit = ifelse(dealer_visit >= 1, 1, 0))
-    ) %>%
-    as.matrix()
-  Z_geo <- ifelse(Z_geo > 5, 1, Z_geo)
-  Z_demo <- final_data %>%
-    select(Q4x1, Q4x4:Q4x6, Q4x9, Q4x10, Q4x12r1:Q4x12r4) %>%
-    as.matrix()
-  Z_bnd <- final_data %>%
-    select(contains("Q1x2"), contains("Q2x3"), Q2x1, Q2x2, Q2x8) %>%
-    as.matrix()
-  Z <- cbind(Z_geo, Z_demo, Z_bnd)
-}
 
 # HMC ---------------------------------------------------------------------
 # Set Stan options.
@@ -183,38 +74,43 @@ data <- list(
   L = dim(X)[4],           # Number of (estimable) attribute levels.
   C = ncol(Z),             # Number of respondent-level covariates.
 
+  # Theta_mean = 0,          # Mean of coefficients for the heterogeneity model.
+  # Theta_scale = 10,        # Scale of coefficients for the heterogeneity model.
+  # tau_scale = 2.5,         # Variation for scale parameters in the heterogeneity model.
+  # Omega_shape = 2,         # Shape of correlation matrix for the heterogeneity model.
+
   Theta_mean = 0,          # Mean of coefficients for the heterogeneity model.
-  Theta_scale = 10,        # Scale of coefficients for the heterogeneity model.
-  tau_scale = 2.5,         # Variation for scale parameters in the heterogeneity model.
-  Omega_shape = 2,         # Shape of correlation matrix for the heterogeneity model.
+  Theta_scale = 1,         # Scale of coefficients for the heterogeneity model.
+  alpha_mean = 0,          # Mean of scale for the heterogeneity model.
+  alpha_scale = 10,        # Scale of scale for the heterogeneity model.
+  lkj_corr_shape = 5,      # Shape of correlation matrix for the heterogeneity model.
 
   Y = Y,                   # Matrix of observed choices.
   X = X,                   # Array of experimental designs per choice task.
   Z = Z                    # Matrix of respondent-level covariates.
 )
 
-# test <- diag(data$tau_scale, data$L) %*%
-#   rethinking::rlkjcorr(1, K = data$L, eta = data$Omega_shape) %*%
-#   # matrix(data = data$Omega_shape, nrow = data$L, ncol = data$L) %*%
-#   diag(data$tau_scale, data$L)
-#
-# matrixcalc::is.positive.definite(test)
-
-# Calibrate the model.
+# Run the model.
 fit <- stan(
-  file = here::here("Code", "hmnl_centered.stan"),
+  # file = here::here("src", "stan_files", "hmnl_centered.stan"),
+  file = here::here("src", "stan_files", "hmnl_noncentered.stan"),
   data = data,
   seed = 42
 )
 
-# # Save model output.
-# write_rds(fit, here::here("Output", "hmnl_intercept.RDS"))
+# Save data and model output.
+run <- list(data = data, fit = fit)
+if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "hmnl-intercept_noncentered.rds"))
+
+# Centered:
+# Noncentered: 5634.98 seconds (Total)
 
 # MCMC --------------------------------------------------------------------
 # Load estimation routine.
-source(here::here("Code", "hier_mnl.R"))
+source(here::here("R", "hier_mnl.R"))
 
-nhold <- round(dim(X)[1]*.10) # Number of hold-out respondents.
+# nhold <- round(dim(X)[1]*.10) # Number of hold-out respondents.
+nhold <- 0                    # Number of hold-out respondents.
 nresp <- dim(X)[1] - nhold    # Number of respondents.
 nscns <- dim(X)[2]            # Number of choice tasks per respondent.
 nalts <- dim(X)[3]            # Number of product alternatives per choice task.
@@ -262,10 +158,7 @@ fit <- hier_mnl(Data, Prior, Mcmc)
 
 # Save data and model output.
 run <- list(Data = Data, Prior = Prior, Mcmc = Mcmc, fit = fit)
-if (intercept == 1) write_rds(run, here::here("Output", "hmnl_intercept-100k_ho.RDS"))
-if (geo_locat == 1) write_rds(run, here::here("Output", "hmnl_geo-locat-100k_ho.RDS"))
-if (demo_vars == 1) write_rds(run, here::here("Output", "hmnl_demo-vars-100k_ho.RDS"))
-if (geo_demos == 1) write_rds(run, here::here("Output", "hmnl_geo-demos-100k_ho.RDS"))
-if (bnd_demos == 1) write_rds(run, here::here("Output", "hmnl_bnd-demos-100k_ho.RDS"))
-if (all_three == 1) write_rds(run, here::here("Output", "hmnl_all-three-100k_ho.RDS"))
+if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "hmnl-intercept_conjugate.rds"))
+
+# Conjugate:
 
