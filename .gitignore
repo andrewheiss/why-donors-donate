@@ -19,6 +19,8 @@ manuscript/submissions/*
 
 # Data (temporarily)
 data/*.csv
+data/derived_data/*.csv
+data/raw_data/*.csv
 
 # Other folders
 admin/*

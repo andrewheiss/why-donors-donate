@@ -18,7 +18,7 @@ library(tidyverse)
 library(donorheuristics)
 library(here)
 
-col_names <- names(read_csv(here::here("data", "conjointqsf_final.csv")))
+col_names <- names(read_csv(here::here("data", "raw_data", "conjointqsf_final.csv")))
 data <- read_csv(
   here::here("data", "conjointqsf_final.csv"),
   skip = 2,
@@ -150,7 +150,7 @@ data_clean %>%
 Everyone in the clean data responds to every choice task and the "none of the above" option doesn't appear to be abused.
 
 ```{r clean-data, warning=FALSE, message=FALSE}
-design_orig <- read_csv(here("data", "design.csv")) %>% 
+design_orig <- read_csv(here("data", "derived_data", "design.csv")) %>% 
   rename(
     version = question_set,
     task = question,
@@ -205,7 +205,7 @@ The design matrix as reported in the survey is correct. We can use the separate 
 data <- data_clean %>% 
   select(-c("732d72a6-25a3-4194-8416-461acae30837.1.1_CBCONJOINT":"revision_CBCONJOINT"))
 
-write_csv(data, here("data", "final_data.csv"))
+write_csv(data, here("data", "derived_data", "final_data.csv"))
 ```
 
 <!-- select(-c("732d72a6-25a3-4194-8416-461acae30837.1.1_CBCONJOINT":"revision_CBCONJOINT")) -->
