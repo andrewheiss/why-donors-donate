@@ -37,6 +37,9 @@ for(i in 4:ncol(dummy_design)) {
   dummy_design[,i] <- as.factor(dummy_design[,i])
 }
 
+# Rename the variables.
+colnames(dummy_design)[4:9] <- c("org", "issue", "transp", "account", "fund", "gov_rel")
+
 # Use the output of lm to get a dummy-coded version of the design
 dummy_design$y <- matrix(rnorm(nrow(dummy_design)), ncol=1)
 out <- lm(y ~ ., dummy_design, x = TRUE)
