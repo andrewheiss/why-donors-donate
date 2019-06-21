@@ -20,7 +20,7 @@ library(here)
 
 col_names <- names(read_csv(here::here("data", "raw_data", "conjointqsf_final.csv")))
 data <- read_csv(
-  here::here("data", "conjointqsf_final.csv"),
+  here::here("data", "raw_data", "conjointqsf_final.csv"),
   skip = 2,
   col_names = col_names
 )
@@ -199,12 +199,18 @@ design_surv %>%
 
 The design matrix as reported in the survey is correct. We can use the separate design file matched by design version for estimation.
 
-## Save clean data
+## Remove identifying and extraneous information
 
 ```{r clean-data, warning=FALSE, message=FALSE}
 data <- data_clean %>% 
-  select(-c("732d72a6-25a3-4194-8416-461acae30837.1.1_CBCONJOINT":"revision_CBCONJOINT"))
+  mutate(id = row_number()) %>% 
+  rename(version = vers_CBCONJOINT) %>% 
+  select(id, version, Q1.1:Q5.18)
+```
 
+## Save clean data
+
+```{r clean-data, warning=FALSE, message=FALSE}
 write_csv(data, here("data", "derived_data", "final_data.csv"))
 ```
 
