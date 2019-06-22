@@ -13,22 +13,41 @@ editor_options:
 
 ## Load data
 
-```{r clean-data, warning=FALSE, message=FALSE}
+We downloaded the `conjointqsf_final.csv` file directly from Qualtrics and ran this code to remove identifying information. We then saved that CSV file as `conjointqsf_final.csv` and include it in `data/raw_data` for distribution. We use the de-identified file in the rest of our data cleaning and analysis.
+
+```r
 library(tidyverse)
 library(donorheuristics)
 library(here)
 
-col_names <- names(read_csv(here::here("data", "raw_data", "conjointqsf_final.csv")))
+col_names <- names(read_csv(here::here("data", "private_data", "conjointqsf_final.csv")))
+data <- read_csv(
+  here::here("data", "private_data", "conjointqsf_final.csv"),
+  skip = 3,
+  col_names = col_names,
+  guess_max = 1500
+)
+
+# Remove IP address and location information
+data %>% 
+  select(-V6, -LocationLatitude, -LocationLongitude, -LocationAccuracy) %>% 
+  write_csv(here::here("data", "raw_data", "conjointqsf_final.csv"))
+```
+
+```{r load-raw-data, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(donorheuristics)
+library(here)
+
 data <- read_csv(
   here::here("data", "raw_data", "conjointqsf_final.csv"),
-  skip = 2,
-  col_names = col_names
+  guess_max = 1500
 )
 ```
 
 ## Respondents who finished
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r number-finished}
 data %>%
   summarize(
     total = n(),
@@ -40,7 +59,7 @@ Out of 1508 respondents, 1437 "finished" the survey and 71 didn't.
 
 ## Consent
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r consent}
 data %>%
   count(Q1.1)
 
@@ -52,7 +71,7 @@ data %>%
 
 ## Screening
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r screening}
 data %>%
   count(Q2.5)
 
@@ -65,7 +84,7 @@ An additional 12 respondents drop out by Q2.5 (a total of 45). 385 respondents a
 
 ## Check display logic
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r display-logic}
 data %>%
   count(Q2.9)
 
@@ -77,7 +96,7 @@ data %>%
 
 ## Attention check
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r attention-check}
 data %>%
   count(Q2.11)
 ```
@@ -86,18 +105,19 @@ data %>%
 
 ## Confirm ages
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r confirm-ages}
 data %>%
   count(Q5.17)
 ```
 
 By the end of the survey, 44 more respondents have dropped out (a total of 99) but no one is under 18, as they indicated as part of the consent.
 
+
 # Clean data
 
 ## Clean based on initial criteria
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r clean-data}
 data_clean <- data %>%
   filter(V10 == 1) %>%         # Keep respondents who completed the entire survey
   filter(Q1.1 == 1) %>%        # Keep respondents who gave consent
@@ -107,7 +127,7 @@ data_clean <- data %>%
 
 ## Confirm the data is clean
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r clean-data-confirmation}
 # Finished respondents
 data_clean %>% 
   summarize(
@@ -132,7 +152,7 @@ We have 1016 total respondents who have finished the entire survey, given consen
 
 ## Confirm the choice data is clean
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r choice-clean}
 data_clean %>%
   count(vers_CBCONJOINT) %>%
   count(n)
@@ -140,7 +160,7 @@ data_clean %>%
 
 The design version appears to be properly assigned at random.
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r design-random-assignment}
 data_clean %>%
   select(Q4.1:Q4.12) %>%
   gather(key = "task", value = "choice") %>%
@@ -149,7 +169,7 @@ data_clean %>%
 
 Everyone in the clean data responds to every choice task and the "none of the above" option doesn't appear to be abused.
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r check-design, warning=FALSE, message=FALSE}
 design_orig <- read_csv(here("data", "derived_data", "design.csv")) %>% 
   rename(
     version = question_set,
@@ -199,9 +219,9 @@ design_surv %>%
 
 The design matrix as reported in the survey is correct. We can use the separate design file matched by design version for estimation.
 
-## Remove identifying and extraneous information
+## Remove extraneous information
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r shrink-data}
 data <- data_clean %>% 
   mutate(id = row_number()) %>% 
   rename(version = vers_CBCONJOINT) %>% 
@@ -210,7 +230,7 @@ data <- data_clean %>%
 
 ## Save clean data
 
-```{r clean-data, warning=FALSE, message=FALSE}
+```{r save-clean-data}
 write_csv(data, here("data", "derived_data", "final_data.csv"))
 ```
 
