@@ -17,7 +17,7 @@ library(donorheuristics)
 library(here)
 
 # Load design
-design <- read_csv(here("data", "design.csv"))
+design <- read_csv(here("data", "derived_data", "design.csv"))
 
 # Check to make sure there is a balance across levels
 as_tibble(design) %>%
@@ -37,6 +37,9 @@ for(i in 4:ncol(dummy_design)) {
   dummy_design[,i] <- as.factor(dummy_design[,i])
 }
 
+# Rename the variables.
+colnames(dummy_design)[4:9] <- c("org", "issue", "transp", "account", "fund", "gov_rel")
+
 # Use the output of lm to get a dummy-coded version of the design
 dummy_design$y <- matrix(rnorm(nrow(dummy_design)), ncol=1)
 out <- lm(y ~ ., dummy_design, x = TRUE)
@@ -44,7 +47,7 @@ dummy_design <- out$x[,-1]
 rownames(dummy_design) <- NULL
 
 # Save dummy-coded design output
-write.csv(dummy_design, here("data", "dummy_design.csv"))
+write.csv(dummy_design, here("data", "derived_data", "dummy_design.csv"))
 ```
 
 

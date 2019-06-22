@@ -11,9 +11,16 @@ editor_options:
   chunk_output_type: console
 ---
 
+# Load data and model output
+
 ```{r load-libraries-data, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(donorheuristics)
+library(rstan)
+library(bayesplot)
+library(tidybayes)
+library(bayesm)
+library(ggridges)
 library(ggraph)
 library(ggdag)
 library(here)
@@ -24,8 +31,15 @@ source(here("analysis", "options.R"))
 # Make all the randomness reproducible
 set.seed(1234)
 
-# Load data
-# results <- readRDS(here("data", "derived_data", "results.rds"))
+# Specify the model to load
+intercept <- 1 # Intercept-only
+
+# Load and extract data and model output (see model-calibration.R)
+if (intercept == 1) {
+  run <- read_rds(here::here("analysis", "output", "model_runs", "hmnl-intercept_noncentered.RDS"))
+  data <- run$data
+  fit <- run$fit
+}
 ```
 
 
@@ -73,6 +87,79 @@ ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.p
        width = 13/3, height = 2, units = "in", device = cairo_pdf)
 ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.png"),
        width = 13/3, height = 2, units = "in", type = "cairo", dpi = 300)
+```
+
+
+# Model checking
+
+```{r model-checking, warning=FALSE, message=FALSE}
+source(here::here("R", "stan_utility.R"))
+
+# Check for divergences
+check_div(fit)
+
+# # Check the effective sample size (not working for a hierarchical model?)
+# check_n_eff(fit)
+# 
+# # Check the Rhat statistic (not working for a hierarchical model?)
+# check_rhat(fit)
+
+# Check trace plots
+fit %>%
+  extract(
+    inc_warmup = TRUE,
+    permuted = FALSE
+  ) %>%
+  mcmc_trace(
+    regex_pars = "Theta",
+    n_warmup = 1000,
+    facet_args = list(nrow = 2, labeller = label_parsed)
+  )
+
+ggsave(
+  "mcmc-trace_noncentered.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12, height = 6, units = "in"
+)
+```
+
+
+# Plot marginals
+
+```{r plot-marginals, warning=FALSE, message=FALSE}
+# Extract posterior draws
+draws <- fit %>% 
+  spread_draws(Theta[i, j]) %>% 
+  ungroup() %>% 
+  filter(.iteration > 500)
+
+# Plot marginals
+level_labels <- c(
+  str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
+  str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief")),
+  "Financial transparency: Yes",
+  "Accountability: Yes",
+  str_c("Funding sources: ", c("Funded primarily by a handful of wealthy private donors", "Funded primarily by government grants")),
+  str_c("Relationship with host government: ", c("Criticized by government", "Under government crackdown"))
+)
+draws %>% 
+  mutate(
+    levels = factor(
+      i,
+      labels = level_labels
+    )
+  ) %>%
+  ggplot(aes(x = Theta, y = levels)) + 
+  geom_halfeyeh(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Attribute Levels")
+
+# Save plot
+ggsave(
+  "marginal_posteriors.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12, height = 6, units = "in"
+)
 ```
 
 
