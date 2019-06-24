@@ -36,7 +36,7 @@ intercept <- 1 # Intercept-only
 
 # Load and extract data and model output (see model-calibration.R)
 if (intercept == 1) {
-  run <- read_rds(here::here("analysis", "output", "model_runs", "hmnl-intercept_noncentered.RDS"))
+  run <- read_rds(here::here("analysis", "output", "model_runs", "intercept_noncentered.RDS"))
   data <- run$data
   fit <- run$fit
 }
@@ -92,7 +92,7 @@ ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.p
 
 # Model checking
 
-```{r model-checking, warning=FALSE, message=FALSE}
+```{r model-checking}
 source(here::here("R", "stan_utility.R"))
 
 # Check for divergences
@@ -116,23 +116,57 @@ fit %>%
     facet_args = list(nrow = 2, labeller = label_parsed)
   )
 
+# colnames(fit$Gammadraw) <- str_c("Gamma[", c(1:ncol(fit$Gammadraw)), ",1]")
+# fit$Gammadraw %>%
+#   mcmc_trace(
+#     n_warmup = 500,
+#     facet_args = list(nrow = 5, labeller = label_parsed)
+#   )
+
 ggsave(
-  "mcmc-trace_noncentered.png",
+  "intercept_trace_noncentered.png",
   path = here::here("analysis", "output", "figures"),
   width = 12, height = 6, units = "in"
 )
 ```
 
 
-# Plot marginals
+# Extract draws
 
-```{r plot-marginals, warning=FALSE, message=FALSE}
+```{r extract-draws}
 # Extract posterior draws
 draws <- fit %>% 
   spread_draws(Theta[i, j]) %>% 
   ungroup() %>% 
   filter(.iteration > 500)
 
+# colnames(fit$Gammadraw) <- str_c("Gamma[", c(1:ncol(fit$Gammadraw)), ",1]")
+# draws <- as_tibble(fit$Gammadraw) %>%
+#   mutate(
+#     .draw = row_number(),
+#     .iteration = row_number()
+#   ) %>%
+#   gather(key = i, value = Gamma, -c(.draw, .iteration)) %>%
+#   separate(col = i, into = c("temp1", "i"), sep = "\\[") %>%
+#   separate(col = i, into = c("i", "j"), sep = ",") %>%
+#   separate(col = j, into = c("j", "temp2"), sep = "\\]") %>%
+#   mutate(
+#     .chain = as.integer(1),
+#     i = as.integer(i),
+#     j = as.integer(j)
+#   ) %>%
+#   select(.chain, .iteration, .draw, i, j, Gamma) %>%
+#   arrange(.iteration) %>%
+#   filter(.iteration > 500)
+
+# Save draws
+write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
+```
+
+
+# Plot marginals
+
+```{r plot-marginals}
 # Plot marginals
 level_labels <- c(
   str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
@@ -156,7 +190,7 @@ draws %>%
 
 # Save plot
 ggsave(
-  "marginal_posteriors.png",
+  "intercept_marginal-posteriors_noncentered.png",
   path = here::here("analysis", "output", "figures"),
   width = 12, height = 6, units = "in"
 )

@@ -100,9 +100,9 @@ fit <- stan(
 
 # Save data and model output.
 run <- list(data = data, fit = fit)
-if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "hmnl-intercept_noncentered.rds"))
+if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "intercept_noncentered.rds"))
 
-# Centered:
+# Centered: 17990.1 seconds (Total)
 # Noncentered: 5634.98 seconds (Total)
 
 # MCMC --------------------------------------------------------------------
@@ -158,7 +158,7 @@ fit <- hier_mnl(Data, Prior, Mcmc)
 
 # Save data and model output.
 run <- list(Data = Data, Prior = Prior, Mcmc = Mcmc, fit = fit)
-if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "hmnl-intercept_conjugate.rds"))
+if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "intercept_conjugate.rds"))
 
-# Conjugate:
+# Conjugate: Total Time Elapsed (in Hours):  14.89
 
