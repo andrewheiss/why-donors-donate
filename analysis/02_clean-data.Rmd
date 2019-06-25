@@ -422,7 +422,7 @@ data <- data %>%
 # Save clean data with transformations
 
 ```{r save-clean-data}
-write_csv(data, here("data", "derived_data", "final_data.csv"))
+write_rds(data, here("data", "derived_data", "final_data.rds"))
 ```
 
 <!-- select(-c("732d72a6-25a3-4194-8416-461acae30837.1.1_CBCONJOINT":"revision_CBCONJOINT")) -->
