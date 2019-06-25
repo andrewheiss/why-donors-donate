@@ -42,3 +42,17 @@ We will field our larger conjoint survey experiment very soon and we look forwar
 
 # Results
 
+- First set of questions (hypotheses) can be answered using the results of the intercept-only model.
+- Second set of questions (confirmatory) can be answered using the following upper-level models:
+  - Public affairs: `Donation preferences ~ Public affairs knowledge + Public affairs activity`
+  - Political ideology: `Donation preferences ~ Political ideology`
+  - Social views: `Donation preferences ~ Public affairs trust + Social ideology + Religiosity`
+  - Charity and voluntarism: `Donation preferences ~ Charity trust + Charity activity + Volunteer activity + Activism activity + Association membership`
+  - Demographics: `Donation preferences ~ Gender + Marital status + Education + Income + Race + Age`
+  - `Donation preferences ~ (Public affairs) + (Political ideology)`
+  - `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views)`
+  - `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views) + (Charity and voluntarism)`
+  - `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views) + (Charity and voluntarism) + (Demographics)`
+- Third set of questions (exploratory) can be answered using a market simulator.
+
+
