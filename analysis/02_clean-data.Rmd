@@ -270,8 +270,6 @@ data %>%
     # - Once every three months → More than once a month, less than once a year
     # - Once every six months → More than once a month, less than once a year
     # - Once a year → More than once a month, less than once a year
-    # - Once every few years → Rarely (base case) TERMINATED
-    # - Never → Rarely TERMINATED
     Q2.5 = factor(
       case_when(
         Q2.5 == 1 ~ "At least once a month",
@@ -289,15 +287,14 @@ data %>%
     # - Once every six months → More than once a month, less than once a year
     # - Once a year → More than once a month, less than once a year
     # - Once every few years → Rarely (base case)
-    # - Never → Rarely NOT INCLUDED
     Q2.10 = factor(
       case_when(
-        Q2.6 == 1 ~ "At least once a month",
-        Q2.6 == 2 ~ "At least once a month",
-        Q2.6 == 3 ~ "More than once a month, less than once a year",
-        Q2.6 == 4 ~ "More than once a month, less than once a year",
-        Q2.6 == 5 ~ "More than once a month, less than once a year",
-        Q2.6 == 6 ~ "Rarely"
+        Q2.10 == 1 ~ "At least once a month",
+        Q2.10 == 2 ~ "At least once a month",
+        Q2.10 == 3 ~ "More than once a month, less than once a year",
+        Q2.10 == 4 ~ "More than once a month, less than once a year",
+        Q2.10 == 5 ~ "More than once a month, less than once a year",
+        Q2.10 == 6 ~ "Rarely"
       )
     ),
     # *Q5.4*: Historically, how involved have you been in activist causes?
@@ -386,8 +383,8 @@ data %>%
     # - \$300,000 or more → More/less than median
     Q5.15 = factor(
       case_when(
-        Q5.15 > median(Q5.15) ~ "More than median",
-        Q5.15 <= median(Q5.15) ~ "Less than median"
+        Q5.15 > 5 ~ "More than median", # Median income in 2017 was $61,372
+        Q5.15 <= 5 ~ "Less than median"
       )
     ),
     # *Q5.17*: How old are you?
@@ -403,8 +400,8 @@ data %>%
     # - 85 or older → More/less than median
     Q5.17 = factor(
       case_when(
-        Q5.17 > median(Q5.17) ~ "More than median",
-        Q5.17 <= median(Q5.17) ~ "Less than median"
+        Q5.17 >= 3 ~ "More than median", # Median age in 2017 was 36
+        Q5.17 < 3 ~ "Less than median"
       )
     )
   )
