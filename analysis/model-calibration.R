@@ -6,7 +6,7 @@ library(mvtnorm)
 library(bayesm)
 
 # Load data and design.
-final_data <- read_csv(here::here("data", "derived_data", "final_data.csv"))
+final_data <- read_rds(here::here("data", "derived_data", "final_data.rds"))
 design <- read_csv(here::here("data", "derived_data", "dummy_design.csv")) %>%
   select(-X1) %>%
   rename(
@@ -15,8 +15,19 @@ design <- read_csv(here::here("data", "derived_data", "dummy_design.csv")) %>%
     alt = choice
   )
 
-# Specify the model to load.
-intercept <- 1 # Intercept-only.
+# Main covariate models.
+intercept <- 0           # Intercept-only.
+public_affairs <- 1      # Public affairs: Public affairs knowledge + Public affairs activity.
+political_ideology <- 0  # Political ideology.
+social_views <- 0        # Social views: Public affairs trust + Social ideology + Religiosity.
+charity_voluntarism <- 0 # Charity and voluntarism: Charity trust, Charity activity, Volunteer activity, Activism activity, Association membership
+demographics <- 0        # Demographics: Gender, Marital status, Education, Income, Race, Age
+
+# Many covariate models.
+public_political <- 0                     # Public affairs + Political ideology
+public_political_social <- 0              # Public affairs + Political ideology + Social views
+public_political_social_charity <- 0      # Public affairs + Political ideology + Social views + Charity and voluntarism
+public_political_social_charity_demo <- 0 # Public affairs + Political ideology + Social views + Charity and voluntarism + Demographics
 
 # Restructure choice data Y.
 Y <- final_data %>%
@@ -60,8 +71,113 @@ for (n in 1:dim(X)[1]) {
 
 # Restructure covariates Z.
 if (intercept == 1) Z <- matrix(data = 1, nrow = dim(X)[1], ncol = 1)
+if (public_affairs == 1) {
+  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
+    bind_cols(
+      final_data %>%
+        select(Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7) %>%
+        mutate_if(is.factor, as.integer) %>%
+        mutate_at(vars(contains("Q2.3")), coalesce, 0)
+    ) %>%
+    as.matrix()
+}
+if (political_ideology == 1) {
+  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
+    bind_cols(
+      final_data %>%
+        select(Q5.2)
+    ) %>%
+    as.matrix()
+}
+if (social_views == 1) {
+  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
+    bind_cols(
+      final_data %>%
+        select(Q5.6, Q5.11, Q5.8, Q5.9, Q5.10) %>%
+        mutate_if(is.factor, as.integer)
+    ) %>%
+    as.matrix()
+}
+if (charity_voluntarism == 1) {
+  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
+    bind_cols(
+      final_data %>%
+        select(Q2.7, Q2.8, Q2.5, Q2.6, Q2.9, Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10) %>%
+        mutate_if(is.factor, as.integer)
+    ) %>%
+    as.matrix()
+}
+if (demographics == 1) {
+  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
+    bind_cols(
+      final_data %>%
+        select(Q5.12, Q5.13, Q5.14, Q5.15, Q5.16_1:Q5.16_6, Q5.17) %>%
+        mutate_if(is.factor, as.integer) %>%
+        mutate_at(vars(contains("Q5.16")), coalesce, 0)
+    ) %>%
+    as.matrix()
+}
+if (public_political == 1) {
+  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
+    bind_cols(
+      final_data %>%
+        select(
+          Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7, # Public affairs
+          Q5.2                                   # Political ideology
+        ) %>%
+        mutate_if(is.factor, as.integer) %>%
+        mutate_at(vars(contains("Q2.3")), coalesce, 0)
+    ) %>%
+    as.matrix()
+}
+if (public_political_social == 1) {
+  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
+    bind_cols(
+      final_data %>%
+        select(
+          Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7, # Public affairs
+          Q5.2,                                  # Political ideology
+          Q5.6, Q5.11, Q5.8, Q5.9, Q5.10         # Social views
+        ) %>%
+        mutate_if(is.factor, as.integer) %>%
+        mutate_at(vars(contains("Q2.3")), coalesce, 0)
+    ) %>%
+    as.matrix()
+}
+if (public_political_social_charity == 1) {
+  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
+    bind_cols(
+      final_data %>%
+        select(
+          Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7,                           # Public affairs
+          Q5.2,                                                            # Political ideology
+          Q5.6, Q5.11, Q5.8, Q5.9, Q5.10,                                  # Social views
+          Q2.7, Q2.8, Q2.5, Q2.6, Q2.9, Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10  # Charity and voluntarism
+        ) %>%
+        mutate_if(is.factor, as.integer) %>%
+        mutate_at(vars(contains("Q2.3")), coalesce, 0)
+    ) %>%
+    as.matrix()
+}
+if (public_political_social_charity_demo == 1) {
+  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
+    bind_cols(
+      final_data %>%
+        select(
+          Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7,                           # Public affairs
+          Q5.2,                                                            # Political ideology
+          Q5.6, Q5.11, Q5.8, Q5.9, Q5.10,                                  # Social views
+          Q2.7, Q2.8, Q2.5, Q2.6, Q2.9, Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10, # Charity and voluntarism
+          Q5.12, Q5.13, Q5.14, Q5.15, Q5.16_1:Q5.16_6, Q5.17               # Demographics
+        ) %>%
+        mutate_if(is.factor, as.integer) %>%
+        mutate_at(vars(contains("Q2.3")), coalesce, 0) %>%
+        mutate_at(vars(contains("Q5.16")), coalesce, 0)
+    ) %>%
+    as.matrix()
+}
 
-# HMC ---------------------------------------------------------------------
+# Model Calibration -------------------------------------------------------
 # Set Stan options.
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
@@ -74,11 +190,6 @@ data <- list(
   L = dim(X)[4],           # Number of (estimable) attribute levels.
   C = ncol(Z),             # Number of respondent-level covariates.
 
-  # Theta_mean = 0,          # Mean of coefficients for the heterogeneity model.
-  # Theta_scale = 10,        # Scale of coefficients for the heterogeneity model.
-  # tau_scale = 2.5,         # Variation for scale parameters in the heterogeneity model.
-  # Omega_shape = 2,         # Shape of correlation matrix for the heterogeneity model.
-
   Theta_mean = 0,          # Mean of coefficients for the heterogeneity model.
   Theta_scale = 1,         # Scale of coefficients for the heterogeneity model.
   alpha_mean = 0,          # Mean of scale for the heterogeneity model.
@@ -90,75 +201,21 @@ data <- list(
   Z = Z                    # Matrix of respondent-level covariates.
 )
 
-# Run the model.
+# Run the model and save data and model output.
 fit <- stan(
-  # file = here::here("src", "stan_files", "hmnl_centered.stan"),
   file = here::here("src", "stan_files", "hmnl_noncentered.stan"),
   data = data,
   seed = 42
 )
-
-# Save data and model output.
 run <- list(data = data, fit = fit)
 if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "intercept_noncentered.rds"))
-
-# Centered: 17990.1 seconds (Total)
-# Noncentered: 5634.98 seconds (Total)
-
-# MCMC --------------------------------------------------------------------
-# Load estimation routine.
-source(here::here("R", "hier_mnl.R"))
-
-# nhold <- round(dim(X)[1]*.10) # Number of hold-out respondents.
-nhold <- 0                    # Number of hold-out respondents.
-nresp <- dim(X)[1] - nhold    # Number of respondents.
-nscns <- dim(X)[2]            # Number of choice tasks per respondent.
-nalts <- dim(X)[3]            # Number of product alternatives per choice task.
-nvars <- dim(X)[4]            # Number of (estimable) attribute levels.
-ncovs <- ncol(Z)              # Number of respondent-level covariates.
-
-Y_new <- vector(mode = "list", length = nresp + nhold)
-X_new <- vector(mode = "list", length = nresp + nhold)
-for (resp in 1:(nresp + nhold)) {
-  Y_new[[resp]] <- matrix(Y[resp, ])
-  for(scns in 1:nscns) {
-    X_new[[resp]] <- rbind(X_new[[resp]], X[resp, scns,,])
-  }
-}
-
-# Specify the hold-out sample.
-ho_ind <- matrix(0, nrow = (nresp + nhold), ncol = 1)
-set.seed(42); ho_ind[sample(nresp + nhold, nhold), ] <- 1
-
-# Estimate the model.
-Data <- list(
-  y = Y_new[which(ho_ind != 1)],
-  X = X_new[which(ho_ind != 1)],
-  Z = matrix(Z[which(ho_ind != 1),], ncol = ncol(Z)),
-  ho_ind = ho_ind,
-  y_ho = Y_new[which(ho_ind == 1)],
-  X_ho = X_new[which(ho_ind == 1)],
-  Z_ho = matrix(Z[which(ho_ind == 1),], ncol = ncol(Z))
-)
-Prior <- list(
-  gammabar = matrix(rep(0, ncovs * nvars), ncol = nvars),
-  Agamma = 0.01 * diag(ncovs),
-  nu = nvars + 3,
-  V = (nvars + 3) * diag(nvars)
-)
-Mcmc <- list(
-  R = 100000,
-  keep = 100,
-  step = .08,
-  sim_ind = 0,
-  cont_ind = 0
-)
-
-fit <- hier_mnl(Data, Prior, Mcmc)
-
-# Save data and model output.
-run <- list(Data = Data, Prior = Prior, Mcmc = Mcmc, fit = fit)
-if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "intercept_conjugate.rds"))
-
-# Conjugate: Total Time Elapsed (in Hours):  14.89
+if (public_affairs == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_affairs.rds"))
+if (political_ideology == 1) write_rds(run, here::here("analysis", "output", "model_runs", "political_ideology.rds"))
+if (social_views == 1) write_rds(run, here::here("analysis", "output", "model_runs", "social_views.rds"))
+if (charity_voluntarism == 1) write_rds(run, here::here("analysis", "output", "model_runs", "charity_voluntarism.rds"))
+if (demographics == 1) write_rds(run, here::here("analysis", "output", "model_runs", "demographics.rds"))
+if (public_political == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political.rds"))
+if (public_political_social == 1)  write_rds(run, here::here("analysis", "output", "model_runs", "public_political_social.rds"))
+if (public_political_social_charity == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political_social_charity.rds"))
+if (public_political_social_charity_demo == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
 
