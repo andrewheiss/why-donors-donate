@@ -31,15 +31,30 @@ source(here("analysis", "options.R"))
 # Make all the randomness reproducible
 set.seed(1234)
 
-# Specify the model to load
-intercept <- 1 # Intercept-only
+intercept <- 0                            # Intercept-only
+public_affairs <- 0                       # Public affairs
+political_ideology <- 0                   # Political ideology
+social_views <- 0                         # Social views
+charity_voluntarism <- 0                  # Charity and voluntarism
+demographics <- 0                         # Demographics
+public_political <- 0                     # Public affairs + Political ideology
+public_political_social <- 0              # + Social views
+public_political_social_charity <- 0      # + Charity and voluntarism
+public_political_social_charity_demo <- 1 # + Demographics
 
 # Load and extract data and model output (see model-calibration.R)
-if (intercept == 1) {
-  run <- read_rds(here::here("analysis", "output", "model_runs", "intercept_noncentered.RDS"))
-  data <- run$data
-  fit <- run$fit
-}
+if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept_noncentered.RDS"))
+if (public_affairs == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
+if (political_ideology == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
+if (social_views == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "social_views.rds"))
+if (charity_voluntarism == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "charity_voluntarism.rds"))
+if (demographics == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "demographics.rds"))
+if (public_political == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political.rds"))
+if (public_political_social == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social.rds"))
+if (public_political_social_charity == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity.rds"))
+if (public_political_social_charity_demo == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
+data <- run$data
+fit <- run$fit
 ```
 
 
@@ -104,7 +119,7 @@ check_div(fit)
 # # Check the Rhat statistic (not working for a hierarchical model?)
 # check_rhat(fit)
 
-# Check trace plots
+# Check trace plots (SUBSET?)
 fit %>%
   extract(
     inc_warmup = TRUE,
@@ -113,21 +128,17 @@ fit %>%
   mcmc_trace(
     regex_pars = "Theta",
     n_warmup = 1000,
-    facet_args = list(nrow = 2, labeller = label_parsed)
+    facet_args = list(
+      nrow = round((data$L * data$C)/7), 
+      labeller = label_parsed
+    )
   )
 
-# colnames(fit$Gammadraw) <- str_c("Gamma[", c(1:ncol(fit$Gammadraw)), ",1]")
-# fit$Gammadraw %>%
-#   mcmc_trace(
-#     n_warmup = 500,
-#     facet_args = list(nrow = 5, labeller = label_parsed)
-#   )
-
-ggsave(
-  "intercept_trace_noncentered.png",
-  path = here::here("analysis", "output", "figures"),
-  width = 12, height = 6, units = "in"
-)
+# ggsave(
+#   "intercept_trace_noncentered.png",
+#   path = here::here("analysis", "output", "figures"),
+#   width = 12, height = 6, units = "in"
+# )
 ```
 
 
@@ -140,27 +151,17 @@ draws <- fit %>%
   ungroup() %>% 
   filter(.iteration > 500)
 
-# colnames(fit$Gammadraw) <- str_c("Gamma[", c(1:ncol(fit$Gammadraw)), ",1]")
-# draws <- as_tibble(fit$Gammadraw) %>%
-#   mutate(
-#     .draw = row_number(),
-#     .iteration = row_number()
-#   ) %>%
-#   gather(key = i, value = Gamma, -c(.draw, .iteration)) %>%
-#   separate(col = i, into = c("temp1", "i"), sep = "\\[") %>%
-#   separate(col = i, into = c("i", "j"), sep = ",") %>%
-#   separate(col = j, into = c("j", "temp2"), sep = "\\]") %>%
-#   mutate(
-#     .chain = as.integer(1),
-#     i = as.integer(i),
-#     j = as.integer(j)
-#   ) %>%
-#   select(.chain, .iteration, .draw, i, j, Gamma) %>%
-#   arrange(.iteration) %>%
-#   filter(.iteration > 500)
-
 # Save draws
-write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
+if (intercept == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
+if (public_affairs == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_affairs.rds"))
+if (political_ideology == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "political_ideology.rds"))
+if (social_views == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "social_views.rds"))
+if (charity_voluntarism == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "charity_voluntarism.rds"))
+if (demographics == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "demographics.rds"))
+if (public_political == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_political.rds"))
+if (public_political_social == 1)  write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_political_social.rds"))
+if (public_political_social_charity == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_political_social_charity.rds"))
+if (public_political_social_charity_demo == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_political_social_charity_demo.rds"))
 ```
 
 
@@ -176,6 +177,9 @@ level_labels <- c(
   str_c("Funding sources: ", c("Funded primarily by a handful of wealthy private donors", "Funded primarily by government grants")),
   str_c("Relationship with host government: ", c("Criticized by government", "Under government crackdown"))
 )
+
+# Covariates...
+
 draws %>% 
   mutate(
     levels = factor(
