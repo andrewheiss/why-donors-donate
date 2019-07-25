@@ -11,9 +11,9 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Load data and model output
+# Load packages
 
-```{r load-libraries-data, warning=FALSE, message=FALSE}
+```{r load-packages, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(donorheuristics)
 library(rstan)
@@ -30,31 +30,6 @@ source(here("analysis", "options.R"))
 
 # Make all the randomness reproducible
 set.seed(1234)
-
-intercept <- 0                            # Intercept-only
-public_affairs <- 0                       # Public affairs
-political_ideology <- 0                   # Political ideology
-social_views <- 0                         # Social views
-charity_voluntarism <- 0                  # Charity and voluntarism
-demographics <- 0                         # Demographics
-public_political <- 0                     # Public affairs + Political ideology
-public_political_social <- 0              # + Social views
-public_political_social_charity <- 0      # + Charity and voluntarism
-public_political_social_charity_demo <- 1 # + Demographics
-
-# Load and extract data and model output (see model-calibration.R)
-if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept_noncentered.RDS"))
-if (public_affairs == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
-if (political_ideology == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
-if (social_views == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "social_views.rds"))
-if (charity_voluntarism == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "charity_voluntarism.rds"))
-if (demographics == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "demographics.rds"))
-if (public_political == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political.rds"))
-if (public_political_social == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social.rds"))
-if (public_political_social_charity == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity.rds"))
-if (public_political_social_charity_demo == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
-data <- run$data
-fit <- run$fit
 ```
 
 
@@ -102,6 +77,36 @@ ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.p
        width = 13/3, height = 2, units = "in", device = cairo_pdf)
 ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.png"),
        width = 13/3, height = 2, units = "in", type = "cairo", dpi = 300)
+```
+
+
+# Load data and model output
+
+```{r load-data-output, warning=FALSE, message=FALSE}
+intercept <- 0                            # Intercept-only
+public_affairs <- 1                       # Public affairs
+political_ideology <- 0                   # Political ideology
+social_views <- 0                         # Social views
+charity_voluntarism <- 0                  # Charity and voluntarism
+demographics <- 0                         # Demographics
+public_political <- 0                     # Public affairs + Political ideology
+public_political_social <- 0              # + Social views
+public_political_social_charity <- 0      # + Charity and voluntarism
+public_political_social_charity_demo <- 0 # + Demographics
+
+# Load and extract data and model output (see model-calibration.R)
+if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept_noncentered.RDS"))
+if (public_affairs == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
+if (political_ideology == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
+if (social_views == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "social_views.rds"))
+if (charity_voluntarism == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "charity_voluntarism.rds"))
+if (demographics == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "demographics.rds"))
+if (public_political == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political.rds"))
+if (public_political_social == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social.rds"))
+if (public_political_social_charity == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity.rds"))
+if (public_political_social_charity_demo == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
+data <- run$data
+fit <- run$fit
 ```
 
 
@@ -168,35 +173,225 @@ if (public_political_social_charity_demo == 1) write_rds(draws, here::here("anal
 # Plot marginals
 
 ```{r plot-marginals}
-# Plot marginals
+intercept <- 0                            # Intercept-only
+public_affairs <- 0                       # Public affairs
+political_ideology <- 0                   # Political ideology
+social_views <- 0                         # Social views
+charity_voluntarism <- 0                  # Charity and voluntarism
+demographics <- 0                         # Demographics
+public_political <- 0                     # Public affairs + Political ideology
+public_political_social <- 0              # + Social views
+public_political_social_charity <- 0      # + Charity and voluntarism
+public_political_social_charity_demo <- 1 # + Demographics
+
+# Load draws
+if (intercept == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
+if (public_affairs == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_affairs.rds"))
+if (political_ideology == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "political_ideology.rds"))
+if (social_views == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "social_views.rds"))
+if (charity_voluntarism == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "charity_voluntarism.rds"))
+if (demographics == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "demographics.rds"))
+if (public_political == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_political.rds"))
+if (public_political_social == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_political_social.rds"))
+if (public_political_social_charity == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_political_social_charity.rds"))
+if (public_political_social_charity_demo == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_political_social_charity_demo.rds"))
+
+# Name labels
 level_labels <- c(
   str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
   str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief")),
   "Financial transparency: Yes",
   "Accountability: Yes",
-  str_c("Funding sources: ", c("Funded primarily by a handful of wealthy private donors", "Funded primarily by government grants")),
-  str_c("Relationship with host government: ", c("Criticized by government", "Under government crackdown"))
+  str_c("Funding sources: ", c("Handful of wealthy private donors", "Government grants")),
+  str_c("Relationship with host government: ", c("Criticized", "Under crackdown"))
 )
 
-# Covariates...
-
-draws %>% 
-  mutate(
-    levels = factor(
-      i,
-      labels = level_labels
+# Name covariates
+if (public_affairs == 1) {
+  covariate_labels <- c(
+    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
+    str_c(
+      "Medium to follow news: ", 
+      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
+    ),
+    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: Yes to No"
+  )
+}
+if (political_ideology == 1) {
+  covariate_labels <- c(
+    "Liberal to Conservative"
+  )
+}
+if (social_views == 1) {
+  covariate_labels <- c(
+    "Trust in political institutions: None to Complete", "People should be more charitable: Agree to Disagree",
+    "Religious and worship service attendance: Multiple times a week to Never", "Importance of religion: Extremely to Not at all",
+    "Religion: Catholic to Atheist"
+  )
+}
+if (charity_voluntarism == 1) {
+  covariate_labels <- c(
+    "Importance of trusing charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
+    "Donated last year: $1-$49 to $10,000 or more", "Volunteered in past 12 months: Yes to No", "Volunteer frequency: Weekly to Every few years",
+    "History of activism: Extreme to Never", "History of family activism: Extreme to Never", 
+    str_c(
+      c(
+        "Church or religious organization: ", "Sport or recreational organization: ", "Art, music, or educational organization: ",
+        "Labor union: ", "Political party: ", "Environmental organization: ", "Professional association: ", 
+        "Humanitarian or charitable organization: ", "Consumer organization: ", "Other organization: "
+      ), 
+      "Member to Not"
     )
-  ) %>%
-  ggplot(aes(x = Theta, y = levels)) + 
-  geom_halfeyeh(.width = .95) +
-  geom_vline(xintercept = 0, color = "grey") +
-  labs(y = "Attribute Levels")
+  )
+}
+if (demographics == 1) {
+  covariate_labels <- c(
+    "Gender: Male to Prefer not to say", "Marital status: Married to Never married", "Education: Less than high school to Doctorate",
+    "Income: Less than $10,000 to $300,000 or more",
+    str_c(
+      "Race/ethnicity: ", 
+      c("White", "Black or African American", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Pacific Islander", "Other")
+    ),
+    "Age: Under 18 to 85 or older"
+  )
+}
+if (public_political == 1) {
+  covariate_labels <- c(
+    # Public affairs
+    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
+    str_c(
+      "Medium to follow news: ", 
+      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
+    ),
+    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: Yes to No",
+    # Political ideology
+    "Liberal to Conservative"
+  )
+}
+if (public_political_social == 1) {
+  covariate_labels <- c(
+    # Public affairs
+    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
+    str_c(
+      "Medium to follow news: ", 
+      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
+    ),
+    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: Yes to No",
+    # Political ideology
+    "Liberal to Conservative",
+    # Social views
+    "Trust in political institutions: None to Complete", "People should be more charitable: Agree to Disagree",
+    "Religious and worship service attendance: Multiple times a week to Never", "Importance of religion: Extremely to Not at all",
+    "Religion: Catholic to Atheist"
+  )
+}
+if (public_political_social_charity == 1) {
+  covariate_labels <- c(
+    # Public affairs
+    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
+    str_c(
+      "Medium to follow news: ", 
+      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
+    ),
+    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: Yes to No",
+    # Political ideology
+    "Liberal to Conservative",
+    # Social views
+    "Trust in political institutions: None to Complete", "People should be more charitable: Agree to Disagree",
+    "Religious and worship service attendance: Multiple times a week to Never", "Importance of religion: Extremely to Not at all",
+    "Religion: Catholic to Atheist",
+    # Charity and voluntarism
+    "Importance of trusing charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
+    "Donated last year: $1-$49 to $10,000 or more", "Volunteered in past 12 months: Yes to No", "Volunteer frequency: Weekly to Every few years",
+    "History of activism: Extreme to Never", "History of family activism: Extreme to Never", 
+    str_c(
+      c(
+        "Church or religious organization: ", "Sport or recreational organization: ", "Art, music, or educational organization: ",
+        "Labor union: ", "Political party: ", "Environmental organization: ", "Professional association: ", 
+        "Humanitarian or charitable organization: ", "Consumer organization: ", "Other organization: "
+      ), 
+      "Member to Not"
+    )
+  )
+}
+if (public_political_social_charity_demo == 1) {
+  covariate_labels <- c(
+    # Public affairs
+    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
+    str_c(
+      "Medium to follow news: ", 
+      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
+    ),
+    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: Yes to No",
+    # Political ideology
+    "Liberal to Conservative",
+    # Social views
+    "Trust in political institutions: None to Complete", "People should be more charitable: Agree to Disagree",
+    "Religious and worship service attendance: Multiple times a week to Never", "Importance of religion: Extremely to Not at all",
+    "Religion: Catholic to Atheist",
+    # Charity and voluntarism
+    "Importance of trusing charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
+    "Donated last year: $1-$49 to $10,000 or more", "Volunteered in past 12 months: Yes to No", "Volunteer frequency: Weekly to Every few years",
+    "History of activism: Extreme to Never", "History of family activism: Extreme to Never", 
+    str_c(
+      c(
+        "Church or religious organization: ", "Sport or recreational organization: ", "Art, music, or educational organization: ",
+        "Labor union: ", "Political party: ", "Environmental organization: ", "Professional association: ", 
+        "Humanitarian or charitable organization: ", "Consumer organization: ", "Other organization: "
+      ), 
+      "Member to Not"
+    ),
+    # Demographics
+    "Gender: Male to Prefer not to say", "Marital status: Married to Never married", "Education: Less than high school to Doctorate",
+    "Income: Less than $10,000 to $300,000 or more",
+    str_c(
+      "Race/ethnicity: ", 
+      c("White", "Black or African American", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Pacific Islander", "Other")
+    ),
+    "Age: Under 18 to 85 or older"
+  )
+}
+
+# Plot marginals
+if (intercept == 1) {
+  draws %>% 
+    mutate(
+      levels = factor(i, labels = level_labels)
+    ) %>%
+    ggplot(aes(x = Theta, y = levels)) + 
+    geom_halfeyeh(.width = .95) +
+    geom_vline(xintercept = 0, color = "grey") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+  draws %>% 
+    filter(j != 1) %>% 
+    mutate(
+      levels = factor(i, labels = level_labels),
+      covariates = factor(j, labels = covariate_labels)
+    ) %>%
+    ggplot(aes(x = Theta, y = covariates)) + 
+    geom_halfeyeh(.width = .95) +
+    geom_vline(xintercept = 0, color = "grey") +
+    labs(y = "Attribute Levels") +
+    facet_wrap(~ levels, ncol = 5)
+}
 
 # Save plot
+if (intercept == 1) file_name <- paste("intercept_marginal-posteriors.png")
+if (public_affairs == 1) file_name <- paste("public-affairs_marginal-posteriors.png")
+if (political_ideology == 1) file_name <- paste("political-ideology_marginal-posteriors.png")
+if (social_views == 1) file_name <- paste("social-views_marginal-posteriors.png")
+if (charity_voluntarism == 1) file_name <- paste("charity-voluntarism_marginal-posteriors.png")
+if (demographics == 1) file_name <- paste("demographics_marginal-posteriors.png")
+if (public_political == 1) file_name <- paste("public-political_marginal-posteriors.png")
+if (public_political_social == 1) file_name <- paste("public-political-social_marginal-posteriors.png")
+if (public_political_social_charity == 1) file_name <- paste("public-political-social-charity_marginal-posteriors.png")
+if (public_political_social_charity_demo == 1) file_name <- paste("public-political-social-charity-demos_marginal-posteriors.png")
 ggsave(
-  "intercept_marginal-posteriors_noncentered.png",
+  file_name,
   path = here::here("analysis", "output", "figures"),
-  width = 12, height = 6, units = "in"
+  width = 20, height = 20, units = "in"
 )
 ```
 
