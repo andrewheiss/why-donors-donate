@@ -16,7 +16,7 @@ design <- read_csv(here::here("data", "derived_data", "dummy_design.csv")) %>%
   )
 
 intercept <- 0                            # Intercept-only.
-public_affairs <- 1                       # Public affairs: Public affairs knowledge + Public affairs activity.
+public_affairs <- 0                       # Public affairs: Public affairs knowledge + Public affairs activity.
 political_ideology <- 0                   # Political ideology.
 social_views <- 0                         # Social views: Public affairs trust + Social ideology + Religiosity.
 charity_voluntarism <- 0                  # Charity and voluntarism: Charity trust, Charity activity, Volunteer activity, etc.
@@ -24,7 +24,7 @@ demographics <- 0                         # Demographics: Gender, Marital status
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # Public affairs + Political ideology + Social views
 public_political_social_charity <- 0      # Public affairs + Political ideology + Social views + Charity and voluntarism
-public_political_social_charity_demo <- 0 # Public affairs + Political ideology + Social views + Charity and voluntarism + Demographics
+public_political_social_charity_demo <- 1 # Public affairs + Political ideology + Social views + Charity and voluntarism + Demographics
 
 # Restructure choice data Y.
 Y <- final_data %>%
@@ -74,7 +74,11 @@ if (public_affairs == 1) {
       final_data %>%
         select(Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7) %>%
         mutate_if(is.factor, as.integer) %>%
-        mutate_at(vars(contains("Q2.3")), coalesce, 0)
+        mutate_at(vars(contains("Q2.3")), coalesce, 0) %>%
+        mutate(
+          Q5.7_2 = if_else(Q5.7 == 2, 1, 0)
+        ) %>%
+        select(Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, contains("Q5.7_"))
     ) %>%
     as.matrix()
 }
@@ -91,7 +95,19 @@ if (social_views == 1) {
     bind_cols(
       final_data %>%
         select(Q5.6, Q5.11, Q5.8, Q5.9, Q5.10) %>%
-        mutate_if(is.factor, as.integer)
+        mutate_if(is.factor, as.integer) %>%
+        mutate(
+          Q5.10_2 = if_else(Q5.10 == 2, 1, 0),
+          Q5.10_3 = if_else(Q5.10 == 3, 1, 0),
+          Q5.10_4 = if_else(Q5.10 == 4, 1, 0),
+          Q5.10_5 = if_else(Q5.10 == 5, 1, 0),
+          Q5.10_6 = if_else(Q5.10 == 6, 1, 0),
+          Q5.10_7 = if_else(Q5.10 == 7, 1, 0),
+          Q5.10_8 = if_else(Q5.10 == 8, 1, 0),
+          Q5.10_9 = if_else(Q5.10 == 9, 1, 0),
+          Q5.10_10 = if_else(Q5.10 == 10, 1, 0)
+        ) %>%
+        select(Q5.6, Q5.11, Q5.8, Q5.9, contains("Q5.10_"))
     ) %>%
     as.matrix()
 }
@@ -100,7 +116,11 @@ if (charity_voluntarism == 1) {
     bind_cols(
       final_data %>%
         select(Q2.7, Q2.8, Q2.5, Q2.6, Q2.9, Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10) %>%
-        mutate_if(is.factor, as.integer)
+        mutate_if(is.factor, as.integer) %>%
+        mutate(
+          Q2.9_2 = if_else(Q2.9 == 2, 1, 0)
+        ) %>%
+        select(Q2.7, Q2.8, Q2.5, Q2.6, contains("Q2.9_"), Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10)
     ) %>%
     as.matrix()
 }
@@ -110,7 +130,18 @@ if (demographics == 1) {
       final_data %>%
         select(Q5.12, Q5.13, Q5.14, Q5.15, Q5.16_1:Q5.16_6, Q5.17) %>%
         mutate_if(is.factor, as.integer) %>%
-        mutate_at(vars(contains("Q5.16")), coalesce, 0)
+        mutate_at(vars(contains("Q5.16")), coalesce, 0) %>%
+        mutate(
+          Q5.12_2 = if_else(Q5.12 == 2, 1, 0),
+          Q5.12_3 = if_else(Q5.12 == 3, 1, 0),
+          Q5.12_4 = if_else(Q5.12 == 4, 1, 0),
+          Q5.12_5 = if_else(Q5.12 == 5, 1, 0),
+          Q5.13_2 = if_else(Q5.13 == 2, 1, 0),
+          Q5.13_3 = if_else(Q5.13 == 3, 1, 0),
+          Q5.13_4 = if_else(Q5.13 == 4, 1, 0),
+          Q5.13_5 = if_else(Q5.13 == 5, 1, 0)
+        ) %>%
+        select(contains("Q5.12_"), contains("Q5.13_"), Q5.14, Q5.15, Q5.16_1:Q5.16_6, Q5.17)
     ) %>%
     as.matrix()
 }
@@ -123,7 +154,14 @@ if (public_political == 1) {
           Q5.2                                   # Political ideology
         ) %>%
         mutate_if(is.factor, as.integer) %>%
-        mutate_at(vars(contains("Q2.3")), coalesce, 0)
+        mutate_at(vars(contains("Q2.3")), coalesce, 0) %>%
+        mutate(
+          Q5.7_2 = if_else(Q5.7 == 2, 1, 0)
+        ) %>%
+        select(
+          Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, contains("Q5.7_"), # Public affairs
+          Q5.2                                                # Political ideology
+        )
     ) %>%
     as.matrix()
 }
@@ -137,7 +175,24 @@ if (public_political_social == 1) {
           Q5.6, Q5.11, Q5.8, Q5.9, Q5.10         # Social views
         ) %>%
         mutate_if(is.factor, as.integer) %>%
-        mutate_at(vars(contains("Q2.3")), coalesce, 0)
+        mutate_at(vars(contains("Q2.3")), coalesce, 0) %>%
+        mutate(
+          Q5.7_2 = if_else(Q5.7 == 2, 1, 0),
+          Q5.10_2 = if_else(Q5.10 == 2, 1, 0),
+          Q5.10_3 = if_else(Q5.10 == 3, 1, 0),
+          Q5.10_4 = if_else(Q5.10 == 4, 1, 0),
+          Q5.10_5 = if_else(Q5.10 == 5, 1, 0),
+          Q5.10_6 = if_else(Q5.10 == 6, 1, 0),
+          Q5.10_7 = if_else(Q5.10 == 7, 1, 0),
+          Q5.10_8 = if_else(Q5.10 == 8, 1, 0),
+          Q5.10_9 = if_else(Q5.10 == 9, 1, 0),
+          Q5.10_10 = if_else(Q5.10 == 10, 1, 0)
+        ) %>%
+        select(
+          Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, contains("Q5.7_"), # Public affairs
+          Q5.2,                                               # Political ideology
+          Q5.6, Q5.11, Q5.8, Q5.9, contains("Q5.10_")         # Social views
+        )
     ) %>%
     as.matrix()
 }
@@ -152,7 +207,26 @@ if (public_political_social_charity == 1) {
           Q2.7, Q2.8, Q2.5, Q2.6, Q2.9, Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10  # Charity and voluntarism
         ) %>%
         mutate_if(is.factor, as.integer) %>%
-        mutate_at(vars(contains("Q2.3")), coalesce, 0)
+        mutate_at(vars(contains("Q2.3")), coalesce, 0) %>%
+        mutate(
+          Q5.7_2 = if_else(Q5.7 == 2, 1, 0),
+          Q5.10_2 = if_else(Q5.10 == 2, 1, 0),
+          Q5.10_3 = if_else(Q5.10 == 3, 1, 0),
+          Q5.10_4 = if_else(Q5.10 == 4, 1, 0),
+          Q5.10_5 = if_else(Q5.10 == 5, 1, 0),
+          Q5.10_6 = if_else(Q5.10 == 6, 1, 0),
+          Q5.10_7 = if_else(Q5.10 == 7, 1, 0),
+          Q5.10_8 = if_else(Q5.10 == 8, 1, 0),
+          Q5.10_9 = if_else(Q5.10 == 9, 1, 0),
+          Q5.10_10 = if_else(Q5.10 == 10, 1, 0),
+          Q2.9_2 = if_else(Q2.9 == 2, 1, 0)
+        ) %>%
+        select(
+          Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, contains("Q5.7_"),                          # Public affairs
+          Q5.2,                                                                        # Political ideology
+          Q5.6, Q5.11, Q5.8, Q5.9, contains("Q5.10_"),                                 # Social views
+          Q2.7, Q2.8, Q2.5, Q2.6, contains("Q2.9_"), Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10 # Charity and voluntarism
+        )
     ) %>%
     as.matrix()
 }
@@ -169,7 +243,35 @@ if (public_political_social_charity_demo == 1) {
         ) %>%
         mutate_if(is.factor, as.integer) %>%
         mutate_at(vars(contains("Q2.3")), coalesce, 0) %>%
-        mutate_at(vars(contains("Q5.16")), coalesce, 0)
+        mutate_at(vars(contains("Q5.16")), coalesce, 0) %>%
+        mutate(
+          Q5.7_2 = if_else(Q5.7 == 2, 1, 0),
+          Q5.10_2 = if_else(Q5.10 == 2, 1, 0),
+          Q5.10_3 = if_else(Q5.10 == 3, 1, 0),
+          Q5.10_4 = if_else(Q5.10 == 4, 1, 0),
+          Q5.10_5 = if_else(Q5.10 == 5, 1, 0),
+          Q5.10_6 = if_else(Q5.10 == 6, 1, 0),
+          Q5.10_7 = if_else(Q5.10 == 7, 1, 0),
+          Q5.10_8 = if_else(Q5.10 == 8, 1, 0),
+          Q5.10_9 = if_else(Q5.10 == 9, 1, 0),
+          Q5.10_10 = if_else(Q5.10 == 10, 1, 0),
+          Q2.9_2 = if_else(Q2.9 == 2, 1, 0),
+          Q5.12_2 = if_else(Q5.12 == 2, 1, 0),
+          Q5.12_3 = if_else(Q5.12 == 3, 1, 0),
+          Q5.12_4 = if_else(Q5.12 == 4, 1, 0),
+          Q5.12_5 = if_else(Q5.12 == 5, 1, 0),
+          Q5.13_2 = if_else(Q5.13 == 2, 1, 0),
+          Q5.13_3 = if_else(Q5.13 == 3, 1, 0),
+          Q5.13_4 = if_else(Q5.13 == 4, 1, 0),
+          Q5.13_5 = if_else(Q5.13 == 5, 1, 0)
+        ) %>%
+        select(
+          Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, contains("Q5.7_"),                           # Public affairs
+          Q5.2,                                                                         # Political ideology
+          Q5.6, Q5.11, Q5.8, Q5.9, contains("Q5.10_"),                                  # Social views
+          Q2.7, Q2.8, Q2.5, Q2.6, contains("Q2.9_"), Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10, # Charity and voluntarism
+          contains("Q5.12_"), contains("Q5.13_"), Q5.14, Q5.15, Q5.16_1:Q5.16_6, Q5.17  # Demographics
+        )
     ) %>%
     as.matrix()
 }
