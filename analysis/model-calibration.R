@@ -304,6 +304,7 @@ data <- list(
 fit <- stan(
   file = here::here("src", "stan_files", "hmnl_noncentered.stan"),
   data = data,
+  iter = 4000,
   seed = 42
 )
 run <- list(data = data, fit = fit)
