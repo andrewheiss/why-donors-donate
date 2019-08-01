@@ -83,8 +83,8 @@ ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.p
 # Load data and model output
 
 ```{r load-data-output, warning=FALSE, message=FALSE}
-intercept <- 0                            # Intercept-only
-public_affairs <- 1                       # Public affairs
+intercept <- 1                            # Intercept-only
+public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
 charity_voluntarism <- 0                  # Charity and voluntarism
@@ -95,7 +95,7 @@ public_political_social_charity <- 0      # + Charity and voluntarism
 public_political_social_charity_demo <- 0 # + Demographics
 
 # Load and extract data and model output (see model-calibration.R)
-if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept_noncentered.RDS"))
+if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept_noncentered.rds"))
 if (public_affairs == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
 if (political_ideology == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
 if (social_views == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "social_views.rds"))
@@ -115,26 +115,73 @@ fit <- run$fit
 ```{r model-checking}
 source(here::here("R", "stan_utility.R"))
 
+# Thetas
+draws_theta <- fit %>% 
+  extract(
+    pars = str_c("Theta[", 1:13, ",1]"),
+    inc_warmup = TRUE,
+    permuted = FALSE
+  )
+
+draws_theta %>% 
+  mcmc_hist_by_chain()
+
+draws_theta %>% 
+  mcmc_trace(
+    n_warmup = 2000,
+    facet_args = list(
+      nrow = 4, 
+      labeller = label_parsed
+    )
+  )
+
+# Extract the L_Omega parameters only and look at trace plots, etc.
+
+# L_Omega
+draws_L_Omega <- fit %>% 
+  extract(
+    regex_pars = c("L_Omega"),
+    inc_warmup = TRUE,
+    permuted = FALSE
+  )
+
+draws_theta %>% 
+  mcmc_hist_by_chain()
+
+draws_theta %>% 
+  mcmc_trace(
+    n_warmup = 2000,
+    facet_args = list(
+      nrow = 4, 
+      labeller = label_parsed
+    )
+  )
+
+
+# # Check diagnostics
+# check_all_diagnostics(fit)
+
 # Check for divergences
 check_div(fit)
 
-# # Check the effective sample size (not working for a hierarchical model?)
+# # Check the effective sample size (NOT WORKING?)
 # check_n_eff(fit)
 # 
-# # Check the Rhat statistic (not working for a hierarchical model?)
+# # Check the Rhat statistic (NOT WORKING?)
 # check_rhat(fit)
 
 # Check trace plots (SUBSET?)
+color_scheme_set("mix-blue-red")
 fit %>%
   extract(
     inc_warmup = TRUE,
     permuted = FALSE
   ) %>%
   mcmc_trace(
-    regex_pars = "Theta",
-    n_warmup = 1000,
+    pars = str_c("Theta[", 1:13, ",1]"),
+    n_warmup = 2000,
     facet_args = list(
-      nrow = round((data$L * data$C)/7), 
+      nrow = 2, 
       labeller = label_parsed
     )
   )
@@ -154,7 +201,7 @@ fit %>%
 draws <- fit %>% 
   spread_draws(Theta[i, j]) %>% 
   ungroup() %>% 
-  filter(.iteration > 500)
+  filter(.iteration > 1000)
 
 # Save draws
 if (intercept == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))

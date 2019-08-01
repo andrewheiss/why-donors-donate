@@ -25,7 +25,7 @@ check_treedepth <- function(fit, max_depth = 10, quiet=FALSE) {
   if (!quiet)
     print(sprintf('%s of %s iterations saturated the maximum tree depth of %s (%s%%)',
                             n, N, max_depth, 100 * n / N))
-  
+
   if (n > 0) {
     if (!quiet) print('  Run again with max_treedepth set to a larger value to avoid saturation')
     if (quiet) return(FALSE)
@@ -67,6 +67,7 @@ check_n_eff <- function(fit, quiet=FALSE) {
   for (n in 1:N) {
     ratio <- fit_summary[,5][n] / iter
     if (ratio < 0.001) {
+    # if (is.nan(ratio) == FALSE & ratio < 0.001) {
       if (!quiet) print(sprintf('n_eff / iter for parameter %s is %s!',
                         rownames(fit_summary)[n], ratio))
       no_warning <- FALSE
@@ -114,7 +115,7 @@ check_all_diagnostics <- function(fit, quiet=FALSE) {
     check_energy(fit)
   } else {
     warning_code <- 0
-    
+
     if (!check_n_eff(fit, quiet=TRUE))
       warning_code <- bitwOr(warning_code, bitwShiftL(1, 0))
     if (!check_rhat(fit, quiet=TRUE))
