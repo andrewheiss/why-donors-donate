@@ -15,7 +15,7 @@ design <- read_csv(here::here("data", "derived_data", "dummy_design.csv")) %>%
     alt = choice
   )
 
-intercept <- 1                            # Intercept-only.
+intercept <- 0                            # Intercept-only.
 public_affairs <- 0                       # Public affairs: Public affairs knowledge + Public affairs activity.
 political_ideology <- 0                   # Political ideology.
 social_views <- 0                         # Social views: Public affairs trust + Social ideology + Religiosity.
@@ -24,7 +24,7 @@ demographics <- 0                         # Demographics: Gender, Marital status
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # Public affairs + Political ideology + Social views
 public_political_social_charity <- 0      # Public affairs + Political ideology + Social views + Charity and voluntarism
-public_political_social_charity_demo <- 0 # Public affairs + Political ideology + Social views + Charity and voluntarism + Demographics
+public_political_social_charity_demo <- 1 # Public affairs + Political ideology + Social views + Charity and voluntarism + Demographics
 
 # Restructure choice data Y.
 Y <- final_data %>%
@@ -304,7 +304,8 @@ data <- list(
 fit <- stan(
   file = here::here("src", "stan_files", "hmnl_noncentered.stan"),
   data = data,
-  iter = 4000,
+  iter = 10000,
+  thin = 5,
   seed = 42
 )
 run <- list(data = data, fit = fit)
