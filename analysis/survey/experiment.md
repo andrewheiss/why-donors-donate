@@ -363,7 +363,7 @@ I have read the above information, and I consent to take part in the study.
 
 :   Single answer
 
-    - Less than $10,000
+    - Less than \$10,000
     - \$10,000 to \$19,999
     - \$20,000 to \$29,999
     - \$30,000 to \$39,999
