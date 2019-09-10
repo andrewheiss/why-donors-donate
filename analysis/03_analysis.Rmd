@@ -452,24 +452,24 @@ if (intercept != 1) {
     facet_wrap(~ levels, ncol = 5)
 }
 
-# Save plot
-if (intercept == 1) file_name <- paste("intercept_marginal-posteriors.png")
-if (public_affairs == 1) file_name <- paste("public-affairs_marginal-posteriors.png")
-if (political_ideology == 1) file_name <- paste("political-ideology_marginal-posteriors.png")
-if (social_views == 1) file_name <- paste("social-views_marginal-posteriors.png")
-if (charity_voluntarism == 1) file_name <- paste("charity-voluntarism_marginal-posteriors.png")
-if (demographics == 1) file_name <- paste("demographics_marginal-posteriors.png")
-if (public_political == 1) file_name <- paste("public-political_marginal-posteriors.png")
-if (public_political_social == 1) file_name <- paste("public-political-social_marginal-posteriors.png")
-if (public_political_social_charity == 1) file_name <- paste("public-political-social-charity_marginal-posteriors.png")
-if (public_political_social_charity_demo == 1) file_name <- paste("public-political-social-charity-demos_marginal-posteriors.png")
-ggsave(
-  file_name,
-  path = here::here("analysis", "output", "figures"),
-  width = ifelse(intercept == 1, 12, 20), 
-  height = ifelse(sum(intercept, public_affairs, political_ideology, social_views, charity_voluntarism, demographics) == 1, 12, 20), 
-  units = "in"
-)
+# # Save plot
+# if (intercept == 1) file_name <- paste("intercept_marginal-posteriors.png")
+# if (public_affairs == 1) file_name <- paste("public-affairs_marginal-posteriors.png")
+# if (political_ideology == 1) file_name <- paste("political-ideology_marginal-posteriors.png")
+# if (social_views == 1) file_name <- paste("social-views_marginal-posteriors.png")
+# if (charity_voluntarism == 1) file_name <- paste("charity-voluntarism_marginal-posteriors.png")
+# if (demographics == 1) file_name <- paste("demographics_marginal-posteriors.png")
+# if (public_political == 1) file_name <- paste("public-political_marginal-posteriors.png")
+# if (public_political_social == 1) file_name <- paste("public-political-social_marginal-posteriors.png")
+# if (public_political_social_charity == 1) file_name <- paste("public-political-social-charity_marginal-posteriors.png")
+# if (public_political_social_charity_demo == 1) file_name <- paste("public-political-social-charity-demos_marginal-posteriors.png")
+# ggsave(
+#   file_name,
+#   path = here::here("analysis", "output", "figures"),
+#   width = ifelse(intercept == 1, 12, 20), 
+#   height = ifelse(sum(intercept, public_affairs, political_ideology, social_views, charity_voluntarism, demographics) == 1, 12, 20), 
+#   units = "in"
+# )
 ```
 
 
