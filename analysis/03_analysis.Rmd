@@ -14,6 +14,17 @@ editor_options:
 # Load packages
 
 ```{r load-packages, warning=FALSE, message=FALSE}
+#install.packages("donorheuristics")
+# Error: package ‘donorheuristics’ is not available (for R version 3.6.1)
+#install.packages("rstan")
+#install.packages("bayesplot")
+#install.packages("tidybayes")
+#install.packages("bayesm")
+#install.packages("ggridges")
+#install.packages("ggraph")
+#install.packages("ggdag")
+#install.packages("here")
+
 library(tidyverse)
 library(donorheuristics)
 library(rstan)
@@ -27,6 +38,8 @@ library(here)
 
 # General settings
 source(here("analysis", "options.R"))
+
+# giving me the error: "Error in loadNamespace(name) : there is no package called ‘pander’"
 
 # Make all the randomness reproducible
 set.seed(1234)
@@ -220,10 +233,10 @@ if (public_political_social_charity_demo == 1) write_rds(draws, here::here("anal
 # Plot marginals
 
 ```{r plot-marginals}
-intercept <- 1                            # Intercept-only
+intercept <- 0                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
-social_views <- 0                         # Social views
+social_views <- 1                         # Social views
 charity_voluntarism <- 0                  # Charity and voluntarism
 demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
@@ -446,6 +459,8 @@ if (intercept != 1) {
       covariates = factor(j, labels = covariate_labels)
     ) %>%
     ggplot(aes(x = Theta, y = covariates)) + 
+    # what other geoms could we use
+    # how to filter to zoom in on a certain part of the graph
     geom_halfeyeh(.width = .95) +
     geom_vline(xintercept = 0, color = "grey") +
     labs(y = "Covariates") +
