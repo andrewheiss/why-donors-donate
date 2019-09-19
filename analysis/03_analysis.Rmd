@@ -459,8 +459,9 @@ if (intercept != 1) {
     ggplot(aes(x = Theta, y = covariates)) + 
     # what other geoms could we use
     # geom_ridgeline(fill="lightblue") +
-    geom_density_ridges() +
-    # geom_density_ridges2
+     geom_density_ridges() +
+    # geom_density_ridges2 - includes bottom line
+    # geom_density_ridges(rel_min_height = 0.01) - shortens tails
     # geom_density_ridges_gradient
     # geom_halfeyeh(.width = .95) +
     geom_vline(xintercept = 0, color = "grey") +
