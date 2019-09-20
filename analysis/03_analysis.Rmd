@@ -234,9 +234,9 @@ if (public_political_social_charity_demo == 1) write_rds(draws, here::here("anal
 intercept <- 0                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
-social_views <- 1                         # Social views
+social_views <- 0                         # Social views
 charity_voluntarism <- 0                  # Charity and voluntarism
-demographics <- 0                         # Demographics
+demographics <- 1                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
@@ -449,6 +449,7 @@ if (intercept == 1) {
     geom_vline(xintercept = 0, color = "grey") +
     labs(y = "Attribute Levels")
 }
+# zoom in on a certain part of the graph
 if (intercept != 1) {
   draws %>% 
     filter(j != 1) %>% 
@@ -456,21 +457,22 @@ if (intercept != 1) {
       levels = factor(i, labels = level_labels),
       covariates = factor(j, labels = covariate_labels)
     ) %>%
-    ggplot(aes(x = Theta, y = covariates)) + 
-    # what other geoms could we use
-    # geom_ridgeline(fill="lightblue") +
-     geom_density_ridges() +
-    # geom_density_ridges2 - includes bottom line
-    # geom_density_ridges(rel_min_height = 0.01) - shortens tails
-    # geom_density_ridges_gradient
+    ggplot(aes(x = Theta, y = covariates)) +
+# 1. geom_ridgeline 
+    # geom_ridgeline(fill = "blue") +
+# 2. geom_density_ridges seems to be the better option for overlapping distributions.
+    geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.001) +
+        # geom_density_ridges(scale = 3) - control overlap
+        # geom_density_ridges2 - includes bottom line
+        # geom_density_ridges(rel_min_height = 0.01) - shortens tails
     # geom_halfeyeh(.width = .95) +
-    geom_vline(xintercept = 0, color = "grey") +
+    geom_vline(xintercept = 0, color = "white") +
     labs(y = "Covariates") +
     facet_wrap(~ levels, ncol = 5)
 }
 
 # Notes to self:
-# how to filter to zoom in on a certain part of the graph
+    
 # load the rethinking package and use the draws and summarize them
 # we have the draws, sum/distribution of counts of samples of the posterior 
 
