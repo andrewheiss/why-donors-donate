@@ -1,11 +1,11 @@
 ---
-title: "Hypothesis Testing"
+title: "Hypotheses"
 output: github_document
 ---
 
 The purpose of this R Markdown is to visualize the results to the hypotheses proposed at the beginning of the paper. 
 
-```{r load-packages, warning=FALSE, message=FALSE}
+```{r load-packages, warning = FALSE, message = FALSE, echo = FALSE}
 library(tidyverse)
 library(donorheuristics)
 library(rstan)
@@ -18,8 +18,9 @@ library(ggdag)
 library(here)
 ```
 
-Run this code below to specify the covariate.
-```{r plot-marginals}
+
+```{r plot-marginals, echo = FALSE}
+# Specify the covariate.
 intercept <- 1                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
@@ -229,10 +230,10 @@ if (public_political_social_charity_demo == 1) {
 
 ```
 
+
 #### Do donors care if nonprofits they care about are criticized by or kicked out of the countries they work in?
 
-
-```{r}
+```{r echo = FALSE}
 # Plot marginals
 if (intercept == 1) {
   draws %>% 
@@ -241,7 +242,7 @@ if (intercept == 1) {
     ) %>%
     filter(levels == str_c("Relationship with host government: ", c("Criticized", "Under crackdown"))) %>% 
     ggplot(aes(x = Theta, y = levels)) + 
-    geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+    geom_density_ridges(scale = 5, height = 1, rel_min_height = 0.01) +
     geom_vline(xintercept = 0, color = "grey") +
     labs(y = "Attribute Levels")
 }
@@ -264,13 +265,110 @@ if (intercept != 1) {
 
 #### Do managerial practices (financial transparency and accountability systems), funding sources (private donations and government grants), and issue areas (emergency response, environmental issues, human rights, and refugee relief) also serve as heuristics that signal an organization’s deservingness to donors?
 
-```{r}
+#### 1. Managerial Practices
+
+```{r echo = FALSE}
+# Plot marginals
+if (intercept == 1) {
+  draws %>% 
+    mutate(
+      levels = factor(i, labels = level_labels)
+    ) %>%
+    filter(levels == c( "Financial transparency: Yes",
+  "Accountability: Yes")) %>% 
+    ggplot(aes(x = Theta, y = levels)) + 
+    geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+    geom_vline(xintercept = 0, color = "grey") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+  draws %>% 
+    filter(j != 1) %>% 
+    mutate(
+      levels = factor(i, labels = level_labels), 
+      covariates = factor(j, labels = covariate_labels)  
+    ) %>%
+    ggplot(aes(x = Theta, y = covariates)) +
+       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+       geom_vline(xintercept = 0, color = "white") +
+       labs(y = "Covariates") +
+       facet_wrap(~ levels, ncol = 5)
+}
+```
+
+#### 2. Funding Sources
+```{r echo = FALSE}
+# Plot marginals
+if (intercept == 1) {
+  draws %>% 
+    mutate(
+      levels = factor(i, labels = level_labels)
+    ) %>%
+    filter(levels ==   str_c("Funding sources: ", c("Handful of wealthy private donors", "Government grants"))) %>% 
+    ggplot(aes(x = Theta, y = levels)) + 
+    geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+    geom_vline(xintercept = 0, color = "grey") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+  draws %>% 
+    filter(j != 1) %>% 
+    mutate(
+      levels = factor(i, labels = level_labels), 
+      covariates = factor(j, labels = covariate_labels)  
+    ) %>%
+    ggplot(aes(x = Theta, y = covariates)) +
+       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+       geom_vline(xintercept = 0, color = "white") +
+       labs(y = "Covariates") +
+       facet_wrap(~ levels, ncol = 5)
+}
+```
+
+#### 3. Issue Areas
+
+```{r echo = FALSE}
+# Plot marginals
+if (intercept == 1) {
+  draws %>% 
+    mutate(
+      levels = factor(i, labels = level_labels)
+    ) %>%
+    filter(levels == str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief"))) %>% 
+    ggplot(aes(x = Theta, y = levels, fill = levels)) + 
+    geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+    geom_vline(xintercept = 0, color = "grey") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+  draws %>% 
+    filter(j != 1) %>% 
+    mutate(
+      levels = factor(i, labels = level_labels), 
+      covariates = factor(j, labels = covariate_labels)  
+    ) %>%
+    ggplot(aes(x = Theta, y = covariates)) +
+       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+       geom_vline(xintercept = 0, color = "white") +
+       labs(y = "Covariates") +
+       facet_wrap(~ levels, ncol = 5)
+}
 
 ```
 
 
-# Hypotheses:
-# We theorize that structural characteristics like an NGO’s host-country political and legal environment can serve as heuristics and shortcuts for donors.
-# Donors who see that an NGO faces general legal trouble abroad will use that knowledge to decide whether or not to donate.
-# We also theorize that non-structural organizational characteristics like managerial practices, funding sources, and issue area also serve as heuristics and influence donation patterns.
-# In this study, we simultaneously account for the interaction between legal crackdown, issue area, funding source, and managerial practices as well as donor characteristics. We hypothesize that each of these structural and organizational characteristics will have a significant effect on donor behavior, but we’re unsure of the direction of that effect.
+#### We theorize that structural characteristics like an NGO’s host-country political and legal environment can serve as heuristics and shortcuts for donors.
+
+
+#### Donors who see that an NGO faces general legal trouble abroad will use that knowledge to decide whether or not to donate.
+```{r}
+
+```
+
+#### We also theorize that non-structural organizational characteristics like managerial practices, funding sources, and issue area also serve as heuristics and influence donation patterns.
+
+```{r}
+
+```
+
+#### In this study, we simultaneously account for the interaction between legal crackdown, issue area, funding source, and managerial practices as well as donor characteristics. We hypothesize that each of these structural and organizational characteristics will have a significant effect on donor behavior, but we’re unsure of the direction of that effect.
