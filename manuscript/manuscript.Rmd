@@ -43,6 +43,11 @@ We will field our larger conjoint survey experiment very soon and we look forwar
 # Results
 
 - First set of questions (hypotheses) can be answered using the results of the intercept-only model.
+
+```{r}
+! [Combined Results] (../analysis/output/figures/combined-results-1.png)
+```
+
 - Second set of questions (confirmatory) can be answered using the following upper-level models:
   - Public affairs: `Donation preferences ~ Public affairs knowledge + Public affairs activity`
   - Political ideology: `Donation preferences ~ Political ideology`
