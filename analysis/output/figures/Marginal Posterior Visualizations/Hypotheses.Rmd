@@ -1,7 +1,14 @@
 ---
 title: "Hypotheses"
-date: "Last run: `r format(Sys.time(), '%B %e, %Y')`"
-output: github_document
+author: "Andrew Heiss, Marc Dotson, and Suparna Chaudhry"
+date: "Last run: `r format(Sys.time(), '%F')`"
+output: 
+  html_document:
+    code_folding: hide
+    pandoc_args:
+      - "--default-image-extension=png"
+editor_options: 
+  chunk_output_type: console
 ---
 In this study, we simultaneously account for the interaction between legal crackdown, issue area, funding source, and managerial practices as well as donor characteristics. We hypothesize that each of these structural and organizational characteristics will have a significant effect on donor behavior, but we’re unsure of the direction of that effect.
 
@@ -398,7 +405,7 @@ if (intercept == 1) {
       levels = factor(i, labels = level_labels)
     ) %>%
     filter(levels == str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"))) %>% 
-    ggplot(aes(x = Theta, y = levels)) + 
+    ggplot(aes(x = Theta, y = levels)) +
     geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
     geom_vline(xintercept = 0, color = "grey") +
     labs(y = "Attribute Levels")
