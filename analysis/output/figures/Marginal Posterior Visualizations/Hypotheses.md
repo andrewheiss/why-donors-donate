@@ -5,7 +5,31 @@ The purpose of this R Markdown is to visualize the results to the hypotheses pro
 
 #### In this study, we simultaneously account for the interaction between legal crackdown, issue area, funding source, and managerial practices as well as donor characteristics. We hypothesize that each of these structural and organizational characteristics will have a significant effect on donor behavior, but we’re unsure of the direction of that effect.
 
-    ## Picking joint bandwidth of 0.0165
+    ## Picking joint bandwidth of 0.0853
+
+    ## Picking joint bandwidth of 0.0844
+
+    ## Picking joint bandwidth of 0.0859
+
+    ## Picking joint bandwidth of 0.0894
+
+    ## Picking joint bandwidth of 0.0641
+
+    ## Picking joint bandwidth of 0.0616
+
+    ## Picking joint bandwidth of 0.0645
+
+    ## Picking joint bandwidth of 0.0583
+
+    ## Picking joint bandwidth of 0.0574
+
+    ## Picking joint bandwidth of 0.0569
+
+    ## Picking joint bandwidth of 0.0527
+
+    ## Picking joint bandwidth of 0.0615
+
+    ## Picking joint bandwidth of 0.0661
 
 ![](Hypotheses_files/figure-markdown_github/overall-1.png)
 
@@ -13,7 +37,31 @@ The purpose of this R Markdown is to visualize the results to the hypotheses pro
 
 We theorize that structural characteristics like an NGO’s host-country political and legal environment can serve as heuristics and shortcuts for donors. Donors who see that an NGO faces general legal trouble abroad will use that knowledge to decide whether or not to donate.
 
-    ## Picking joint bandwidth of 0.0141
+    ## Picking joint bandwidth of 0.0853
+
+    ## Picking joint bandwidth of 0.0844
+
+    ## Picking joint bandwidth of 0.0859
+
+    ## Picking joint bandwidth of 0.0894
+
+    ## Picking joint bandwidth of 0.0641
+
+    ## Picking joint bandwidth of 0.0616
+
+    ## Picking joint bandwidth of 0.0645
+
+    ## Picking joint bandwidth of 0.0583
+
+    ## Picking joint bandwidth of 0.0574
+
+    ## Picking joint bandwidth of 0.0569
+
+    ## Picking joint bandwidth of 0.0527
+
+    ## Picking joint bandwidth of 0.0615
+
+    ## Picking joint bandwidth of 0.0661
 
 ![](Hypotheses_files/figure-markdown_github/relationship-with-gov-1.png)
 
@@ -23,18 +71,90 @@ We theorize that non-structural organizational characteristics like managerial p
 
 #### 1. Managerial Practices
 
-    ## Picking joint bandwidth of 0.0132
+    ## Picking joint bandwidth of 0.0853
+
+    ## Picking joint bandwidth of 0.0844
+
+    ## Picking joint bandwidth of 0.0859
+
+    ## Picking joint bandwidth of 0.0894
+
+    ## Picking joint bandwidth of 0.0641
+
+    ## Picking joint bandwidth of 0.0616
+
+    ## Picking joint bandwidth of 0.0645
+
+    ## Picking joint bandwidth of 0.0583
+
+    ## Picking joint bandwidth of 0.0574
+
+    ## Picking joint bandwidth of 0.0569
+
+    ## Picking joint bandwidth of 0.0527
+
+    ## Picking joint bandwidth of 0.0615
+
+    ## Picking joint bandwidth of 0.0661
 
 ![](Hypotheses_files/figure-markdown_github/managerial-practices-1.png)
 
 #### 2. Funding Sources
 
-    ## Picking joint bandwidth of 0.0106
+    ## Picking joint bandwidth of 0.0853
+
+    ## Picking joint bandwidth of 0.0844
+
+    ## Picking joint bandwidth of 0.0859
+
+    ## Picking joint bandwidth of 0.0894
+
+    ## Picking joint bandwidth of 0.0641
+
+    ## Picking joint bandwidth of 0.0616
+
+    ## Picking joint bandwidth of 0.0645
+
+    ## Picking joint bandwidth of 0.0583
+
+    ## Picking joint bandwidth of 0.0574
+
+    ## Picking joint bandwidth of 0.0569
+
+    ## Picking joint bandwidth of 0.0527
+
+    ## Picking joint bandwidth of 0.0615
+
+    ## Picking joint bandwidth of 0.0661
 
 ![](Hypotheses_files/figure-markdown_github/funding_sources-1.png)
 
 #### 3. Issue Areas
 
-    ## Picking joint bandwidth of 0.0148
+    ## Picking joint bandwidth of 0.0853
+
+    ## Picking joint bandwidth of 0.0844
+
+    ## Picking joint bandwidth of 0.0859
+
+    ## Picking joint bandwidth of 0.0894
+
+    ## Picking joint bandwidth of 0.0641
+
+    ## Picking joint bandwidth of 0.0616
+
+    ## Picking joint bandwidth of 0.0645
+
+    ## Picking joint bandwidth of 0.0583
+
+    ## Picking joint bandwidth of 0.0574
+
+    ## Picking joint bandwidth of 0.0569
+
+    ## Picking joint bandwidth of 0.0527
+
+    ## Picking joint bandwidth of 0.0615
+
+    ## Picking joint bandwidth of 0.0661
 
 ![](Hypotheses_files/figure-markdown_github/issue-areas-1.png)
