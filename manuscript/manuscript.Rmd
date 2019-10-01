@@ -28,7 +28,7 @@ NGOs have less control over *structural* issues, and the role of political and l
 
 In our larger project (which has unfortunately faced some substantial delays), we will use a conjoint survey experiment to disentangle these different questions. We theorize that organizational characteristics like managerial practices, issue area, and funding sources all influence the decision to donate to an NGO (see @fig:big-dag). At the same time, however, we propose that structural characteristics like an NGO's host-country political and legal environment can also serve as donor heuristics. Donors who see that an NGO has been kicked out of a country or that an NGO faces general legal trouble abroad will use that knowledge to decide whether or not to donate. 
 
-![Causal diagram showing causes of donor behavior. D = donation to NGO (outcome); G = NGO-government relationship, I = NGO issue area, F = NGO funding source, O = NGO organizational and managerial practices.](output/figures/causal-path-full.pdf){#fig:big-dag}
+![Causal diagram showing causes of donor behavior. D = donation to NGO (outcome); G = NGO-government relationship, I = NGO issue area, F = NGO funding source, O = NGO organizational and managerial practices.](output/figures/causal-path.pdf){#fig:big-dag}
 
 Identifying the causal link between structural factors and donor behavior is trickier than measuring the link between organizational factors and donor behavior, however, because (1) NGOs have less direct control over their political environments, and (2) organizational characteristics like issue area and funding can both sour the NGO-government relationship (as we explain in further detail below, governments are more likely to crack down on NGOs that address human rights and that receive government funding). @fig:big-dag helps disentangle this complex relationship. Organizational factors (**O**, or organizational practices like financial disclosure and accountability practices; **I**, or issue area; and **F**, or funding) all influence the decision to donate (**D**). Structural factors like an NGO's relationship with its host government (**G**) also influence donation behavior, but the relationship itself is shaped by both funding and issue area. 
 
@@ -44,9 +44,28 @@ We will field our larger conjoint survey experiment very soon and we look forwar
 
 - First set of questions (hypotheses) can be answered using the results of the intercept-only model.
 
-```{r}
-! [Combined Results] (../analysis/output/figures/combined-results-1.png)
-```
+![Combined Results](output/figures/combined-results.png)
+We hypothesized that each of these structural and organizational characteristics would have a significant effect on donor behavior, though we were unsure of the direction of that effect.
+
+The following plots zoom in on how strongly each of the attributes serve as heuristics. 
+
+
+
+![Relationship With Host Government](output/figures/relationship-with-gov.png)
+Donors are less likely to donate when government is under crackdown than when it is criticized. In both cases, there is a clear negative effect.
+
+![Organizational Characteristics: Managerial Practices](output/figures/managerial-practices.png)
+Donors are more likely to donate when organizations are accountable and financially transparent.
+
+![Organizational Characteristics: Funding Sources](output/figures/funding-sources.png)
+Donors are less likely to donate when an NGO is subsidized by government grants, and even less likely when an NGO is funded by a few private donors. (look further into demographic info to see if there is any explanation or insight there)
+
+![Organizational Characteristics: Issue Areas](output/figures/issue-areas.png)
+* Emergency response is mentioned in Hypothesis but isn't included in plot?
+Issue Areas 
+
+![Organization](output/figures/organization.png)
+All organizations were percieved positively by respondents. The Red Cross was significantly more favored.
 
 - Second set of questions (confirmatory) can be answered using the following upper-level models:
   - Public affairs: `Donation preferences ~ Public affairs knowledge + Public affairs activity`
