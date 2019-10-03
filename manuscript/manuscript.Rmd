@@ -44,39 +44,83 @@ We will field our larger conjoint survey experiment very soon and we look forwar
 
 - First set of questions (hypotheses) can be answered using the results of the intercept-only model.
 
-![Combined Results](output/figures/combined-results.png)
 We hypothesized that each of these structural and organizational characteristics would have a significant effect on donor behavior, though we were unsure of the direction of that effect.
 
-The following plots zoom in on how strongly each of the attributes serve as heuristics. 
+![Combined Results](output/figures/combined-results.png)
+
+
+
+The following plots zoom in on the strength of the effects that these characteristics have.
+
+
+Compared to when an NGO has a friendly relationship with the host government, donors are much less likely to donate when government is under crackdown or criticized.
 
 
 
 ![Relationship With Host Government](output/figures/relationship-with-gov.png)
-Donors are less likely to donate when government is under crackdown than when it is criticized. In both cases, there is a clear negative effect.
 
-![Organizational Characteristics: Managerial Practices](output/figures/managerial-practices.png)
 Donors are more likely to donate when organizations are accountable and financially transparent.
 
+![Organizational Characteristics: Managerial Practices](output/figures/managerial-practices.png)
+
+Donors are most likely to donate when an NGO is funded primarily by many small private donations. Donors are less likely to donate when the organization is subsidized by government grants, and even less likely when it is funded by a few private donors.
+
+
+
 ![Organizational Characteristics: Funding Sources](output/figures/funding-sources.png)
-Donors are less likely to donate when an NGO is subsidized by government grants, and even less likely when an NGO is funded by a few private donors. (look further into demographic info to see if there is any explanation or insight there)
+
+Of all issue areas, donations to emergency response were most likely, followed by human rights and then environment. Refugee relief was the least likely issue area to be donated to.
+
+
 
 ![Organizational Characteristics: Issue Areas](output/figures/issue-areas.png)
-* Emergency response is mentioned in Hypothesis but isn't included in plot?
-Issue Areas 
+
+All organizations were positively percieved by respondents. The Red Cross was significantly more favored.
+
 
 ![Organization](output/figures/organization.png)
-All organizations were percieved positively by respondents. The Red Cross was significantly more favored.
+
 
 - Second set of questions (confirmatory) can be answered using the following upper-level models:
   - Public affairs: `Donation preferences ~ Public affairs knowledge + Public affairs activity`
+![](output/figures/public-affairs.png)
+
+
+  
   - Political ideology: `Donation preferences ~ Political ideology`
+  
+![](output/figures/political-ideology.png)
+  
   - Social views: `Donation preferences ~ Public affairs trust + Social ideology + Religiosity`
+  
+  ![](output/figures/social-views.png)
+  
+  
   - Charity and voluntarism: `Donation preferences ~ Charity trust + Charity activity + Volunteer activity + Activism activity + Association membership`
+  
+![](output/figures/charity-and-volunteerism.png)  
+
+  
   - Demographics: `Donation preferences ~ Gender + Marital status + Education + Income + Race + Age`
+  
+  ![](output/figures/demographics.png)
+  
   - `Donation preferences ~ (Public affairs) + (Political ideology)`
+  
+  ![](output/figures/public-political.png)
+  
   - `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views)`
+  
+![](output/figures/public-political-social.png)
+  
   - `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views) + (Charity and voluntarism)`
+  
+![](output/figures/public-political-social-charity.png)
+  
   - `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views) + (Charity and voluntarism) + (Demographics)`
+
+![](output/figures/public-political-social-charity-demo.png)  
+  
 - Third set of questions (exploratory) can be answered using a market simulator.
 
 
