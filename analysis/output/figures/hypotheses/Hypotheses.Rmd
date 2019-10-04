@@ -259,6 +259,12 @@ if (intercept != 1) {
       levels = factor(i, labels = level_labels),
       covariates = factor(j, labels = covariate_labels)  
     ) %>%
+    filter(
+      levels == str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
+      covariates == c("Religion: Christian")
+# package to help with filtering: stringr
+# r4ds chapter 14 (detect matches)
+    )
     ggplot(aes(x = Theta, y = covariates)) +
        geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
        geom_vline(xintercept = 0, color = "white") +
