@@ -253,23 +253,20 @@ if (intercept == 1) {
     labs(y = "Attribute Levels")
 }
 if (intercept != 1) {
-  draws %>% 
+    draws %>% 
     filter(j != 1) %>% 
     mutate(
-      levels = factor(i, labels = level_labels),
+      levels = factor(i, labels = level_labels), 
       covariates = factor(j, labels = covariate_labels)  
     ) %>%
     filter(
-      levels == str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
-      covariates == c("Religion: Christian")
-# package to help with filtering: stringr
-# r4ds chapter 14 (detect matches)
-    )
+      levels ==   str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief")),
+      covariates == c("Religion: Hindu", "Religion: Protestant", "Religion: Christian Orthodox", "Religion: Jewish")) %>% 
     ggplot(aes(x = Theta, y = covariates)) +
        geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
        geom_vline(xintercept = 0, color = "white") +
        labs(y = "Covariates") +
-       facet_wrap(~ levels, ncol = 7)
+       facet_wrap(~ levels, ncol = 5)
 }
 ```
 

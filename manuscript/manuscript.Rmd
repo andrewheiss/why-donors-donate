@@ -46,7 +46,7 @@ We will field our larger conjoint survey experiment very soon and we look forwar
 
 We hypothesized that each of these structural and organizational characteristics would have a significant effect on donor behavior, though we were unsure of the direction of that effect.
 
-![Combined Results](output/figures/combined-results.png)
+![](output/figures/combined-results.png)
 
 
 
@@ -57,28 +57,28 @@ Compared to when an NGO has a friendly relationship with the host government, do
 
 
 
-![Relationship With Host Government](output/figures/relationship-with-gov.png)
+![](output/figures/relationship-with-gov.png)
 
 Donors are more likely to donate when organizations are accountable and financially transparent.
 
-![Organizational Characteristics: Managerial Practices](output/figures/managerial-practices.png)
+![](output/figures/managerial-practices.png)
 
 Donors are most likely to donate when an NGO is funded primarily by many small private donations. Donors are less likely to donate when the organization is subsidized by government grants, and even less likely when it is funded by a few private donors.
 
 
 
-![Organizational Characteristics: Funding Sources](output/figures/funding-sources.png)
+![](output/figures/funding-sources.png)
 
 Of all issue areas, donations to emergency response were most likely, followed by human rights and then environment. Refugee relief was the least likely issue area to be donated to.
 
 
 
-![Organizational Characteristics: Issue Areas](output/figures/issue-areas.png)
+![](output/figures/issue-areas.png)
 
 All organizations were positively percieved by respondents. The Red Cross was significantly more favored.
 
 
-![Organization](output/figures/organization.png)
+![](output/figures/organization.png)
 
 
 - Second set of questions (confirmatory) can be answered using the following upper-level models:
@@ -104,7 +104,6 @@ All organizations were positively percieved by respondents. The Red Cross was si
   - Demographics: `Donation preferences ~ Gender + Marital status + Education + Income + Race + Age`
   
   ![](output/figures/demographics.png)
-  
   - `Donation preferences ~ (Public affairs) + (Political ideology)`
   
   ![](output/figures/public-political.png)
