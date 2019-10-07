@@ -33,11 +33,11 @@ public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
 charity_voluntarism <- 0                  # Charity and voluntarism
-demographics <- 0                         # Demographics
+demographics <- 1                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
-public_political_social_charity_demo <- 1 # + Demographics
+public_political_social_charity_demo <- 0 # + Demographics
 
 # Load draws
 if (intercept == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
@@ -260,8 +260,8 @@ if (intercept != 1) {
       covariates = factor(j, labels = covariate_labels)  
     ) %>%
     filter(
-      levels ==   str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief")),
-      covariates == c("Religion: Hindu", "Religion: Protestant", "Religion: Christian Orthodox", "Religion: Jewish")) %>% 
+    # levels ==   str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief")),
+      covariates ==  "Income: Less than $10,000 to $300,000 or more") %>% 
     ggplot(aes(x = Theta, y = covariates)) +
        geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
        geom_vline(xintercept = 0, color = "white") +
@@ -269,6 +269,7 @@ if (intercept != 1) {
        facet_wrap(~ levels, ncol = 5)
 }
 ```
+
 
 ### Relationship With Host Government
 

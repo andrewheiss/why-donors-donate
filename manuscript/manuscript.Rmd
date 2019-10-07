@@ -104,6 +104,18 @@ All organizations were positively percieved by respondents. The Red Cross was si
   - Demographics: `Donation preferences ~ Gender + Marital status + Education + Income + Race + Age`
   
   ![](output/figures/demographics.png)
+    - Gender
+    - Marital Status
+  ![](output/figures/marital-status.png)  
+  Question: it seems that levels like emergency response are omitted because they're considered the base to compare to. Why is there not a "Marital status: Married" though? It can't be the same thing  
+    
+    - Education
+  ![](output/figures/education.png)
+    - Income
+  ![](output/figures/income.png)
+    - Race 
+    - Age 
+ 
   - `Donation preferences ~ (Public affairs) + (Political ideology)`
   
   ![](output/figures/public-political.png)
