@@ -50,8 +50,7 @@ We hypothesized that each of these structural and organizational characteristics
 
 
 
-The following plots zoom in on the strength of the effects that these characteristics have.
-
+The following plots zoom in on the strength of the effects of these characteristics.
 
 Compared to when an NGO has a friendly relationship with the host government, donors are much less likely to donate when government is under crackdown or criticized.
 
@@ -105,16 +104,19 @@ All organizations were positively percieved by respondents. The Red Cross was si
   
   ![](output/figures/demographics.png)
     - Gender
+    
     - Marital Status
   ![](output/figures/marital-status.png)  
   Question: it seems that levels like emergency response are omitted because they're considered the base to compare to. Why is there not a "Marital status: Married" though? It can't be the same thing  
     
-    - Education
+  - Education
   ![](output/figures/education.png)
     - Income
   ![](output/figures/income.png)
     - Race 
+    ![](output/figures/race.png)
     - Age 
+  ![](output/figures/age.png)
  
   - `Donation preferences ~ (Public affairs) + (Political ideology)`
   
