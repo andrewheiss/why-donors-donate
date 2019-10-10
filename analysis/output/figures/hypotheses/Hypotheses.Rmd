@@ -29,11 +29,11 @@ library(here)
 ```{r plot-marginals, echo = FALSE}
 # Specify the covariate.
 intercept <- 0                            # Intercept-only
-public_affairs <- 0                       # Public affairs
+public_affairs <- 1                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
 charity_voluntarism <- 0                  # Charity and voluntarism
-demographics <- 1                         # Demographics
+demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
@@ -261,19 +261,16 @@ if (intercept != 1) {
     ) %>%
     filter(
     # levels == str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
-      covariates == c( "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
-    str_c(
-      "Medium to follow news: ", 
-      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
-    ),
-    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: No")) %>% 
+      covariates ==  "Liberal to Conservative") %>% 
     ggplot(aes(x = Theta, y = covariates)) +
        geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
        geom_vline(xintercept = 0, color = "white") +
        labs(y = "Covariates") +
-       facet_wrap(~ levels, ncol = 5)
+       facet_wrap(~ levels, ncol = 4)
 }
 ```
+
+Error: Faceting variables must have at least one value
 
 
 ### Relationship With Host Government
