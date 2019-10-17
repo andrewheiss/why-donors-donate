@@ -29,10 +29,10 @@ library(here)
 ```{r plot-marginals, echo = FALSE}
 # Specify the covariate.
 intercept <- 0                            # Intercept-only
-public_affairs <- 1                       # Public affairs
+public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
-charity_voluntarism <- 0                  # Charity and voluntarism
+charity_voluntarism <- 1                  # Charity and voluntarism
 demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
@@ -89,7 +89,7 @@ if (social_views == 1) {
 }
 if (charity_voluntarism == 1) {
   covariate_labels <- c(
-    "Importance of trusing charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
+    "Importance of trusting charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
     "Donated last year: $1-$49 to $10,000 or more", "Volunteered in past 12 months: No", "Volunteer frequency: Weekly to Every few years",
     "History of activism: Extreme to Never", "History of family activism: Extreme to Never", 
     str_c(
@@ -173,7 +173,7 @@ if (public_political_social_charity == 1) {
       c("Protestant", "Christian Orthodox", "Jewish", "Muslim", "Sikh", "Hindu", "Buddhist", "Atheist", "Other")
     ),
     # Charity and voluntarism
-    "Importance of trusing charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
+    "Importance of trusting charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
     "Donated last year: $1-$49 to $10,000 or more", "Volunteered in past 12 months: No", "Volunteer frequency: Weekly to Every few years",
     "History of activism: Extreme to Never", "History of family activism: Extreme to Never", 
     str_c(
@@ -205,7 +205,7 @@ if (public_political_social_charity_demo == 1) {
       c("Protestant", "Christian Orthodox", "Jewish", "Muslim", "Sikh", "Hindu", "Buddhist", "Atheist", "Other")
     ),
     # Charity and voluntarism
-    "Importance of trusing charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
+    "Importance of trusting charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
     "Donated last year: $1-$49 to $10,000 or more", "Volunteered in past 12 months: No", "Volunteer frequency: Weekly to Every few years",
     "History of activism: Extreme to Never", "History of family activism: Extreme to Never", 
     str_c(
@@ -260,8 +260,13 @@ if (intercept != 1) {
       covariates = factor(j, labels = covariate_labels)  
     ) %>%
     filter(
-    # levels == str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
-      covariates ==  "Liberal to Conservative") %>% 
+      # levels == str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
+      covariates == str_c(
+      c("Church or religious organization: ", "Sport or recreational organization: ", "Art, music, or educational organization: ",
+        "Labor union: ", "Political party: ", "Environmental organization: ", "Professional association: ", 
+        "Humanitarian or charitable organization: ", "Consumer organization: ", "Other organization: "
+      ), 
+      "Member to Not")) %>% 
     ggplot(aes(x = Theta, y = covariates)) +
        geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
        geom_vline(xintercept = 0, color = "white") +
@@ -270,7 +275,6 @@ if (intercept != 1) {
 }
 ```
 
-Error: Faceting variables must have at least one value
 
 
 ### Relationship With Host Government
@@ -351,7 +355,7 @@ if (intercept == 1) {
     mutate(
       levels = factor(i, labels = level_labels)
     ) %>%
-    filter(levels ==   str_c("Funding sources: ", c("Handful of wealthy private donors", "Government grants"))) %>% 
+    filter(levels ==  str_c("Funding sources: ", c("Handful of wealthy private donors", "Government grants"))) %>% 
     ggplot(aes(x = Theta, y = levels)) + 
     geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
     geom_vline(xintercept = 0, color = "grey") +

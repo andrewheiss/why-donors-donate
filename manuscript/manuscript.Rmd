@@ -52,7 +52,7 @@ We hypothesized that each of these structural and organizational characteristics
 
 The following plots zoom in on the strength of the effects of these characteristics.
 
-Compared to when an NGO has a friendly relationship with the host government, donors are much less likely to donate when government is under crackdown or criticized.
+Compared to when an NGO has a friendly relationship with the host government, donors who see that an NGO faces general legal trouble abroad are less likely to donate.
 
 
 
@@ -84,16 +84,24 @@ All organizations were positively percieved by respondents. The Red Cross was si
   - Public affairs: `Donation preferences ~ Public affairs knowledge + Public affairs activity`
 ![](output/figures/public-affairs.png)
 
-
-  
+    - Traveled Internationally: No
+    ![](output/figures/traveled.png)
+    
+    - Medium to follow news: Online (excluding social media) with all attributes
+      ![](output/figures/following-news.png)
+    
+    - Medium to follow news: Online (excluding social media) with organization
+      ![](output/figures/following-news2.png)
+    
   - Political ideology: `Donation preferences ~ Political ideology`
   
 ![](output/figures/political-ideology.png)
   
   - Social views: `Donation preferences ~ Public affairs trust + Social ideology + Religiosity`
   
-  ![](output/figures/social-views.png)
+![](output/figures/social-views.png)
   
+    - Can't get a plot of Religiosity to work.  
   
   - Charity and voluntarism: `Donation preferences ~ Charity trust + Charity activity + Volunteer activity + Activism activity + Association membership`
   
@@ -107,7 +115,6 @@ All organizations were positively percieved by respondents. The Red Cross was si
     
     - Marital Status
   ![](output/figures/marital-status.png)  
-  Question: it seems that levels like emergency response are omitted because they're considered the base to compare to. Why is there not a "Marital status: Married" though? It can't be the same thing  
     
   - Education
   ![](output/figures/education.png)
@@ -134,6 +141,7 @@ All organizations were positively percieved by respondents. The Red Cross was si
 
 ![](output/figures/public-political-social-charity-demo.png)  
   
+
 - Third set of questions (exploratory) can be answered using a market simulator.
 
 
