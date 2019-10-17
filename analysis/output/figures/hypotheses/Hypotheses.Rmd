@@ -32,8 +32,8 @@ intercept <- 0                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
-charity_voluntarism <- 1                  # Charity and voluntarism
-demographics <- 0                         # Demographics
+charity_voluntarism <- 0                  # Charity and voluntarism
+demographics <- 1                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
@@ -261,17 +261,14 @@ if (intercept != 1) {
     ) %>%
     filter(
       # levels == str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
-      covariates == str_c(
-      c("Church or religious organization: ", "Sport or recreational organization: ", "Art, music, or educational organization: ",
-        "Labor union: ", "Political party: ", "Environmental organization: ", "Professional association: ", 
-        "Humanitarian or charitable organization: ", "Consumer organization: ", "Other organization: "
-      ), 
-      "Member to Not")) %>% 
+      covariates == str_c("Gender: ", 
+      c("Female", "Transgender", "Prefer not to say", "Other")
+    ))  %>% 
     ggplot(aes(x = Theta, y = covariates)) +
        geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
        geom_vline(xintercept = 0, color = "white") +
        labs(y = "Covariates") +
-       facet_wrap(~ levels, ncol = 4)
+       facet_wrap(~ levels, ncol = 5)
 }
 ```
 

@@ -101,17 +101,21 @@ All organizations were positively percieved by respondents. The Red Cross was si
   
 ![](output/figures/social-views.png)
   
-    - Can't get a plot of Religiosity to work.  
+   - Religiosity
+  ![](output/figures/religion.png)
   
   - Charity and voluntarism: `Donation preferences ~ Charity trust + Charity activity + Volunteer activity + Activism activity + Association membership`
   
-![](output/figures/charity-and-volunteerism.png)  
-
+   
+![](output/figures/charity-and-voluntarism.png)  
+      - Association membership
+  ![](output/figures/other-organizations.png)
   
   - Demographics: `Donation preferences ~ Gender + Marital status + Education + Income + Race + Age`
   
   ![](output/figures/demographics.png)
     - Gender
+  ![](output/figures/gender.png)  
     
     - Marital Status
   ![](output/figures/marital-status.png)  
