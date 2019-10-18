@@ -40,9 +40,12 @@ We will field our larger conjoint survey experiment very soon and we look forwar
 
 # Methods
 
+A few paragraphs about the context of what has been done with conjoint analysis within the political and/or public policy field. 
+
 # Results
 
-- First set of questions (hypotheses) can be answered using the results of the intercept-only model.
+### First Set of Questions
+The first set of questions (hypotheses) can be answered using the results of the intercept-only model.
 
 We hypothesized that each of these structural and organizational characteristics would have a significant effect on donor behavior, though we were unsure of the direction of that effect.
 
@@ -80,12 +83,13 @@ All organizations were positively percieved by respondents. The Red Cross was si
 ![](output/figures/organization.png)
 
 
-- Second set of questions (confirmatory) can be answered using the following upper-level models:
+### Second Set of Questions
+The second set of questions (confirmatory) can be answered using the following upper-level models:
   - Public affairs: `Donation preferences ~ Public affairs knowledge + Public affairs activity`
-![](output/figures/public-affairs.png)
+    ![](output/figures/public-affairs.png)
 
     - Traveled Internationally: No
-    ![](output/figures/traveled.png)
+      ![](output/figures/traveled.png)
     
     - Medium to follow news: Online (excluding social media) with all attributes
       ![](output/figures/following-news.png)
@@ -100,8 +104,7 @@ All organizations were positively percieved by respondents. The Red Cross was si
   - Social views: `Donation preferences ~ Public affairs trust + Social ideology + Religiosity`
   
 ![](output/figures/social-views.png)
-  
-   - Religiosity
+      - Religiosity
   ![](output/figures/religion.png)
   
   - Charity and voluntarism: `Donation preferences ~ Charity trust + Charity activity + Volunteer activity + Activism activity + Association membership`
@@ -114,19 +117,17 @@ All organizations were positively percieved by respondents. The Red Cross was si
   - Demographics: `Donation preferences ~ Gender + Marital status + Education + Income + Race + Age`
   
   ![](output/figures/demographics.png)
-    - Gender
+      - Gender
   ![](output/figures/gender.png)  
-    
-    - Marital Status
+      - Marital Status
   ![](output/figures/marital-status.png)  
-    
-  - Education
+      - Education
   ![](output/figures/education.png)
-    - Income
+      - Income
   ![](output/figures/income.png)
-    - Race 
+      - Race 
     ![](output/figures/race.png)
-    - Age 
+      - Age 
   ![](output/figures/age.png)
  
   - `Donation preferences ~ (Public affairs) + (Political ideology)`
@@ -146,6 +147,7 @@ All organizations were positively percieved by respondents. The Red Cross was si
 ![](output/figures/public-political-social-charity-demo.png)  
   
 
-- Third set of questions (exploratory) can be answered using a market simulator.
+### Third Set of Questions
+The third set of questions (exploratory) can be answered using a market simulator.
 
 
