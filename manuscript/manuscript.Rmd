@@ -40,13 +40,9 @@ We will field our larger conjoint survey experiment very soon and we look forwar
 
 # Methods
 
-Conjoint analysis has been widely used within social sciences but has only recently been used in the political and public policy field. Helfer (2016) and Mummolo (2016) both used conjoint analysis to assess tradeoffs made in political communications. Conjoint is key in political research because helps it captures multidimensional causal relations.  
+Causality can be inferred through conjoint analysis because it shows which components of a choice hold the most weight. Conjoint analysis has been widely used within social sciences and has recently begun to be used in political and public policy fields. Helfer (2016) and Mummolo (2016) both used conjoint analysis to assess tradeoffs made in political communications. ### rewrite in more detail so that it's clear that consumers are making the tradeoffs ### Conjoint is key in political research because it captures multidimensional causal relations.  
 
-Knudsen and Johannesson (2018) showed that political communication requires conjoint analysis because __________.
-
-"Conjoint addresses [the issues of the traditional survey] by separately identifying several component-specific causal effects." (pg. 11)
-
-
+Knudsen and Johannesson (2018) argue that political communication research requires conjoint analysis because it accounts for the masking effects of factors as well as the complexity of a respondent's judgement of credibility. Public policy research would benefit from conjoint analysis for the same reasons.
 
 # Results
 
