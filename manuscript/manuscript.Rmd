@@ -51,7 +51,7 @@ The first set of questions (hypotheses) can be answered using the results of the
 
 We hypothesized that each of these structural and organizational characteristics would have a significant effect on donor behavior, though we were unsure of the direction of that effect. 
 
-![](output/figures/combined-results.png)
+![](output/figures/combined-results-halfeye.png)
 
 
 
@@ -61,28 +61,28 @@ Compared to when an NGO has a friendly relationship with the host government, do
 
 
 
-![](output/figures/relationship-with-gov.png)
+![](output/figures/relationship-with-gov-halfeye.png)
 
 Donors are more likely to donate when organizations are accountable and financially transparent.
 
-![](output/figures/managerial-practices.png)
+![](output/figures/managerial-practices-halfeye.png)
 
 Donors are most likely to donate when an NGO is funded primarily by many small private donations. Donors are less likely to donate when the organization is subsidized by government grants, and even less likely when it is funded by a few private donors.
 
 
 
-![](output/figures/funding-sources.png)
+![](output/figures/funding-sources-halfeye.png)
 
 Of all issue areas, donations to emergency response were most likely, followed by human rights and then environment. Refugee relief was the least likely issue area to be donated to.
 
 
 
-![](output/figures/issue-areas.png)
+![](output/figures/issue-areas-halfeye.png)
 
 All organizations were positively percieved by respondents. The Red Cross was significantly more favored.
 
 
-![](output/figures/organization.png)
+![](output/figures/organization-halfeye.png)
 
 
 ### Second Set of Questions
