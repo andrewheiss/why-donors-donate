@@ -28,7 +28,7 @@ NGOs have less control over *structural* issues, and the role of political and l
 
 In our larger project (which has unfortunately faced some substantial delays), we will use a conjoint survey experiment to disentangle these different questions. We theorize that organizational characteristics like managerial practices, issue area, and funding sources all influence the decision to donate to an NGO (see @fig:big-dag). At the same time, however, we propose that structural characteristics like an NGO's host-country political and legal environment can also serve as donor heuristics. Donors who see that an NGO has been kicked out of a country or that an NGO faces general legal trouble abroad will use that knowledge to decide whether or not to donate. 
 
-![Causal diagram showing causes of donor behavior. D = donation to NGO (outcome); G = NGO-government relationship, I = NGO issue area, F = NGO funding source, O = NGO organizational and managerial practices.](output/figures/causal-path-full.pdf){#fig:big-dag}
+![Causal diagram showing causes of donor behavior. D = donation to NGO (outcome); G = NGO-government relationship, I = NGO issue area, F = NGO funding source, O = NGO organizational and managerial practices.](output/figures/causal-path.pdf){#fig:big-dag}
 
 Identifying the causal link between structural factors and donor behavior is trickier than measuring the link between organizational factors and donor behavior, however, because (1) NGOs have less direct control over their political environments, and (2) organizational characteristics like issue area and funding can both sour the NGO-government relationship (as we explain in further detail below, governments are more likely to crack down on NGOs that address human rights and that receive government funding). @fig:big-dag helps disentangle this complex relationship. Organizational factors (**O**, or organizational practices like financial disclosure and accountability practices; **I**, or issue area; and **F**, or funding) all influence the decision to donate (**D**). Structural factors like an NGO's relationship with its host government (**G**) also influence donation behavior, but the relationship itself is shaped by both funding and issue area. 
 
@@ -40,19 +40,135 @@ We will field our larger conjoint survey experiment very soon and we look forwar
 
 # Methods
 
+Conjoint analysis forces a consumer to choose between alternatives, revealing which components of a choice are the most important to that consumer. Conjoint analysis has been widely used within social sciences to explain causality and has recently begun to be used in political and public policy fields. Helfer (2016) and Mummolo (2016) both used conjoint analysis to assess consumer perceptions of political communications. Conjoint is key in political research because it captures multidimensional causal relations.  
+
+Knudsen and Johannesson (2018) argue that political communication research requires conjoint analysis because it accounts for the masking effects of factors as well as the complexity of a respondent's judgment of credibility. Because we also want to capture the complexity of a respondent's judgment of whether they should donate to an NGO or not, we used conjoint analysis to draw our conclusions. 
+
 # Results
 
-- First set of questions (hypotheses) can be answered using the results of the intercept-only model.
-- Second set of questions (confirmatory) can be answered using the following upper-level models:
-  - Public affairs: `Donation preferences ~ Public affairs knowledge + Public affairs activity`
-  - Political ideology: `Donation preferences ~ Political ideology`
-  - Social views: `Donation preferences ~ Public affairs trust + Social ideology + Religiosity`
-  - Charity and voluntarism: `Donation preferences ~ Charity trust + Charity activity + Volunteer activity + Activism activity + Association membership`
-  - Demographics: `Donation preferences ~ Gender + Marital status + Education + Income + Race + Age`
-  - `Donation preferences ~ (Public affairs) + (Political ideology)`
-  - `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views)`
-  - `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views) + (Charity and voluntarism)`
-  - `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views) + (Charity and voluntarism) + (Demographics)`
-- Third set of questions (exploratory) can be answered using a market simulator.
+## Hypotheses
 
+We hypothesized that each of these structural and organizational characteristics would have a significant effect on donor behavior, and that's what we can clearly see here. Each of the marginal posterior distributions representing the relationship between the structural and organizational characteristics and likelihood of donating have 95% credible intervals that don't include zero. Note that these are the aggregate results. For the influence of various covariate effects, see the second set of questions/hypotheses.
+
+![](output/figures/combined-results-halfeye.png)
+
+Starting with the relationship with the host government, compared to when an NGO has a friendly relationship with the host government (the reference level), donors who see that an NGO faces general trouble (under crackdown or criticized) are less likely to donate, with the stronger negative effect of being under crackdown significantly different than the less negative effect of being criticized.
+
+![](output/figures/relationship-with-gov-halfeye.png)
+
+Donors are more likely to donate when organizations are accountable and financially transparent (not being accountable or financially transparent are the respective reference levels) with no significant difference between being accountable or financially transparent.
+
+![](output/figures/managerial-practices-halfeye.png)
+
+Donors are most likely to donate when an NGO is funded primarily by many small private donations (the reference level). Donors are less likely to donate when the organization is subsidized by government grants, and even less likely when it is funded by a few private donors, though there is no significant difference between the negative effect of funding by government grants and a handful of wealthy private donors.
+
+![](output/figures/funding-sources-halfeye.png)
+
+Of all issue areas, donations to emergency response were most likely (the reference level) followed by human rights and then environment. Refugee relief was the least likely issue area to be donated to, though there is no significant difference between the negative effect of environment and refugee relief on donation intent.
+
+![](output/figures/issue-areas-halfeye.png)
+
+All organizations were positively perceived by respondents, with the Red Cross significantly more favored (no reference level needed since organization doubles as the intercept). There is no significant difference in the effect of each of the other organizations on donation intent.
+
+![](output/figures/organization-halfeye.png)
+
+## Exploratory Analysis
+
+REPLACE RIDGE PLOTS WITH A HISTOGRAM, FOCUS ON SPECIFIC MARGINALS OF INTEREST USING HALFEYE PLOTS AS ABOVE.
+
+The second set of questions (confirmatory) can be answered using the following upper-level models.
+
+### Public affairs: `Donation preferences ~ Public affairs knowledge + Public affairs activity`
+
+![](output/figures/public-affairs.png)
+
+Those that haven't traveled internationally are significantly less likely to donate to NGOs than those who have.
+
+![](output/figures/traveled.png)
+      
+Of all media sources, those that follow the news through an app or email newsletter are more likely to donate in general. Interestingly, those that read newsletters are the most likely to donate overall. They feel most comfortable donating to environmental causes. They care significantly less about managerial practices and funding sources than other groups. 
+
+![](output/figures/following-news.png)
+    
+When it comes to donating to organizations, those whose top news medium is online sources (excluding social media) are least likely to donate.
+
+![](output/figures/following-news2.png)
+    
+### Political ideology: `Donation preferences ~ Political ideology`
+
+Those that are conservative are significantly more likely to donate to the Red Cross.
+
+![](output/figures/political-ideology.png)
+  
+### Social views: `Donation preferences ~ Public affairs trust + Social ideology + Religiosity`
+  
+![](output/figures/social-views.png)
+
+Hindus are very unlikely to donate to human rights or refugee relief, whereas Muslims are very likely to donate to human rights and refugee relief. Muslims are also very willing to donate to organizations that are facing government criticism or crackdown in the country. 
+
+![](output/figures/religion.png)
+  
+### Charity and voluntarism: `Donation preferences ~ Charity trust + Charity activity + Volunteer activity + Activism activity + Association membership`
+  
+Those that have a history of either family or personal activism are most likely to donate to organizations. Those that haven't volunteered in the past 12 months are also more likely to donate.   
+
+![](output/figures/charity-and-voluntarism.png)  
+
+Those that are in a professional or humanitarian organization are most likely to donate. It's odd that those that belong to an environmental organization are less likely to donate to environmental NGOs.
+
+![](output/figures/other-organizations.png)
+  
+### Demographics: `Donation preferences ~ Gender + Marital status + Education + Income + Race + Age`
+  
+Demographics are broken down further and analyzed below.
+
+![](output/figures/demographics.png)
+
+Note: not sure if "other" indicates "male" or if male is the intercept everything else is compared to.
+
+![](output/figures/gender.png)  
+
+Overall, those that are widowed are less likely to donate to organizations than others. They also don't pay attention to financial transparency and accountability, though those that have never married do.
+
+![](output/figures/marital-status.png)  
+
+Financial transparency was important to everyone regardless of education level. 
+
+![](output/figures/education.png)
+
+Income doesn't impact the various attributes except when it comes to organization. There is a lot more spread when it comes to choosing an organization.
+
+![](output/figures/income.png)
+
+Not seeing obvious patterns across races.
+
+![](output/figures/race.png)
+
+Across all ages, people are most likely to donate to emergency response efforts more than any other issue area. 
+
+![](output/figures/age.png)
+ 
+### `Donation preferences ~ (Public affairs) + (Political ideology)`
+  
+Those that read printed news are least likely to donate to any of these organizations. Those that follow international news multiple times are day are more likely to donate and are less concerned when an organization is criticized by the government.  
+
+![](output/figures/public-political.png)
+  
+### `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views)`
+
+For the most part, these plots have too much information to gain useful insight.
+
+![](output/figures/public-political-social.png)
+  
+### `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views) + (Charity and voluntarism)`
+  
+![](output/figures/public-political-social-charity.png)
+  
+### `Donation preferences ~ (Public affairs) + (Political ideology) + (Social views) + (Charity and voluntarism) + (Demographics)`
+
+![](output/figures/public-political-social-charity-demo.png)  
+  
+### Market Simulator
+
+TBD.
 
