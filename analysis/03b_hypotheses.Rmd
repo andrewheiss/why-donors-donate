@@ -10,6 +10,7 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
+
 In this study, we simultaneously account for the interaction between legal crackdown, issue area, funding source, and managerial practices as well as donor characteristics. We hypothesize that each of these structural and organizational characteristics will have a significant effect on donor behavior, but we’re unsure of the direction of that effect.
 
 ```{r load-packages, warning = FALSE, message = FALSE, echo = FALSE}
