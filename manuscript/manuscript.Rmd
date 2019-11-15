@@ -40,13 +40,23 @@ We will field our larger conjoint survey experiment very soon and we look forwar
 
 # Methods
 
-Conjoint anlysis is a common research method used to evaluate which attributes of a choice are most important to a consumer. A conjoint analysis survey includes sets of alternatives that consumers must choose between. These choice sets are made up of attributes such as price, brand, and features. However, the alternatives have different levels within these attributes. Price may be 20 dollars for Option A and 30 dollars for Option B, however Option A may not include a specific feature while Option B does.
+## Conjoint Analysis
 
-Conjoint analysis reflects a real world experience where the consumer has to weigh tradeoffs and choose between alternatives. This reveals which components of a choice are the most important to that consumer. Aggregated results from all participants show which attributes have the greatest weight on a decision. Further insights can be concluded by analyzing responses of specific groups (i.e. according to gender, age, member of an organization).
+Conjoint analysis is a staple in marketing research for evaluating which product attributes are most important to consumers. It has been extensively used in new product development and product line optimization. However, conjoint analysis is generally applicable whenever individuals face complex, multi-dimensional tradeoffs such that explicitly eliciting preferences isn't productive or even possible. In the context of our project, we are evaluating donor rather than consumer preferences as they choose NGOs to donate to based on both organizational and structural heuristics.
 
-Conjoint analysis has been widely used within social sciences to explain causality and has recently begun to be used in political and public policy fields. Helfer (2016) and Mummolo (2016) both used conjoint analysis to assess consumer perceptions of political communications. Conjoint is key in political research because it captures multidimensional causal relations.  
+Conjoint analysis has been widely used within social sciences to explain causality and has recently begun to be used in political and public policy fields. Helfer (2016) and Mummolo (2016) both used conjoint analysis to assess perceptions of political communications. Knudsen and Johannesson (2018) argue that political communication research requires conjoint analysis because it accounts for the masking effects of factors as well as the complexity of a respondent's judgment of credibility. Because we also want to capture the complexity of a respondent's judgment of which NGO they should donate to, if any, we saw potential to expand the application of conjoint analysis within public policy.
 
-Knudsen and Johannesson (2018) argue that political communication research requires conjoint analysis because it accounts for the masking effects of factors as well as the complexity of a respondent's judgment of credibility. Because we also want to capture the complexity of a respondent's judgment of whether they should donate to an NGO or not, we used conjoint analysis to draw our conclusions. 
+Respondents were presented with 4 hypothetical organizations that each had 4 randomly assigned features. Respondents were shown 12 sets of these hypothetical organizations. This partial fractional factorial design resulted in 288 (4 × 4 × 2 × 3 × 3) possible combinations of features, and no single respondent was offered every combination.
+
+## Sample
+
+We used an online survey, hosted at Qualtrics, to collect our data. We designed this survey to measure and test each of our hypotheses. After collecting demographic information about respondents, the survey presented 12 random combinations of managerial practices, issue areas, funding sources, and relationships with host governments for 4 alternative organizations and asked respondents which of the 4 organizations they would most prefer to donate to, if any.
+
+Participants of the survey experiment were recruited through Centiment, a commercial online provider of high quality non-probability opt-in survey panels. Centiment ensures panel quality by actively recruiting representative samples of the US population and provides monetary incentives and rewards to participants.
+
+To see how varying NGO characteristics influence the decision to donate, our sample was representative of the population of people who are likely to donate to charity. We asked potential participants a screening question early in the survey (“Q2.5: How often do you donate to charity”). If a participant responded that they give once every few years or never, they were be disqualified from the study.
+
+The 1,000 subjects constituted a sufficient size for model estimation. A sample size of at least 500 respondents is typical for estimating a hierarchical Bayesian model based on conjoint data. We doubled this amount because we are interested in analyzing subpopulations of respondents, which requires a larger sample. The first page of the survey contained a consent statement that participants must agree to before continuing with the experiment.
 
 # Results
 
