@@ -220,7 +220,7 @@ if (public_political_social_charity_demo == 1) write_rds(draws, here::here("anal
 # Plot marginals
 
 ```{r plot-marginals}
-intercept <- 1                            # Intercept-only
+intercept <- 0                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
@@ -229,7 +229,7 @@ demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
-public_political_social_charity_demo <- 0 # + Demographics
+public_political_social_charity_demo <- 1 # + Demographics
 
 # Load draws
 if (intercept == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
@@ -455,7 +455,6 @@ if (intercept != 1) {
        facet_wrap(~ levels, ncol = 5)
 }
 
-
 # # Save plot
 # if (intercept == 1) file_name <- paste("intercept_marginal-posteriors.png")
 # if (public_affairs == 1) file_name <- paste("public-affairs_marginal-posteriors.png")
@@ -476,6 +475,76 @@ if (intercept != 1) {
 # )
 ```
 
+As an experiment, it might be helpful to use a heatmap to identify where there are significant differences in the non-intercept models, which can then be narrowed down using the marginal plots.
+
+```{r heatmaps}
+if (public_affairs == 1) plot_title <- paste("Public Affairs")
+if (political_ideology == 1) plot_title <- paste("Political Ideology")
+if (social_views == 1) plot_title <- paste("Social Views")
+if (charity_voluntarism == 1) plot_title <- paste("Charity and Voluntarism")
+if (demographics == 1) plot_title <- paste("Demographics")
+if (public_political == 1) plot_title <- paste("Public Affairs and Political Ideology")
+if (public_political_social == 1) plot_title <- paste("Public Affairs, Political Ideology, and Social Views")
+if (public_political_social_charity == 1) plot_title <- paste("Public Affairs, Political Ideology, Social Views, and Charity and Voluntarism")
+if (public_political_social_charity_demo == 1) plot_title <- paste("Public Affairs, Political Ideology, Social Views, Charity and Voluntarism, and Demographics")
+if (intercept != 1) {
+  # Posterior means.
+  posterior_means <- draws %>% 
+    filter(j != 1) %>% 
+    mutate(
+      levels = factor(i, labels = level_labels), 
+      # covariates = factor(j, labels = covariate_labels)
+      covariates = factor(j, labels = 1:length(covariate_labels))
+    ) %>% 
+    group_by(levels, covariates) %>% 
+    summarize(
+      mean = mean(Theta),
+      ci_lower = quantile(Theta, .025),
+      ci_upper = quantile(Theta, .975),
+      gt_zero = if_else(ci_lower > 0 & ci_upper > 0, 1, 0),
+      lt_zero = if_else(ci_lower < 0 & ci_upper < 0, -1, 0)
+    )
+  
+  # Heatmap of Theta matrix.
+  posterior_means %>% 
+    mutate(
+      gt_lt_zero = gt_zero + lt_zero,
+      Coefficients = factor(
+        gt_lt_zero, 
+        levels = -1:1,
+        labels = c("Negative", "Not Significant", "Positive"))
+    ) %>% 
+    ggplot(aes(x = covariates, y = levels, fill = Coefficients)) +
+    geom_raster() +
+    scale_fill_brewer(palette = "Blues") +
+    scale_x_discrete(expand=c(0.001,0.001)) +
+    scale_y_discrete(expand=c(0.001,0.001)) +
+    # theme(axis.text.x = element_text(angle = 90)) +
+    labs(
+      title = plot_title,
+      x = "Covariates",
+      y = "Attribute Levels"
+    )
+}
+
+# Save plot
+if (public_affairs == 1) file_name <- paste("public-affairs_coefficient-matrix.png")
+if (political_ideology == 1) file_name <- paste("political-ideology_coefficient-matrix.png")
+if (social_views == 1) file_name <- paste("social-views_coefficient-matrix.png")
+if (charity_voluntarism == 1) file_name <- paste("charity-voluntarism_coefficient-matrix.png")
+if (demographics == 1) file_name <- paste("demographics_coefficient-matrix.png")
+if (public_political == 1) file_name <- paste("public-political_coefficient-matrix.png")
+if (public_political_social == 1) file_name <- paste("public-political-social_coefficient-matrix.png")
+if (public_political_social_charity == 1) file_name <- paste("public-political-social-charity_coefficient-matrix.png")
+if (public_political_social_charity_demo == 1) file_name <- paste("public-political-social-charity-demos_coefficient-matrix.png")
+ggsave(
+  file_name,
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
+```
 
 # Original computing environment
 
