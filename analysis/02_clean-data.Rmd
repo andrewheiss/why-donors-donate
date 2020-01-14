@@ -417,6 +417,35 @@ data <- data %>%
       levels = c("Less than median", "More than median")
     )
   )
+
+# Add other factor levels
+data <- data %>% 
+  mutate(
+    Q2.2 = factor(Q2.2, labels = c("Always", "Sometimes", "Never"), ordered = TRUE),
+    Q2.6 = factor(Q2.6, 
+                  labels = c("$1-$49", "$50-$99", "$100-$499", "$500-$999", 
+                             "$1000-$4,999", "$5000-$9,999", "$10,000+"),
+                  ordered = TRUE),
+    Q2.7_f = factor(Q2.7, ordered = TRUE),
+    Q2.8_f = factor(Q2.8, ordered = TRUE),
+    Q2.9 = factor(Q2.9, labels = c("Yes", "No"), ordered = TRUE),
+    Q5.1 = factor(Q5.1, labels = c("Yes", "No"), ordered = TRUE),
+    Q5.2_f = factor(Q5.2, ordered = TRUE),
+    Q5.6_f = factor(Q5.6, ordered = TRUE),
+    Q5.7 = factor(Q5.7, labels = c("Yes", "No"), ordered = TRUE),
+    Q5.11_f = factor(Q5.11, ordered = TRUE),
+    Q5.12 = factor(Q5.12, labels = c("Male", "Female", "Transgender", 
+                                     "Prefer not to say", "Other"), 
+                   ordered = TRUE),
+    Q5.13 = factor(Q5.13, labels = c("Married", "Widowed", "Divorced", 
+                                     "Separated", "Never married"), 
+                   ordered = TRUE),
+    Q5.14 = factor(Q5.14, 
+                   labels = c("Less than high school", "High school graduate", 
+                              "Some college", "2 year degree", "4 year degree", 
+                              "Graduate or professional degree", "Doctorate"),
+                   ordered = TRUE)
+  )
 ```
 
 # Save clean data with transformations
