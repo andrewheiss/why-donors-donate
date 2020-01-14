@@ -381,12 +381,13 @@ if (intercept != 1) {
 if (intercept == 1) {
   draws %>% 
     mutate(
-      levels = factor(i, labels = level_labels)
+      levels = factor(i, labels = level_labels),
+      Theta_exp = exp(Theta)
     ) %>%
     filter(levels == str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief"))) %>% 
-    ggplot(aes(x = Theta, y = levels)) + 
+    ggplot(aes(x = Theta_exp, y = levels)) + 
     geom_halfeyeh(.width = .95) +
-    geom_vline(xintercept = 0, color = "grey") +
+    geom_vline(xintercept = 1, color = "grey") +
     labs(y = "Attribute Levels")
 }
 if (intercept != 1) {
@@ -413,9 +414,9 @@ if (intercept == 1) {
       levels = factor(i, labels = level_labels)
     ) %>%
     filter(levels == str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"))) %>% 
-    ggplot(aes(x = Theta, y = levels)) +
+    ggplot(aes(x = exp(Theta), y = levels)) +
     geom_halfeyeh(.width = .95) +
-    geom_vline(xintercept = 0, color = "grey") +
+    geom_vline(xintercept = 1, color = "grey") +
     labs(y = "Attribute Levels")
 }
 if (intercept != 1) {

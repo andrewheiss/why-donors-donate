@@ -33,61 +33,14 @@ set.seed(1234)
 ```
 
 
-# Causal pathway
-
-Our theory and hypotheses are laid out in the causal pathway below. Organizational factors (**O**, or organizational practices like financial disclosure and accountability practices; **I**, or issue area; and **F**, or funding) all influence the decision to donate (**D**). Structural factors like an NGO's relationship with its host government (**G**) also influence donation behavior, but the relationship itself is shaped by both funding and issue area. 
-
-```{r causal-dag, fig.width=13/3, fig.height=2}
-node_colors <- tribble(
-  ~name, ~type,
-  "D", "Outcome",
-  "I", "Organizational factor",
-  "F", "Organizational factor",
-  "O", "Organizational factor",
-  "G", "Structural factor"
-)
-
-# Set up DAG structure
-theory_dag <- dagify(D ~ I + F + O + G,
-                     G ~ I + F,
-                     outcome = "D",
-                     exposure = "C") %>% 
-  tidy_dagitty(layout = "dh", seed = 1234) 
-
-# Add node types/colors to DAG data
-theory_dag$data <- theory_dag$data %>% 
-  left_join(node_colors, by = "name")
-
-# Make DAG plot
-plot_dag <- ggplot(theory_dag, aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_dag_point(size = 6, mapping = aes(color = type)) +
-  geom_dag_edges(start_cap = circle(4, "mm"),
-                 end_cap = circle(4, "mm")) +
-  geom_dag_text(size = pts(6), family = "Roboto Condensed", fontface = "bold") +
-  scale_adjusted() +
-  theme_ngo() +
-  theme(panel.grid = element_blank(),
-        panel.border = element_blank(),
-        axis.title = element_blank(),
-        axis.text = element_blank())
-
-# Show and save plot
-plot_dag
-ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.pdf"),
-       width = 13/3, height = 2, units = "in", device = cairo_pdf)
-ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.png"),
-       width = 13/3, height = 2, units = "in", type = "cairo", dpi = 300)
-```
-
-
 # Load data and model output
 
 ```{r load-data-output, warning=FALSE, message=FALSE}
 intercept <- 0                           # Intercept-only
-public_affairs <- 1                       # Public affairs
+public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
-charity_voluntarism <- 0                  # Charity and voluntarism
+charity_voluntarism <- 1                  # Charity and voluntarism
 demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
@@ -224,12 +177,12 @@ intercept <- 0                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
-charity_voluntarism <- 0                  # Charity and voluntarism
+charity_voluntarism <- 1                  # Charity and voluntarism
 demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
-public_political_social_charity_demo <- 1 # + Demographics
+public_political_social_charity_demo <- 0 # + Demographics
 
 # Load draws
 if (intercept == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
@@ -428,32 +381,32 @@ if (public_political_social_charity_demo == 1) {
 }
 
 # Plot marginals
-if (intercept == 1) {
-  draws %>% 
-    mutate(
-      levels = factor(i, labels = level_labels)
-    ) %>%
-    ggplot(aes(x = Theta, y = levels)) + 
-    geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
-    # geom_halfeyeh(.width = .95) +
-    geom_vline(xintercept = 0, color = "grey") +
-    labs(y = "Attribute Levels")
-}
+# if (intercept == 1) {
+#   draws %>% 
+#     mutate(
+#       levels = factor(i, labels = level_labels)
+#     ) %>%
+#     ggplot(aes(x = Theta, y = levels)) + 
+#     geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+#     # geom_halfeyeh(.width = .95) +
+#     geom_vline(xintercept = 0, color = "grey") +
+#     labs(y = "Attribute Levels")
+# }
 
-if (intercept != 1) {
-  draws %>% 
-    filter(j != 1) %>% 
-    mutate(
-      levels = factor(i, labels = level_labels), 
-      covariates = factor(j, labels = covariate_labels)  
-    ) %>%
-    ggplot(aes(x = Theta, y = covariates)) +
-       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
-       # geom_halfeyeh(.width = .95) +
-       geom_vline(xintercept = 0, color = "white") +
-       labs(y = "Covariates") +
-       facet_wrap(~ levels, ncol = 5)
-}
+# if (intercept != 1) {
+#   draws %>% 
+#     filter(j != 1) %>% 
+#     mutate(
+#       levels = factor(i, labels = level_labels), 
+#       covariates = factor(j, labels = covariate_labels)  
+#     ) %>%
+#     ggplot(aes(x = Theta, y = covariates)) +
+#        geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+#        # geom_halfeyeh(.width = .95) +
+#        geom_vline(xintercept = 0, color = "white") +
+#        labs(y = "Covariates") +
+#        facet_wrap(~ levels, ncol = 5)
+# }
 
 # # Save plot
 # if (intercept == 1) file_name <- paste("intercept_marginal-posteriors.png")
@@ -481,22 +434,50 @@ As an experiment, it might be helpful to use a heatmap to identify where there a
 if (public_affairs == 1) plot_title <- paste("Public Affairs")
 if (political_ideology == 1) plot_title <- paste("Political Ideology")
 if (social_views == 1) plot_title <- paste("Social Views")
-if (charity_voluntarism == 1) plot_title <- paste("Charity and Voluntarism")
+if (charity_voluntarism == 1) plot_title <- paste("Covariates related to charity and voluntarism")
 if (demographics == 1) plot_title <- paste("Demographics")
 if (public_political == 1) plot_title <- paste("Public Affairs and Political Ideology")
 if (public_political_social == 1) plot_title <- paste("Public Affairs, Political Ideology, and Social Views")
 if (public_political_social_charity == 1) plot_title <- paste("Public Affairs, Political Ideology, Social Views, and Charity and Voluntarism")
 if (public_political_social_charity_demo == 1) plot_title <- paste("Public Affairs, Political Ideology, Social Views, Charity and Voluntarism, and Demographics")
+
+if (charity_voluntarism == 1) {
+  j_labels <- tribble(
+    ~j, ~j_label,
+    2, "Importance of trusting charities", 
+    3, "Trust charities", 
+    4, "Frequency of donation", 
+    5, "Amount of donation", 
+    6, "Volunteered", 
+    7, "Volunteer frequency", 
+    8, "Personal involvement in activism", 
+    9, "Family involvement in activism", 
+    10, "Membership in church", 
+    11, "Membership in sports", 
+    12, "Membership in art, music, or educational organization", 
+    13, "Membership in labor union", 
+    14, "Membership in political party", 
+    15, "Membership in envrionmental organization", 
+    16, "Membership in professional association", 
+    17, "Membership in humanitarian organization", 
+    18, "Membership in consumer organization", 
+    19, "Membership in other organization"
+  ) %>% 
+    mutate(j_label = fct_inorder(j_label))
+}
+
 if (intercept != 1) {
   # Posterior means.
   posterior_means <- draws %>% 
     filter(j != 1) %>% 
+    left_join(j_labels, by = "j") %>% 
+    left_join(level_lookup, by = "i") %>% 
     mutate(
       levels = factor(i, labels = level_labels), 
       # covariates = factor(j, labels = covariate_labels)
       covariates = factor(j, labels = 1:length(covariate_labels))
     ) %>% 
-    group_by(levels, covariates) %>% 
+    group_by(category, attribute, j_label) %>% 
     summarize(
       mean = mean(Theta),
       ci_lower = quantile(Theta, .025),
@@ -506,7 +487,7 @@ if (intercept != 1) {
     )
   
   # Heatmap of Theta matrix.
-  posterior_means %>% 
+  plot_heatmap <- posterior_means %>% 
     mutate(
       gt_lt_zero = gt_zero + lt_zero,
       Coefficients = factor(
@@ -514,18 +495,32 @@ if (intercept != 1) {
         levels = -1:1,
         labels = c("Negative", "Not Significant", "Positive"))
     ) %>% 
-    ggplot(aes(x = covariates, y = levels, fill = Coefficients)) +
-    geom_raster() +
-    scale_fill_brewer(palette = "Blues") +
-    scale_x_discrete(expand=c(0.001,0.001)) +
-    scale_y_discrete(expand=c(0.001,0.001)) +
-    # theme(axis.text.x = element_text(angle = 90)) +
+    ggplot(aes(x = j_label, y = attribute, fill = Coefficients)) +
+    geom_tile(color = "white", size = 0.25) +
+    # scale_fill_brewer(palette = "Blues") +
+    scale_fill_manual(values = c(clrs$orange, "grey80", clrs$olive)) +
+    scale_x_discrete(expand = c(0.001, 0.001)) +
+    scale_y_discrete(expand = c(0.001, 0.001)) +
+    # guides(fill = guide_legend(override.aes = list(key.height = 0.5, key.width = 0.5))) +
+    guides(fill = guide_legend(keywidth = 0.5, keyheight = 0.5)) +
+    theme_ngo(base_size = 14) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+          legend.position = "bottom",
+          strip.placement = "outside") +
     labs(
       title = plot_title,
       x = "Covariates",
       y = "Attribute Levels"
-    )
+    ) + 
+    # facet_wrap(~ category, ncol = 1, scales = "free_y")
+    facet_grid(vars(category), scales = "free_y", space = "free_y")
 }
+
+plot_heatmap
+ggsave(plot_heatmap, filename = here("analysis", "output", "figures", "q2-heatmap.pdf"),
+       width = 26/3, height = 6.5, units = "in", device = cairo_pdf)
+ggsave(plot_heatmap, filename = here("analysis", "output", "figures", "q2-heatmap.png"),
+       width = 26/3, height = 6.5, units = "in", type = "cairo", dpi = 300)
 
 # Save plot
 if (public_affairs == 1) file_name <- paste("public-affairs_coefficient-matrix.png")
