@@ -31,7 +31,7 @@ theme_ngo <- function(base_size = 9, base_family = "Roboto Condensed") {
                                     family = "Roboto Condensed", face = "bold"),
           strip.background = element_rect(fill = "#ffffff", colour = NA),
           axis.ticks = element_blank(),
-          axis.title.x = element_text(margin = margin(t = 10)),
+          axis.title.x = element_text(margin = margin(t = 5)),
           axis.text = element_text(family = "Roboto Condensed Light", face = "plain"),
           legend.key = element_blank(),
           legend.text = element_text(size = rel(1), family = "Roboto Condensed Light", face = "plain"),
