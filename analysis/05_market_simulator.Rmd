@@ -1,0 +1,262 @@
+---
+title: "Data Dashboard"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r packages, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(flexdashboard)
+library(plotly)
+```
+
+
+Column {data-width=200 .sidebar}
+-------------------------------------------------------------------------------------
+
+```{r Inputs}
+
+```
+
+Row
+------------------------------------------------------------------------------------
+
+```{r plot}
+#barchart <- ggplot()
+
+#ggplotly(barchart)
+```
+
+Row 
+--------------------------------------------------------------------------------------
+### Amnest International Expected Utility
+
+```{r}
+renderValueBox({
+  ai_exp_util <- 15
+  valueBox(ai_exp_util,
+           color = "#FFC30B")
+})
+```
+
+### Greenpeace Expected Utility
+
+```{r}
+renderValueBox({
+  gp_exp_util <- 15
+  valueBox(gp_exp_util,
+           color = "green")
+})
+```
+
+### Oxfam Expected Utility
+
+```{r}
+renderValueBox({
+  ox_exp_util <- 15
+  valueBox(ox_exp_util,
+           color = "teal")
+})
+```
+
+### Redcross Expected Utility
+
+```{r}
+renderValueBox({
+  rc_exp_util <- 15
+  valueBox(rc_exp_util,
+           color = "maroon")
+})
+```
+
+Row 
+--------------------------------------------------------------------------------------
+
+### Amnesty International Expected Donors
+
+```{r echo=FALSE}
+renderGauge({
+  ai_rate <- 15
+  gauge(ai_rate, 
+        min = 0, 
+        max = 1000,
+        gaugeSectors(colors = "#FFC30B"))
+})
+```
+
+### Greenpeace Expected Donors
+
+```{r echo=FALSE}
+renderGauge({
+  gp_rate <- 15
+  gauge(gp_rate, 
+        min = 0, 
+        max = 1000,
+        gaugeSectors(colors = "green"))
+})
+```
+
+### Oxfam Expected Donors
+
+```{r echo=FALSE}
+renderGauge({
+  ox_rate <- 15
+  gauge(ox_rate, 
+        min = 0, 
+        max = 1000,
+        gaugeSectors(colors = "teal"))
+})
+```
+
+### Red Cross Expected Donors
+
+```{r echo=FALSE}
+renderGauge({
+  rc_rate <- 15
+  gauge(rc_rate, 
+        min = 0, 
+        max = 1000,
+        gaugeSectors(colors = "maroon"))
+})
+```
+
+Row 
+--------------------------------------------------------------------------------------
+
+
+### Amnesty International Inputs
+
+```{r echo=FALSE}
+selectInput("ai_issue", 
+            label = "Select Issue Area:",
+            choices = c("Emergency response",
+                        "Environment",
+                        "Human rights",
+                        "Refugee relief"))
+
+selectInput("ai_fin_trans",
+            label = "Select Financial transparency:",
+            choices = c("Doesn’t engage in transparency",
+                        "Engages in transparency"))
+
+selectInput("ai_account",
+            label = "Select Financial Accountability:",
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in financial accountability"))
+
+selectInput("ai_funding",
+            label = "Select Funding source:",
+            choices = c("Handful of wealthy private donors",
+                        "Government Grants",
+                        "Many small private donations"))
+
+selectInput("ai_gov_relat",
+            label = "Select Relationship with host government",
+            choices = c("Friendly relationship with government",
+                        "Criticized by government", 
+                        "Under government crackdown"))
+```
+
+### Greenpeace Inputs
+
+```{r echo=FALSE}
+selectInput("gp_issue", 
+            label = "Select Issue Area:",
+            choices = c("Emergency response",
+                        "Environment",
+                        "Human rights",
+                        "Refugee relief"))
+
+selectInput("gp_fin_trans",
+            label = "Select Financial transparency:",
+            choices = c("Doesn’t engage in transparency",
+                        "Engages in transparency"))
+
+selectInput("gp_account",
+            label = "Select Financial Accountability:",
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in financial accountability"))
+
+selectInput("gp_funding",
+            label = "Select Funding source:",
+            choices = c("Handful of wealthy private donors",
+                        "Government Grants",
+                        "Many small private donations"))
+
+selectInput("gp_gov_relat",
+            label = "Select Relationship with host government",
+            choices = c("Friendly relationship with government",
+                        "Criticized by government", 
+                        "Under government crackdown"))
+```
+
+
+### Oxfam Inputs
+
+```{r echo=FALSE}
+selectInput("ox_issue", 
+            label = "Select Issue Area:",
+            choices = c("Emergency response",
+                        "Environment",
+                        "Human rights",
+                        "Refugee relief"))
+
+selectInput("ox_fin_trans",
+            label = "Select Financial transparency:",
+            choices = c("Doesn’t engage in transparency",
+                        "Engages in transparency"))
+
+selectInput("ox_account",
+            label = "Select Financial Accountability:",
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in financial accountability"))
+
+selectInput("ox_funding",
+            label = "Select Funding source:",
+            choices = c("Handful of wealthy private donors",
+                        "Government Grants",
+                        "Many small private donations"))
+
+selectInput("ox_gov_relat",
+            label = "Select Relationship with host government",
+            choices = c("Friendly relationship with government",
+                        "Criticized by government", 
+                        "Under government crackdown"))
+```
+
+### Red Cross Inputs
+
+```{r echo=FALSE}
+selectInput("rc_issue", 
+            label = "Select Issue Area:",
+            choices = c("Emergency response",
+                        "Environment",
+                        "Human rights",
+                        "Refugee relief"))
+
+selectInput("rc_fin_trans",
+            label = "Select Financial transparency:",
+            choices = c("Doesn’t engage in transparency",
+                        "Engages in transparency"))
+
+selectInput("rc_account",
+            label = "Select Financial Accountability:",
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in financial accountability"))
+
+selectInput("rc_funding",
+            label = "Select Funding source:",
+            choices = c("Handful of wealthy private donors",
+                        "Government Grants",
+                        "Many small private donations"))
+
+selectInput("rc_gov_relat",
+            label = "Select Relationship with host government",
+            choices = c("Friendly relationship with government",
+                        "Criticized by government", 
+                        "Under government crackdown"))
+```
