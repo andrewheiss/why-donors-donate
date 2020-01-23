@@ -12,6 +12,14 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(flexdashboard)
 library(plotly)
+library(here)
+```
+
+```{r load data}
+intercept_mod <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercept_noncentered.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Theta))
+
 ```
 
 
