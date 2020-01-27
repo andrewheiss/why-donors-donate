@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(flexdashboard)
 library(plotly)
+library(shiny)
 library(here)
 ```
 
@@ -19,6 +20,22 @@ library(here)
 intercept_mod <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercept_noncentered.rds')) %>% 
   group_by(i) %>% 
   summarize(theta_mean = mean(Theta))
+intercept_mod
+#Levels (This is a guess):            Means:
+#   1. Amnesty International          0.805
+#   2. Greenpeace                     0.923
+#   3. Oxfam                          0.620
+#   4. Red Cross                      1.820
+#   5. Environment                   -0.444
+#   6. Human Rights                  -0.164
+#   7. Refugee Relief                -0.582
+#   8. Financially Transparent        1.080
+#   9. Accountable                    1.130
+#   10. Small wealthy donars         -0.376
+#   11. Government Grants            -0.252
+#   12. Critized by Government       -0.663
+#   13. Under Government Crackdown   -1.010
+
 
 ```
 
