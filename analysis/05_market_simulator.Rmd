@@ -39,6 +39,9 @@ intercept_mod
 
 ```
 
+```{r matrix multiplication}
+
+```
 
 Column {data-width=200 .sidebar}
 -------------------------------------------------------------------------------------
@@ -58,7 +61,7 @@ Row
 
 Row 
 --------------------------------------------------------------------------------------
-### Amnest International Expected Utility
+### Amnesty International Expected Utility
 
 ```{r}
 renderValueBox({
@@ -162,6 +165,17 @@ selectInput("ai_issue",
                         "Environment",
                         "Human rights",
                         "Refugee relief"))
+
+# add value to a vector that can then be used for matrix multiplication
+if (ai_issue = "Environment") {
+# add 1 to a vector that will be multiplied by the means
+}
+
+# this won't work for discrete variables
+show_ai_issue <- reactive({
+  intercept_mod %>% 
+     filter()
+})
 
 selectInput("ai_fin_trans",
             label = "Select Financial transparency:",
