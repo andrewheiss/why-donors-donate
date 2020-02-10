@@ -20,7 +20,6 @@ library(here)
 intercept_mod <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercept_noncentered.rds')) %>% 
   group_by(i) %>% 
   summarize(theta_mean = mean(Theta))
-intercept_mod
 #Levels (This is a guess):            Means:
 #   1. Amnesty International          0.805
 #   2. Greenpeace                     0.923
@@ -34,13 +33,97 @@ intercept_mod
 #   10. Small wealthy donars         -0.376
 #   11. Government Grants            -0.252
 #   12. Critized by Government       -0.663
-#   13. Under Government Crackdown   -1.010
+#   13. Under Government Crackdown   -1.011
 
+
+beta <- as.data.frame(matrix(rep(0), nrow = 13))
+beta$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human Rights", "Refugee Relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
+
+
+
+
+####################################################################################
+
+df <- reactive({
+  #Amnesty International
+    beta$ai_value <- 0
+    beta$ai_value[beta$levels == 'Amnesty International'] <- 1
+    beta$ai_value[beta$levels %in% input$ai_issue] <- 1
+    beta$ai_value[beta$levels %in% input$ai_fin_trans] <- 1
+    beta$ai_value[beta$levels %in% input$ai_account] <- 1
+    beta$ai_value[beta$levels %in% input$ai_funding] <- 1
+    beta$ai_value[beta$levels %in% input$ai_gov_relat] <- 1
+  #Greenpeace
+    beta$gp_value <- 0
+    beta$gp_value[beta$levels == 'Greenpeace'] <- 1
+    beta$gp_value[beta$levels %in% input$gp_issue] <- 1
+    beta$gp_value[beta$levels %in% input$gp_fin_trans] <- 1
+    beta$gp_value[beta$levels %in% input$gp_account] <- 1
+    beta$gp_value[beta$levels %in% input$gp_funding] <- 1
+    beta$gp_value[beta$levels %in% input$gp_gov_relat] <- 1
+  #Oxfam
+    beta$ox_value <- 0
+    beta$ox_value[beta$levels == 'Oxfam'] <- 1
+    beta$ox_value[beta$levels %in% input$ox_issue] <- 1
+    beta$ox_value[beta$levels %in% input$ox_fin_trans] <- 1
+    beta$ox_value[beta$levels %in% input$ox_account] <- 1
+    beta$ox_value[beta$levels %in% input$ox_funding] <- 1
+    beta$ox_value[beta$levels %in% input$ox_gov_relat] <- 1
+  #Redcross
+    beta$rc_value <- 0
+    beta$rc_value[beta$levels == 'Red Cross'] <- 1
+    beta$rc_value[beta$levels %in% input$rc_issue] <- 1
+    beta$rc_value[beta$levels %in% input$rc_fin_trans] <- 1
+    beta$rc_value[beta$levels %in% input$rc_account] <- 1
+    beta$rc_value[beta$levels %in% input$rc_funding] <- 1
+    beta$rc_value[beta$levels %in% input$rc_gov_relat] <- 1
+    beta
+    
+})
+
+output$data <- renderTable({
+    df()
+})
+  
+renderTable({
+    df()
+})
 
 ```
 
-```{r matrix multiplication}
+```{r matrix multiplication, eval=FALSE, include=FALSE}
+library(shiny)
 
+beta <- data.frame(
+  value = c(0,0,0),
+  levels = c("Environment", "Human rights", "Refugee relief")
+)
+
+ui <- fluidPage(
+  fluidRow(
+    column(6,
+      selectInput("ai_issue", 
+                  label = "Select Issue Area:",
+                  choices = beta$levels,
+                  multiple = TRUE)
+    ),
+    column(6,
+      tableOutput("data")
+    )
+  )
+)
+
+server = function(input, output) {
+
+  df <- reactive({
+    beta$value[beta$levels %in% input$ai_issue] <- 1
+    beta
+  })
+
+  output$data <- renderTable({
+    df()
+  })
+}
 ```
 
 Column {data-width=200 .sidebar}
@@ -166,17 +249,6 @@ selectInput("ai_issue",
                         "Human rights",
                         "Refugee relief"))
 
-# add value to a vector that can then be used for matrix multiplication
-if (ai_issue = "Environment") {
-# add 1 to a vector that will be multiplied by the means
-}
-
-# this won't work for discrete variables
-show_ai_issue <- reactive({
-  intercept_mod %>% 
-     filter()
-})
-
 selectInput("ai_fin_trans",
             label = "Select Financial transparency:",
             choices = c("Doesn’t engage in transparency",
@@ -189,9 +261,9 @@ selectInput("ai_account",
 
 selectInput("ai_funding",
             label = "Select Funding source:",
-            choices = c("Handful of wealthy private donors",
-                        "Government Grants",
-                        "Many small private donations"))
+            choices = c("Many small private donations",
+                        "Handful of wealthy private donors",
+                        "Government Grants"))
 
 selectInput("ai_gov_relat",
             label = "Select Relationship with host government",
@@ -222,9 +294,9 @@ selectInput("gp_account",
 
 selectInput("gp_funding",
             label = "Select Funding source:",
-            choices = c("Handful of wealthy private donors",
-                        "Government Grants",
-                        "Many small private donations"))
+            choices = c("Many small private donations",
+                        "Handful of wealthy private donors",
+                        "Government Grants"))
 
 selectInput("gp_gov_relat",
             label = "Select Relationship with host government",
@@ -256,9 +328,9 @@ selectInput("ox_account",
 
 selectInput("ox_funding",
             label = "Select Funding source:",
-            choices = c("Handful of wealthy private donors",
-                        "Government Grants",
-                        "Many small private donations"))
+            choices = c("Many small private donations",
+                        "Handful of wealthy private donors",
+                        "Government Grants"))
 
 selectInput("ox_gov_relat",
             label = "Select Relationship with host government",
@@ -289,9 +361,9 @@ selectInput("rc_account",
 
 selectInput("rc_funding",
             label = "Select Funding source:",
-            choices = c("Handful of wealthy private donors",
-                        "Government Grants",
-                        "Many small private donations"))
+            choices = c("Many small private donations",
+                        "Handful of wealthy private donors",
+                        "Government Grants"))
 
 selectInput("rc_gov_relat",
             label = "Select Relationship with host government",
