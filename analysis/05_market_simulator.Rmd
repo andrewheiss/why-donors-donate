@@ -37,11 +37,16 @@ intercept_mod <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercep
 
 
 beta <- as.data.frame(matrix(rep(0), nrow = 13))
-beta$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human Rights", "Refugee Relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
+beta$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human rights", "Refugee relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
 
 
+testlevels <- as.data.frame(matrix(0, 12, 1))
+testlevels[c(3,4,8),] <- 1
+testlevels[11,] <- 22.4
+testWeights <- c(.4, .15, .53, .19, .32, .09, .00, .1,.14, .16, -.08, 1.24)
+testWeights <- as.data.frame(matrix(testWeights, nrow = 12, ncol = 1))
 
-
+exp(t(testlevels) %*% as.matrix(testWeights))
 ####################################################################################
 
 df <- reactive({
@@ -81,12 +86,20 @@ df <- reactive({
     
 })
 
-output$data <- renderTable({
-    df()
-})
-  
 renderTable({
     df()
+})
+
+renderTable({
+    choice = df()
+    t(choice[,3]) %*% as.matrix(intercept_mod[,2])
+    
+})
+
+ai_util <- renderTable({
+    choice = df()
+    exp(t(choice[,3]) %*% as.matrix(intercept_mod[,2]))
+    
 })
 
 ```
@@ -148,7 +161,8 @@ Row
 
 ```{r}
 renderValueBox({
-  ai_exp_util <- 15
+  choice = df()
+  ai_exp_util <- round(exp(t(choice[,3]) %*% as.matrix(intercept_mod[,2])),2)
   valueBox(ai_exp_util,
            color = "#FFC30B")
 })
@@ -158,7 +172,8 @@ renderValueBox({
 
 ```{r}
 renderValueBox({
-  gp_exp_util <- 15
+  choice = df()
+  gp_exp_util <- round(exp(t(choice[,4]) %*% as.matrix(intercept_mod[,2])),2)
   valueBox(gp_exp_util,
            color = "green")
 })
@@ -168,7 +183,8 @@ renderValueBox({
 
 ```{r}
 renderValueBox({
-  ox_exp_util <- 15
+  choice = df()
+  ox_exp_util <- round(exp(t(choice[,5]) %*% as.matrix(intercept_mod[,2])),2)
   valueBox(ox_exp_util,
            color = "teal")
 })
@@ -178,7 +194,8 @@ renderValueBox({
 
 ```{r}
 renderValueBox({
-  rc_exp_util <- 15
+  choice = df()
+  rc_exp_util <- round(exp(t(choice[,6]) %*% as.matrix(intercept_mod[,2])),2)
   valueBox(rc_exp_util,
            color = "maroon")
 })
@@ -191,7 +208,13 @@ Row
 
 ```{r echo=FALSE}
 renderGauge({
-  ai_rate <- 15
+  choice = df()
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(intercept_mod[,2])),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(intercept_mod[,2])),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_mod[,2])),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_mod[,2])),2)
+  
+  ai_rate <- round(1000 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   gauge(ai_rate, 
         min = 0, 
         max = 1000,
@@ -203,7 +226,13 @@ renderGauge({
 
 ```{r echo=FALSE}
 renderGauge({
-  gp_rate <- 15
+  choice = df()
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(intercept_mod[,2])),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(intercept_mod[,2])),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_mod[,2])),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_mod[,2])),2)
+  
+  gp_rate <- round(1000 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   gauge(gp_rate, 
         min = 0, 
         max = 1000,
@@ -215,7 +244,13 @@ renderGauge({
 
 ```{r echo=FALSE}
 renderGauge({
-  ox_rate <- 15
+  choice = df()
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(intercept_mod[,2])),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(intercept_mod[,2])),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_mod[,2])),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_mod[,2])),2)
+  
+  ox_rate <- round(1000 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   gauge(ox_rate, 
         min = 0, 
         max = 1000,
@@ -227,7 +262,13 @@ renderGauge({
 
 ```{r echo=FALSE}
 renderGauge({
-  rc_rate <- 15
+  choice = df()
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(intercept_mod[,2])),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(intercept_mod[,2])),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_mod[,2])),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_mod[,2])),2)
+  
+  rc_rate <- round(1000 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   gauge(rc_rate, 
         min = 0, 
         max = 1000,
@@ -256,7 +297,7 @@ selectInput("ai_fin_trans",
 
 selectInput("ai_account",
             label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
+            choices = c("Doesn’t engage in financial accountability",
                         "Engages in financial accountability"))
 
 selectInput("ai_funding",
