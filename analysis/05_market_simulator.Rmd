@@ -1,9 +1,9 @@
 ---
 title: "Data Dashboard"
-output:
+output: 
   flexdashboard::flex_dashboard:
     orientation: rows
-    vertical_layout: fill
+    vertical_layout: scroll
 runtime: shiny
 ---
 
@@ -39,14 +39,6 @@ intercept_mod <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercep
 beta <- as.data.frame(matrix(rep(0), nrow = 13))
 beta$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human rights", "Refugee relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
 
-
-testlevels <- as.data.frame(matrix(0, 12, 1))
-testlevels[c(3,4,8),] <- 1
-testlevels[11,] <- 22.4
-testWeights <- c(.4, .15, .53, .19, .32, .09, .00, .1,.14, .16, -.08, 1.24)
-testWeights <- as.data.frame(matrix(testWeights, nrow = 12, ncol = 1))
-
-exp(t(testlevels) %*% as.matrix(testWeights))
 ####################################################################################
 
 df <- reactive({
@@ -83,22 +75,6 @@ df <- reactive({
     beta$rc_value[beta$levels %in% input$rc_funding] <- 1
     beta$rc_value[beta$levels %in% input$rc_gov_relat] <- 1
     beta
-    
-})
-
-renderTable({
-    df()
-})
-
-renderTable({
-    choice = df()
-    t(choice[,3]) %*% as.matrix(intercept_mod[,2])
-    
-})
-
-ai_util <- renderTable({
-    choice = df()
-    exp(t(choice[,3]) %*% as.matrix(intercept_mod[,2]))
     
 })
 
@@ -139,24 +115,39 @@ server = function(input, output) {
 }
 ```
 
-Column {data-width=200 .sidebar}
--------------------------------------------------------------------------------------
-
-```{r Inputs}
-
-```
-
 Row
-------------------------------------------------------------------------------------
+-------------------------------------
 
 ```{r plot}
-#barchart <- ggplot()
-
-#ggplotly(barchart)
+renderPlotly({
+  choice = df()
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(intercept_mod[,2])),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(intercept_mod[,2])),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_mod[,2])),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_mod[,2])),2)
+  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  data <- c(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util, ai_rate, gp_rate, ox_rate, rc_rate)
+  df <- as.data.frame(matrix(data, 8, 1))
+  df[,2] <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")
+  df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
+  colnames(df) <- c('Value', 'Organization', "Type")
+  
+  ggplotly(ggplot(df, aes(y = Value, x = Organization, fill = Type)) +
+             geom_col() +
+             labs(x="") + 
+             #scale_fill_manual(values = c("Amnesty International" = "#FFC30B", "Greenpeace" = "#3fad48", "Oxfam" = "#006633", "Red Cross" = "#660000"))+
+             theme(legend.position = "none", axis.text.x = element_text(angle = 10, hjust = 1)) +
+             facet_wrap(~Type)
+    )
+})
 ```
 
 Row 
---------------------------------------------------------------------------------------
+-------------------------------------
 ### Amnesty International Expected Utility
 
 ```{r}
@@ -175,7 +166,7 @@ renderValueBox({
   choice = df()
   gp_exp_util <- round(exp(t(choice[,4]) %*% as.matrix(intercept_mod[,2])),2)
   valueBox(gp_exp_util,
-           color = "green")
+           color = "#3fad48")
 })
 ```
 
@@ -186,7 +177,7 @@ renderValueBox({
   choice = df()
   ox_exp_util <- round(exp(t(choice[,5]) %*% as.matrix(intercept_mod[,2])),2)
   valueBox(ox_exp_util,
-           color = "teal")
+           color = "#006633")
 })
 ```
 
@@ -197,12 +188,12 @@ renderValueBox({
   choice = df()
   rc_exp_util <- round(exp(t(choice[,6]) %*% as.matrix(intercept_mod[,2])),2)
   valueBox(rc_exp_util,
-           color = "maroon")
+           color = "#660000")
 })
 ```
 
 Row 
---------------------------------------------------------------------------------------
+-------------------------------------
 
 ### Amnesty International Expected Donors
 
@@ -214,11 +205,12 @@ renderGauge({
   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_mod[,2])),2)
   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_mod[,2])),2)
   
-  ai_rate <- round(1000 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   gauge(ai_rate, 
         min = 0, 
-        max = 1000,
-        gaugeSectors(colors = "#FFC30B"))
+        max = 100,
+        gaugeSectors(colors = "#FFC30B"),
+        symbol = "%")
 })
 ```
 
@@ -232,11 +224,12 @@ renderGauge({
   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_mod[,2])),2)
   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_mod[,2])),2)
   
-  gp_rate <- round(1000 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   gauge(gp_rate, 
         min = 0, 
-        max = 1000,
-        gaugeSectors(colors = "green"))
+        max = 100,
+        gaugeSectors(colors = "#3fad48"),
+        symbol = "%")
 })
 ```
 
@@ -250,11 +243,12 @@ renderGauge({
   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_mod[,2])),2)
   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_mod[,2])),2)
   
-  ox_rate <- round(1000 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   gauge(ox_rate, 
         min = 0, 
-        max = 1000,
-        gaugeSectors(colors = "teal"))
+        max = 100,
+        gaugeSectors(colors = "#006633"),
+        symbol = "%")
 })
 ```
 
@@ -268,16 +262,17 @@ renderGauge({
   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_mod[,2])),2)
   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_mod[,2])),2)
   
-  rc_rate <- round(1000 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   gauge(rc_rate, 
         min = 0, 
-        max = 1000,
-        gaugeSectors(colors = "maroon"))
+        max = 100,
+        gaugeSectors(colors = "#660000"),
+        symbol = "%")
 })
 ```
 
 Row 
---------------------------------------------------------------------------------------
+-------------------------------------
 
 
 ### Amnesty International Inputs
