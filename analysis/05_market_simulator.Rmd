@@ -1,0 +1,876 @@
+---
+title: "Data Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+runtime: shiny
+---
+
+```{r packages, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(flexdashboard)
+library(plotly)
+library(shiny)
+library(here)
+```
+
+```{r load data}
+charity_voluntarism <- readRDS(here('analysis', 'output', 'posterior_draws', 'charity_voluntarism.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Theta))
+
+demographics <- readRDS(here('analysis', 'output', 'posterior_draws', 'demographics.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Theta))
+
+intercept_centered <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercept_centered.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Theta))
+
+intercept_conjugate <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercept_conjugate.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Gamma))
+
+intercept_noncentered <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercept_noncentered.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Theta))
+
+political_ideology <- readRDS(here('analysis', 'output', 'posterior_draws', 'political_ideology.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Theta))
+
+public_affairs <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_affairs.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Theta))
+
+public_political <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Theta))
+
+public_political_social <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political_social.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Theta))
+
+public_political_social_charity <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political_social_charity.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Theta))
+
+public_political_social_charity_demo <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political_social_charity_demo.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Theta))
+
+social_views <- readRDS(here('analysis', 'output', 'posterior_draws', 'social_views.rds')) %>% 
+  group_by(i) %>% 
+  summarize(theta_mean = mean(Theta))
+
+#Levels (This is a guess):            Means:
+#   1. Amnesty International          0.805
+#   2. Greenpeace                     0.923
+#   3. Oxfam                          0.620
+#   4. Red Cross                      1.820
+#   5. Environment                   -0.444
+#   6. Human Rights                  -0.164
+#   7. Refugee Relief                -0.582
+#   8. Financially Transparent        1.080
+#   9. Accountable                    1.130
+#   10. Small wealthy donars         -0.376
+#   11. Government Grants            -0.252
+#   12. Critized by Government       -0.663
+#   13. Under Government Crackdown   -1.011
+
+beta <- as.data.frame(matrix(rep(0), nrow = 13))
+beta$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human rights", "Refugee relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
+
+####################################################################################
+
+df <- reactive({
+  #Amnesty International
+    beta$ai_value <- 0
+    beta$ai_value[beta$levels == 'Amnesty International'] <- 1
+    beta$ai_value[beta$levels %in% input$ai_issue] <- 1
+    beta$ai_value[beta$levels %in% input$ai_fin_trans] <- 1
+    beta$ai_value[beta$levels %in% input$ai_account] <- 1
+    beta$ai_value[beta$levels %in% input$ai_funding] <- 1
+    beta$ai_value[beta$levels %in% input$ai_gov_relat] <- 1
+  #Greenpeace
+    beta$gp_value <- 0
+    beta$gp_value[beta$levels == 'Greenpeace'] <- 1
+    beta$gp_value[beta$levels %in% input$gp_issue] <- 1
+    beta$gp_value[beta$levels %in% input$gp_fin_trans] <- 1
+    beta$gp_value[beta$levels %in% input$gp_account] <- 1
+    beta$gp_value[beta$levels %in% input$gp_funding] <- 1
+    beta$gp_value[beta$levels %in% input$gp_gov_relat] <- 1
+  #Oxfam
+    beta$ox_value <- 0
+    beta$ox_value[beta$levels == 'Oxfam'] <- 1
+    beta$ox_value[beta$levels %in% input$ox_issue] <- 1
+    beta$ox_value[beta$levels %in% input$ox_fin_trans] <- 1
+    beta$ox_value[beta$levels %in% input$ox_account] <- 1
+    beta$ox_value[beta$levels %in% input$ox_funding] <- 1
+    beta$ox_value[beta$levels %in% input$ox_gov_relat] <- 1
+  #Redcross
+    beta$rc_value <- 0
+    beta$rc_value[beta$levels == 'Red Cross'] <- 1
+    beta$rc_value[beta$levels %in% input$rc_issue] <- 1
+    beta$rc_value[beta$levels %in% input$rc_fin_trans] <- 1
+    beta$rc_value[beta$levels %in% input$rc_account] <- 1
+    beta$rc_value[beta$levels %in% input$rc_funding] <- 1
+    beta$rc_value[beta$levels %in% input$rc_gov_relat] <- 1
+    beta
+    
+})
+
+```
+
+```{r matrix multiplication, eval=FALSE, include=FALSE}
+library(shiny)
+
+beta <- data.frame(
+  value = c(0,0,0),
+  levels = c("Environment", "Human rights", "Refugee relief")
+)
+
+ui <- fluidPage(
+  fluidRow(
+    column(6,
+      selectInput("ai_issue", 
+                  label = "Select Issue Area:",
+                  choices = beta$levels,
+                  multiple = TRUE)
+    ),
+    column(6,
+      tableOutput("data")
+    )
+  )
+)
+
+server = function(input, output) {
+
+  df <- reactive({
+    beta$value[beta$levels %in% input$ai_issue] <- 1
+    beta
+  })
+
+  output$data <- renderTable({
+    df()
+  })
+}
+```
+
+Inputs {.sidebar}
+-------------------------------------------------------
+
+```{r echo=FALSE}
+selectInput("model_choice", 
+            label = "Select Model:",
+            choices = c("charity_voluntarism",
+                        "demographics",
+                        "intercept_centered",
+                        "intercept_conjugate",
+                        "intercept_noncentered",
+                        "political_ideology",
+                        "public_affairs",
+                        "public_political",
+                        "public_political_social",
+                        "public_political_social_charity",
+                        "public_political_social_charity_demo",
+                        "social_views"))
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+    
+    selectInput("charity_importance", 
+              label = "Charity Importance:",
+              choices = c("0", '1', '2', '3','4','5','6','7'))
+  }
+})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+  selectInput("trust_in_charity", 
+              label = "Charity Trust:",
+              choices = c("0", '1', '2', '3','4','5','6','7'))
+  }
+})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("donation_frequency", 
+               label = "Donation Frequency:",
+               choices = c('Once a week', 'Once a Month', 'Once every three months', 'Once every six months', 'Once a year', 'Once every few years', 'Never'))
+  }
+})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("donation_amount", 
+               label = "Donation Amount:",
+               choices = c("$1-$49", '$50-$99', '$100-$499', '$500-$999','$1,000-$4,999','$5,000-$9,999','$10,000+'))
+}})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("volunteer_12", 
+               label = "Volunteered in last 12 Months:",
+               choices = c("Yes", "No"))
+}}) 
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("volunteer_frequency", 
+               label = "Volunteer Frequency:",
+               choices = c('Once a week', 'Once a Month', 'Once every three months', 'Once every six months', 'Once a year', 'Once every few years', 'Never'))
+}})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("personal_activism", 
+               label = "Personal Activism:",
+               choices = c('Extremely involved', 
+               'Very involved', 
+               'Moderately involved', 
+               'Slightly involved',
+               'Never involved'))
+}})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("family_activism", 
+               label = "Family Activism:",
+               choices = c('Extremely involved', 
+               'Very involved', 
+               'Moderately involved', 
+               'Slightly involved',
+               'Never involved'))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("religious_member", 
+               label = "Church Membership:",
+               choices = c('Active Member', 
+               'Inactive Member', 
+               "Don't belong"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("sport_member", 
+               label = "Sport or Recreational Membership:",
+               choices = c('Active Member', 
+               'Inactive Member', 
+               "Don't belong"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("art_member", 
+               label = "Art, Music, or Educational Membership:",
+               choices = c('Active Member', 
+               'Inactive Member', 
+               "Don't belong"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("labor_member", 
+               label = "Labor Union Membership:",
+               choices = c('Active Member', 
+               'Inactive Member', 
+               "Don't belong"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("political_member", 
+               label = "Political Party Membership:",
+               choices = c('Active Member', 
+               'Inactive Member', 
+               "Don't belong"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("environmental_member", 
+               label = "Enviornmental Org. Membership:",
+               choices = c('Active Member', 
+               'Inactive Member', 
+               "Don't belong"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("professional_member", 
+               label = "Professional Membership:",
+               choices = c('Active Member', 
+               'Inactive Member', 
+               "Don't belong"))
+  }})
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("humanitarian_member", 
+               label = "Humanitarian Org. Membership:",
+               choices = c('Active Member', 
+               'Inactive Member', 
+               "Don't belong"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("consumer_member", 
+               label = "Consumer Org. Membership:",
+               choices = c('Active Member', 
+               'Inactive Member', 
+               "Don't belong"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("religious_member", 
+               label = "Church Membership:",
+               choices = c('Active Member', 
+               'Inactive Member', 
+               "Don't belong"))
+    
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("other_member", 
+               label = "Other Org. Membership:",
+               choices = c('Active Member', 
+               'Inactive Member', 
+               "Don't belong"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("public_affairs", "public_political", "public_political_social", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("national_news", 
+               label = "Follow national news:",
+               choices = c('Multiple times a day', 
+               'Every day', 
+               "Once a week",
+               "Hardly ever",
+               "Never"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("public_affairs", "public_political", "public_political_social", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("international_news", 
+               label = "Follow international news:",
+               choices = c('Always',
+                           "Sometimes",
+                           "Never"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("public_affairs", "public_political", "public_political_social", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("news_medium", 
+               label = "Medium to follow news:",
+               choices = c('TV', 
+               'Print', 
+               "Online",
+               "Social Media",
+               "Radio",
+               "Email newsletters",
+               "News app"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("public_affairs", "public_political", "public_political_social", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("international_news", 
+               label = "Follow international news:",
+               choices = c('Multiple times a day', 
+               'Every day', 
+               "Once a week",
+               "Hardly ever",
+               "Never"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("public_affairs", "public_political", "public_political_social", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("follow_gov", 
+               label = "Follow government & public affairs:",
+               choices = c('Most of the time', 
+               'Some of the time', 
+               "Only now and then",
+               "Hardly at all"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("public_affairs", "public_political", "public_political_social", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("travel_developing", 
+               label = "Travel to developing country:",
+               choices = c('Yes', 
+               'No'))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("political_ideology", "public_political", "public_political_social", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("polical_pref", 
+               label = "Polical views from liberal to conservative:",
+               choices = c('0', 
+               '1', 
+               "2",
+               "3",
+               "4",
+               "5",
+               "6",
+               "7"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("social_views", "public_political_social", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("institution_trust", 
+               label = "Political institution trust from none to complete:",
+               choices = c('0', 
+               '1', 
+               "2",
+               "3",
+               "4",
+               "5",
+               "6",
+               "7"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("social_views", "public_political_social", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("others_charitable", 
+               label = "People should be more charitable:",
+               choices = c('0', 
+               '1', 
+               "2",
+               "3",
+               "4",
+               "5",
+               "6",
+               "7"))
+  }}) #??
+
+renderUI({
+  if (input$model_choice %in% c("social_views", "public_political_social", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("worship_attendance", 
+               label = "Worship service attendance:",
+               choices = c('Multiple times a week', 
+               'Once a week', 
+               "Once a month",
+               "Once a year",
+               "Never"))
+  }}) #??
+  
+renderUI({
+  if (input$model_choice %in% c("social_views", "public_political_social", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("religion_importance", 
+               label = "Importance of religion:",
+               choices = c('Extremely important',
+                           'Very important',
+                           'Moderately important',
+                           'Slightly important',
+                           'Not at all important'))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("social_views", "public_political_social", 'public_political_social_charity', 'public_political_social_charity_demo')) {
+     selectInput("religion", 
+               label = "Religion:",
+               choices = c('Catholic',
+                           'Protestant',
+                           'Christian Orthodox',
+                           'Jewish',
+                           'Muslim',
+                           'Sikh',
+                           'Hindu',
+                           'Buddhist',
+                           'Atheist',
+                           'Other'))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("demographics", 'public_political_social_charity_demo')) {
+     selectInput("gender", 
+               label = "Gender:",
+               choices = c("Male",
+                           "Female",
+                           "Transgender",
+                           "Prefer not to say",
+                           "Other"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("demographics", 'public_political_social_charity_demo')) {
+     selectInput("marital_status", 
+               label = "Marital Status:",
+               choices = c("Married",
+                           "Widowed",
+                           "Divorced",
+                           "Separated",
+                           "Never married"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("demographics", 'public_political_social_charity_demo')) {
+     selectInput("education", 
+               label = "Education:",
+               choices = c("Less than high school",
+                           "High school",
+                           "Some college",
+                           "2 year degree",
+                           "4 year degree",
+                           "Graduate degree",
+                           "Doctorate"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("demographics", 'public_political_social_charity_demo')) {
+     selectInput("income", 
+               label = "Income:",
+               choices = c('Less than $10,000', 
+                           '$10,000 to $19,999',
+                           '$20,000 to $29,999',
+                           '$30,000 to $39,999',
+                           '$40,000 to $49,999',
+                           '$50,000 to $59,999',
+                           '$60,000 to $69,999',
+                           '$70,000 to $79,999',
+                           '$80,000 to $89,999',
+                           '$90,000 to $99,999',
+                           '$100,000 to $149,999',
+                           '$150,000 to $199,999',
+                           '$200,000 to $299,999',
+                           '$300,000 or more'))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("demographics", 'public_political_social_charity_demo')) {
+     selectInput("race", 
+               label = "Race(s):",
+               choices = c('White',
+                           'Black or African American','American Indian or Alaska Native','Asian','Native Hawaiian or Pacific Islander', 'Other'), 
+               multiple = TRUE)
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("demographics", 'public_political_social_charity_demo')) {
+     selectInput("education", 
+               label = "Education:",
+               choices = c("Less than high school",
+                           "High school",
+                           "Some college",
+                           "2 year degree",
+                           "4 year degree",
+                           "Graduate degree",
+                           "Doctorate"))
+  }})
+
+renderUI({
+  if (input$model_choice %in% c("demographics", 'public_political_social_charity_demo')) {
+     selectInput("age", 
+               label = "Age:",
+               choices = c('Under 18',
+                           '18 - 24',
+                           '25 - 34',
+                           '35 - 44',
+                           '45 - 54',
+                           '55 - 64',
+                           '65 - 74',
+                           '75 - 84',
+                           '85 or older'))
+  }})
+
+
+```
+
+Row
+-------------------------------------
+
+```{r plot}
+renderPlotly({
+  choice = df()
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(intercept_noncentered[,2])),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(intercept_noncentered[,2])),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_noncentered[,2])),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_noncentered[,2])),2)
+  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  data <- c(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util, ai_rate, gp_rate, ox_rate, rc_rate)
+  df <- as.data.frame(matrix(data, 8, 1))
+  df[,2] <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")
+  df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
+  colnames(df) <- c('Value', 'Organization', "Type")
+  
+  ggplotly(ggplot(df, aes(y = Value, x = Organization, fill = Type)) +
+             geom_col() +
+             labs(x="") + 
+             #scale_fill_manual(values = c("Amnesty International" = "#FFC30B", "Greenpeace" = "#3fad48", "Oxfam" = "#006633", "Red Cross" = "#660000"))+
+             theme(legend.position = "none") +
+             facet_wrap(~Type)
+    )
+})
+```
+
+Row 
+-------------------------------------
+### Amnesty International Expected Utility
+
+```{r}
+renderValueBox({
+  choice = df()
+  ai_exp_util <- round(exp(t(choice[,3]) %*% as.matrix(intercept_noncentered[,2])),2)
+  valueBox(ai_exp_util,
+           color = "#FFC30B")
+})
+```
+
+### Greenpeace Expected Utility
+
+```{r}
+renderValueBox({
+  choice = df()
+  gp_exp_util <- round(exp(t(choice[,4]) %*% as.matrix(intercept_noncentered[,2])),2)
+  valueBox(gp_exp_util,
+           color = "#3fad48")
+})
+```
+
+### Oxfam Expected Utility
+
+```{r}
+renderValueBox({
+  choice = df()
+  ox_exp_util <- round(exp(t(choice[,5]) %*% as.matrix(intercept_noncentered[,2])),2)
+  valueBox(ox_exp_util,
+           color = "#006633")
+})
+```
+
+### Redcross Expected Utility
+
+```{r}
+renderValueBox({
+  choice = df()
+  rc_exp_util <- round(exp(t(choice[,6]) %*% as.matrix(intercept_noncentered[,2])),2)
+  valueBox(rc_exp_util,
+           color = "#660000")
+})
+```
+
+Row 
+-------------------------------------
+
+### Amnesty International Expected Donors
+
+```{r echo=FALSE}
+renderGauge({
+  choice = df()
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(intercept_noncentered[,2])),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(intercept_noncentered[,2])),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_noncentered[,2])),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_noncentered[,2])),2)
+  
+  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  gauge(ai_rate, 
+        min = 0, 
+        max = 100,
+        gaugeSectors(colors = "#FFC30B"),
+        symbol = "%")
+})
+```
+
+### Greenpeace Expected Donors
+
+```{r echo=FALSE}
+renderGauge({
+  choice = df()
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(intercept_noncentered[,2])),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(intercept_noncentered[,2])),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_noncentered[,2])),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_noncentered[,2])),2)
+  
+  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  gauge(gp_rate, 
+        min = 0, 
+        max = 100,
+        gaugeSectors(colors = "#3fad48"),
+        symbol = "%")
+})
+```
+
+### Oxfam Expected Donors
+
+```{r echo=FALSE}
+renderGauge({
+  choice = df()
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(intercept_noncentered[,2])),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(intercept_noncentered[,2])),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_noncentered[,2])),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_noncentered[,2])),2)
+  
+  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  gauge(ox_rate, 
+        min = 0, 
+        max = 100,
+        gaugeSectors(colors = "#006633"),
+        symbol = "%")
+})
+```
+
+### Red Cross Expected Donors
+
+```{r echo=FALSE}
+renderGauge({
+  choice = df()
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(intercept_noncentered[,2])),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(intercept_noncentered[,2])),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_noncentered[,2])),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_noncentered[,2])),2)
+  
+  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  gauge(rc_rate, 
+        min = 0, 
+        max = 100,
+        gaugeSectors(colors = "#660000"),
+        symbol = "%")
+})
+```
+
+Row 
+-------------------------------------
+
+
+### Amnesty International Inputs
+
+```{r echo=FALSE}
+selectInput("ai_issue", 
+            label = "Select Issue Area:",
+            choices = c("Emergency response",
+                        "Environment",
+                        "Human rights",
+                        "Refugee relief"))
+
+selectInput("ai_fin_trans",
+            label = "Select Financial transparency:",
+            choices = c("Doesn’t engage in transparency",
+                        "Engages in transparency"))
+
+selectInput("ai_account",
+            label = "Select Financial Accountability:",
+            choices = c("Doesn’t engage in financial accountability",
+                        "Engages in financial accountability"))
+
+selectInput("ai_funding",
+            label = "Select Funding source:",
+            choices = c("Many small private donations",
+                        "Handful of wealthy private donors",
+                        "Government Grants"))
+
+selectInput("ai_gov_relat",
+            label = "Select Relationship with host government",
+            choices = c("Friendly relationship with government",
+                        "Criticized by government", 
+                        "Under government crackdown"))
+```
+
+### Greenpeace Inputs
+
+```{r echo=FALSE}
+selectInput("gp_issue", 
+            label = "Select Issue Area:",
+            choices = c("Emergency response",
+                        "Environment",
+                        "Human rights",
+                        "Refugee relief"))
+
+selectInput("gp_fin_trans",
+            label = "Select Financial transparency:",
+            choices = c("Doesn’t engage in transparency",
+                        "Engages in transparency"))
+
+selectInput("gp_account",
+            label = "Select Financial Accountability:",
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in financial accountability"))
+
+selectInput("gp_funding",
+            label = "Select Funding source:",
+            choices = c("Many small private donations",
+                        "Handful of wealthy private donors",
+                        "Government Grants"))
+
+selectInput("gp_gov_relat",
+            label = "Select Relationship with host government",
+            choices = c("Friendly relationship with government",
+                        "Criticized by government", 
+                        "Under government crackdown"))
+```
+
+
+### Oxfam Inputs
+
+```{r echo=FALSE}
+selectInput("ox_issue", 
+            label = "Select Issue Area:",
+            choices = c("Emergency response",
+                        "Environment",
+                        "Human rights",
+                        "Refugee relief"))
+
+selectInput("ox_fin_trans",
+            label = "Select Financial transparency:",
+            choices = c("Doesn’t engage in transparency",
+                        "Engages in transparency"))
+
+selectInput("ox_account",
+            label = "Select Financial Accountability:",
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in financial accountability"))
+
+selectInput("ox_funding",
+            label = "Select Funding source:",
+            choices = c("Many small private donations",
+                        "Handful of wealthy private donors",
+                        "Government Grants"))
+
+selectInput("ox_gov_relat",
+            label = "Select Relationship with host government",
+            choices = c("Friendly relationship with government",
+                        "Criticized by government", 
+                        "Under government crackdown"))
+```
+
+### Red Cross Inputs
+
+```{r echo=FALSE}
+selectInput("rc_issue", 
+            label = "Select Issue Area:",
+            choices = c("Emergency response",
+                        "Environment",
+                        "Human rights",
+                        "Refugee relief"))
+
+selectInput("rc_fin_trans",
+            label = "Select Financial transparency:",
+            choices = c("Doesn’t engage in transparency",
+                        "Engages in transparency"))
+
+selectInput("rc_account",
+            label = "Select Financial Accountability:",
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in financial accountability"))
+
+selectInput("rc_funding",
+            label = "Select Funding source:",
+            choices = c("Many small private donations",
+                        "Handful of wealthy private donors",
+                        "Government Grants"))
+
+selectInput("rc_gov_relat",
+            label = "Select Relationship with host government",
+            choices = c("Friendly relationship with government",
+                        "Criticized by government", 
+                        "Under government crackdown"))
+```
