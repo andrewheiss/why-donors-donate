@@ -1,0 +1,89 @@
+---
+title: "Shiny Walkthrough"
+output: html_notebook
+---
+
+
+## Shiny
+
+Shiny dashboard structure (UI - user interface)
+
+3 Main parts:
+
+* Header - dashboardHeader()
+* Sidebar - dashboardSidebar()
+* Body - dashboardBody()
+
+
+## How to build a Sidebar Dashboard
+
+sidebar <- dashboardSidebar(
+  sidebarMenu(
+    menuItem("Data",
+      tabName = "data") #Used for linking in the body
+  )
+)
+
+
+You can have users input information - 
+Different input functions:
+selectInput() # Allows user to select a singular item from a list
+textInput() # Allows user to input text
+dateInput() # Allows user to input a date
+checkboxInput() # Allows user to select multiple items
+
+
+How to build user input
+
+selectInput(
+  inputId = "object", # This is the name you described the object elsewhere in the application
+  label = "Favorite Character", # The label you want to show to the user
+  choices = c(...) # List the choices the user has to pick from
+)
+
+
+### Render Functions 
+Functions that you use in your application's server side code, assigning them to outputs that appear in your user interface.
+
+renderPrint()
+renderText()
+renderPlot()
+renderUI() # HTML or a shiny tag object
+
+## Example Using Star Wars df
+```{r}
+library(shiny)
+library(tidyverse)
+library(flexdashboard)
+library(shinydashboard)
+
+sidebar <- dashboardSidebar(
+  selectInput(
+    inputId = "name",
+    label = "Favorite Character",
+    choices = c(starwars$name)
+  )
+)
+
+body <- dashboardBody(
+  textOutput("name")
+)
+
+ui <- dashboardPage(header = dashboardHeader(),
+                    sidebar = sidebar,
+                    body = body
+                    )
+
+server <- function(input, output) {
+  output$name <- renderText({
+      input$name
+    })
+}
+
+shinyApp(ui, server)
+
+```
+
+
+
+
