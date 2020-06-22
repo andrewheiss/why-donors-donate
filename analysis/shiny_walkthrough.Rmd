@@ -3,10 +3,14 @@ title: "Shiny Walkthrough"
 output: html_notebook
 ---
 
+# Shiny
 
-## Shiny
+Shiny is an R package that makes it easy to build interactive web apps straight from R. You can host standalone apps on a webpage or embed them in R Markdown documents or build dashboards. You can also extend your Shiny apps with CSS themes, htmlwidgets, and JavaScript actions.
 
-Shiny dashboard structure (UI - user interface)
+Shiny is most often used with the packages "shinydashboard" or "flexdashboard" to build interactive dashboards. We will walk through how to use both shinydashboard and flexdashboard to give you options when using shiny.
+
+
+## Shiny dashboard structure (UI - user interface)
 
 3 Main parts:
 
@@ -15,7 +19,10 @@ Shiny dashboard structure (UI - user interface)
 * Body - dashboardBody()
 
 
-## How to build a Sidebar Dashboard
+### How to build a Sidebar Dashboard
+
+```{r}
+library(shinydashboard)
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
@@ -23,38 +30,40 @@ sidebar <- dashboardSidebar(
       tabName = "data") #Used for linking in the body
   )
 )
+```
 
 
-You can have users input information - 
+You can also have users input information - 
 Different input functions:
-selectInput() # Allows user to select a singular item from a list
-textInput() # Allows user to input text
-dateInput() # Allows user to input a date
-checkboxInput() # Allows user to select multiple items
+* selectInput() # Allows user to select a singular item from a list
+* textInput() # Allows user to input text
+* dateInput() # Allows user to input a date
+* checkboxInput() # Allows user to select multiple items
 
 
-How to build user input
+### How to build user input with shinydashboard
 
+```{r}
 selectInput(
   inputId = "object", # This is the name you described the object elsewhere in the application
   label = "Favorite Character", # The label you want to show to the user
-  choices = c(...) # List the choices the user has to pick from
-)
+  choices = c(starwars$name) # List the choices the user has to pick from
+ )
+```
 
 
 ### Render Functions 
 Functions that you use in your application's server side code, assigning them to outputs that appear in your user interface.
 
-renderPrint()
-renderText()
-renderPlot()
-renderUI() # HTML or a shiny tag object
+* renderPrint()
+* renderText()
+* renderPlot()
+* renderUI() # HTML or a shiny tag object
 
 ## Example Using Star Wars df
 ```{r}
 library(shiny)
 library(tidyverse)
-library(flexdashboard)
 library(shinydashboard)
 
 sidebar <- dashboardSidebar(
@@ -83,6 +92,44 @@ server <- function(input, output) {
 shinyApp(ui, server)
 
 ```
+
+
+# Flexdashboard
+
+Flexdashboard is a similar dashboard system as shiny. A flexdashboard is filled with charts. To create a flexdashboard, you will first need to adjust the YAML header.
+
+title: "title of document"
+output: 
+  flexdashboard::flex_dashboard
+  
+Now your Rmarkdown file will be interpreted as a flexdashboard file.
+
+The flexdashboard default layout is in columns. To separate the columns, you will use the following syntax:
+
+```{r}
+library(flexdashboard)
+```
+
+Column
+----------------------------------------------------------------------------------------
+## Chart A
+```{r}
+
+```
+
+Column
+-----------------------------------------------------------------------------------------
+## Chart B
+```{r}
+
+```
+
+## Chart C
+```{r}
+
+```
+
+
 
 
 
