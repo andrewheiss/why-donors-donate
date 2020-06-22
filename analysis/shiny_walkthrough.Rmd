@@ -46,6 +46,7 @@ Different input functions:
 ```{r}
 library("shiny")
 library("tidyverse")
+
 selectInput(
   inputId = "object", # This is the name you described the object elsewhere in the application
   label = "Favorite Character", # The label you want to show to the user
