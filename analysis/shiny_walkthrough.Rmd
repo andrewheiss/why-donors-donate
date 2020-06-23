@@ -32,13 +32,13 @@ sidebar <- dashboardSidebar(
 )
 ```
 
+If you want more interactivity on your dashboard, shiny has some functions that enables you to do that. You can use a number of different input options using shiny. This allows the user of the website to input information - whether it's text, a date, or to select options from data that you provide.
 
-You can also have users input information - 
 Different input functions:
 * selectInput() # Allows user to select a singular item from a list
 * textInput() # Allows user to input text
 * dateInput() # Allows user to input a date
-* checkboxInput() # Allows user to select multiple items
+* checkboxInput()
 
 
 ### How to build user input with shinydashboard
@@ -69,6 +69,11 @@ library(shiny)
 library(tidyverse)
 library(shinydashboard)
 
+header <- dashboardHeader(
+  title = "Example Dashboard Header",
+  titleWidth = 300
+)
+
 sidebar <- dashboardSidebar(
   selectInput(
     inputId = "name",
@@ -80,8 +85,14 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   textOutput("name")
 )
+```
 
-ui <- dashboardPage(header = dashboardHeader(),
+
+After you code the sidebar and body, you can then create the User Interface, or "ui". The User Interface is built from a header, sidebar, and body. When you modify any of these options, the easiest way is to save it as an object called "header", "sidebar", or "body". The user interface is most often coded into the dashboardPage() function.
+
+
+```{r}
+ui <- dashboardPage(header = header,
                     sidebar = sidebar,
                     body = body
                     )
@@ -94,6 +105,114 @@ server <- function(input, output) {
 
 shinyApp(ui, server)
 
+```
+
+
+
+## Shinydashboard Layout
+
+There are two main types of layouts that shiny uses. The first is a "row" based layout, while the other is a "column" based layout. You can use either one, or even a mix of the two.
+The way to create the layouts is by using the "fluidRow()" function. 
+
+These functions are used inside of the dashboardBody() section. Each time "fluidRow()" is called, a new row is created. 
+
+Row layout
+```{r}
+body <- dashboardBody(
+  fluidRow(
+# Row 1
+  box(
+  width = 12, # 12 width spans the entire width of the screen
+  title = "Regular Box, Row 1",
+  "Text inside of box"
+  )),
+  fluidRow(
+# Row 2
+  box(
+  width = 12,
+  title = "Regular Box, Row 2",
+  "Text inside of box 2"
+  )
+)
+)
+ui <- dashboardPage(header = dashboardHeader(),
+                    sidebar = dashboardSidebar(),
+                    body = body
+                    )
+
+ui
+```
+
+
+Column Layout
+```{r}
+body <- dashboardBody(
+    fluidRow(
+    #   Column 1
+      column(width = 6,
+      infoBox(
+        width = NULL, # The width must be "NULL" when using a column layout
+        title = "Regular Box, Column 1",
+        "Text inside of box"
+         )      
+   ),
+  column(width = 6,
+    #   Column 2
+      infoBox(
+        width = NULL, # The width must be "NULL" when using a column layout
+        title = "Regular Box, Column 2",
+        "Text inside of box"
+         )      
+   )
+)
+)
+ui <- dashboardPage(header = dashboardHeader(),
+                    sidebar = dashboardSidebar(),
+                    body = body
+                    )
+
+shinyApp(ui, server)
+```
+
+
+### Mix of Column and Row Layout
+Note:
+To create a new row, you call another fluidRow() function. 
+```{r}
+body <- dashboardBody(
+    fluidRow(
+    #   Row 1
+      box(
+        width = 12, # The width must be "NULL" when using a column layout
+        title = "Regular Box, Row 1",
+        "Text inside of box"
+         ),
+    ),
+  fluidRow(
+    column(width = 6,
+    #   Column 2
+      infoBox(
+        width = NULL, # The width must be "NULL" when using a column layout
+        title = "Regular Box, Row 2, Column 1",
+        subtitle = "Text inside of box"
+         )
+    ),
+    column(width = 6,
+      infoBox(
+        width = NULL,
+        title = "Regular Box, Row 2, Column 2",
+        subtitle = "Text inside of box"
+      )
+    )
+  )
+)
+
+ui <- dashboardPage(header = dashboardHeader(),
+                    sidebar = dashboardSidebar(),
+                    body = body
+                    )
+
+shinyApp(ui, server)
 ```
 
 
