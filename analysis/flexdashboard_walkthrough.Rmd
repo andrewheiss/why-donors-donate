@@ -1,0 +1,42 @@
+---
+title: "Untitled"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+### Chart A
+
+```{r}
+starwars10 <- starwars %>% 
+  filter(height >= 180)
+
+starwars10 %>% 
+  ggplot(aes(x = name, y = height)) +
+    geom_col() +
+    coord_flip()
+```
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
+
