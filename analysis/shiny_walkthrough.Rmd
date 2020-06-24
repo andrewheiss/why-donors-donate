@@ -116,7 +116,7 @@ The way to create the layouts is by using the "fluidRow()" function.
 
 These functions are used inside of the dashboardBody() section. Each time "fluidRow()" is called, a new row is created. 
 
-Row layout
+### Row layout
 ```{r}
 body <- dashboardBody(
   fluidRow(
@@ -143,8 +143,12 @@ ui <- dashboardPage(header = dashboardHeader(),
 ui
 ```
 
+### Column Layout
+The next layout option is to build columns. The difference in using columns instead of rows is to use the "column()" function inside of "fluidRow()". 
 
-Column Layout
+You can set the width of the column, but when you insert a box or chart, the width needs to be "NULL". 
+
+
 ```{r}
 body <- dashboardBody(
     fluidRow(
@@ -177,7 +181,7 @@ shinyApp(ui, server)
 
 ### Mix of Column and Row Layout
 Note:
-To create a new row, you call another fluidRow() function. 
+To create a new row, call another fluidRow() function. 
 ```{r}
 body <- dashboardBody(
     fluidRow(
@@ -214,43 +218,6 @@ ui <- dashboardPage(header = dashboardHeader(),
 
 shinyApp(ui, server)
 ```
-
-
-# Flexdashboard
-
-Flexdashboard is a similar dashboard system as shiny. A flexdashboard is filled with charts. To create a flexdashboard, you will first need to adjust the YAML header.
-
-title: "title of document"
-output: 
-  flexdashboard::flex_dashboard
-  
-Now your Rmarkdown file will be interpreted as a flexdashboard file.
-
-The flexdashboard default layout is in columns. To separate the columns, you will use the following syntax:
-
-```{r}
-library(flexdashboard)
-```
-
-Column
-----------------------------------------------------------------------------------------
-## Chart A
-```{r}
-
-```
-
-Column
------------------------------------------------------------------------------------------
-## Chart B
-```{r}
-
-```
-
-## Chart C
-```{r}
-
-```
-
 
 
 
