@@ -9,8 +9,74 @@ Shiny is an R package that makes it easy to build interactive web apps straight 
 
 Shiny is most often used with the packages "shinydashboard" or "flexdashboard" to build interactive dashboards. We will walk through how to use both shinydashboard and flexdashboard to give you options when using shiny.
 
+## Shiny Outline
+
+If you were to open a Shiny app while creating a new file in R, an outline of the an app will be shown using the Old Faithful Geyser Data. This example app shows eruption wait times in a histogram with a side panel to change the number of bins in the histogram. A simple example of what these apps are intended for, user interaction. 
+
+```{r}
+## Old Faithful Geyser Example
+
+library(shiny)
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+
+    # Application title
+    titlePanel("Old Faithful Geyser Data"),
+
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput("bins",
+                        "Number of bins:",
+                        min = 1,
+                        max = 50,
+                        value = 30)
+        ),
+
+        # Show a plot of the generated distribution
+        mainPanel(
+           plotOutput("distPlot")
+        )
+    )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+    output$distPlot <- renderPlot({
+        # generate bins based on input$bins from ui.R
+        x    <- faithful[, 2]
+        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+
+        # draw the histogram with the specified number of bins
+        hist(x, breaks = bins, col = 'darkgray', border = 'white')
+    })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+
+```
+
+Viewing this example can be useful to see the flow of the user interface and processes. So let's go through what those terms mean. There are essentially three steps to any Shiny App:
+
+1. Create the User interface -- __ui__
+2. Create the processes -- __server__
+3. Run the app -- __shinyApp__
+
+The two main parts of the Shiny app are the __ui__ and the __server__. These objects are the arguments used in the function to run the app, __shinyApp(ui, server)__. We will create an ui and server object for these arguments and name them what they are, _ui_ and _server_. This will help us from mixing up them up and make our lives easier.
+
+## Shiny and Shinydashboard
+
+We will mostly be talking about shinydashboard in this walkthrough. There is no reason to worry as the two packages are essentially the same, but shinydashboard puts your code into an already styled theme in the ui without having to write the code yourself. 
+
 
 ## Shiny dashboard structure (UI - user interface)
+
+The __ui__ object controls the layout and appearance of the app. This includes formatting, color, text, input panels, main panels, etc. (maybe go into detail here). ui writes your code into html for you. Alternatively, you could use the html functions as well. 
+
+For shinydashboard we design parts of the ui and then combine it together in a function called dashboardPage(). To keep things simple, we will go through each of the main parts individually. Then show how they can be combined in this dashboardPage() to make the comeplete user interface.
 
 3 Main parts:
 
@@ -135,6 +201,7 @@ body <- dashboardBody(
   )
 )
 )
+
 ui <- dashboardPage(header = dashboardHeader(),
                     sidebar = dashboardSidebar(),
                     body = body
@@ -147,7 +214,6 @@ ui
 The next layout option is to build columns. The difference in using columns instead of rows is to use the "column()" function inside of "fluidRow()". 
 
 You can set the width of the column, but when you insert a box or chart, the width needs to be "NULL". 
-
 
 ```{r}
 body <- dashboardBody(
@@ -168,7 +234,7 @@ body <- dashboardBody(
         "Text inside of box"
          )      
    )
-)
+  )
 )
 ui <- dashboardPage(header = dashboardHeader(),
                     sidebar = dashboardSidebar(),
