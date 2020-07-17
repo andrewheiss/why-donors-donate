@@ -1,6 +1,6 @@
 ---
 title: "Shiny Walkthrough"
-output: html_notebook
+output: github_document
 ---
 
 # Shiny
