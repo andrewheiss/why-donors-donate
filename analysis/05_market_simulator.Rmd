@@ -85,7 +85,7 @@ social_views <- readRDS(here('analysis', 'output', 'posterior_draws', 'social_vi
 #   13. Under Government Crackdown   -1.011
 
 
-##### Updated the beta's to be just the betas from the public_political_social_chartiy_demo Thetas
+##### Updated the beta's to be just the betas from the public_political_social_charity_demo Thetas
 
 beta <- public_political_social_charity_demo
 
