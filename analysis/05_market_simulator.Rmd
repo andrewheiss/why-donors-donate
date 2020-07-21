@@ -17,52 +17,56 @@ library(here)
 ```
 
 ```{r load data}
-charity_voluntarism <- readRDS(here('analysis', 'output', 'posterior_draws', 'charity_voluntarism.rds')) %>% 
-  group_by(i) %>% 
+
+### Commented out the beta's we don't need right now. We only need the one that contains all the factors.
+
+
+charity_voluntarism <- readRDS(here('analysis', 'output', 'posterior_draws', 'charity_voluntarism.rds')) %>%
+  group_by(i) %>%
   summarize(theta_mean = mean(Theta))
 
-demographics <- readRDS(here('analysis', 'output', 'posterior_draws', 'demographics.rds')) %>% 
-  group_by(i) %>% 
+demographics <- readRDS(here('analysis', 'output', 'posterior_draws', 'demographics.rds')) %>%
+  group_by(i) %>%
   summarize(theta_mean = mean(Theta))
 
-intercept_centered <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercept_centered.rds')) %>% 
-  group_by(i) %>% 
+intercept_centered <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercept_centered.rds')) %>%
+  group_by(i) %>%
   summarize(theta_mean = mean(Theta))
 
-intercept_conjugate <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercept_conjugate.rds')) %>% 
-  group_by(i) %>% 
+intercept_conjugate <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercept_conjugate.rds')) %>%
+  group_by(i) %>%
   summarize(theta_mean = mean(Gamma))
 
-intercept_noncentered <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercept_noncentered.rds')) %>% 
-  group_by(i) %>% 
+intercept_noncentered <- readRDS(here('analysis', 'output', 'posterior_draws', 'intercept_noncentered.rds')) %>%
+  group_by(i) %>%
   summarize(theta_mean = mean(Theta))
 
-political_ideology <- readRDS(here('analysis', 'output', 'posterior_draws', 'political_ideology.rds')) %>% 
-  group_by(i) %>% 
+political_ideology <- readRDS(here('analysis', 'output', 'posterior_draws', 'political_ideology.rds')) %>%
+  group_by(i) %>%
   summarize(theta_mean = mean(Theta))
 
-public_affairs <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_affairs.rds')) %>% 
-  group_by(i) %>% 
+public_affairs <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_affairs.rds')) %>%
+  group_by(i) %>%
   summarize(theta_mean = mean(Theta))
 
-public_political <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political.rds')) %>% 
-  group_by(i) %>% 
+public_political <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political.rds')) %>%
+  group_by(i) %>%
   summarize(theta_mean = mean(Theta))
 
-public_political_social <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political_social.rds')) %>% 
-  group_by(i) %>% 
+public_political_social <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political_social.rds')) %>%
+  group_by(i) %>%
   summarize(theta_mean = mean(Theta))
 
-public_political_social_charity <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political_social_charity.rds')) %>% 
-  group_by(i) %>% 
+public_political_social_charity <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political_social_charity.rds')) %>%
+  group_by(i) %>%
   summarize(theta_mean = mean(Theta))
 
 public_political_social_charity_demo <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political_social_charity_demo.rds')) %>% 
   group_by(i) %>% 
   summarize(theta_mean = mean(Theta))
 
-social_views <- readRDS(here('analysis', 'output', 'posterior_draws', 'social_views.rds')) %>% 
-  group_by(i) %>% 
+social_views <- readRDS(here('analysis', 'output', 'posterior_draws', 'social_views.rds')) %>%
+  group_by(i) %>%
   summarize(theta_mean = mean(Theta))
 
 #Levels (This is a guess):            Means:
@@ -80,7 +84,11 @@ social_views <- readRDS(here('analysis', 'output', 'posterior_draws', 'social_vi
 #   12. Critized by Government       -0.663
 #   13. Under Government Crackdown   -1.011
 
-beta <- as.data.frame(matrix(rep(0), nrow = 13))
+
+##### Updated the beta's to be just the betas from the public_political_social_chartiy_demo Thetas
+
+beta <- public_political_social_charity_demo
+
 beta$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human rights", "Refugee relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
 
 ####################################################################################
@@ -592,6 +600,7 @@ renderPlotly({
   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(intercept_noncentered[,2])),2)
   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_noncentered[,2])),2)
   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_noncentered[,2])),2)
+  
   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
@@ -606,7 +615,7 @@ renderPlotly({
   ggplotly(ggplot(df, aes(y = Value, x = Organization, fill = Type)) +
              geom_col() +
              labs(x="") + 
-             #scale_fill_manual(values = c("Amnesty International" = "#FFC30B", "Greenpeace" = "#3fad48", "Oxfam" = "#006633", "Red Cross" = "#660000"))+
+             scale_fill_manual(values = c("Amnesty International" = "#FFC30B", "Greenpeace" = "#3fad48", "Oxfam" = "#006633", "Red Cross" = "#660000"))+
              theme(legend.position = "none") +
              facet_wrap(~Type)
     )
