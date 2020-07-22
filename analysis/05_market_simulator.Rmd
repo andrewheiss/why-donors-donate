@@ -87,7 +87,7 @@ social_views <- readRDS(here('analysis', 'output', 'posterior_draws', 'social_vi
 
 ##### Updated the beta's to be just the betas from the public_political_social_charity_demo Thetas
 
-beta <- public_political_social_charity_demo
+beta <- as.data.frame(matrix(rep(0), nrow = 13))
 
 beta$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human rights", "Refugee relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
 
@@ -95,7 +95,8 @@ beta$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "En
 
 df <- reactive({
   #Amnesty International
-    beta$ai_value <- 0
+  beta$ai_
+  value <- 0
     beta$ai_value[beta$levels == 'Amnesty International'] <- 1
     beta$ai_value[beta$levels %in% input$ai_issue] <- 1
     beta$ai_value[beta$levels %in% input$ai_fin_trans] <- 1
@@ -596,10 +597,10 @@ Row
 ```{r plot}
 renderPlotly({
   choice = df()
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(intercept_noncentered[,2])),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(intercept_noncentered[,2])),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(intercept_noncentered[,2])),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(intercept_noncentered[,2])),2)
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
   
   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
@@ -608,6 +609,7 @@ renderPlotly({
   
   data <- c(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util, ai_rate, gp_rate, ox_rate, rc_rate)
   df <- as.data.frame(matrix(data, 8, 1))
+  
   df[,2] <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")
   df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
   colnames(df) <- c('Value', 'Organization', "Type")
@@ -629,7 +631,7 @@ Row
 ```{r}
 renderValueBox({
   choice = df()
-  ai_exp_util <- round(exp(t(choice[,3]) %*% as.matrix(intercept_noncentered[,2])),2)
+  ai_exp_util <- round(exp(t(choice[,3]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
   valueBox(ai_exp_util,
            color = "#FFC30B")
 })
@@ -640,7 +642,7 @@ renderValueBox({
 ```{r}
 renderValueBox({
   choice = df()
-  gp_exp_util <- round(exp(t(choice[,4]) %*% as.matrix(intercept_noncentered[,2])),2)
+  gp_exp_util <- round(exp(t(choice[,4]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
   valueBox(gp_exp_util,
            color = "#3fad48")
 })
