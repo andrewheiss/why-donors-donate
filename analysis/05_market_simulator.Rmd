@@ -148,43 +148,34 @@ Practice
 # 
 # renderPlotly({
 #   choice <- df()
-#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
-#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
-#   
-#   data <- c(ai_exp_util, gp_exp_util)
-#   df <- as.data.frame(matrix(data, 8, 1))
-#   
-#   df[,2] <- c("Amnesty International", "Green Peace")
-#   df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
-#   colnames(df) <- c("Value", "Organization", "Type")
-#   
+  # ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
+  # gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
+  # 
+  # data <- c(ai_exp_util, gp_exp_util)
+  # df <- as.data.frame(matrix(data, 8, 1))
+  # 
+  # df[,2] <- c("Amnesty International", "Green Peace")
+  # df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
+  # colnames(df) <- c("Value", "Organization", "Type")
+
+# test <- as.data.frame(matrix(runif(10), 8, 1))
 # 
-#   
-#   ggplotly(ggplot(df, aes(y = Value, x = Organization, fill = Type)) +
+# test[,2] <- c("Amnesty International", "Green Peace", "Oxfam", "Red Cross")
+# test[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
+# colnames(test) <- c("Value", "Organization", "Type")
+# 
+# colors <- c("#ffc30b", "#3fad48", "#006633", "#660000")
+# 
+#   ggplotly(
+#     ggplot(test, aes(y = Value, x = Organization, fill = Organization)) +
 #            geom_col() +
-#            labs(x="") + 
-#            scale_fill_manual(values = c("Amnesty International" = "#FFC30B", "Greenpeace" = "#3fad48")) +
+#            labs(x="") +
+#            scale_fill_manual(values = colors) +
 #            theme(legend.position = "none") +
 #            facet_wrap(~Type)
 #   )
 # }) 
 
-  
-  
-  # ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
-  # rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
-  # 
-  # ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  # gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  # ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  # rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  # 
-  # data <- c(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util, ai_rate, gp_rate, ox_rate, rc_rate)
-  # df <- as.data.frame(matrix(data, 8, 1))
-  # 
-  # df[,2] <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")
-  # df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
-  # colnames(df) <- c('Value', 'Organization', "Type")
   
 
 
@@ -671,10 +662,10 @@ renderPlotly({
   df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
   colnames(df) <- c('Value', 'Organization', "Type")
   
-  ggplotly(ggplot(df, aes(y = Value, x = Organization, fill = Type)) +
+  ggplotly(ggplot(df, aes(y = Value, x = Organization, fill = Organization)) +
              geom_col() +
              labs(x="") + 
-             scale_fill_manual(values = c("Amnesty International" = "#FFC30B", "Greenpeace" = "#3fad48", "Oxfam" = "#006633", "Red Cross" = "#660000"))+
+             scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
              theme(legend.position = "none") +
              facet_wrap(~Type)
     )
