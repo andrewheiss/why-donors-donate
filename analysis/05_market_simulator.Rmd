@@ -1,9 +1,9 @@
 ---
-title: "Data Dashboard"
+title: "Market Simulator"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: rows
-    vertical_layout: scroll
+    orientation: columns
+    vertical_layout: fill
 runtime: shiny
 ---
 
@@ -85,8 +85,6 @@ social_views <- readRDS(here('analysis', 'output', 'posterior_draws', 'social_vi
 #   13. Under Government Crackdown   -1.011
 
 
-##### Updated the beta's to be just the betas from the public_political_social_charity_demo Thetas
-
 beta <- as.data.frame(matrix(rep(0), nrow = 13))
 
 beta$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human rights", "Refugee relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
@@ -132,9 +130,6 @@ df <- reactive({
 
 ```
 
-
-Practice
--------------------------------------------------------
 ```{r practice code}
 
 #### this chunk is for testing code and making sure things work before adding it into the dashboard
@@ -216,7 +211,7 @@ server = function(input, output) {
 }
 ```
 
-Inputs {.sidebar}
+Inputs {.sidebar data-width=50}
 -------------------------------------------------------
 
 ```{r echo=FALSE}
@@ -234,6 +229,11 @@ selectInput("model_choice",
                         "public_political_social_charity",
                         "public_political_social_charity_demo",
                         "social_views"))
+
+```
+
+
+``` {r echo=FALSE}
 
 renderUI({
   if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
@@ -639,8 +639,8 @@ renderUI({
 
 ```
 
-Row
--------------------------------------
+Market Share and Expected Utility
+--------------------------------------------------
 
 ```{r plot}
 renderPlotly({
@@ -672,9 +672,9 @@ renderPlotly({
 })
 ```
 
-Row 
+Organization Utility
 -------------------------------------
-### Amnesty International Expected Utility
+Amnesty International Expected Utility
 
 ```{r}
 renderValueBox({
@@ -685,7 +685,7 @@ renderValueBox({
 })
 ```
 
-### Greenpeace Expected Utility
+## Greenpeace Expected Utility
 
 ```{r}
 renderValueBox({
@@ -696,7 +696,7 @@ renderValueBox({
 })
 ```
 
-### Oxfam Expected Utility
+## Oxfam Expected Utility
 
 ```{r}
 renderValueBox({
@@ -707,7 +707,7 @@ renderValueBox({
 })
 ```
 
-### Redcross Expected Utility
+## Redcross Expected Utility
 
 ```{r}
 renderValueBox({
@@ -718,9 +718,8 @@ renderValueBox({
 })
 ```
 
-Row 
+Expected Donors {.tabset .tabset-fade}
 -------------------------------------
-
 ### Amnesty International Expected Donors
 
 ```{r echo=FALSE}
@@ -797,10 +796,8 @@ renderGauge({
 })
 ```
 
-Row 
+Organizational Inputs {.tabset .tabset-fade}
 -------------------------------------
-
-
 ### Amnesty International Inputs
 
 ```{r echo=FALSE}
