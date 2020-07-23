@@ -79,9 +79,9 @@ social_views <- readRDS(here('analysis', 'output', 'posterior_draws', 'social_vi
 #   7. Refugee Relief                -0.582
 #   8. Financially Transparent        1.080
 #   9. Accountable                    1.130
-#   10. Small wealthy donars         -0.376
+#   10. Small wealthy donors         -0.376
 #   11. Government Grants            -0.252
-#   12. Critized by Government       -0.663
+#   12. Criticized by Government       -0.663
 #   13. Under Government Crackdown   -1.011
 
 
@@ -127,6 +127,13 @@ df <- reactive({
     beta
     
 })
+
+```
+
+
+```{r functions}
+#### This chunk can be used for writing function to calculate the utilities and what not
+
 
 ```
 
@@ -211,7 +218,7 @@ server = function(input, output) {
 }
 ```
 
-Inputs {.sidebar data-width=50}
+Inputs {.sidebar}
 -------------------------------------------------------
 
 ```{r echo=FALSE}
@@ -230,10 +237,6 @@ selectInput("model_choice",
                         "public_political_social_charity_demo",
                         "social_views"))
 
-```
-
-
-``` {r echo=FALSE}
 
 renderUI({
   if (input$model_choice %in% c("charity_voluntarism", 'public_political_social_charity', 'public_political_social_charity_demo')) {
@@ -674,7 +677,7 @@ renderPlotly({
 
 Organization Utility
 -------------------------------------
-Amnesty International Expected Utility
+## Amnesty International Expected Utility
 
 ```{r}
 renderValueBox({
