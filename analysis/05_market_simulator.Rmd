@@ -607,53 +607,75 @@ renderPlotly({
 })
 ```
 
-<!-- Persona 1 page -->
+<!-- Organizational Tabs -->
 
-
-
-Persona 1 (change this to Org 1) {.tabset .tabset-fade}
+Organization Breakdown {.tabset .tabset-fade}
 --------------------------------------------------
+### Amnesty International Market Share
 
-### Market Share Chart Persona 1
-<!-- Might get rid of this graph -->
-
-```{r plot person 1}
+```{r plot ai plot}
 renderPlotly({
   choice = df()
-  persona = p_beta1 # Choose the persona
   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+    persona1 = p_beta1 # Choose the persona
   
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  ai_exp_util1 <- round(exp(t(choice[, 3]) %*% as.matrix(persona1)),2)
+  gp_exp_util1 <- round(exp(t(choice[, 4]) %*% as.matrix(persona1)),2)
+  ox_exp_util1 <- round(exp(t(choice[, 5]) %*% as.matrix(persona1)),2)
+  rc_exp_util1 <- round(exp(t(choice[, 6]) %*% as.matrix(persona1)),2)
   
-  data <- c(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util, ai_rate, gp_rate, ox_rate, rc_rate)
-  df <- as.data.frame(matrix(data, 8, 1))
+  ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
   
-  df[,2] <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")
-  df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
-  df[,4] <- rep(c("Persona 1","Persona 2", "Persona 3"), length.out = 8)
+    persona2 = p_beta2 # Choose the persona
+  
+  ai_exp_util2 <- round(exp(t(choice[, 3]) %*% as.matrix(persona2)),2)
+  gp_exp_util2 <- round(exp(t(choice[, 4]) %*% as.matrix(persona2)),2)
+  ox_exp_util2 <- round(exp(t(choice[, 5]) %*% as.matrix(persona2)),2)
+  rc_exp_util2 <- round(exp(t(choice[, 6]) %*% as.matrix(persona2)),2)
+  
+  ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  
+      persona3 = p_beta3 # Choose the persona
+  
+  ai_exp_util3 <- round(exp(t(choice[, 3]) %*% as.matrix(persona3)),2)
+  gp_exp_util3 <- round(exp(t(choice[, 4]) %*% as.matrix(persona3)),2)
+  ox_exp_util3 <- round(exp(t(choice[, 5]) %*% as.matrix(persona3)),2)
+  rc_exp_util3 <- round(exp(t(choice[, 6]) %*% as.matrix(persona3)),2)
+  
+  ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  
+  data <- c(ai_exp_util1, ai_rate1, 
+            ai_exp_util2, ai_rate2,
+            ai_exp_util3, ai_rate3)
+  
+  
+  df <- as.data.frame(matrix(data, 6, 1))
+  
+  df[,2] <- c("Amnesty International")
+  df[,3] <- rep(c("Utility", "Market Share"), length.out = 6)
+  df[,4] <- c(rep("Persona 1", 2),rep("Persona 2", 2), rep("Persona 3", 2))
   colnames(df) <- c('Value', 'Organization', "Type", "Persona")
   
   ggplotly(df %>% filter(Type == "Market Share") %>% 
-             ggplot(aes(y = Value, x = Organization, fill = Organization)) +
-             geom_col() +
+             ggplot(aes(y = Value, x = Organization, fill = Persona)) +
+             geom_bar(position = "dodge", stat = "identity") +
              labs(x="") + 
              scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
-             theme(legend.position = "none") +
-             facet_wrap(~Type)
+             theme(legend.position = "none")
     )
 })
 ```
 
-### Amnesty International Market Share
-
-```{r valuebox ai persona 1}
+```{r valuebox ai}
 renderValueBox({
   choice = df()
   
@@ -672,73 +694,7 @@ renderValueBox({
 })
 ```
 
-### Greenpeace Market Share
-
-```{r valuebox gp persona 1}
-renderValueBox({
-  choice = df()
-  persona = p_beta1 # Choose the persona
-  
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-  
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(gp_rate,
-           color = "#3fad48",
-           icon = "fa-percent")
-})
-```
-
-### Oxfam Market Share
-
-```{r valuebox ox persona 1}
-renderValueBox({
-  choice = df()
-  
-  persona = p_beta1 # Choose the persona
-  
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-  
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(ox_rate,
-           color = "#006633",
-           icon = "fa-percent")
-})
-```
-
-### Redcross Market Share
-
-```{r valuebox rc persona 1}
-renderValueBox({
-  choice = df()
-  
-  persona = p_beta1 # Choose the persona
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-  
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(rc_rate,
-           color = "#660000",
-           icon = "fa-percent")
-})
-```
-
-Organizations {.tabset .tabset-fade}
--------------------------------------
-### Amnesty International
-
-```{r echo=FALSE}
+```{r ai org inputs}
 selectInput("ai_issue", 
             label = "Select Issue Area:",
             choices = c("Emergency response",
@@ -769,7 +725,7 @@ selectInput("ai_gov_relat",
                         "Under government crackdown"))
 ```
 
-```{r echo=FALSE}
+```{r ai gauge}
 renderGauge({
   choice = df()
   persona = p_beta1 # Choose the persona
@@ -789,9 +745,89 @@ renderGauge({
 })
 ```
 
-### Greenpeace
+### Greenpeace Market Share
 
-```{r echo=FALSE}
+```{r plot gp plot}
+renderPlotly({
+  choice = df()
+  
+    persona1 = p_beta1 # Choose the persona
+  
+  ai_exp_util1 <- round(exp(t(choice[, 3]) %*% as.matrix(persona1)),2)
+  gp_exp_util1 <- round(exp(t(choice[, 4]) %*% as.matrix(persona1)),2)
+  ox_exp_util1 <- round(exp(t(choice[, 5]) %*% as.matrix(persona1)),2)
+  rc_exp_util1 <- round(exp(t(choice[, 6]) %*% as.matrix(persona1)),2)
+  
+  ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  
+    persona2 = p_beta2 # Choose the persona
+  
+  ai_exp_util2 <- round(exp(t(choice[, 3]) %*% as.matrix(persona2)),2)
+  gp_exp_util2 <- round(exp(t(choice[, 4]) %*% as.matrix(persona2)),2)
+  ox_exp_util2 <- round(exp(t(choice[, 5]) %*% as.matrix(persona2)),2)
+  rc_exp_util2 <- round(exp(t(choice[, 6]) %*% as.matrix(persona2)),2)
+  
+  ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  
+      persona3 = p_beta3 # Choose the persona
+  
+  ai_exp_util3 <- round(exp(t(choice[, 3]) %*% as.matrix(persona3)),2)
+  gp_exp_util3 <- round(exp(t(choice[, 4]) %*% as.matrix(persona3)),2)
+  ox_exp_util3 <- round(exp(t(choice[, 5]) %*% as.matrix(persona3)),2)
+  rc_exp_util3 <- round(exp(t(choice[, 6]) %*% as.matrix(persona3)),2)
+  
+  ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  
+  data <- c(gp_exp_util1, gp_rate1, 
+            gp_exp_util2, gp_rate2,
+            gp_exp_util3, gp_rate3)
+  
+  
+  df <- as.data.frame(matrix(data, 6, 1))
+  
+  df[,2] <- c("Greenpeace")
+  df[,3] <- rep(c("Utility", "Market Share"), length.out = 6)
+  df[,4] <- c(rep("Persona 1", 2),rep("Persona 2", 2), rep("Persona 3", 2))
+  colnames(df) <- c('Value', 'Organization', "Type", "Persona")
+  
+  ggplotly(df %>% filter(Type == "Market Share") %>% 
+             ggplot(aes(y = Value, x = Organization, fill = Persona)) +
+             geom_bar(position = "dodge", stat = "identity") +
+             labs(x="") + 
+             scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
+             theme(legend.position = "none")
+    )
+})
+```
+
+```{r valuebox gp}
+renderValueBox({
+  choice = df()
+  persona = p_beta1 # Choose the persona
+  
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+  
+  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  valueBox(gp_rate,
+           color = "#3fad48",
+           icon = "fa-percent")
+})
+```
+
+```{r gp org inputs}
 selectInput("gp_issue", 
             label = "Select Issue Area:",
             choices = c("Emergency response",
@@ -822,10 +858,110 @@ selectInput("gp_gov_relat",
                         "Under government crackdown"))
 ```
 
+```{r gp gauge}
+renderGauge({
+  choice = df()
+  persona = p_beta1 # Choose the persona
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
 
-### Oxfam
+  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(gp_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#3fad48"),
+        symbol = "%")
+})
+```
 
-```{r echo=FALSE}
+### Oxfam Market Share
+
+```{r plot ox plot}
+renderPlotly({
+  choice = df()
+  
+    persona1 = p_beta1 # Choose the persona
+  
+  ai_exp_util1 <- round(exp(t(choice[, 3]) %*% as.matrix(persona1)),2)
+  gp_exp_util1 <- round(exp(t(choice[, 4]) %*% as.matrix(persona1)),2)
+  ox_exp_util1 <- round(exp(t(choice[, 5]) %*% as.matrix(persona1)),2)
+  rc_exp_util1 <- round(exp(t(choice[, 6]) %*% as.matrix(persona1)),2)
+  
+  ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  
+    persona2 = p_beta2 # Choose the persona
+  
+  ai_exp_util2 <- round(exp(t(choice[, 3]) %*% as.matrix(persona2)),2)
+  gp_exp_util2 <- round(exp(t(choice[, 4]) %*% as.matrix(persona2)),2)
+  ox_exp_util2 <- round(exp(t(choice[, 5]) %*% as.matrix(persona2)),2)
+  rc_exp_util2 <- round(exp(t(choice[, 6]) %*% as.matrix(persona2)),2)
+  
+  ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  
+      persona3 = p_beta3 # Choose the persona
+  
+  ai_exp_util3 <- round(exp(t(choice[, 3]) %*% as.matrix(persona3)),2)
+  gp_exp_util3 <- round(exp(t(choice[, 4]) %*% as.matrix(persona3)),2)
+  ox_exp_util3 <- round(exp(t(choice[, 5]) %*% as.matrix(persona3)),2)
+  rc_exp_util3 <- round(exp(t(choice[, 6]) %*% as.matrix(persona3)),2)
+  
+  ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  
+  data <- c(ox_exp_util1, ox_rate1, 
+            ox_exp_util2, ox_rate2,
+            ox_exp_util3, ox_rate3)
+  
+  
+  df <- as.data.frame(matrix(data, 6, 1))
+  
+  df[,2] <- c("Oxfam")
+  df[,3] <- rep(c("Utility", "Market Share"), length.out = 6)
+  df[,4] <- c(rep("Persona 1", 2),rep("Persona 2", 2), rep("Persona 3", 2))
+  colnames(df) <- c('Value', 'Organization', "Type", "Persona")
+  
+  ggplotly(df %>% filter(Type == "Market Share") %>% 
+             ggplot(aes(y = Value, x = Organization, fill = Persona)) +
+             geom_bar(position = "dodge", stat = "identity") +
+             labs(x="") + 
+             scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
+             theme(legend.position = "none")
+    )
+})
+```
+
+```{r valuebox ox}
+renderValueBox({
+  choice = df()
+  
+  persona = p_beta1 # Choose the persona
+  
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+  
+  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  valueBox(ox_rate,
+           color = "#006633",
+           icon = "fa-percent")
+})
+```
+
+```{r ox org inputs}
 selectInput("ox_issue", 
             label = "Select Issue Area:",
             choices = c("Emergency response",
@@ -856,9 +992,110 @@ selectInput("ox_gov_relat",
                         "Under government crackdown"))
 ```
 
-### Red Cross
+```{r ox gauge}
+renderGauge({
+  choice = df()
+  persona = p_beta1 # Choose the persona
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
 
-```{r echo=FALSE}
+  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(ox_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#006633"),
+        symbol = "%")
+})
+```
+
+### Redcross Market Share
+
+```{r plot rc plot}
+renderPlotly({
+  choice = df()
+  
+    persona1 = p_beta1 # Choose the persona
+  
+  ai_exp_util1 <- round(exp(t(choice[, 3]) %*% as.matrix(persona1)),2)
+  gp_exp_util1 <- round(exp(t(choice[, 4]) %*% as.matrix(persona1)),2)
+  ox_exp_util1 <- round(exp(t(choice[, 5]) %*% as.matrix(persona1)),2)
+  rc_exp_util1 <- round(exp(t(choice[, 6]) %*% as.matrix(persona1)),2)
+  
+  ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  
+    persona2 = p_beta2 # Choose the persona
+  
+  ai_exp_util2 <- round(exp(t(choice[, 3]) %*% as.matrix(persona2)),2)
+  gp_exp_util2 <- round(exp(t(choice[, 4]) %*% as.matrix(persona2)),2)
+  ox_exp_util2 <- round(exp(t(choice[, 5]) %*% as.matrix(persona2)),2)
+  rc_exp_util2 <- round(exp(t(choice[, 6]) %*% as.matrix(persona2)),2)
+  
+  ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  
+      persona3 = p_beta3 # Choose the persona
+  
+  ai_exp_util3 <- round(exp(t(choice[, 3]) %*% as.matrix(persona3)),2)
+  gp_exp_util3 <- round(exp(t(choice[, 4]) %*% as.matrix(persona3)),2)
+  ox_exp_util3 <- round(exp(t(choice[, 5]) %*% as.matrix(persona3)),2)
+  rc_exp_util3 <- round(exp(t(choice[, 6]) %*% as.matrix(persona3)),2)
+  
+  ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  
+  data <- c(rc_exp_util1, rc_rate1, 
+            rc_exp_util2, rc_rate2,
+            rc_exp_util3, rc_rate3)
+  
+  
+  df <- as.data.frame(matrix(data, 6, 1))
+  
+  df[,2] <- c("Red Cross")
+  df[,3] <- rep(c("Utility", "Market Share"), length.out = 6)
+  df[,4] <- c(rep("Persona 1", 2),rep("Persona 2", 2), rep("Persona 3", 2))
+  colnames(df) <- c('Value', 'Organization', "Type", "Persona")
+  
+  ggplotly(df %>% filter(Type == "Market Share") %>% 
+             ggplot(aes(y = Value, x = Organization, fill = Persona)) +
+             geom_bar(position = "dodge", stat = "identity") +
+             labs(x="") + 
+             scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
+             theme(legend.position = "none")
+    )
+})
+```
+
+```{r valuebox rc}
+renderValueBox({
+  choice = df()
+  
+  persona = p_beta1 # Choose the persona
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+  
+  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  valueBox(rc_rate,
+           color = "#660000",
+           icon = "fa-percent")
+})
+```
+
+```{r rc org inputs}
 selectInput("rc_issue", 
             label = "Select Issue Area:",
             choices = c("Emergency response",
@@ -888,6 +1125,27 @@ selectInput("rc_gov_relat",
                         "Criticized by government", 
                         "Under government crackdown"))
 ```
+
+```{r rc gauge}
+renderGauge({
+  choice = df()
+  persona = p_beta1 # Choose the persona
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+
+  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(rc_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#660000"),
+        symbol = "%")
+})
+```
+
 
 <!-- There is an issue of not being able to see the last selectInput options when drop down box appears -->
 
@@ -896,264 +1154,264 @@ selectInput("rc_gov_relat",
 <!-- Persona 2 Page -->
 
 
-Persona 2 {.tabset .tabset-fade}
---------------------------------------------------
+<!-- Persona 2 {.tabset .tabset-fade} -->
+<!-- -------------------------------------------------- -->
 
-### Market Share Persona 2
+<!-- ### Market Share Persona 2 -->
 
-```{r plot persona 2}
-renderPlotly({
-  choice = df()
-  
-  persona = p_beta2 # Choose the persona
-  
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-  
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  data <- c(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util, ai_rate, gp_rate, ox_rate, rc_rate)
-  df <- as.data.frame(matrix(data, 8, 1))
-  
-  df[,2] <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")
-  df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
-  df[,4] <- rep(c("Persona 1","Persona 2", "Persona 3"), length.out = 8)
-  colnames(df) <- c('Value', 'Organization', "Type", "Persona")
-  
-  ggplotly(df %>% filter(Type == "Market Share") %>% 
-             ggplot(aes(y = Value, x = Organization, fill = Organization)) +
-             geom_col() +
-             labs(x="") + 
-             scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
-             theme(legend.position = "none") +
-             facet_wrap(~Type)
-    )
-})
-```
+<!-- ```{r plot persona 2} -->
+<!-- renderPlotly({ -->
+<!--   choice = df() -->
 
-### Amnesty International Market Share
+<!--   persona = p_beta2 # Choose the persona -->
 
-```{r valuebox ai persona 2}
-renderValueBox({
-  choice = df()
-  
-  persona = p_beta2 # Choose the persona
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-  
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(ai_rate,
-           color = "#FFC30B",
-           icon = "fa-percent")
-})
-```
+<!--   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2) -->
+<!--   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2) -->
+<!--   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2) -->
+<!--   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2) -->
 
-### Greenpeace Market Share
+<!--   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
+<!--   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
+<!--   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
+<!--   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
 
-```{r valuebox gp persona 2}
-renderValueBox({
-  choice = df()
-  
-  persona = p_beta2 # Choose the persona
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-  
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(gp_rate,
-           color = "#3fad48",
-           icon = "fa-percent")
-})
-```
+<!--   data <- c(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util, ai_rate, gp_rate, ox_rate, rc_rate) -->
+<!--   df <- as.data.frame(matrix(data, 8, 1)) -->
 
-### Oxfam Market Share
+<!--   df[,2] <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross") -->
+<!--   df[,3] <- c(rep("Utility", 4), rep("Market Share", 4)) -->
+<!--   df[,4] <- rep(c("Persona 1","Persona 2", "Persona 3"), length.out = 8) -->
+<!--   colnames(df) <- c('Value', 'Organization', "Type", "Persona") -->
 
-```{r valuebox ox persona 2}
-renderValueBox({
-  choice = df()
-  
-  persona = p_beta2 # Choose the persona
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-  
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(ox_rate,
-           color = "#006633",
-           icon = "fa-percent")
-})
-```
+<!--   ggplotly(df %>% filter(Type == "Market Share") %>%  -->
+<!--              ggplot(aes(y = Value, x = Organization, fill = Organization)) + -->
+<!--              geom_col() + -->
+<!--              labs(x="") +  -->
+<!--              scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) + -->
+<!--              theme(legend.position = "none") + -->
+<!--              facet_wrap(~Type) -->
+<!--     ) -->
+<!-- }) -->
+<!-- ``` -->
 
-### Redcross Market Share
+<!-- ### Amnesty International Market Share -->
 
-```{r valuebox rc persona 2}
-renderValueBox({
-  choice = df()
-   
-  persona = p_beta2 # Choose the persona
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-  
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(rc_rate,
-           color = "#660000",
-           icon = "fa-percent")
-})
-```
+<!-- ```{r valuebox ai persona 2} -->
+<!-- renderValueBox({ -->
+<!--   choice = df() -->
 
-Organizational Inputs {.tabset .tabset-fade}
--------------------------------------
-### Amnesty International Inputs
+<!--   persona = p_beta2 # Choose the persona -->
 
-```{r echo=FALSE}
-selectInput("ai_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"))
+<!--   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2) -->
+<!--   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2) -->
+<!--   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2) -->
+<!--   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2) -->
 
-selectInput("ai_fin_trans",
-            label = "Select Financial transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"))
+<!--   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
 
-selectInput("ai_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in financial accountability",
-                        "Engages in financial accountability"))
+<!--   valueBox(ai_rate, -->
+<!--            color = "#FFC30B", -->
+<!--            icon = "fa-percent") -->
+<!-- }) -->
+<!-- ``` -->
 
-selectInput("ai_funding",
-            label = "Select Funding source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government Grants"))
+<!-- ### Greenpeace Market Share -->
 
-selectInput("ai_gov_relat",
-            label = "Select Relationship with host government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"))
-```
+<!-- ```{r valuebox gp persona 2} -->
+<!-- renderValueBox({ -->
+<!--   choice = df() -->
 
-### Greenpeace Inputs
+<!--   persona = p_beta2 # Choose the persona -->
 
-```{r echo=FALSE}
-selectInput("gp_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"))
+<!--   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2) -->
+<!--   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2) -->
+<!--   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2) -->
+<!--   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2) -->
 
-selectInput("gp_fin_trans",
-            label = "Select Financial transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"))
+<!--   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
 
-selectInput("gp_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in financial accountability"))
+<!--   valueBox(gp_rate, -->
+<!--            color = "#3fad48", -->
+<!--            icon = "fa-percent") -->
+<!-- }) -->
+<!-- ``` -->
 
-selectInput("gp_funding",
-            label = "Select Funding source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government Grants"))
+<!-- ### Oxfam Market Share -->
 
-selectInput("gp_gov_relat",
-            label = "Select Relationship with host government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"))
-```
+<!-- ```{r valuebox ox persona 2} -->
+<!-- renderValueBox({ -->
+<!--   choice = df() -->
+
+<!--   persona = p_beta2 # Choose the persona -->
+
+<!--   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2) -->
+<!--   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2) -->
+<!--   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2) -->
+<!--   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2) -->
+
+<!--   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
+
+<!--   valueBox(ox_rate, -->
+<!--            color = "#006633", -->
+<!--            icon = "fa-percent") -->
+<!-- }) -->
+<!-- ``` -->
+
+<!-- ### Redcross Market Share -->
+
+<!-- ```{r valuebox rc persona 2} -->
+<!-- renderValueBox({ -->
+<!--   choice = df() -->
+
+<!--   persona = p_beta2 # Choose the persona -->
+
+<!--   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2) -->
+<!--   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2) -->
+<!--   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2) -->
+<!--   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2) -->
+
+<!--   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
+
+<!--   valueBox(rc_rate, -->
+<!--            color = "#660000", -->
+<!--            icon = "fa-percent") -->
+<!-- }) -->
+<!-- ``` -->
+
+<!-- Organizational Inputs {.tabset .tabset-fade} -->
+<!-- ------------------------------------- -->
+<!-- ### Amnesty International Inputs -->
+
+<!-- ```{r echo=FALSE} -->
+<!-- selectInput("ai_issue",  -->
+<!--             label = "Select Issue Area:", -->
+<!--             choices = c("Emergency response", -->
+<!--                         "Environment", -->
+<!--                         "Human rights", -->
+<!--                         "Refugee relief")) -->
+
+<!-- selectInput("ai_fin_trans", -->
+<!--             label = "Select Financial transparency:", -->
+<!--             choices = c("Doesn’t engage in transparency", -->
+<!--                         "Engages in transparency")) -->
+
+<!-- selectInput("ai_account", -->
+<!--             label = "Select Financial Accountability:", -->
+<!--             choices = c("Doesn’t engage in financial accountability", -->
+<!--                         "Engages in financial accountability")) -->
+
+<!-- selectInput("ai_funding", -->
+<!--             label = "Select Funding source:", -->
+<!--             choices = c("Many small private donations", -->
+<!--                         "Handful of wealthy private donors", -->
+<!--                         "Government Grants")) -->
+
+<!-- selectInput("ai_gov_relat", -->
+<!--             label = "Select Relationship with host government", -->
+<!--             choices = c("Friendly relationship with government", -->
+<!--                         "Criticized by government",  -->
+<!--                         "Under government crackdown")) -->
+<!-- ``` -->
+
+<!-- ### Greenpeace Inputs -->
+
+<!-- ```{r echo=FALSE} -->
+<!-- selectInput("gp_issue",  -->
+<!--             label = "Select Issue Area:", -->
+<!--             choices = c("Emergency response", -->
+<!--                         "Environment", -->
+<!--                         "Human rights", -->
+<!--                         "Refugee relief")) -->
+
+<!-- selectInput("gp_fin_trans", -->
+<!--             label = "Select Financial transparency:", -->
+<!--             choices = c("Doesn’t engage in transparency", -->
+<!--                         "Engages in transparency")) -->
+
+<!-- selectInput("gp_account", -->
+<!--             label = "Select Financial Accountability:", -->
+<!--             choices = c("Doesn’t engage in accountability", -->
+<!--                         "Engages in financial accountability")) -->
+
+<!-- selectInput("gp_funding", -->
+<!--             label = "Select Funding source:", -->
+<!--             choices = c("Many small private donations", -->
+<!--                         "Handful of wealthy private donors", -->
+<!--                         "Government Grants")) -->
+
+<!-- selectInput("gp_gov_relat", -->
+<!--             label = "Select Relationship with host government", -->
+<!--             choices = c("Friendly relationship with government", -->
+<!--                         "Criticized by government",  -->
+<!--                         "Under government crackdown")) -->
+<!-- ``` -->
 
 
-### Oxfam Inputs
+<!-- ### Oxfam Inputs -->
 
-```{r echo=FALSE}
-selectInput("ox_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"))
+<!-- ```{r echo=FALSE} -->
+<!-- selectInput("ox_issue",  -->
+<!--             label = "Select Issue Area:", -->
+<!--             choices = c("Emergency response", -->
+<!--                         "Environment", -->
+<!--                         "Human rights", -->
+<!--                         "Refugee relief")) -->
 
-selectInput("ox_fin_trans",
-            label = "Select Financial transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"))
+<!-- selectInput("ox_fin_trans", -->
+<!--             label = "Select Financial transparency:", -->
+<!--             choices = c("Doesn’t engage in transparency", -->
+<!--                         "Engages in transparency")) -->
 
-selectInput("ox_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in financial accountability"))
+<!-- selectInput("ox_account", -->
+<!--             label = "Select Financial Accountability:", -->
+<!--             choices = c("Doesn’t engage in accountability", -->
+<!--                         "Engages in financial accountability")) -->
 
-selectInput("ox_funding",
-            label = "Select Funding source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government Grants"))
+<!-- selectInput("ox_funding", -->
+<!--             label = "Select Funding source:", -->
+<!--             choices = c("Many small private donations", -->
+<!--                         "Handful of wealthy private donors", -->
+<!--                         "Government Grants")) -->
 
-selectInput("ox_gov_relat",
-            label = "Select Relationship with host government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"))
-```
+<!-- selectInput("ox_gov_relat", -->
+<!--             label = "Select Relationship with host government", -->
+<!--             choices = c("Friendly relationship with government", -->
+<!--                         "Criticized by government",  -->
+<!--                         "Under government crackdown")) -->
+<!-- ``` -->
 
-### Red Cross Inputs
+<!-- ### Red Cross Inputs -->
 
-```{r echo=FALSE}
-selectInput("rc_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"))
+<!-- ```{r echo=FALSE} -->
+<!-- selectInput("rc_issue",  -->
+<!--             label = "Select Issue Area:", -->
+<!--             choices = c("Emergency response", -->
+<!--                         "Environment", -->
+<!--                         "Human rights", -->
+<!--                         "Refugee relief")) -->
 
-selectInput("rc_fin_trans",
-            label = "Select Financial transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"))
+<!-- selectInput("rc_fin_trans", -->
+<!--             label = "Select Financial transparency:", -->
+<!--             choices = c("Doesn’t engage in transparency", -->
+<!--                         "Engages in transparency")) -->
 
-selectInput("rc_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in financial accountability"))
+<!-- selectInput("rc_account", -->
+<!--             label = "Select Financial Accountability:", -->
+<!--             choices = c("Doesn’t engage in accountability", -->
+<!--                         "Engages in financial accountability")) -->
 
-selectInput("rc_funding",
-            label = "Select Funding source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government Grants"))
+<!-- selectInput("rc_funding", -->
+<!--             label = "Select Funding source:", -->
+<!--             choices = c("Many small private donations", -->
+<!--                         "Handful of wealthy private donors", -->
+<!--                         "Government Grants")) -->
 
-selectInput("rc_gov_relat",
-            label = "Select Relationship with host government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"))
-```
+<!-- selectInput("rc_gov_relat", -->
+<!--             label = "Select Relationship with host government", -->
+<!--             choices = c("Friendly relationship with government", -->
+<!--                         "Criticized by government",  -->
+<!--                         "Under government crackdown")) -->
+<!-- ``` -->
 
 
 
@@ -1161,263 +1419,263 @@ selectInput("rc_gov_relat",
 
 
 
-Persona 3 {.tabset .tabset-fade}
---------------------------------------------------
+<!-- Persona 3 {.tabset .tabset-fade} -->
+<!-- -------------------------------------------------- -->
 
-### Market Share Persona 3
-```{r plot persona 3}
-renderPlotly({
-  choice = df()
-  
-  persona = p_beta3 # Choose the persona
-  
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona[,1])),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona[,1])),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona[,1])),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona[,1])),2)
-  
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  data <- c(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util, ai_rate, gp_rate, ox_rate, rc_rate)
-  df <- as.data.frame(matrix(data, 8, 1))
-  
-  df[,2] <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")
-  df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
-  df[,4] <- rep(c("Persona 1","Persona 2", "Persona 3"), length.out = 8)
-  colnames(df) <- c('Value', 'Organization', "Type", "Persona")
-  
-  ggplotly(df %>% filter(Type == "Market Share") %>% 
-             ggplot(aes(y = Value, x = Organization, fill = Organization)) +
-             geom_col() +
-             labs(x="") + 
-             scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
-             theme(legend.position = "none") +
-             facet_wrap(~Type)
-    )
-})
-```
+<!-- ### Market Share Persona 3 -->
+<!-- ```{r plot persona 3} -->
+<!-- renderPlotly({ -->
+<!--   choice = df() -->
 
-### Amnesty International Market Share
+<!--   persona = p_beta3 # Choose the persona -->
 
-```{r valuebox ai persona 3}
-renderValueBox({
-  choice = df()
-  
-  persona = p_beta3 # Choose the persona
-  
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona[,1])),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona[,1])),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona[,1])),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona[,1])),2)
-  
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(ai_rate,
-           color = "#FFC30B",
-           icon = "fa-percent")
-})
-```
+<!--   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona[,1])),2) -->
+<!--   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona[,1])),2) -->
+<!--   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona[,1])),2) -->
+<!--   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona[,1])),2) -->
 
-### Greenpeace Market Share
+<!--   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
+<!--   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
+<!--   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
+<!--   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
 
-```{r valuebox gp persona 3}
-renderValueBox({
-  choice = df()
-  
-  persona = p_beta3 # Choose the persona
-  
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona[,1])),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona[,1])),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona[,1])),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona[,1])),2)
-  
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(gp_rate,
-           color = "#3fad48",
-           icon = "fa-percent")
-})
-```
+<!--   data <- c(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util, ai_rate, gp_rate, ox_rate, rc_rate) -->
+<!--   df <- as.data.frame(matrix(data, 8, 1)) -->
 
-### Oxfam Market Share
+<!--   df[,2] <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross") -->
+<!--   df[,3] <- c(rep("Utility", 4), rep("Market Share", 4)) -->
+<!--   df[,4] <- rep(c("Persona 1","Persona 2", "Persona 3"), length.out = 8) -->
+<!--   colnames(df) <- c('Value', 'Organization', "Type", "Persona") -->
 
-```{r valuebox ox persona 3}
-renderValueBox({
-  choice = df()
-  
-  persona = p_beta3 # Choose the persona
-  
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona[,1])),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona[,1])),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona[,1])),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona[,1])),2)
-  
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(ox_rate,
-           color = "#006633",
-           icon = "fa-percent")
-})
-```
+<!--   ggplotly(df %>% filter(Type == "Market Share") %>%  -->
+<!--              ggplot(aes(y = Value, x = Organization, fill = Organization)) + -->
+<!--              geom_col() + -->
+<!--              labs(x="") +  -->
+<!--              scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) + -->
+<!--              theme(legend.position = "none") + -->
+<!--              facet_wrap(~Type) -->
+<!--     ) -->
+<!-- }) -->
+<!-- ``` -->
 
-### Redcross Market Share
+<!-- ### Amnesty International Market Share -->
 
-```{r valuebox rc persona 3}
-renderValueBox({
-  choice = df()
-   
-  persona = p_beta3 # Choose the persona
-  
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona[,1])),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona[,1])),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona[,1])),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona[,1])),2)
-  
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(rc_rate,
-           color = "#660000",
-           icon = "fa-percent")
-})
-```
+<!-- ```{r valuebox ai persona 3} -->
+<!-- renderValueBox({ -->
+<!--   choice = df() -->
 
-Organizational Inputs {.tabset .tabset-fade}
--------------------------------------
-### Amnesty International Inputs
+<!--   persona = p_beta3 # Choose the persona -->
 
-```{r echo=FALSE}
-selectInput("ai_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"))
+<!--   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona[,1])),2) -->
+<!--   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona[,1])),2) -->
+<!--   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona[,1])),2) -->
+<!--   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona[,1])),2) -->
 
-selectInput("ai_fin_trans",
-            label = "Select Financial transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"))
+<!--   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
 
-selectInput("ai_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in financial accountability",
-                        "Engages in financial accountability"))
+<!--   valueBox(ai_rate, -->
+<!--            color = "#FFC30B", -->
+<!--            icon = "fa-percent") -->
+<!-- }) -->
+<!-- ``` -->
 
-selectInput("ai_funding",
-            label = "Select Funding source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government Grants"))
+<!-- ### Greenpeace Market Share -->
 
-selectInput("ai_gov_relat",
-            label = "Select Relationship with host government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"))
-```
+<!-- ```{r valuebox gp persona 3} -->
+<!-- renderValueBox({ -->
+<!--   choice = df() -->
 
-### Greenpeace Inputs
+<!--   persona = p_beta3 # Choose the persona -->
 
-```{r echo=FALSE}
-selectInput("gp_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"))
+<!--   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona[,1])),2) -->
+<!--   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona[,1])),2) -->
+<!--   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona[,1])),2) -->
+<!--   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona[,1])),2) -->
 
-selectInput("gp_fin_trans",
-            label = "Select Financial transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"))
+<!--   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
 
-selectInput("gp_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in financial accountability"))
+<!--   valueBox(gp_rate, -->
+<!--            color = "#3fad48", -->
+<!--            icon = "fa-percent") -->
+<!-- }) -->
+<!-- ``` -->
 
-selectInput("gp_funding",
-            label = "Select Funding source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government Grants"))
+<!-- ### Oxfam Market Share -->
 
-selectInput("gp_gov_relat",
-            label = "Select Relationship with host government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"))
-```
+<!-- ```{r valuebox ox persona 3} -->
+<!-- renderValueBox({ -->
+<!--   choice = df() -->
+
+<!--   persona = p_beta3 # Choose the persona -->
+
+<!--   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona[,1])),2) -->
+<!--   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona[,1])),2) -->
+<!--   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona[,1])),2) -->
+<!--   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona[,1])),2) -->
+
+<!--   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
+
+<!--   valueBox(ox_rate, -->
+<!--            color = "#006633", -->
+<!--            icon = "fa-percent") -->
+<!-- }) -->
+<!-- ``` -->
+
+<!-- ### Redcross Market Share -->
+
+<!-- ```{r valuebox rc persona 3} -->
+<!-- renderValueBox({ -->
+<!--   choice = df() -->
+
+<!--   persona = p_beta3 # Choose the persona -->
+
+<!--   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona[,1])),2) -->
+<!--   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona[,1])),2) -->
+<!--   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona[,1])),2) -->
+<!--   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona[,1])),2) -->
+
+<!--   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
+
+<!--   valueBox(rc_rate, -->
+<!--            color = "#660000", -->
+<!--            icon = "fa-percent") -->
+<!-- }) -->
+<!-- ``` -->
+
+<!-- Organizational Inputs {.tabset .tabset-fade} -->
+<!-- ------------------------------------- -->
+<!-- ### Amnesty International Inputs -->
+
+<!-- ```{r echo=FALSE} -->
+<!-- selectInput("ai_issue",  -->
+<!--             label = "Select Issue Area:", -->
+<!--             choices = c("Emergency response", -->
+<!--                         "Environment", -->
+<!--                         "Human rights", -->
+<!--                         "Refugee relief")) -->
+
+<!-- selectInput("ai_fin_trans", -->
+<!--             label = "Select Financial transparency:", -->
+<!--             choices = c("Doesn’t engage in transparency", -->
+<!--                         "Engages in transparency")) -->
+
+<!-- selectInput("ai_account", -->
+<!--             label = "Select Financial Accountability:", -->
+<!--             choices = c("Doesn’t engage in financial accountability", -->
+<!--                         "Engages in financial accountability")) -->
+
+<!-- selectInput("ai_funding", -->
+<!--             label = "Select Funding source:", -->
+<!--             choices = c("Many small private donations", -->
+<!--                         "Handful of wealthy private donors", -->
+<!--                         "Government Grants")) -->
+
+<!-- selectInput("ai_gov_relat", -->
+<!--             label = "Select Relationship with host government", -->
+<!--             choices = c("Friendly relationship with government", -->
+<!--                         "Criticized by government",  -->
+<!--                         "Under government crackdown")) -->
+<!-- ``` -->
+
+<!-- ### Greenpeace Inputs -->
+
+<!-- ```{r echo=FALSE} -->
+<!-- selectInput("gp_issue",  -->
+<!--             label = "Select Issue Area:", -->
+<!--             choices = c("Emergency response", -->
+<!--                         "Environment", -->
+<!--                         "Human rights", -->
+<!--                         "Refugee relief")) -->
+
+<!-- selectInput("gp_fin_trans", -->
+<!--             label = "Select Financial transparency:", -->
+<!--             choices = c("Doesn’t engage in transparency", -->
+<!--                         "Engages in transparency")) -->
+
+<!-- selectInput("gp_account", -->
+<!--             label = "Select Financial Accountability:", -->
+<!--             choices = c("Doesn’t engage in accountability", -->
+<!--                         "Engages in financial accountability")) -->
+
+<!-- selectInput("gp_funding", -->
+<!--             label = "Select Funding source:", -->
+<!--             choices = c("Many small private donations", -->
+<!--                         "Handful of wealthy private donors", -->
+<!--                         "Government Grants")) -->
+
+<!-- selectInput("gp_gov_relat", -->
+<!--             label = "Select Relationship with host government", -->
+<!--             choices = c("Friendly relationship with government", -->
+<!--                         "Criticized by government",  -->
+<!--                         "Under government crackdown")) -->
+<!-- ``` -->
 
 
-### Oxfam Inputs
+<!-- ### Oxfam Inputs -->
 
-```{r echo=FALSE}
-selectInput("ox_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"))
+<!-- ```{r echo=FALSE} -->
+<!-- selectInput("ox_issue",  -->
+<!--             label = "Select Issue Area:", -->
+<!--             choices = c("Emergency response", -->
+<!--                         "Environment", -->
+<!--                         "Human rights", -->
+<!--                         "Refugee relief")) -->
 
-selectInput("ox_fin_trans",
-            label = "Select Financial transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"))
+<!-- selectInput("ox_fin_trans", -->
+<!--             label = "Select Financial transparency:", -->
+<!--             choices = c("Doesn’t engage in transparency", -->
+<!--                         "Engages in transparency")) -->
 
-selectInput("ox_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in financial accountability"))
+<!-- selectInput("ox_account", -->
+<!--             label = "Select Financial Accountability:", -->
+<!--             choices = c("Doesn’t engage in accountability", -->
+<!--                         "Engages in financial accountability")) -->
 
-selectInput("ox_funding",
-            label = "Select Funding source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government Grants"))
+<!-- selectInput("ox_funding", -->
+<!--             label = "Select Funding source:", -->
+<!--             choices = c("Many small private donations", -->
+<!--                         "Handful of wealthy private donors", -->
+<!--                         "Government Grants")) -->
 
-selectInput("ox_gov_relat",
-            label = "Select Relationship with host government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"))
-```
+<!-- selectInput("ox_gov_relat", -->
+<!--             label = "Select Relationship with host government", -->
+<!--             choices = c("Friendly relationship with government", -->
+<!--                         "Criticized by government",  -->
+<!--                         "Under government crackdown")) -->
+<!-- ``` -->
 
-### Red Cross Inputs
+<!-- ### Red Cross Inputs -->
 
-```{r echo=FALSE}
-selectInput("rc_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"))
+<!-- ```{r echo=FALSE} -->
+<!-- selectInput("rc_issue",  -->
+<!--             label = "Select Issue Area:", -->
+<!--             choices = c("Emergency response", -->
+<!--                         "Environment", -->
+<!--                         "Human rights", -->
+<!--                         "Refugee relief")) -->
 
-selectInput("rc_fin_trans",
-            label = "Select Financial transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"))
+<!-- selectInput("rc_fin_trans", -->
+<!--             label = "Select Financial transparency:", -->
+<!--             choices = c("Doesn’t engage in transparency", -->
+<!--                         "Engages in transparency")) -->
 
-selectInput("rc_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in financial accountability"))
+<!-- selectInput("rc_account", -->
+<!--             label = "Select Financial Accountability:", -->
+<!--             choices = c("Doesn’t engage in accountability", -->
+<!--                         "Engages in financial accountability")) -->
 
-selectInput("rc_funding",
-            label = "Select Funding source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government Grants"))
+<!-- selectInput("rc_funding", -->
+<!--             label = "Select Funding source:", -->
+<!--             choices = c("Many small private donations", -->
+<!--                         "Handful of wealthy private donors", -->
+<!--                         "Government Grants")) -->
 
-selectInput("rc_gov_relat",
-            label = "Select Relationship with host government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"))
-```
+<!-- selectInput("rc_gov_relat", -->
+<!--             label = "Select Relationship with host government", -->
+<!--             choices = c("Friendly relationship with government", -->
+<!--                         "Criticized by government",  -->
+<!--                         "Under government crackdown")) -->
+<!-- ``` -->
 
 
 
@@ -1472,26 +1730,26 @@ selectInput("rc_gov_relat",
 <!-- }) -->
 <!-- ``` -->
 
-Expected Donors {.tabset .tabset-fade}
--------------------------------------
-### Amnesty International Expected Donors
+<!-- Expected Donors {.tabset .tabset-fade} -->
+<!-- ------------------------------------- -->
+<!-- ### Amnesty International Expected Donors -->
 
-```{r echo=FALSE}
-renderGauge({
-  choice = df()
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(public_political_social_charity_demo[,2])),2)
+<!-- ```{r echo=FALSE} -->
+<!-- renderGauge({ -->
+<!--   choice = df() -->
+<!--   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(public_political_social_charity_demo[,2])),2) -->
+<!--   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(public_political_social_charity_demo[,2])),2) -->
+<!--   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(public_political_social_charity_demo[,2])),2) -->
+<!--   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(public_political_social_charity_demo[,2])),2) -->
 
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  gauge(ai_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#FFC30B"),
-        symbol = "%")
-})
-```
+<!--   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util)) -->
+<!--   gauge(ai_rate, -->
+<!--         min = 0, -->
+<!--         max = 100, -->
+<!--         gaugeSectors(colors = "#FFC30B"), -->
+<!--         symbol = "%") -->
+<!-- }) -->
+<!-- ``` -->
 
 <!-- ### Greenpeace Expected Donors -->
 
