@@ -541,7 +541,7 @@ p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona
 
 <!-- Main page Chart with All Personas -->
 
-Market Share Per Persona 
+Market Share Per Persona {data-height=600}
 --------------------------------------
 
 ```{r plot all personas}
@@ -605,13 +605,14 @@ renderPlotly({
              theme(legend.position = "none")
     )
 })
+
 ```
 
 <!-- Organizational Tabs -->
 
 Organization Breakdown {.tabset .tabset-fade}
 --------------------------------------------------
-### Amnesty International
+### Org 1
 
 ```{r plot ai plot}
 renderPlotly({
@@ -743,9 +744,45 @@ renderGauge({
         gaugeSectors(colors = "#FFC30B"),
         symbol = "%")
 })
+
+renderGauge({
+  choice = df()
+  persona = p_beta2 # Choose the persona
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+
+  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(ai_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#3fad48"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  persona = p_beta3 # Choose the persona
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+
+  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(ai_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#006633"),
+        symbol = "%")
+})
 ```
 
-### Greenpeace
+### Org 2
 
 ```{r plot gp plot}
 renderPlotly({
@@ -878,7 +915,7 @@ renderGauge({
 })
 ```
 
-### Oxfam
+### Org 3
 
 ```{r plot ox plot}
 renderPlotly({
@@ -1012,7 +1049,7 @@ renderGauge({
 })
 ```
 
-### Redcross
+### Org 4
 
 ```{r plot rc plot}
 renderPlotly({
@@ -1146,6 +1183,23 @@ renderGauge({
 })
 ```
 
+### Persona 1
+
+```{r persona 1 inputs}
+
+```
+
+### Persona 2
+
+```{r persona 2 inputs}
+
+```
+
+### Persona 3
+
+```{r persona 3 inputs}
+
+```
 
 <!-- There is an issue of not being able to see the last selectInput options when drop down box appears -->
 
