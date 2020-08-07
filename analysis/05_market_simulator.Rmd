@@ -611,7 +611,7 @@ renderPlotly({
 
 Organization Breakdown {.tabset .tabset-fade}
 --------------------------------------------------
-### Amnesty International Market Share
+### Amnesty International
 
 ```{r plot ai plot}
 renderPlotly({
@@ -676,22 +676,22 @@ renderPlotly({
 ```
 
 ```{r valuebox ai}
-renderValueBox({
-  choice = df()
-  
-  persona = p_beta1 # Choose the persona
-  
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-  
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(ai_rate,
-           color = "#FFC30B",
-           icon = "fa-percent")
-})
+# renderValueBox({
+#   choice = df()
+#   
+#   persona = p_beta1 # Choose the persona
+#   
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+#   
+#   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   valueBox(ai_rate,
+#            color = "#FFC30B",
+#            icon = "fa-percent")
+# })
 ```
 
 ```{r ai org inputs}
@@ -745,7 +745,7 @@ renderGauge({
 })
 ```
 
-### Greenpeace Market Share
+### Greenpeace
 
 ```{r plot gp plot}
 renderPlotly({
@@ -810,21 +810,21 @@ renderPlotly({
 ```
 
 ```{r valuebox gp}
-renderValueBox({
-  choice = df()
-  persona = p_beta1 # Choose the persona
-  
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-  
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(gp_rate,
-           color = "#3fad48",
-           icon = "fa-percent")
-})
+# renderValueBox({
+#   choice = df()
+#   persona = p_beta1 # Choose the persona
+#   
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+#   
+#   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   valueBox(gp_rate,
+#            color = "#3fad48",
+#            icon = "fa-percent")
+# })
 ```
 
 ```{r gp org inputs}
@@ -878,7 +878,7 @@ renderGauge({
 })
 ```
 
-### Oxfam Market Share
+### Oxfam
 
 ```{r plot ox plot}
 renderPlotly({
@@ -943,22 +943,22 @@ renderPlotly({
 ```
 
 ```{r valuebox ox}
-renderValueBox({
-  choice = df()
-  
-  persona = p_beta1 # Choose the persona
-  
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-  
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(ox_rate,
-           color = "#006633",
-           icon = "fa-percent")
-})
+# renderValueBox({
+#   choice = df()
+#   
+#   persona = p_beta1 # Choose the persona
+#   
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+#   
+#   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   valueBox(ox_rate,
+#            color = "#006633",
+#            icon = "fa-percent")
+# })
 ```
 
 ```{r ox org inputs}
@@ -1012,7 +1012,7 @@ renderGauge({
 })
 ```
 
-### Redcross Market Share
+### Redcross
 
 ```{r plot rc plot}
 renderPlotly({
@@ -1077,22 +1077,22 @@ renderPlotly({
 ```
 
 ```{r valuebox rc}
-renderValueBox({
-  choice = df()
-  
-  persona = p_beta1 # Choose the persona
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-  
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  valueBox(rc_rate,
-           color = "#660000",
-           icon = "fa-percent")
-})
+# renderValueBox({
+#   choice = df()
+#   
+#   persona = p_beta1 # Choose the persona
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+#   
+#   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   valueBox(rc_rate,
+#            color = "#660000",
+#            icon = "fa-percent")
+# })
 ```
 
 ```{r rc org inputs}
