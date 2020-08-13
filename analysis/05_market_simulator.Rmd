@@ -92,9 +92,9 @@ df <- reactive({
 
 ####################################################################
 
-beta <- as.data.frame(matrix(rep(0), nrow = 28))
+beta <- as.data.frame(matrix(rep(0), nrow = 38))
 
-beta$levels = c("Persona 1", "Persona 2", "Persona 3", "Chartiy Importance", "Trust in Charity", "Donation Frequency", "Donation Amount", "Volunteer 12 Months", "filler","filler", "filler", "filler", "filler", "filler","filler", "filler", "filler", "filler", "filler","filler", "filler", "filler", "filler", "filler","filler", "filler", "filler", "filler")
+beta$levels = c("Persona 1", "Persona 2", "Persona 3", "Chartiy Importance", "Trust in Charity", "Donation Frequency", "Donation Amount", "Volunteer 12 Months", "Volunteer Frequence","Personal Activism", "Family Activism", "Religious Membership", "Sport or Recreational Membership", "Art, Music, or Educational Membership","Labor Union Membership", "Political Party Membership", "Environmental Organization Membership", "Professional Association", "Humanitarian or Charity Membership","Consumer Organization Membership", "Other Organization Membership", "Follow National News", "Follow International News", "News Medium","Follow Government or Public Affairs", "Travel to Developing Countries", "Political Preference", "Trust in Political Institutions", "Others Should be Charitable", "Worship Service Attendence", "Religious Importance", "Religion", "Gender", "Marital Status", "Education", "Income", "Race", "Age")
 
 # Persona Reactive Element
 p <- reactive({
@@ -106,6 +106,36 @@ p <- reactive({
     beta$p1_value[beta$levels %in% input$p1_donation_frequency] <- 1
     beta$p1_value[beta$levels %in% input$p1_donation_amount] <- 1
     beta$p1_value[beta$levels %in% input$p1_volunteer_12] <- 1
+    beta$p1_value[beta$levels %in% input$p1_volunteer_frequency] <- 1
+    beta$p1_value[beta$levels %in% input$p1_personal_activism] <- 1
+    beta$p1_value[beta$levels %in% input$p1_family_activism] <- 1
+    beta$p1_value[beta$levels %in% input$p1_religious_member] <- 1
+    beta$p1_value[beta$levels %in% input$p1_sport_member] <- 1
+    beta$p1_value[beta$levels %in% input$p1_art_member] <- 1
+    beta$p1_value[beta$levels %in% input$p1_labor_member] <- 1
+    beta$p1_value[beta$levels %in% input$p1_political_member] <- 1
+    beta$p1_value[beta$levels %in% input$p1_environmental_member] <- 1
+    beta$p1_value[beta$levels %in% input$p1_professional_member] <- 1
+    beta$p1_value[beta$levels %in% input$p1_humanitarian_member] <- 1
+    beta$p1_value[beta$levels %in% input$p1_consumer_member] <- 1
+    beta$p1_value[beta$levels %in% input$p1_other_member] <- 1
+    beta$p1_value[beta$levels %in% input$p1_national_news] <- 1
+    beta$p1_value[beta$levels %in% input$p1_international_news] <- 1
+    beta$p1_value[beta$levels %in% input$p1_news_medium] <- 1
+    beta$p1_value[beta$levels %in% input$p1_follow_gov] <- 1
+    beta$p1_value[beta$levels %in% input$p1_travel_developing] <- 1
+    beta$p1_value[beta$levels %in% input$p1_political_pref] <- 1
+    beta$p1_value[beta$levels %in% input$p1_institution_trust] <- 1
+    beta$p1_value[beta$levels %in% input$p1_others_charitable] <- 1
+    beta$p1_value[beta$levels %in% input$p1_worship_attendence] <- 1
+    beta$p1_value[beta$levels %in% input$p1_religion_importance] <- 1
+    beta$p1_value[beta$levels %in% input$p1_religion] <- 1
+    beta$p1_value[beta$levels %in% input$p1_gender] <- 1
+    beta$p1_value[beta$levels %in% input$p1_marital_status] <- 1
+    beta$p1_value[beta$levels %in% input$p1_education] <- 1
+    beta$p1_value[beta$levels %in% input$p1_income] <- 1
+    beta$p1_value[beta$levels %in% input$p1_race] <- 1
+    beta$p1_value[beta$levels %in% input$p1_age] <- 1
   #Persona 2
     beta$p2_value <- 0
     beta$p2_value[beta$levels == 'Persona 2'] <- 1
@@ -114,6 +144,36 @@ p <- reactive({
     beta$p2_value[beta$levels %in% input$p2_donation_frequency] <- 1
     beta$p2_value[beta$levels %in% input$p2_donation_amount] <- 1
     beta$p2_value[beta$levels %in% input$p2_volunteer_12] <- 1
+    beta$p2_value[beta$levels %in% input$p2_volunteer_frequency] <- 1
+    beta$p2_value[beta$levels %in% input$p2_personal_activism] <- 1
+    beta$p2_value[beta$levels %in% input$p2_family_activism] <- 1
+    beta$p2_value[beta$levels %in% input$p2_religious_member] <- 1
+    beta$p2_value[beta$levels %in% input$p2_sport_member] <- 1
+    beta$p2_value[beta$levels %in% input$p2_art_member] <- 1
+    beta$p2_value[beta$levels %in% input$p2_labor_member] <- 1
+    beta$p2_value[beta$levels %in% input$p2_political_member] <- 1
+    beta$p2_value[beta$levels %in% input$p2_environmental_member] <- 1
+    beta$p2_value[beta$levels %in% input$p2_professional_member] <- 1
+    beta$p2_value[beta$levels %in% input$p2_humanitarian_member] <- 1
+    beta$p2_value[beta$levels %in% input$p2_consumer_member] <- 1
+    beta$p2_value[beta$levels %in% input$p2_other_member] <- 1
+    beta$p2_value[beta$levels %in% input$p2_national_news] <- 1
+    beta$p2_value[beta$levels %in% input$p2_international_news] <- 1
+    beta$p2_value[beta$levels %in% input$p2_news_medium] <- 1
+    beta$p2_value[beta$levels %in% input$p2_follow_gov] <- 1
+    beta$p2_value[beta$levels %in% input$p2_travel_developing] <- 1
+    beta$p2_value[beta$levels %in% input$p2_political_pref] <- 1
+    beta$p2_value[beta$levels %in% input$p2_institution_trust] <- 1
+    beta$p2_value[beta$levels %in% input$p2_others_charitable] <- 1
+    beta$p2_value[beta$levels %in% input$p2_worship_attendence] <- 1
+    beta$p2_value[beta$levels %in% input$p2_religion_importance] <- 1
+    beta$p2_value[beta$levels %in% input$p2_religion] <- 1
+    beta$p2_value[beta$levels %in% input$p2_gender] <- 1
+    beta$p2_value[beta$levels %in% input$p2_marital_status] <- 1
+    beta$p2_value[beta$levels %in% input$p2_education] <- 1
+    beta$p2_value[beta$levels %in% input$p2_income] <- 1
+    beta$p2_value[beta$levels %in% input$p2_race] <- 1
+    beta$p2_value[beta$levels %in% input$p2_age] <- 1
   #Persona 3
     beta$p3_value <- 0
     beta$p3_value[beta$levels == 'Persona 3'] <- 1
@@ -122,6 +182,36 @@ p <- reactive({
     beta$p3_value[beta$levels %in% input$p3_donation_frequency] <- 1
     beta$p3_value[beta$levels %in% input$p3_donation_amount] <- 1
     beta$p3_value[beta$levels %in% input$p3_volunteer_12] <- 1
+    beta$p3_value[beta$levels %in% input$p3_volunteer_frequency] <- 1
+    beta$p3_value[beta$levels %in% input$p3_personal_activism] <- 1
+    beta$p3_value[beta$levels %in% input$p3_family_activism] <- 1
+    beta$p3_value[beta$levels %in% input$p3_religious_member] <- 1
+    beta$p3_value[beta$levels %in% input$p3_sport_member] <- 1
+    beta$p3_value[beta$levels %in% input$p3_art_member] <- 1
+    beta$p3_value[beta$levels %in% input$p3_labor_member] <- 1
+    beta$p3_value[beta$levels %in% input$p3_political_member] <- 1
+    beta$p3_value[beta$levels %in% input$p3_environmental_member] <- 1
+    beta$p3_value[beta$levels %in% input$p3_professional_member] <- 1
+    beta$p3_value[beta$levels %in% input$p3_humanitarian_member] <- 1
+    beta$p3_value[beta$levels %in% input$p3_consumer_member] <- 1
+    beta$p3_value[beta$levels %in% input$p3_other_member] <- 1
+    beta$p3_value[beta$levels %in% input$p3_national_news] <- 1
+    beta$p3_value[beta$levels %in% input$p3_international_news] <- 1
+    beta$p3_value[beta$levels %in% input$p3_news_medium] <- 1
+    beta$p3_value[beta$levels %in% input$p3_follow_gov] <- 1
+    beta$p3_value[beta$levels %in% input$p3_travel_developing] <- 1
+    beta$p3_value[beta$levels %in% input$p3_political_pref] <- 1
+    beta$p3_value[beta$levels %in% input$p3_institution_trust] <- 1
+    beta$p3_value[beta$levels %in% input$p3_others_charitable] <- 1
+    beta$p3_value[beta$levels %in% input$p3_worship_attendence] <- 1
+    beta$p3_value[beta$levels %in% input$p3_religion_importance] <- 1
+    beta$p3_value[beta$levels %in% input$p3_religion] <- 1
+    beta$p3_value[beta$levels %in% input$p3_gender] <- 1
+    beta$p3_value[beta$levels %in% input$p3_marital_status] <- 1
+    beta$p3_value[beta$levels %in% input$p3_education] <- 1
+    beta$p3_value[beta$levels %in% input$p3_income] <- 1
+    beta$p3_value[beta$levels %in% input$p3_race] <- 1
+    beta$p3_value[beta$levels %in% input$p3_age] <- 1
     beta
     
 })
@@ -1553,18 +1643,18 @@ selectInput("p1_age",
 #             choices = c("public_political_social_charity_demo"))
 
 
-selectInput("charity_importance",
+selectInput("p2_charity_importance",
           label = "Charity Importance:",
           choices = c("0", '1', '2', '3','4','5','6','7'))
 
 
-selectInput("trust_in_charity",
+selectInput("p2_trust_in_charity",
             label = "Charity Trust:",
             choices = c("0", '1', '2', '3','4','5','6','7'))
 
 
 
-selectInput("donation_frequency",
+selectInput("p2_donation_frequency",
          label = "Donation Frequency:",
          choices = c('Once a week',
                      'Once a Month',
@@ -1576,7 +1666,7 @@ selectInput("donation_frequency",
 
 
 
-selectInput("donation_amount",
+selectInput("p2_donation_amount",
          label = "Donation Amount:",
          choices = c("$1-$49",
                      '$50-$99',
@@ -1587,13 +1677,13 @@ selectInput("donation_amount",
                      '$10,000+'))
 
 
-selectInput("volunteer_12",
+selectInput("p2_volunteer_12",
          label = "Volunteered in last 12 Months:",
          choices = c("Yes", "No"))
 
 
 
-selectInput("volunteer_frequency",
+selectInput("p2_volunteer_frequency",
          label = "Volunteer Frequency:",
          choices = c('Once a week',
                      'Once a Month',
@@ -1604,7 +1694,7 @@ selectInput("volunteer_frequency",
                      'Never'))
 
 
-selectInput("personal_activism",
+selectInput("p2_personal_activism",
          label = "Personal Activism:",
          choices = c('Extremely involved',
                      'Very involved',
@@ -1613,7 +1703,7 @@ selectInput("personal_activism",
                      'Never involved'))
 
 
-selectInput("family_activism",
+selectInput("p2_family_activism",
          label = "Family Activism:",
          choices = c('Extremely involved',
                      'Very involved',
@@ -1622,70 +1712,70 @@ selectInput("family_activism",
                      'Never involved'))
 
 
-selectInput("religious_member",
+selectInput("p2_religious_member",
          label = "Church Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("sport_member",
+selectInput("p2_sport_member",
          label = "Sport or Recreational Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("art_member",
+selectInput("p2_art_member",
          label = "Art, Music, or Educational Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("labor_member",
+selectInput("p2_labor_member",
          label = "Labor Union Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("political_member",
+selectInput("p2_political_member",
          label = "Political Party Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("environmental_member",
+selectInput("p2_environmental_member",
          label = "Enviornmental Org. Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("professional_member",
+selectInput("p2_professional_member",
          label = "Professional Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("humanitarian_member",
+selectInput("p2_humanitarian_member",
          label = "Humanitarian Org. Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("consumer_member",
+selectInput("p2_consumer_member",
          label = "Consumer Org. Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("other_member",
+selectInput("p2_other_member",
          label = "Other Org. Membership:",
          choices = c('Active Member',
                      'Inactive Member',
@@ -1693,7 +1783,7 @@ selectInput("other_member",
 
 
 
-selectInput("national_news",
+selectInput("p2_national_news",
          label = "Follow national news:",
          choices = c('Multiple times a day',
                      'Every day',
@@ -1702,14 +1792,14 @@ selectInput("national_news",
                      "Never"))
 
 
-selectInput("international_news",
+selectInput("p2_international_news",
          label = "Follow international news:",
          choices = c('Always',
                      "Sometimes",
                      "Never"))
 
 
-selectInput("news_medium",
+selectInput("p2_news_medium",
          label = "Medium to follow news:",
          choices = c('TV',
                      'Print',
@@ -1720,7 +1810,7 @@ selectInput("news_medium",
                      "News app"))
 
 
-selectInput("follow_gov",
+selectInput("p2_follow_gov",
          label = "Follow government & public affairs:",
          choices = c('Most of the time',
                      'Some of the time',
@@ -1728,29 +1818,29 @@ selectInput("follow_gov",
                      "Hardly at all"))
 
 
-selectInput("travel_developing",
+selectInput("p2_travel_developing",
          label = "Travel to developing country:",
          choices = c('Yes', 'No'))
 
 
 
-selectInput("polical_pref",
+selectInput("p2_polical_pref",
          label = "Polical views from liberal to conservative:",
          choices = c("0", '1', '2', '3','4','5','6','7'))
 
 
-selectInput("institution_trust",
+selectInput("p2_institution_trust",
          label = "Political institution trust from none to complete:",
          choices = c("0", '1', '2', '3','4','5','6','7'))
 
 
 
-selectInput("others_charitable",
+selectInput("p2_others_charitable",
          label = "People should be more charitable:",
          choices = c("0", '1', '2', '3','4','5','6','7'))
 
 
-selectInput("worship_attendance",
+selectInput("p2_worship_attendance",
          label = "Worship service attendance:",
          choices = c('Multiple times a week',
                      'Once a week',
@@ -1759,7 +1849,7 @@ selectInput("worship_attendance",
                      "Never"))
 
 
-selectInput("religion_importance",
+selectInput("p2_religion_importance",
          label = "Importance of religion:",
          choices = c('Extremely important',
                      'Very important',
@@ -1768,7 +1858,7 @@ selectInput("religion_importance",
                      'Not at all important'))
 
 
-selectInput("religion",
+selectInput("p2_religion",
          label = "Religion:",
          choices = c('Catholic',
                      'Protestant',
@@ -1782,7 +1872,7 @@ selectInput("religion",
                      'Other'))
 
 
-selectInput("gender",
+selectInput("p2_gender",
          label = "Gender:",
          choices = c("Male",
                      "Female",
@@ -1791,7 +1881,7 @@ selectInput("gender",
                      "Other"))
 
 
-selectInput("marital_status",
+selectInput("p2_marital_status",
          label = "Marital Status:",
          choices = c("Married",
                      "Widowed",
@@ -1800,7 +1890,7 @@ selectInput("marital_status",
                      "Never married"))
 
 
-selectInput("education",
+selectInput("p2_education",
          label = "Education:",
          choices = c("Less than high school",
                      "High school",
@@ -1810,7 +1900,7 @@ selectInput("education",
                      "Graduate degree",
                      "Doctorate"))
 
-selectInput("income",
+selectInput("p2_income",
          label = "Income:",
          choices = c('Less than $10,000',
                      '$10,000 to $19,999',
@@ -1829,7 +1919,7 @@ selectInput("income",
 
 
 
-selectInput("race",
+selectInput("p2_race",
          label = "Race(s):",
          choices = c('White',
                      'Black or African American',
@@ -1840,7 +1930,7 @@ selectInput("race",
          multiple = TRUE)
 
 
-selectInput("age",
+selectInput("p2_age",
          label = "Age:",
          choices = c('Under 18',
                      '18 - 24',
@@ -1865,18 +1955,18 @@ selectInput("age",
 #             choices = c("public_political_social_charity_demo"))
 
 
-selectInput("charity_importance",
+selectInput("p3_charity_importance",
           label = "Charity Importance:",
           choices = c("0", '1', '2', '3','4','5','6','7'))
 
 
-selectInput("trust_in_charity",
+selectInput("p3_trust_in_charity",
             label = "Charity Trust:",
             choices = c("0", '1', '2', '3','4','5','6','7'))
 
 
 
-selectInput("donation_frequency",
+selectInput("p3_donation_frequency",
          label = "Donation Frequency:",
          choices = c('Once a week',
                      'Once a Month',
@@ -1888,7 +1978,7 @@ selectInput("donation_frequency",
 
 
 
-selectInput("donation_amount",
+selectInput("p3_donation_amount",
          label = "Donation Amount:",
          choices = c("$1-$49",
                      '$50-$99',
@@ -1899,13 +1989,13 @@ selectInput("donation_amount",
                      '$10,000+'))
 
 
-selectInput("volunteer_12",
+selectInput("p3_volunteer_12",
          label = "Volunteered in last 12 Months:",
          choices = c("Yes", "No"))
 
 
 
-selectInput("volunteer_frequency",
+selectInput("p3_volunteer_frequency",
          label = "Volunteer Frequency:",
          choices = c('Once a week',
                      'Once a Month',
@@ -1916,7 +2006,7 @@ selectInput("volunteer_frequency",
                      'Never'))
 
 
-selectInput("personal_activism",
+selectInput("p3_personal_activism",
          label = "Personal Activism:",
          choices = c('Extremely involved',
                      'Very involved',
@@ -1925,7 +2015,7 @@ selectInput("personal_activism",
                      'Never involved'))
 
 
-selectInput("family_activism",
+selectInput("p3_family_activism",
          label = "Family Activism:",
          choices = c('Extremely involved',
                      'Very involved',
@@ -1934,63 +2024,63 @@ selectInput("family_activism",
                      'Never involved'))
 
 
-selectInput("religious_member",
+selectInput("p3_religious_member",
          label = "Church Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("sport_member",
+selectInput("p3_sport_member",
          label = "Sport or Recreational Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("art_member",
+selectInput("p3_art_member",
          label = "Art, Music, or Educational Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("labor_member",
+selectInput("p3_labor_member",
          label = "Labor Union Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("political_member",
+selectInput("p3_political_member",
          label = "Political Party Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("environmental_member",
+selectInput("p3_environmental_member",
          label = "Enviornmental Org. Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("professional_member",
+selectInput("p3_professional_member",
          label = "Professional Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("humanitarian_member",
+selectInput("p3_humanitarian_member",
          label = "Humanitarian Org. Membership:",
          choices = c('Active Member',
                      'Inactive Member',
                      "Don't belong"))
 
 
-selectInput("consumer_member",
+selectInput("p3_consumer_member",
          label = "Consumer Org. Membership:",
          choices = c('Active Member',
                      'Inactive Member',
@@ -1998,7 +2088,7 @@ selectInput("consumer_member",
 
 
 
-selectInput("other_member",
+selectInput("p3_other_member",
          label = "Other Org. Membership:",
          choices = c('Active Member',
                      'Inactive Member',
@@ -2006,7 +2096,7 @@ selectInput("other_member",
 
 
 
-selectInput("national_news",
+selectInput("p3_national_news",
          label = "Follow national news:",
          choices = c('Multiple times a day',
                      'Every day',
@@ -2015,14 +2105,14 @@ selectInput("national_news",
                      "Never"))
 
 
-selectInput("international_news",
+selectInput("p3_international_news",
          label = "Follow international news:",
          choices = c('Always',
                      "Sometimes",
                      "Never"))
 
 
-selectInput("news_medium",
+selectInput("p3_news_medium",
          label = "Medium to follow news:",
          choices = c('TV',
                      'Print',
@@ -2032,7 +2122,7 @@ selectInput("news_medium",
                      "Email newsletters",
                      "News app"))
 
-selectInput("follow_gov",
+selectInput("p3_follow_gov",
          label = "Follow government & public affairs:",
          choices = c('Most of the time',
                      'Some of the time',
@@ -2040,29 +2130,29 @@ selectInput("follow_gov",
                      "Hardly at all"))
 
 
-selectInput("travel_developing",
+selectInput("p3_travel_developing",
          label = "Travel to developing country:",
          choices = c('Yes', 'No'))
 
 
 
-selectInput("polical_pref",
+selectInput("p3_polical_pref",
          label = "Polical views from liberal to conservative:",
          choices = c("0", '1', '2', '3','4','5','6','7'))
 
 
-selectInput("institution_trust",
+selectInput("p3_institution_trust",
          label = "Political institution trust from none to complete:",
          choices = c("0", '1', '2', '3','4','5','6','7'))
 
 
 
-selectInput("others_charitable",
+selectInput("p3_others_charitable",
          label = "People should be more charitable:",
          choices = c("0", '1', '2', '3','4','5','6','7'))
 
 
-selectInput("worship_attendance",
+selectInput("p3_worship_attendance",
          label = "Worship service attendance:",
          choices = c('Multiple times a week',
                      'Once a week',
@@ -2071,7 +2161,7 @@ selectInput("worship_attendance",
                      "Never"))
 
 
-selectInput("religion_importance",
+selectInput("p3_religion_importance",
          label = "Importance of religion:",
          choices = c('Extremely important',
                      'Very important',
@@ -2080,7 +2170,7 @@ selectInput("religion_importance",
                      'Not at all important'))
 
 
-selectInput("religion",
+selectInput("p3_religion",
          label = "Religion:",
          choices = c('Catholic',
                      'Protestant',
@@ -2094,7 +2184,7 @@ selectInput("religion",
                      'Other'))
 
 
-selectInput("gender",
+selectInput("p3_gender",
          label = "Gender:",
          choices = c("Male",
                      "Female",
@@ -2103,7 +2193,7 @@ selectInput("gender",
                      "Other"))
 
 
-selectInput("marital_status",
+selectInput("p3_marital_status",
          label = "Marital Status:",
          choices = c("Married",
                      "Widowed",
@@ -2112,7 +2202,7 @@ selectInput("marital_status",
                      "Never married"))
 
 
-selectInput("education",
+selectInput("p3_education",
          label = "Education:",
          choices = c("Less than high school",
                      "High school",
@@ -2122,7 +2212,7 @@ selectInput("education",
                      "Graduate degree",
                      "Doctorate"))
 
-selectInput("income",
+selectInput("p3_income",
          label = "Income:",
          choices = c('Less than $10,000',
                      '$10,000 to $19,999',
@@ -2141,7 +2231,7 @@ selectInput("income",
 
 
 
-selectInput("race",
+selectInput("p3_race",
          label = "Race(s):",
          choices = c('White',
                      'Black or African American',
@@ -2151,7 +2241,7 @@ selectInput("race",
                      'Other'),
          multiple = TRUE)
 
-selectInput("age",
+selectInput("p3_age",
          label = "Age:",
          choices = c('Under 18',
                      '18 - 24',
