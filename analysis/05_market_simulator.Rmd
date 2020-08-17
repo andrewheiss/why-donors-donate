@@ -90,6 +90,7 @@ df <- reactive({
     
 })
 
+<<<<<<< HEAD
 # persona beta levels -----
 
 beta_persona <- as.data.frame(matrix(rep(0), nrow = 61))
@@ -157,13 +158,28 @@ beta_persona$levels = c("Intercept",
                         "Age")
 
 # Persona Reactive Element --------
+=======
+####################################################################
+
+beta_persona <- as.data.frame(matrix(rep(0), nrow = 38))
+
+beta_persona$levels = c("Persona 1", "Persona 2", "Persona 3", "Follow National News", "Follow International News", "News Medium", "Follow Government or Public Affairs", "Travel to Developing Countries", "Political Preference", "Trust in Political Institutions", "Others Should be Charitable", "Worship Service Attendence", "Religious Importance", "Religion", "Charity Importance", "Trust in Charity", "Donation Frequency", "Donation Amount", "Volunteer 12 Months", "Volunteer Frequence","Personal Activism", "Family Activism", "Religious Membership", "Sport or Recreational Membership", "Art, Music, or Educational Membership","Labor Union Membership", "Political Party Membership", "Environmental Organization Membership", "Professional Association", "Humanitarian or Charity Membership","Consumer Organization Membership", "Other Organization Membership", "Gender", "Marital Status", "Education", "Income", "Race", "Age")
+
+
+
+# Persona Reactive Element
+>>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
 
 
 p <- reactive({
   
   #Persona 1
     beta_persona$p1_value <- 0
+<<<<<<< HEAD
   
+=======
+    beta_persona$p1_value[beta_persona$levels == 'Persona 1'] <- 1
+>>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_national_news] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_international_news] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_news_medium] <- 1
@@ -202,7 +218,11 @@ p <- reactive({
     
   #Persona 2
     beta_persona$p2_value <- 0
+<<<<<<< HEAD
     
+=======
+    beta_persona$p2_value[beta_persona$levels == 'Persona 2'] <- 1
+>>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_national_news] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_international_news] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_news_medium] <- 1
@@ -241,7 +261,11 @@ p <- reactive({
     
   #Persona 3
     beta_persona$p3_value <- 0
+<<<<<<< HEAD
     
+=======
+    beta_persona$p3_value[beta_persona$levels == 'Persona 3'] <- 1
+>>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_national_news] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_international_news] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_news_medium] <- 1
@@ -1465,6 +1489,94 @@ selectInput("p1_religion",
 
 
 
+selectInput("p1_national_news",
+         label = "Follow national news:",
+         choices = c('Multiple times a day',
+                     'Every day',
+                     "Once a week",
+                     "Hardly ever",
+                     "Never"))
+
+
+selectInput("p1_international_news",
+         label = "Follow international news:",
+         choices = c('Always',
+                     "Sometimes",
+                     "Never"))
+
+
+selectInput("p1_news_medium",
+         label = "Medium to follow news:",
+         choices = c('TV',
+                     'Print',
+                     "Online",
+                     "Social Media",
+                     "Radio",
+                     "Email newsletters",
+                     "News app"))
+
+
+selectInput("p1_follow_gov",
+         label = "Follow government & public affairs:",
+         choices = c('Most of the time',
+                     'Some of the time',
+                     "Only now and then",
+                     "Hardly at all"))
+
+
+selectInput("p1_travel_developing",
+         label = "Travel to developing country:",
+         choices = c('Yes', 'No'))
+
+
+
+selectInput("p1_political_pref",
+         label = "Political views from liberal to conservative:",
+         choices = c("0", '1', '2', '3','4','5','6','7'))
+
+
+selectInput("p1_institution_trust",
+         label = "Political institution trust from none to complete:",
+         choices = c("0", '1', '2', '3','4','5','6','7'))
+
+
+
+selectInput("p1_others_charitable",
+         label = "People should be more charitable:",
+         choices = c("0", '1', '2', '3','4','5','6','7'))
+
+
+selectInput("p1_worship_attendance",
+         label = "Worship service attendance:",
+         choices = c('Multiple times a week',
+                     'Once a week',
+                     "Once a month",
+                     "Once a year",
+                     "Never"))
+
+
+selectInput("p1_religion_importance",
+         label = "Importance of religion:",
+         choices = c('Extremely important',
+                     'Very important',
+                     'Moderately important',
+                     'Slightly important',
+                     'Not at all important'))
+
+
+selectInput("p1_religion",
+         label = "Religion:",
+         choices = c('Catholic',
+                     'Protestant',
+                     'Christian Orthodox',
+                     'Jewish',
+                     'Muslim',
+                     'Sikh',
+                     'Hindu',
+                     'Buddhist',
+                     'Atheist',
+                     'Other'))
+
 selectInput("p1_charity_importance",
           label = "Charity Importance:",
           choices = c("0", '1', '2', '3','4','5','6','7'))
@@ -1606,7 +1718,10 @@ selectInput("p1_other_member",
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
 
 selectInput("p1_gender",
          label = "Gender:",
@@ -1698,6 +1813,7 @@ selectInput("p2_national_news",
                      "Hardly ever",
                      "Never"))
 
+<<<<<<< HEAD
 
 selectInput("p2_international_news",
          label = "Follow international news:",
@@ -1705,6 +1821,105 @@ selectInput("p2_international_news",
                      "Sometimes",
                      "Never"))
 
+=======
+selectInput("p2_national_news",
+         label = "Follow national news:",
+         choices = c('Multiple times a day',
+                     'Every day',
+                     "Once a week",
+                     "Hardly ever",
+                     "Never"))
+
+
+selectInput("p2_international_news",
+         label = "Follow international news:",
+         choices = c('Always',
+                     "Sometimes",
+                     "Never"))
+
+
+selectInput("p2_news_medium",
+         label = "Medium to follow news:",
+         choices = c('TV',
+                     'Print',
+                     "Online",
+                     "Social Media",
+                     "Radio",
+                     "Email newsletters",
+                     "News app"))
+
+
+selectInput("p2_follow_gov",
+         label = "Follow government & public affairs:",
+         choices = c('Most of the time',
+                     'Some of the time',
+                     "Only now and then",
+                     "Hardly at all"))
+
+
+selectInput("p2_travel_developing",
+         label = "Travel to developing country:",
+         choices = c('Yes', 'No'))
+
+
+
+selectInput("p2_polical_pref",
+         label = "Polical views from liberal to conservative:",
+         choices = c("0", '1', '2', '3','4','5','6','7'))
+
+
+selectInput("p2_institution_trust",
+         label = "Political institution trust from none to complete:",
+         choices = c("0", '1', '2', '3','4','5','6','7'))
+
+
+
+selectInput("p2_others_charitable",
+         label = "People should be more charitable:",
+         choices = c("0", '1', '2', '3','4','5','6','7'))
+
+
+selectInput("p2_worship_attendance",
+         label = "Worship service attendance:",
+         choices = c('Multiple times a week',
+                     'Once a week',
+                     "Once a month",
+                     "Once a year",
+                     "Never"))
+
+
+selectInput("p2_religion_importance",
+         label = "Importance of religion:",
+         choices = c('Extremely important',
+                     'Very important',
+                     'Moderately important',
+                     'Slightly important',
+                     'Not at all important'))
+
+
+selectInput("p2_religion",
+         label = "Religion:",
+         choices = c('Catholic',
+                     'Protestant',
+                     'Christian Orthodox',
+                     'Jewish',
+                     'Muslim',
+                     'Sikh',
+                     'Hindu',
+                     'Buddhist',
+                     'Atheist',
+                     'Other'))
+
+
+selectInput("p2_charity_importance",
+          label = "Charity Importance:",
+          choices = c("0", '1', '2', '3','4','5','6','7'))
+
+
+selectInput("p2_trust_in_charity",
+            label = "Charity Trust:",
+            choices = c("0", '1', '2', '3','4','5','6','7'))
+>>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
 
 selectInput("p2_news_medium",
          label = "Medium to follow news:",
@@ -1919,9 +2134,12 @@ selectInput("p2_other_member",
                      "Don't belong"))
 
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
 selectInput("p2_gender",
          label = "Gender:",
          choices = c("Male",
@@ -1966,7 +2184,6 @@ selectInput("p2_income",
                      '$150,000 to $199,999',
                      '$200,000 to $299,999',
                      '$300,000 or more'))
-
 
 
 selectInput("p2_race",
@@ -2233,7 +2450,10 @@ selectInput("p3_other_member",
                      "Don't belong"))
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
 selectInput("p3_gender",
          label = "Gender:",
          choices = c("Male",
@@ -2290,6 +2510,7 @@ selectInput("p3_race",
                      'Native Hawaiian or Pacific Islander',
                      'Other'),
          multiple = TRUE)
+
 
 selectInput("p3_age",
          label = "Age:",
