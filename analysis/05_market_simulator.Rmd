@@ -90,7 +90,6 @@ df <- reactive({
     
 })
 
-<<<<<<< HEAD
 # persona beta levels -----
 
 beta_persona <- as.data.frame(matrix(rep(0), nrow = 61))
@@ -98,13 +97,13 @@ beta_persona <- as.data.frame(matrix(rep(0), nrow = 61))
 beta_persona$levels = c("Intercept",
                         "Follow National News", 
                         "Follow International News",
-                        "News Medium - TV",
-                        "News Medium - Print",
-                        "News Medium - Online",
-                        "News Medium - Social Media",
-                        "News Medium - Radio",
-                        "News Medium - Email",
-                        "News Medium - Newsapp",
+                        "TV",
+                        "Print",
+                        "Online",
+                        "Social Media",
+                        "Radio",
+                        "Email",
+                        "Newsapp",
                         "Follow Government or Public Affairs", 
                         "No Travel to Developing Countries", 
                         "Political Preference", 
@@ -112,15 +111,15 @@ beta_persona$levels = c("Intercept",
                         "Others Should be Charitable",
                         "Worship Service Attendence",
                         "Religious Importance",
-                        "Religion - Protestant",
-                        "Religion - Christian Orthodox",
-                        "Religion - Jewish",
-                        "Religion - Muslim",
-                        "Religion - Sikh",
-                        "Religion - Hindu",
-                        "Religion - Buddhist",
-                        "Religion - Atheist",
-                        "Religion - Other",
+                        "Protestant",
+                        "Christian Orthodox",
+                        "Jewish",
+                        "Muslim",
+                        "Sikh",
+                        "Hindu",
+                        "Buddhist",
+                        "Atheist",
+                        "Other",
                         "Chartiy Trust Importance",
                         "Trust in Charity", 
                         "Donation Frequency", 
@@ -139,47 +138,33 @@ beta_persona$levels = c("Intercept",
                         "Humanitarian or Charity Membership",
                         "Consumer Organization Membership",
                         "Other Organization Membership",
-                        "Gender - Female",
-                        "Gender - Transgender",
-                        "Gender - Prefer not to say",
-                        "Gender - Other",
-                        "Marital Status - Widowed",
-                        "Marital Status - Divorced",
-                        "Marital Status - Separated",
-                        "Marital Status - Never Married",
+                        "Female",
+                        "Transgender",
+                        "Prefer not to say",
+                        "Other",
+                        "Widowed",
+                        "Divorced",
+                        "Separated",
+                        "Never Married",
                         "Education", 
                         "Income", 
-                        "Race - White", 
-                        "Race - Black", 
-                        "Race - American Indian", 
-                        "Race - Asian", 
-                        "Race - Pacific Islander", 
-                        "Race - Other", 
+                        "White", 
+                        "Black", 
+                        "American Indian", 
+                        "Asian", 
+                        "Pacific Islander", 
+                        "Other", 
                         "Age")
 
 # Persona Reactive Element --------
-=======
-####################################################################
-
-beta_persona <- as.data.frame(matrix(rep(0), nrow = 38))
-
-beta_persona$levels = c("Persona 1", "Persona 2", "Persona 3", "Follow National News", "Follow International News", "News Medium", "Follow Government or Public Affairs", "Travel to Developing Countries", "Political Preference", "Trust in Political Institutions", "Others Should be Charitable", "Worship Service Attendence", "Religious Importance", "Religion", "Charity Importance", "Trust in Charity", "Donation Frequency", "Donation Amount", "Volunteer 12 Months", "Volunteer Frequence","Personal Activism", "Family Activism", "Religious Membership", "Sport or Recreational Membership", "Art, Music, or Educational Membership","Labor Union Membership", "Political Party Membership", "Environmental Organization Membership", "Professional Association", "Humanitarian or Charity Membership","Consumer Organization Membership", "Other Organization Membership", "Gender", "Marital Status", "Education", "Income", "Race", "Age")
-
-
-
-# Persona Reactive Element
->>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
 
 
 p <- reactive({
   
   #Persona 1
     beta_persona$p1_value <- 0
-<<<<<<< HEAD
-  
-=======
+
     beta_persona$p1_value[beta_persona$levels == 'Persona 1'] <- 1
->>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_national_news] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_international_news] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_news_medium] <- 1
@@ -218,11 +203,8 @@ p <- reactive({
     
   #Persona 2
     beta_persona$p2_value <- 0
-<<<<<<< HEAD
-    
-=======
+
     beta_persona$p2_value[beta_persona$levels == 'Persona 2'] <- 1
->>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_national_news] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_international_news] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_news_medium] <- 1
@@ -261,11 +243,9 @@ p <- reactive({
     
   #Persona 3
     beta_persona$p3_value <- 0
-<<<<<<< HEAD
-    
-=======
+
     beta_persona$p3_value[beta_persona$levels == 'Persona 3'] <- 1
->>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
+
     beta_persona$p3_value[beta_persona$levels %in% input$p3_national_news] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_international_news] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_news_medium] <- 1
@@ -378,344 +358,7 @@ server = function(input, output) {
 
 <!-- ## Persona Inputs -->
 
-```{r sidebar inputs commented}
 
-
-# # selectInput("model_choice",
-# #             label = "Select Model:",
-# #             choices = c("public_political_social_charity_demo"))
-# 
-# 
-# selectInput("charity_importance",
-#           label = "Charity Importance:",
-#           choices = c("0", '1', '2', '3','4','5','6','7'))
-# 
-# 
-# selectInput("trust_in_charity",
-#             label = "Charity Trust:",
-#             choices = c("0", '1', '2', '3','4','5','6','7'))
-# 
-# 
-# 
-# selectInput("donation_frequency",
-#          label = "Donation Frequency:",
-#          choices = c('Once a week',
-#                      'Once a Month',
-#                      'Once every three months',
-#                      'Once every six months',
-#                      'Once a year',
-#                      'Once every few years',
-#                      'Never'))
-# 
-# 
-# 
-# selectInput("donation_amount",
-#          label = "Donation Amount:",
-#          choices = c("$1-$49",
-#                      '$50-$99',
-#                      '$100-$499',
-#                      '$500-$999',
-#                      '$1,000-$4,999',
-#                      '$5,000-$9,999',
-#                      '$10,000+'))
-# 
-# 
-# selectInput("volunteer_12",
-#          label = "Volunteered in last 12 Months:",
-#          choices = c("Yes", "No"))
-# 
-# 
-# 
-# selectInput("volunteer_frequency",
-#          label = "Volunteer Frequency:",
-#          choices = c('Once a week',
-#                      'Once a Month',
-#                      'Once every three months',
-#                      'Once every six months',
-#                      'Once a year',
-#                      'Once every few years',
-#                      'Never'))
-# 
-# 
-# selectInput("personal_activism",
-#          label = "Personal Activism:",
-#          choices = c('Extremely involved',
-#                      'Very involved',
-#                      'Moderately involved',
-#                      'Slightly involved',
-#                      'Never involved'))
-# 
-# 
-# selectInput("family_activism",
-#          label = "Family Activism:",
-#          choices = c('Extremely involved',
-#                      'Very involved',
-#                      'Moderately involved',
-#                      'Slightly involved',
-#                      'Never involved'))
-# 
-# 
-# selectInput("religious_member",
-#          label = "Church Membership:",
-#          choices = c('Active Member',
-#                      'Inactive Member',
-#                      "Don't belong"))
-# 
-# 
-# selectInput("sport_member",
-#          label = "Sport or Recreational Membership:",
-#          choices = c('Active Member',
-#                      'Inactive Member',
-#                      "Don't belong"))
-# 
-# 
-# selectInput("art_member",
-#          label = "Art, Music, or Educational Membership:",
-#          choices = c('Active Member',
-#                      'Inactive Member',
-#                      "Don't belong"))
-# 
-# 
-# selectInput("labor_member",
-#          label = "Labor Union Membership:",
-#          choices = c('Active Member',
-#                      'Inactive Member',
-#                      "Don't belong"))
-# 
-# 
-# selectInput("political_member",
-#          label = "Political Party Membership:",
-#          choices = c('Active Member',
-#                      'Inactive Member',
-#                      "Don't belong"))
-# 
-# 
-# selectInput("environmental_member",
-#          label = "Enviornmental Org. Membership:",
-#          choices = c('Active Member',
-#                      'Inactive Member',
-#                      "Don't belong"))
-# 
-# 
-# selectInput("professional_member",
-#          label = "Professional Membership:",
-#          choices = c('Active Member',
-#                      'Inactive Member',
-#                      "Don't belong"))
-# 
-# 
-# selectInput("humanitarian_member",
-#          label = "Humanitarian Org. Membership:",
-#          choices = c('Active Member',
-#                      'Inactive Member',
-#                      "Don't belong"))
-# 
-# 
-# selectInput("consumer_member",
-#          label = "Consumer Org. Membership:",
-#          choices = c('Active Member',
-#                      'Inactive Member',
-#                      "Don't belong"))
-# 
-# 
-# selectInput("religious_member",
-#          label = "Church Membership:",
-#          choices = c('Active Member',
-#                      'Inactive Member',
-#                      "Don't belong"))
-# 
-# 
-# 
-# 
-# selectInput("other_member",
-#          label = "Other Org. Membership:",
-#          choices = c('Active Member',
-#                      'Inactive Member',
-#                      "Don't belong"))
-# 
-# 
-# 
-# selectInput("national_news",
-#          label = "Follow national news:",
-#          choices = c('Multiple times a day',
-#                      'Every day',
-#                      "Once a week",
-#                      "Hardly ever",
-#                      "Never"))
-# 
-# 
-# selectInput("international_news",
-#          label = "Follow international news:",
-#          choices = c('Always',
-#                      "Sometimes",
-#                      "Never"))
-# 
-# 
-# selectInput("news_medium",
-#          label = "Medium to follow news:",
-#          choices = c('TV',
-#                      'Print',
-#                      "Online",
-#                      "Social Media",
-#                      "Radio",
-#                      "Email newsletters",
-#                      "News app"))
-# 
-# 
-# 
-# selectInput("international_news",
-#          label = "Follow international news:",
-#          choices = c('Multiple times a day',
-#                      'Every day',
-#                      "Once a week",
-#                      "Hardly ever",
-#                      "Never"))
-# 
-# selectInput("follow_gov",
-#          label = "Follow government & public affairs:",
-#          choices = c('Most of the time',
-#                      'Some of the time',
-#                      "Only now and then",
-#                      "Hardly at all"))
-# 
-# 
-# selectInput("travel_developing",
-#          label = "Travel to developing country:",
-#          choices = c('Yes', 'No'))
-# 
-# 
-# 
-# selectInput("polical_pref",
-#          label = "Polical views from liberal to conservative:",
-#          choices = c("0", '1', '2', '3','4','5','6','7'))
-# 
-# 
-# selectInput("institution_trust",
-#          label = "Political institution trust from none to complete:",
-#          choices = c("0", '1', '2', '3','4','5','6','7'))
-# 
-# 
-# 
-# selectInput("others_charitable",
-#          label = "People should be more charitable:",
-#          choices = c("0", '1', '2', '3','4','5','6','7'))
-# 
-# 
-# selectInput("worship_attendance",
-#          label = "Worship service attendance:",
-#          choices = c('Multiple times a week',
-#                      'Once a week',
-#                      "Once a month",
-#                      "Once a year",
-#                      "Never"))
-# 
-# 
-# selectInput("religion_importance",
-#          label = "Importance of religion:",
-#          choices = c('Extremely important',
-#                      'Very important',
-#                      'Moderately important',
-#                      'Slightly important',
-#                      'Not at all important'))
-# 
-# 
-# selectInput("religion",
-#          label = "Religion:",
-#          choices = c('Catholic',
-#                      'Protestant',
-#                      'Christian Orthodox',
-#                      'Jewish',
-#                      'Muslim',
-#                      'Sikh',
-#                      'Hindu',
-#                      'Buddhist',
-#                      'Atheist',
-#                      'Other'))
-# 
-# 
-# selectInput("gender",
-#          label = "Gender:",
-#          choices = c("Male",
-#                      "Female",
-#                      "Transgender",
-#                      "Prefer not to say",
-#                      "Other"))
-# 
-# 
-# selectInput("marital_status",
-#          label = "Marital Status:",
-#          choices = c("Married",
-#                      "Widowed",
-#                      "Divorced",
-#                      "Separated",
-#                      "Never married"))
-# 
-# 
-# selectInput("education",
-#          label = "Education:",
-#          choices = c("Less than high school",
-#                      "High school",
-#                      "Some college",
-#                      "2 year degree",
-#                      "4 year degree",
-#                      "Graduate degree",
-#                      "Doctorate"))
-# 
-# selectInput("income",
-#          label = "Income:",
-#          choices = c('Less than $10,000',
-#                      '$10,000 to $19,999',
-#                      '$20,000 to $29,999',
-#                      '$30,000 to $39,999',
-#                      '$40,000 to $49,999',
-#                      '$50,000 to $59,999',
-#                      '$60,000 to $69,999',
-#                      '$70,000 to $79,999',
-#                      '$80,000 to $89,999',
-#                      '$90,000 to $99,999',
-#                      '$100,000 to $149,999',
-#                      '$150,000 to $199,999',
-#                      '$200,000 to $299,999',
-#                      '$300,000 or more'))
-# 
-# 
-# 
-# selectInput("race",
-#          label = "Race(s):",
-#          choices = c('White',
-#                      'Black or African American',
-#                      'American Indian or Alaska Native',
-#                      'Asian',
-#                      'Native Hawaiian or Pacific Islander',
-#                      'Other'),
-#          multiple = TRUE)
-# 
-# 
-# selectInput("education",
-#          label = "Education:",
-#          choices = c("Less than high school",
-#                      "High school",
-#                      "Some college",
-#                      "2 year degree",
-#                      "4 year degree",
-#                      "Graduate degree",
-#                      "Doctorate"))
-# 
-# 
-# selectInput("age",
-#          label = "Age:",
-#          choices = c('Under 18',
-#                      '18 - 24',
-#                      '25 - 34',
-#                      '35 - 44',
-#                      '45 - 54',
-#                      '55 - 64',
-#                      '65 - 74',
-#                      '75 - 84',
-#                      '85 or older'))
-
-
-```
 
 ```{r persona betas}
 
