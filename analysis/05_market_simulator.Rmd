@@ -396,7 +396,7 @@ renderPlotly({
   org_choice = df()
   per_choice = p()
     
-    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% exp(as.matrix(persona1) %*% t(per_choice[,3]))
+    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
 #add step to matrix multiply the persona reactive element to the persona data and the public_political beta table.
   
   ai_exp_util1 <- round(exp(t(org_choice[, 3]) %*% as.matrix(p_beta1)),2)
@@ -409,7 +409,7 @@ renderPlotly({
   ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
   rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
   
-    # p_beta2 <- as.matrix(public_political_social_charity_demo) %*% (t(per_choice[,4]) %*% as.matrix(persona2))
+    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
   
   ai_exp_util2 <- round(exp(t(org_choice[, 3]) %*% as.matrix(p_beta2)),2)
   gp_exp_util2 <- round(exp(t(org_choice[, 4]) %*% as.matrix(p_beta2)),2)
@@ -421,7 +421,7 @@ renderPlotly({
   ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
   rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
   
-    # p_beta3 =  as.matrix(public_political_social_charity_demo) %*% (t(per_choice[,5]) %*% as.matrix(persona3))
+    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
   
   ai_exp_util3 <- round(exp(t(org_choice[, 3]) %*% as.matrix(p_beta3)),2)
   gp_exp_util3 <- round(exp(t(org_choice[, 4]) %*% as.matrix(p_beta3)),2)
@@ -1362,12 +1362,6 @@ selectInput("p1_other_member",
                      "Don't belong"))
 
 
-
-<<<<<<< HEAD
-
-=======
->>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
-
 selectInput("p1_gender",
          label = "Gender:",
          choices = c("Male",
@@ -1458,22 +1452,6 @@ selectInput("p2_national_news",
                      "Hardly ever",
                      "Never"))
 
-<<<<<<< HEAD
-
-selectInput("p2_international_news",
-         label = "Follow international news:",
-         choices = c('Always',
-                     "Sometimes",
-                     "Never"))
-
-=======
-selectInput("p2_national_news",
-         label = "Follow national news:",
-         choices = c('Multiple times a day',
-                     'Every day',
-                     "Once a week",
-                     "Hardly ever",
-                     "Never"))
 
 
 selectInput("p2_international_news",
@@ -1554,90 +1532,6 @@ selectInput("p2_religion",
                      'Buddhist',
                      'Atheist',
                      'Other'))
-
-
-selectInput("p2_charity_importance",
-          label = "Charity Importance:",
-          choices = c("0", '1', '2', '3','4','5','6','7'))
-
-
-selectInput("p2_trust_in_charity",
-            label = "Charity Trust:",
-            choices = c("0", '1', '2', '3','4','5','6','7'))
->>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
-
-selectInput("p2_news_medium",
-         label = "Medium to follow news:",
-         choices = c('TV',
-                     'Print',
-                     "Online",
-                     "Social Media",
-                     "Radio",
-                     "Email newsletters",
-                     "News app"))
-
-
-selectInput("p2_follow_gov",
-         label = "Follow government & public affairs:",
-         choices = c('Most of the time',
-                     'Some of the time',
-                     "Only now and then",
-                     "Hardly at all"))
-
-
-selectInput("p2_travel_developing",
-         label = "Travel to developing country:",
-         choices = c('Yes', 'No'))
-
-
-
-selectInput("p2_polical_pref",
-         label = "Polical views from liberal to conservative:",
-         choices = c("0", '1', '2', '3','4','5','6','7'))
-
-
-selectInput("p2_institution_trust",
-         label = "Political institution trust from none to complete:",
-         choices = c("0", '1', '2', '3','4','5','6','7'))
-
-
-
-selectInput("p2_others_charitable",
-         label = "People should be more charitable:",
-         choices = c("0", '1', '2', '3','4','5','6','7'))
-
-
-selectInput("p2_worship_attendance",
-         label = "Worship service attendance:",
-         choices = c('Multiple times a week',
-                     'Once a week',
-                     "Once a month",
-                     "Once a year",
-                     "Never"))
-
-
-selectInput("p2_religion_importance",
-         label = "Importance of religion:",
-         choices = c('Extremely important',
-                     'Very important',
-                     'Moderately important',
-                     'Slightly important',
-                     'Not at all important'))
-
-
-selectInput("p2_religion",
-         label = "Religion:",
-         choices = c('Catholic',
-                     'Protestant',
-                     'Christian Orthodox',
-                     'Jewish',
-                     'Muslim',
-                     'Sikh',
-                     'Hindu',
-                     'Buddhist',
-                     'Atheist',
-                     'Other'))
-
 
 
 selectInput("p2_charity_importance",
@@ -1779,12 +1673,6 @@ selectInput("p2_other_member",
                      "Don't belong"))
 
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
 selectInput("p2_gender",
          label = "Gender:",
          choices = c("Male",
@@ -2095,10 +1983,6 @@ selectInput("p3_other_member",
                      "Don't belong"))
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> fe7c63a8a725846f602c5dc4954e693ac23c0da1
 selectInput("p3_gender",
          label = "Gender:",
          choices = c("Male",
