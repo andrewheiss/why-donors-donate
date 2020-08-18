@@ -168,21 +168,23 @@ p <- reactive({
 
     beta_persona$p1_value[beta_persona$levels == 'Persona 1'] <- 1
     
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_national_news == '0'] <- 0
-    beta_persona$p1_value[beta_persona$levels == '1'] <- 1
-    beta_persona$p1_value[beta_persona$levels == '2'] <- 2
-    beta_persona$p1_value[beta_persona$levels == '3'] <- 3
-    beta_persona$p1_value[beta_persona$levels == '4'] <- 4
-    beta_persona$p1_value[beta_persona$levels == '5'] <- 5
-    beta_persona$p1_value[beta_persona$levels == '6'] <- 6
-    beta_persona$p1_value[beta_persona$levels == '7'] <- 7
+    # beta_persona$p1_value[beta_persona$levels %in% input == '0'] <- 0
+    # beta_persona$p1_value[beta_persona$levels %in% input == '1'] <- 1
+    # beta_persona$p1_value[beta_persona$levels %in% input == '2'] <- 2
+    # beta_persona$p1_value[beta_persona$levels %in% input == '3'] <- 3
+    # beta_persona$p1_value[beta_persona$levels %in% input == '4'] <- 4
+    # beta_persona$p1_value[beta_persona$levels %in% input == '5'] <- 5
+    # beta_persona$p1_value[beta_persona$levels %in% input == '6'] <- 6
+    # beta_persona$p1_value[beta_persona$levels %in% input == '7'] <- 7
     
     beta_persona$p1_value[beta_persona$levels %in% input$p1_national_news] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_international_news] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_news_medium] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_follow_gov] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_travel_developing] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_political_pref] <- 1
+    
+    beta_persona$p1_value[beta_persona$levels == "Political Preference"] = p1_pol_pref()
+    
     beta_persona$p1_value[beta_persona$levels %in% input$p1_institution_trust] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_others_charitable] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_worship_attendence] <- 1
@@ -218,14 +220,14 @@ p <- reactive({
 
     beta_persona$p2_value[beta_persona$levels == 'Persona 2'] <- 1
     
-    beta_persona$p2_value[beta_persona$levels == '0'] <- 0
-    beta_persona$p2_value[beta_persona$levels == '1'] <- 1
-    beta_persona$p2_value[beta_persona$levels == '2'] <- 2
-    beta_persona$p2_value[beta_persona$levels == '3'] <- 3
-    beta_persona$p2_value[beta_persona$levels == '4'] <- 4
-    beta_persona$p2_value[beta_persona$levels == '5'] <- 5
-    beta_persona$p2_value[beta_persona$levels == '6'] <- 6
-    beta_persona$p2_value[beta_persona$levels == '7'] <- 7
+    # beta_persona$p2_value[beta_persona$levels == '0'] <- 0
+    # beta_persona$p2_value[beta_persona$levels == '1'] <- 1
+    # beta_persona$p2_value[beta_persona$levels == '2'] <- 2
+    # beta_persona$p2_value[beta_persona$levels == '3'] <- 3
+    # beta_persona$p2_value[beta_persona$levels == '4'] <- 4
+    # beta_persona$p2_value[beta_persona$levels == '5'] <- 5
+    # beta_persona$p2_value[beta_persona$levels == '6'] <- 6
+    # beta_persona$p2_value[beta_persona$levels == '7'] <- 7
     
     beta_persona$p2_value[beta_persona$levels %in% input$p2_national_news] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_international_news] <- 1
@@ -274,6 +276,10 @@ p <- reactive({
     beta_persona$p3_value[beta_persona$levels %in% input$p3_follow_gov] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_travel_developing] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_political_pref] <- 1
+    # 
+    # beta_persona$p3_value[beta_persona$levels == "Political Preference"] <- input$p3_political_pref
+    
+    
     beta_persona$p3_value[beta_persona$levels %in% input$p3_institution_trust] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_others_charitable] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_worship_attendence] <- 1
@@ -306,12 +312,32 @@ p <- reactive({
     beta_persona
 
 })
+
+
+# reactive slider input ----
+
+p1_pol_pref <- reactive({
+  input$p1_political_pref
+})
 ```
 
 
 ```{r practice code}
 
 #### this chunk is for testing code and making sure things work before adding it into the dashboard
+
+
+df <- as.data.frame(matrix(rep(0), nrow = 1))
+
+df$levels = "Rating"
+                        
+                        
+df$p1[df$levels == "Rating"] = p1_pol_pref()
+
+
+p1_pol_pref <- reactive({
+  input$p1_political_pref
+})
 
 
 # beta_persona_test <- as.data.frame(matrix(rep(0), nrow = 38))
@@ -1244,9 +1270,12 @@ selectInput("p1_travel_developing",
 
 
 
-selectInput("p1_political_pref",
-         label = "Political views from liberal to conservative:",
-         choices = c("0", '1', '2', '3','4','5','6','7'))
+sliderInput("p1_political_pref",
+       label = "Political views from liberal to conservative:",
+       min = 0,
+       max = 7,
+       value = 0)
+
 
 
 selectInput("p1_institution_trust",
