@@ -167,6 +167,16 @@ p <- reactive({
     beta_persona$p1_value <- 0
 
     beta_persona$p1_value[beta_persona$levels == 'Persona 1'] <- 1
+    
+    beta_persona$p1_value[beta_persona$levels %in% input$p1_national_news == '0'] <- 0
+    beta_persona$p1_value[beta_persona$levels == '1'] <- 1
+    beta_persona$p1_value[beta_persona$levels == '2'] <- 2
+    beta_persona$p1_value[beta_persona$levels == '3'] <- 3
+    beta_persona$p1_value[beta_persona$levels == '4'] <- 4
+    beta_persona$p1_value[beta_persona$levels == '5'] <- 5
+    beta_persona$p1_value[beta_persona$levels == '6'] <- 6
+    beta_persona$p1_value[beta_persona$levels == '7'] <- 7
+    
     beta_persona$p1_value[beta_persona$levels %in% input$p1_national_news] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_international_news] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_news_medium] <- 1
@@ -207,6 +217,16 @@ p <- reactive({
     beta_persona$p2_value <- 0
 
     beta_persona$p2_value[beta_persona$levels == 'Persona 2'] <- 1
+    
+    beta_persona$p2_value[beta_persona$levels == '0'] <- 0
+    beta_persona$p2_value[beta_persona$levels == '1'] <- 1
+    beta_persona$p2_value[beta_persona$levels == '2'] <- 2
+    beta_persona$p2_value[beta_persona$levels == '3'] <- 3
+    beta_persona$p2_value[beta_persona$levels == '4'] <- 4
+    beta_persona$p2_value[beta_persona$levels == '5'] <- 5
+    beta_persona$p2_value[beta_persona$levels == '6'] <- 6
+    beta_persona$p2_value[beta_persona$levels == '7'] <- 7
+    
     beta_persona$p2_value[beta_persona$levels %in% input$p2_national_news] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_international_news] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_news_medium] <- 1
@@ -369,7 +389,48 @@ server = function(input, output) {
 # Persona 1
 persona1 <- persona_data[,2]
 
-p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona1) 
+p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona1)
+
+beta_test <- as.data.frame(matrix(rep(0), nrow = 13))
+
+beta_test$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human rights", "Refugee relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
+
+beta_test$ai_issue <- 0
+beta_test$ai_issue[4] <- 1
+beta_test$ai_issue[8] <- 1
+beta_test$ai_issue[9] <- 1
+
+
+beta_test$gp_issue <- 0
+beta_test$gp_issue[4] <- 1
+beta_test$gp_issue[5] <- 1
+beta_test$gp_issue[8] <- 1
+beta_test$gp_issue[9] <- 1
+
+
+beta_test$ox_issue <- 0
+beta_test$ox_issue[4] <- 1
+beta_test$ox_issue[6] <- 1
+beta_test$ox_issue[8] <- 1
+beta_test$ox_issue[9] <- 1
+
+beta_test$rc_issue <- 0
+beta_test$rc_issue[4] <- 1
+beta_test$rc_issue[7] <- 1
+beta_test$rc_issue[8] <- 1
+beta_test$rc_issue[9] <- 1
+
+
+
+  ai_exp_util1 <- round(exp(t(beta_test[, 3]) %*% as.matrix(p_beta1)),2)
+  gp_exp_util1 <- round(exp(t(beta_test[, 4]) %*% as.matrix(p_beta1)),2)
+  ox_exp_util1 <- round(exp(t(beta_test[, 5]) %*% as.matrix(p_beta1)),2)
+  rc_exp_util1 <- round(exp(t(beta_test[, 6]) %*% as.matrix(p_beta1)),2)
+
+  ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
 
 
 # Persona 2
@@ -378,10 +439,17 @@ persona2 <- persona_data[,3]
 p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona2)
 
 
+
+exp_util2 <- round(exp(t(beta_test[, 4]) %*% as.matrix(p_beta2)),2)
+
+
 # Persona 3
 persona3 <- persona_data[,4]
 
 p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona3)
+
+
+exp_util3 <- round(exp(t(beta_test[, 5]) %*% as.matrix(p_beta3)),2)
 
 ```
 
@@ -1045,11 +1113,12 @@ renderGauge({
 
 selectInput("p1_national_news",
          label = "Follow national news:",
-         choices = c('Multiple times a day',
-                     'Every day',
-                     "Once a week",
-                     "Hardly ever",
-                     "Never"))
+         choices = c('Multiple times a day' = "1",
+                     'Every day' = "2",
+                     "Once a week" = "3",
+                     "Hardly ever" = "4",
+                     "Never" = "5"),
+         width = "200px")
 
 
 selectInput("p1_international_news",
