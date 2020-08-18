@@ -160,6 +160,9 @@ beta_persona$levels = c("Intercept",
 
 # p reactive element ----
 
+p1_politic_pref <- reactive({
+  input$p1_political_pref
+})
 
 p <- reactive({
   
@@ -183,7 +186,7 @@ p <- reactive({
     beta_persona$p1_value[beta_persona$levels %in% input$p1_follow_gov] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_travel_developing] <- 1
     
-    beta_persona$p1_value[beta_persona$levels == "Political Preference"] = p1_pol_pref()
+    beta_persona$p1_value[beta_persona$levels == "Political Preference"] <- p1_politic_pref()
     
     beta_persona$p1_value[beta_persona$levels %in% input$p1_institution_trust] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_others_charitable] <- 1
@@ -219,15 +222,6 @@ p <- reactive({
     beta_persona$p2_value <- 0
 
     beta_persona$p2_value[beta_persona$levels == 'Persona 2'] <- 1
-    
-    # beta_persona$p2_value[beta_persona$levels == '0'] <- 0
-    # beta_persona$p2_value[beta_persona$levels == '1'] <- 1
-    # beta_persona$p2_value[beta_persona$levels == '2'] <- 2
-    # beta_persona$p2_value[beta_persona$levels == '3'] <- 3
-    # beta_persona$p2_value[beta_persona$levels == '4'] <- 4
-    # beta_persona$p2_value[beta_persona$levels == '5'] <- 5
-    # beta_persona$p2_value[beta_persona$levels == '6'] <- 6
-    # beta_persona$p2_value[beta_persona$levels == '7'] <- 7
     
     beta_persona$p2_value[beta_persona$levels %in% input$p2_national_news] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_international_news] <- 1
@@ -316,9 +310,7 @@ p <- reactive({
 
 # reactive slider input ----
 
-p1_pol_pref <- reactive({
-  input$p1_political_pref
-})
+
 ```
 
 
@@ -327,17 +319,25 @@ p1_pol_pref <- reactive({
 #### this chunk is for testing code and making sure things work before adding it into the dashboard
 
 
-df <- as.data.frame(matrix(rep(0), nrow = 1))
+# df <- as.data.frame(matrix(rep(0), nrow = 1))
+# 
+# df$levels = "Rating"
+#                         
+#                         
+# df$p1[df$levels == "Rating"] <- input$rating_id
+# 
+# 
+# p1_pol_pref <- reactive({
+#   input$p1_political_pref
+# })
+# 
+# 
+# sliderInput("rating_id",
+#        label = "Rating",
+#        min = 0,
+#        max = 7,
+#        value = 0)
 
-df$levels = "Rating"
-                        
-                        
-df$p1[df$levels == "Rating"] = p1_pol_pref()
-
-
-p1_pol_pref <- reactive({
-  input$p1_political_pref
-})
 
 
 # beta_persona_test <- as.data.frame(matrix(rep(0), nrow = 38))
@@ -417,46 +417,46 @@ persona1 <- persona_data[,2]
 
 p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona1)
 
-beta_test <- as.data.frame(matrix(rep(0), nrow = 13))
-
-beta_test$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human rights", "Refugee relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
-
-beta_test$ai_issue <- 0
-beta_test$ai_issue[4] <- 1
-beta_test$ai_issue[8] <- 1
-beta_test$ai_issue[9] <- 1
-
-
-beta_test$gp_issue <- 0
-beta_test$gp_issue[4] <- 1
-beta_test$gp_issue[5] <- 1
-beta_test$gp_issue[8] <- 1
-beta_test$gp_issue[9] <- 1
-
-
-beta_test$ox_issue <- 0
-beta_test$ox_issue[4] <- 1
-beta_test$ox_issue[6] <- 1
-beta_test$ox_issue[8] <- 1
-beta_test$ox_issue[9] <- 1
-
-beta_test$rc_issue <- 0
-beta_test$rc_issue[4] <- 1
-beta_test$rc_issue[7] <- 1
-beta_test$rc_issue[8] <- 1
-beta_test$rc_issue[9] <- 1
-
-
-
-  ai_exp_util1 <- round(exp(t(beta_test[, 3]) %*% as.matrix(p_beta1)),2)
-  gp_exp_util1 <- round(exp(t(beta_test[, 4]) %*% as.matrix(p_beta1)),2)
-  ox_exp_util1 <- round(exp(t(beta_test[, 5]) %*% as.matrix(p_beta1)),2)
-  rc_exp_util1 <- round(exp(t(beta_test[, 6]) %*% as.matrix(p_beta1)),2)
-
-  ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-  gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-  ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-  rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+# beta_test <- as.data.frame(matrix(rep(0), nrow = 13))
+# 
+# beta_test$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human rights", "Refugee relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
+# 
+# beta_test$ai_issue <- 0
+# beta_test$ai_issue[4] <- 1
+# beta_test$ai_issue[8] <- 1
+# beta_test$ai_issue[9] <- 1
+# 
+# 
+# beta_test$gp_issue <- 0
+# beta_test$gp_issue[4] <- 1
+# beta_test$gp_issue[5] <- 1
+# beta_test$gp_issue[8] <- 1
+# beta_test$gp_issue[9] <- 1
+# 
+# 
+# beta_test$ox_issue <- 0
+# beta_test$ox_issue[4] <- 1
+# beta_test$ox_issue[6] <- 1
+# beta_test$ox_issue[8] <- 1
+# beta_test$ox_issue[9] <- 1
+# 
+# beta_test$rc_issue <- 0
+# beta_test$rc_issue[4] <- 1
+# beta_test$rc_issue[7] <- 1
+# beta_test$rc_issue[8] <- 1
+# beta_test$rc_issue[9] <- 1
+# 
+# 
+# 
+#   ai_exp_util1 <- round(exp(t(beta_test[, 3]) %*% as.matrix(p_beta1)),2)
+#   gp_exp_util1 <- round(exp(t(beta_test[, 4]) %*% as.matrix(p_beta1)),2)
+#   ox_exp_util1 <- round(exp(t(beta_test[, 5]) %*% as.matrix(p_beta1)),2)
+#   rc_exp_util1 <- round(exp(t(beta_test[, 6]) %*% as.matrix(p_beta1)),2)
+# 
+#   ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
 
 
 # Persona 2
@@ -465,8 +465,8 @@ persona2 <- persona_data[,3]
 p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona2)
 
 
-
-exp_util2 <- round(exp(t(beta_test[, 4]) %*% as.matrix(p_beta2)),2)
+# 
+# exp_util2 <- round(exp(t(beta_test[, 4]) %*% as.matrix(p_beta2)),2)
 
 
 # Persona 3
@@ -474,8 +474,8 @@ persona3 <- persona_data[,4]
 
 p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona3)
 
-
-exp_util3 <- round(exp(t(beta_test[, 5]) %*% as.matrix(p_beta3)),2)
+# 
+# exp_util3 <- round(exp(t(beta_test[, 5]) %*% as.matrix(p_beta3)),2)
 
 ```
 
@@ -534,10 +534,7 @@ renderPlotly({
   
   df <- as.data.frame(matrix(data, 24, 1))
   
-  df[,2] <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")
-  df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
-  df[,4] <- c(rep("Persona 1",8), rep("Persona 2", 8), rep("Persona 3", 8))
-  colnames(df) <- c('Value', 'Organization', "Type", "Persona")
+
   
   ggplotly(df %>% filter(Type == "Market Share") %>% 
              ggplot(aes(y = Value, x = Organization, fill = Persona)) +
@@ -1137,6 +1134,12 @@ renderGauge({
 #             label = "Select Model:",
 #             choices = c("public_political_social_charity_demo"))
 
+sliderInput("p1_political_pref",
+       label = "Political Preference",
+       min = 0,
+       max = 7,
+       value = 0)
+
 selectInput("p1_national_news",
          label = "Follow national news:",
          choices = c('Multiple times a day' = "1",
@@ -1270,11 +1273,7 @@ selectInput("p1_travel_developing",
 
 
 
-sliderInput("p1_political_pref",
-       label = "Political views from liberal to conservative:",
-       min = 0,
-       max = 7,
-       value = 0)
+
 
 
 
