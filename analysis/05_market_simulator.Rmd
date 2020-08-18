@@ -46,7 +46,7 @@ persona_data <- readxl::read_xlsx(here('analysis', 'output', "persona_config.xls
 #   13. Under Government Crackdown   -1.011
 
 
-####################################################################################
+################### Org Reactive Element####################################
 
 beta <- as.data.frame(matrix(rep(0), nrow = 13))
 
@@ -90,7 +90,9 @@ df <- reactive({
     
 })
 
-# persona beta levels -----
+################### Persona Reactive Element####################################
+
+# Persona beta levels -----
 
 beta_persona <- as.data.frame(matrix(rep(0), nrow = 61))
 
@@ -156,7 +158,7 @@ beta_persona$levels = c("Intercept",
                         "Other", 
                         "Age")
 
-# Persona Reactive Element --------
+# p reactive element ----
 
 
 p <- reactive({
