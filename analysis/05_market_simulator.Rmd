@@ -161,7 +161,7 @@ beta_persona$levels = c("Intercept",
 # p reactive element ----
 
 p1_politic_pref <- reactive({
-  input$p1_political_pref
+  max(input$p1_political_pref)
 })
 
 p <- reactive({
@@ -171,7 +171,7 @@ p <- reactive({
 
     beta_persona$p1_value[beta_persona$levels == 'Persona 1'] <- 1
     
-    # beta_persona$p1_value[beta_persona$levels %in% input == '0'] <- 0
+    beta_persona$p1_value[beta_persona$levels %in% input$p1_political_pref] <- 1
     # beta_persona$p1_value[beta_persona$levels %in% input == '1'] <- 1
     # beta_persona$p1_value[beta_persona$levels %in% input == '2'] <- 2
     # beta_persona$p1_value[beta_persona$levels %in% input == '3'] <- 3
@@ -186,7 +186,7 @@ p <- reactive({
     beta_persona$p1_value[beta_persona$levels %in% input$p1_follow_gov] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_travel_developing] <- 1
     
-    beta_persona$p1_value[beta_persona$levels == "Political Preference"] <- p1_politic_pref()
+    # beta_persona$p1_value[beta_persona$levels == "Political Preference"] <- 1
     
     beta_persona$p1_value[beta_persona$levels %in% input$p1_institution_trust] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_others_charitable] <- 1
@@ -533,6 +533,12 @@ renderPlotly({
   
   
   df <- as.data.frame(matrix(data, 24, 1))
+  
+  df[,2] <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")
+  df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
+  df[,4] <- c(rep("Persona 1",8), rep("Persona 2", 8), rep("Persona 3", 8))
+ 
+  colnames(df) <- c('Value', 'Organization', "Type", "Persona")
   
 
   
@@ -1134,20 +1140,23 @@ renderGauge({
 #             label = "Select Model:",
 #             choices = c("public_political_social_charity_demo"))
 
-sliderInput("p1_political_pref",
-       label = "Political Preference",
-       min = 0,
-       max = 7,
-       value = 0)
+# sliderInput("p1_political_pref",
+#        label = "Political Preference",
+#        min = 0,
+#        max = 7,
+#        value = 0)
+
+selectInput("p1_political_pref",
+         label = "Political views from liberal to conservative:",
+         choices = c("0", '1', '2', '3','4','5','6','7'))
 
 selectInput("p1_national_news",
          label = "Follow national news:",
-         choices = c('Multiple times a day' = "1",
-                     'Every day' = "2",
-                     "Once a week" = "3",
-                     "Hardly ever" = "4",
-                     "Never" = "5"),
-         width = "200px")
+         choices = c('Multiple times a day' = 1,
+                     'Every day' = 2,
+                     "Once a week" = 3,
+                     "Hardly ever" = 4,
+                     "Never" = 5))
 
 
 selectInput("p1_international_news",
@@ -1183,9 +1192,9 @@ selectInput("p1_travel_developing",
 
 
 
-selectInput("p1_political_pref",
-         label = "Political views from liberal to conservative:",
-         choices = c("0", '1', '2', '3','4','5','6','7'))
+# selectInput("p1_political_pref",
+#          label = "Political views from liberal to conservative:",
+#          choices = c("0", '1', '2', '3','4','5','6','7'))
 
 
 selectInput("p1_institution_trust",
