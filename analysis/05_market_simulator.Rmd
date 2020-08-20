@@ -527,7 +527,7 @@ renderPlotly({
   
   df <- as.data.frame(matrix(data, 24, 1))
   
-  df[,2] <- c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")
+  df[,2] <- c(input$ai_id, input$gp_id, input$ox_id, input$rc_id)
   df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
   df[,4] <- c(rep("Persona 1",8), rep("Persona 2", 8), rep("Persona 3", 8))
  
@@ -552,130 +552,64 @@ Organizations and Personas {.tabset .tabset-fade}
 --------------------------------------------------
 ### Org 1
 
-```{r plot ai plot}
-# renderPlotly({
-#   choice = df()
-#   
-#     persona1 = p_beta1 # Choose the persona
-#   
-#   ai_exp_util1 <- round(exp(t(choice[, 3]) %*% as.matrix(persona1)),2)
-#   gp_exp_util1 <- round(exp(t(choice[, 4]) %*% as.matrix(persona1)),2)
-#   ox_exp_util1 <- round(exp(t(choice[, 5]) %*% as.matrix(persona1)),2)
-#   rc_exp_util1 <- round(exp(t(choice[, 6]) %*% as.matrix(persona1)),2)
-#   
-#   ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   
-#     persona2 = p_beta2 # Choose the persona
-#   
-#   ai_exp_util2 <- round(exp(t(choice[, 3]) %*% as.matrix(persona2)),2)
-#   gp_exp_util2 <- round(exp(t(choice[, 4]) %*% as.matrix(persona2)),2)
-#   ox_exp_util2 <- round(exp(t(choice[, 5]) %*% as.matrix(persona2)),2)
-#   rc_exp_util2 <- round(exp(t(choice[, 6]) %*% as.matrix(persona2)),2)
-#   
-#   ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   
-#       persona3 = p_beta3 # Choose the persona
-#   
-#   ai_exp_util3 <- round(exp(t(choice[, 3]) %*% as.matrix(persona3)),2)
-#   gp_exp_util3 <- round(exp(t(choice[, 4]) %*% as.matrix(persona3)),2)
-#   ox_exp_util3 <- round(exp(t(choice[, 5]) %*% as.matrix(persona3)),2)
-#   rc_exp_util3 <- round(exp(t(choice[, 6]) %*% as.matrix(persona3)),2)
-#   
-#   ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   
-#   data <- c(ai_exp_util1, ai_rate1, 
-#             ai_exp_util2, ai_rate2,
-#             ai_exp_util3, ai_rate3)
-#   
-#   
-#   df <- as.data.frame(matrix(data, 6, 1))
-#   
-#   df[,2] <- c("Amnesty International")
-#   df[,3] <- rep(c("Utility", "Market Share"), length.out = 6)
-#   df[,4] <- c(rep("Persona 1", 2),rep("Persona 2", 2), rep("Persona 3", 2))
-#   colnames(df) <- c('Value', 'Organization', "Type", "Persona")
-#   
-#   ggplotly(df %>% filter(Type == "Market Share") %>% 
-#              ggplot(aes(y = Value, x = Organization, fill = Persona)) +
-#              geom_bar(position = "dodge", stat = "identity") +
-#              labs(x="") + 
-#              scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
-#              theme(legend.position = "none")
-#     )
-# })
-```
-
-```{r valuebox ai commented}
-# renderValueBox({
-#   choice = df()
-#   
-#   persona = p_beta1 # Choose the persona
-#   
-#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-#   
-#   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-#   
-#   valueBox(ai_rate,
-#            color = "#FFC30B",
-#            icon = "fa-percent")
-# })
-```
-
 ```{r ai org inputs}
 
 # Some kind of Org Id that could select the organization you are looking at? Not sure how to make it change the label in the graph
+
+textInput("ai_id",
+          label = "Organization Name",
+          value = "Organization 1",
+          placeholder = "Enter Organiation Name",
+          width = "200px")
 
 selectInput("ai_issue", 
             label = "Select Issue Area:",
             choices = c("Emergency response",
                         "Environment",
                         "Human rights",
-                        "Refugee relief"))
+                        "Refugee relief"),
+            width = "200px")
 
 selectInput("ai_fin_trans",
             label = "Select Financial transparency:",
             choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"))
+                        "Engages in transparency"),
+            width = "200px")
 
 selectInput("ai_account",
             label = "Select Financial Accountability:",
             choices = c("Doesn’t engage in financial accountability",
-                        "Engages in financial accountability"))
+                        "Engages in financial accountability"),
+            width = "200px")
 
 selectInput("ai_funding",
             label = "Select Funding source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
-                        "Government Grants"))
+                        "Government Grants"),
+            width = "200px")
 
 selectInput("ai_gov_relat",
             label = "Select Relationship with host government",
             choices = c("Friendly relationship with government",
                         "Criticized by government", 
-                        "Under government crackdown"))
+                        "Under government crackdown"),
+            width = "200px")
+
+
 ```
 
 ```{r ai gauge}
 renderGauge({
   choice = df()
-  persona = p_beta1 # Choose the persona
+  per_choice = p()
+    
+    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
    
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
 
   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   
@@ -688,12 +622,14 @@ renderGauge({
 
 renderGauge({
   choice = df()
-  persona = p_beta2 # Choose the persona
+  per_choice = p()
+  
+    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
    
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
 
   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   
@@ -706,12 +642,14 @@ renderGauge({
 
 renderGauge({
   choice = df()
-  persona = p_beta3 # Choose the persona
+  per_choice = p()
+  
+    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
    
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
 
   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   
@@ -725,87 +663,15 @@ renderGauge({
 
 ### Org 2
 
-```{r plot gp plot}
-# renderPlotly({
-#   choice = df()
-#   
-#     persona1 = p_beta1 # Choose the persona
-#   
-#   ai_exp_util1 <- round(exp(t(choice[, 3]) %*% as.matrix(persona1)),2)
-#   gp_exp_util1 <- round(exp(t(choice[, 4]) %*% as.matrix(persona1)),2)
-#   ox_exp_util1 <- round(exp(t(choice[, 5]) %*% as.matrix(persona1)),2)
-#   rc_exp_util1 <- round(exp(t(choice[, 6]) %*% as.matrix(persona1)),2)
-#   
-#   ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   
-#     persona2 = p_beta2 # Choose the persona
-#   
-#   ai_exp_util2 <- round(exp(t(choice[, 3]) %*% as.matrix(persona2)),2)
-#   gp_exp_util2 <- round(exp(t(choice[, 4]) %*% as.matrix(persona2)),2)
-#   ox_exp_util2 <- round(exp(t(choice[, 5]) %*% as.matrix(persona2)),2)
-#   rc_exp_util2 <- round(exp(t(choice[, 6]) %*% as.matrix(persona2)),2)
-#   
-#   ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   
-#       persona3 = p_beta3 # Choose the persona
-#   
-#   ai_exp_util3 <- round(exp(t(choice[, 3]) %*% as.matrix(persona3)),2)
-#   gp_exp_util3 <- round(exp(t(choice[, 4]) %*% as.matrix(persona3)),2)
-#   ox_exp_util3 <- round(exp(t(choice[, 5]) %*% as.matrix(persona3)),2)
-#   rc_exp_util3 <- round(exp(t(choice[, 6]) %*% as.matrix(persona3)),2)
-#   
-#   ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   
-#   data <- c(gp_exp_util1, gp_rate1, 
-#             gp_exp_util2, gp_rate2,
-#             gp_exp_util3, gp_rate3)
-#   
-#   
-#   df <- as.data.frame(matrix(data, 6, 1))
-#   
-#   df[,2] <- c("Greenpeace")
-#   df[,3] <- rep(c("Utility", "Market Share"), length.out = 6)
-#   df[,4] <- c(rep("Persona 1", 2),rep("Persona 2", 2), rep("Persona 3", 2))
-#   colnames(df) <- c('Value', 'Organization', "Type", "Persona")
-#   
-#   ggplotly(df %>% filter(Type == "Market Share") %>% 
-#              ggplot(aes(y = Value, x = Organization, fill = Persona)) +
-#              geom_bar(position = "dodge", stat = "identity") +
-#              labs(x="") + 
-#              scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
-#              theme(legend.position = "none")
-#     )
-# })
-```
-
-```{r valuebox gp commented}
-# renderValueBox({
-#   choice = df()
-#   persona = p_beta1 # Choose the persona
-#   
-#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-#   
-#   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-#   
-#   valueBox(gp_rate,
-#            color = "#3fad48",
-#            icon = "fa-percent")
-# })
-```
-
 ```{r gp org inputs}
+
+
+textInput("gp_id",
+          label = "Organization Name",
+          value = "Organization 2",
+          placeholder = "Enter Organiation Name"
+)
+
 selectInput("gp_issue", 
             label = "Select Issue Area:",
             choices = c("Emergency response",
@@ -839,12 +705,34 @@ selectInput("gp_gov_relat",
 ```{r gp gauge}
 renderGauge({
   choice = df()
-  persona = p_beta1 # Choose the persona
+  per_choice = p()
+    
+    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
    
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
+
+  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(gp_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#FFC30B"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
 
   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   
@@ -854,92 +742,39 @@ renderGauge({
         gaugeSectors(colors = "#3fad48"),
         symbol = "%")
 })
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+
+  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(gp_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#006633"),
+        symbol = "%")
+})
 ```
 
 ### Org 3
 
-```{r plot ox plot}
-# renderPlotly({
-#   choice = df()
-#   
-#     persona1 = p_beta1 # Choose the persona
-#   
-#   ai_exp_util1 <- round(exp(t(choice[, 3]) %*% as.matrix(persona1)),2)
-#   gp_exp_util1 <- round(exp(t(choice[, 4]) %*% as.matrix(persona1)),2)
-#   ox_exp_util1 <- round(exp(t(choice[, 5]) %*% as.matrix(persona1)),2)
-#   rc_exp_util1 <- round(exp(t(choice[, 6]) %*% as.matrix(persona1)),2)
-#   
-#   ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   
-#     persona2 = p_beta2 # Choose the persona
-#   
-#   ai_exp_util2 <- round(exp(t(choice[, 3]) %*% as.matrix(persona2)),2)
-#   gp_exp_util2 <- round(exp(t(choice[, 4]) %*% as.matrix(persona2)),2)
-#   ox_exp_util2 <- round(exp(t(choice[, 5]) %*% as.matrix(persona2)),2)
-#   rc_exp_util2 <- round(exp(t(choice[, 6]) %*% as.matrix(persona2)),2)
-#   
-#   ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   
-#       persona3 = p_beta3 # Choose the persona
-#   
-#   ai_exp_util3 <- round(exp(t(choice[, 3]) %*% as.matrix(persona3)),2)
-#   gp_exp_util3 <- round(exp(t(choice[, 4]) %*% as.matrix(persona3)),2)
-#   ox_exp_util3 <- round(exp(t(choice[, 5]) %*% as.matrix(persona3)),2)
-#   rc_exp_util3 <- round(exp(t(choice[, 6]) %*% as.matrix(persona3)),2)
-#   
-#   ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   
-#   data <- c(ox_exp_util1, ox_rate1, 
-#             ox_exp_util2, ox_rate2,
-#             ox_exp_util3, ox_rate3)
-#   
-#   
-#   df <- as.data.frame(matrix(data, 6, 1))
-#   
-#   df[,2] <- c("Oxfam")
-#   df[,3] <- rep(c("Utility", "Market Share"), length.out = 6)
-#   df[,4] <- c(rep("Persona 1", 2),rep("Persona 2", 2), rep("Persona 3", 2))
-#   colnames(df) <- c('Value', 'Organization', "Type", "Persona")
-#   
-#   ggplotly(df %>% filter(Type == "Market Share") %>% 
-#              ggplot(aes(y = Value, x = Organization, fill = Persona)) +
-#              geom_bar(position = "dodge", stat = "identity") +
-#              labs(x="") + 
-#              scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
-#              theme(legend.position = "none")
-#     )
-# })
-```
-
-```{r valuebox ox commented}
-# renderValueBox({
-#   choice = df()
-#   
-#   persona = p_beta1 # Choose the persona
-#   
-#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-#   
-#   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-#   
-#   valueBox(ox_rate,
-#            color = "#006633",
-#            icon = "fa-percent")
-# })
-```
-
 ```{r ox org inputs}
+
+textInput("ox_id",
+          label = "Organization Name",
+          value = "Organization 3",
+          placeholder = "Enter Organiation Name"
+)
+
+
 selectInput("ox_issue", 
             label = "Select Issue Area:",
             choices = c("Emergency response",
@@ -973,12 +808,54 @@ selectInput("ox_gov_relat",
 ```{r ox gauge}
 renderGauge({
   choice = df()
-  persona = p_beta1 # Choose the persona
+  per_choice = p()
+    
+    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
    
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
+
+  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(ox_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#FFC30B"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+
+  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(ox_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#3fad48"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
 
   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   
@@ -992,88 +869,15 @@ renderGauge({
 
 ### Org 4
 
-```{r plot rc plot}
-# renderPlotly({
-#   choice = df()
-#   
-#     persona1 = p_beta1 # Choose the persona
-#   
-#   ai_exp_util1 <- round(exp(t(choice[, 3]) %*% as.matrix(persona1)),2)
-#   gp_exp_util1 <- round(exp(t(choice[, 4]) %*% as.matrix(persona1)),2)
-#   ox_exp_util1 <- round(exp(t(choice[, 5]) %*% as.matrix(persona1)),2)
-#   rc_exp_util1 <- round(exp(t(choice[, 6]) %*% as.matrix(persona1)),2)
-#   
-#   ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   
-#     persona2 = p_beta2 # Choose the persona
-#   
-#   ai_exp_util2 <- round(exp(t(choice[, 3]) %*% as.matrix(persona2)),2)
-#   gp_exp_util2 <- round(exp(t(choice[, 4]) %*% as.matrix(persona2)),2)
-#   ox_exp_util2 <- round(exp(t(choice[, 5]) %*% as.matrix(persona2)),2)
-#   rc_exp_util2 <- round(exp(t(choice[, 6]) %*% as.matrix(persona2)),2)
-#   
-#   ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-#   
-#       persona3 = p_beta3 # Choose the persona
-#   
-#   ai_exp_util3 <- round(exp(t(choice[, 3]) %*% as.matrix(persona3)),2)
-#   gp_exp_util3 <- round(exp(t(choice[, 4]) %*% as.matrix(persona3)),2)
-#   ox_exp_util3 <- round(exp(t(choice[, 5]) %*% as.matrix(persona3)),2)
-#   rc_exp_util3 <- round(exp(t(choice[, 6]) %*% as.matrix(persona3)),2)
-#   
-#   ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-#   
-#   data <- c(rc_exp_util1, rc_rate1, 
-#             rc_exp_util2, rc_rate2,
-#             rc_exp_util3, rc_rate3)
-#   
-#   
-#   df <- as.data.frame(matrix(data, 6, 1))
-#   
-#   df[,2] <- c("Red Cross")
-#   df[,3] <- rep(c("Utility", "Market Share"), length.out = 6)
-#   df[,4] <- c(rep("Persona 1", 2),rep("Persona 2", 2), rep("Persona 3", 2))
-#   colnames(df) <- c('Value', 'Organization', "Type", "Persona")
-#   
-#   ggplotly(df %>% filter(Type == "Market Share") %>% 
-#              ggplot(aes(y = Value, x = Organization, fill = Persona)) +
-#              geom_bar(position = "dodge", stat = "identity") +
-#              labs(x="") + 
-#              scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
-#              theme(legend.position = "none")
-#     )
-# })
-```
-
-```{r valuebox rc commented}
-# renderValueBox({
-#   choice = df()
-#   
-#   persona = p_beta1 # Choose the persona
-#    
-#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
-#   
-#   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-#   
-#   valueBox(rc_rate,
-#            color = "#660000",
-#            icon = "fa-percent")
-# })
-```
-
 ```{r rc org inputs}
+
+textInput("rc_id",
+          label = "Organization Name",
+          value = "Organization 4",
+          placeholder = "Enter Organiation Name"
+)
+
+
 selectInput("rc_issue", 
             label = "Select Issue Area:",
             choices = c("Emergency response",
@@ -1107,19 +911,61 @@ selectInput("rc_gov_relat",
 ```{r rc gauge}
 renderGauge({
   choice = df()
-  persona = p_beta1 # Choose the persona
+  per_choice = p()
+    
+    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
    
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
 
   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
   
   gauge(rc_rate,
         min = 0,
         max = 100,
-        gaugeSectors(colors = "#660000"),
+        gaugeSectors(colors = "#FFC30B"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+
+  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(rc_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#3fad48"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+
+  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(rc_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#006633"),
         symbol = "%")
 })
 ```
@@ -1139,9 +985,6 @@ renderGauge({
 #        max = 7,
 #        value = 0)
 
-selectInput("p1_political_pref",
-         label = "Political views from liberal to conservative:",
-         choices = c("0", '1', '2', '3','4','5','6','7'))
 
 selectInput("p1_national_news",
          label = "Follow national news:",
@@ -1185,9 +1028,9 @@ selectInput("p1_travel_developing",
 
 
 
-# selectInput("p1_political_pref",
-#          label = "Political views from liberal to conservative:",
-#          choices = c("0", '1', '2', '3','4','5','6','7'))
+selectInput("p1_political_pref",
+         label = "Political views from liberal to conservative:",
+         choices = c("0", '1', '2', '3','4','5','6','7'))
 
 
 selectInput("p1_institution_trust",
@@ -1534,6 +1377,88 @@ selectInput("p1_age",
 
 ```
 
+```{r persona 1 gauge}
+renderGauge({
+  choice = df()
+  per_choice = p()
+    
+    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
+
+  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(ai_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#FFC30B"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+
+  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(gp_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#3fad48"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+
+  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(ox_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#006633"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+
+  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(rc_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#660000"),
+        symbol = "%")
+})
+```
+
 ### Persona 2
 
 ```{r persona 2 inputs}
@@ -1842,6 +1767,88 @@ selectInput("p2_age",
                      '85 or older'))
 
 
+```
+
+```{r persona 2 gauge}
+renderGauge({
+  choice = df()
+  per_choice = p()
+    
+    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
+
+  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(ai_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#FFC30B"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+
+  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(gp_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#3fad48"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+
+  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(ox_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#006633"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+
+  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(rc_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#660000"),
+        symbol = "%")
+})
 ```
 
 ### Persona 3
@@ -2155,9 +2162,418 @@ selectInput("p3_age",
 
 ```
 
+```{r persona 3 gauge}
+renderGauge({
+  choice = df()
+  per_choice = p()
+    
+    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
+
+  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(ai_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#FFC30B"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+
+  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(gp_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#3fad48"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+
+  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(ox_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#006633"),
+        symbol = "%")
+})
+
+renderGauge({
+  choice = df()
+  per_choice = p()
+  
+    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+   
+  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+
+  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+  
+  gauge(rc_rate,
+        min = 0,
+        max = 100,
+        gaugeSectors(colors = "#660000"),
+        symbol = "%")
+})
+```
+
 <!-- There is an issue of not being able to see the last selectInput options when drop down box appears -->
 
 
+<!-- This is for commented out code -->
+
+```{r plot ai plot}
+# renderPlotly({
+#   choice = df()
+#   
+#     persona1 = p_beta1 # Choose the persona
+#   
+#   ai_exp_util1 <- round(exp(t(choice[, 3]) %*% as.matrix(persona1)),2)
+#   gp_exp_util1 <- round(exp(t(choice[, 4]) %*% as.matrix(persona1)),2)
+#   ox_exp_util1 <- round(exp(t(choice[, 5]) %*% as.matrix(persona1)),2)
+#   rc_exp_util1 <- round(exp(t(choice[, 6]) %*% as.matrix(persona1)),2)
+#   
+#   ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   
+#     persona2 = p_beta2 # Choose the persona
+#   
+#   ai_exp_util2 <- round(exp(t(choice[, 3]) %*% as.matrix(persona2)),2)
+#   gp_exp_util2 <- round(exp(t(choice[, 4]) %*% as.matrix(persona2)),2)
+#   ox_exp_util2 <- round(exp(t(choice[, 5]) %*% as.matrix(persona2)),2)
+#   rc_exp_util2 <- round(exp(t(choice[, 6]) %*% as.matrix(persona2)),2)
+#   
+#   ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   
+#       persona3 = p_beta3 # Choose the persona
+#   
+#   ai_exp_util3 <- round(exp(t(choice[, 3]) %*% as.matrix(persona3)),2)
+#   gp_exp_util3 <- round(exp(t(choice[, 4]) %*% as.matrix(persona3)),2)
+#   ox_exp_util3 <- round(exp(t(choice[, 5]) %*% as.matrix(persona3)),2)
+#   rc_exp_util3 <- round(exp(t(choice[, 6]) %*% as.matrix(persona3)),2)
+#   
+#   ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   
+#   data <- c(ai_exp_util1, ai_rate1, 
+#             ai_exp_util2, ai_rate2,
+#             ai_exp_util3, ai_rate3)
+#   
+#   
+#   df <- as.data.frame(matrix(data, 6, 1))
+#   
+#   df[,2] <- c("Amnesty International")
+#   df[,3] <- rep(c("Utility", "Market Share"), length.out = 6)
+#   df[,4] <- c(rep("Persona 1", 2),rep("Persona 2", 2), rep("Persona 3", 2))
+#   colnames(df) <- c('Value', 'Organization', "Type", "Persona")
+#   
+#   ggplotly(df %>% filter(Type == "Market Share") %>% 
+#              ggplot(aes(y = Value, x = Organization, fill = Persona)) +
+#              geom_bar(position = "dodge", stat = "identity") +
+#              labs(x="") + 
+#              scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
+#              theme(legend.position = "none")
+#     )
+# })
+```
+
+```{r valuebox ai commented}
+# renderValueBox({
+#   choice = df()
+#   
+#   persona = p_beta1 # Choose the persona
+#   
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+#   
+#   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   valueBox(ai_rate,
+#            color = "#FFC30B",
+#            icon = "fa-percent")
+# })
+```
+
+
+```{r plot gp plot}
+# renderPlotly({
+#   choice = df()
+#   
+#     persona1 = p_beta1 # Choose the persona
+#   
+#   ai_exp_util1 <- round(exp(t(choice[, 3]) %*% as.matrix(persona1)),2)
+#   gp_exp_util1 <- round(exp(t(choice[, 4]) %*% as.matrix(persona1)),2)
+#   ox_exp_util1 <- round(exp(t(choice[, 5]) %*% as.matrix(persona1)),2)
+#   rc_exp_util1 <- round(exp(t(choice[, 6]) %*% as.matrix(persona1)),2)
+#   
+#   ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   
+#     persona2 = p_beta2 # Choose the persona
+#   
+#   ai_exp_util2 <- round(exp(t(choice[, 3]) %*% as.matrix(persona2)),2)
+#   gp_exp_util2 <- round(exp(t(choice[, 4]) %*% as.matrix(persona2)),2)
+#   ox_exp_util2 <- round(exp(t(choice[, 5]) %*% as.matrix(persona2)),2)
+#   rc_exp_util2 <- round(exp(t(choice[, 6]) %*% as.matrix(persona2)),2)
+#   
+#   ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   
+#       persona3 = p_beta3 # Choose the persona
+#   
+#   ai_exp_util3 <- round(exp(t(choice[, 3]) %*% as.matrix(persona3)),2)
+#   gp_exp_util3 <- round(exp(t(choice[, 4]) %*% as.matrix(persona3)),2)
+#   ox_exp_util3 <- round(exp(t(choice[, 5]) %*% as.matrix(persona3)),2)
+#   rc_exp_util3 <- round(exp(t(choice[, 6]) %*% as.matrix(persona3)),2)
+#   
+#   ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   
+#   data <- c(gp_exp_util1, gp_rate1, 
+#             gp_exp_util2, gp_rate2,
+#             gp_exp_util3, gp_rate3)
+#   
+#   
+#   df <- as.data.frame(matrix(data, 6, 1))
+#   
+#   df[,2] <- c("Greenpeace")
+#   df[,3] <- rep(c("Utility", "Market Share"), length.out = 6)
+#   df[,4] <- c(rep("Persona 1", 2),rep("Persona 2", 2), rep("Persona 3", 2))
+#   colnames(df) <- c('Value', 'Organization', "Type", "Persona")
+#   
+#   ggplotly(df %>% filter(Type == "Market Share") %>% 
+#              ggplot(aes(y = Value, x = Organization, fill = Persona)) +
+#              geom_bar(position = "dodge", stat = "identity") +
+#              labs(x="") + 
+#              scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
+#              theme(legend.position = "none")
+#     )
+# })
+```
+
+```{r valuebox gp commented}
+# renderValueBox({
+#   choice = df()
+#   persona = p_beta1 # Choose the persona
+#   
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+#   
+#   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   valueBox(gp_rate,
+#            color = "#3fad48",
+#            icon = "fa-percent")
+# })
+```
+
+
+```{r plot ox plot}
+# renderPlotly({
+#   choice = df()
+#   
+#     persona1 = p_beta1 # Choose the persona
+#   
+#   ai_exp_util1 <- round(exp(t(choice[, 3]) %*% as.matrix(persona1)),2)
+#   gp_exp_util1 <- round(exp(t(choice[, 4]) %*% as.matrix(persona1)),2)
+#   ox_exp_util1 <- round(exp(t(choice[, 5]) %*% as.matrix(persona1)),2)
+#   rc_exp_util1 <- round(exp(t(choice[, 6]) %*% as.matrix(persona1)),2)
+#   
+#   ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   
+#     persona2 = p_beta2 # Choose the persona
+#   
+#   ai_exp_util2 <- round(exp(t(choice[, 3]) %*% as.matrix(persona2)),2)
+#   gp_exp_util2 <- round(exp(t(choice[, 4]) %*% as.matrix(persona2)),2)
+#   ox_exp_util2 <- round(exp(t(choice[, 5]) %*% as.matrix(persona2)),2)
+#   rc_exp_util2 <- round(exp(t(choice[, 6]) %*% as.matrix(persona2)),2)
+#   
+#   ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   
+#       persona3 = p_beta3 # Choose the persona
+#   
+#   ai_exp_util3 <- round(exp(t(choice[, 3]) %*% as.matrix(persona3)),2)
+#   gp_exp_util3 <- round(exp(t(choice[, 4]) %*% as.matrix(persona3)),2)
+#   ox_exp_util3 <- round(exp(t(choice[, 5]) %*% as.matrix(persona3)),2)
+#   rc_exp_util3 <- round(exp(t(choice[, 6]) %*% as.matrix(persona3)),2)
+#   
+#   ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   
+#   data <- c(ox_exp_util1, ox_rate1, 
+#             ox_exp_util2, ox_rate2,
+#             ox_exp_util3, ox_rate3)
+#   
+#   
+#   df <- as.data.frame(matrix(data, 6, 1))
+#   
+#   df[,2] <- c("Oxfam")
+#   df[,3] <- rep(c("Utility", "Market Share"), length.out = 6)
+#   df[,4] <- c(rep("Persona 1", 2),rep("Persona 2", 2), rep("Persona 3", 2))
+#   colnames(df) <- c('Value', 'Organization', "Type", "Persona")
+#   
+#   ggplotly(df %>% filter(Type == "Market Share") %>% 
+#              ggplot(aes(y = Value, x = Organization, fill = Persona)) +
+#              geom_bar(position = "dodge", stat = "identity") +
+#              labs(x="") + 
+#              scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
+#              theme(legend.position = "none")
+#     )
+# })
+```
+
+```{r valuebox ox commented}
+# renderValueBox({
+#   choice = df()
+#   
+#   persona = p_beta1 # Choose the persona
+#   
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+#   
+#   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   valueBox(ox_rate,
+#            color = "#006633",
+#            icon = "fa-percent")
+# })
+```
+
+
+```{r plot rc plot}
+# renderPlotly({
+#   choice = df()
+#   
+#     persona1 = p_beta1 # Choose the persona
+#   
+#   ai_exp_util1 <- round(exp(t(choice[, 3]) %*% as.matrix(persona1)),2)
+#   gp_exp_util1 <- round(exp(t(choice[, 4]) %*% as.matrix(persona1)),2)
+#   ox_exp_util1 <- round(exp(t(choice[, 5]) %*% as.matrix(persona1)),2)
+#   rc_exp_util1 <- round(exp(t(choice[, 6]) %*% as.matrix(persona1)),2)
+#   
+#   ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+#   
+#     persona2 = p_beta2 # Choose the persona
+#   
+#   ai_exp_util2 <- round(exp(t(choice[, 3]) %*% as.matrix(persona2)),2)
+#   gp_exp_util2 <- round(exp(t(choice[, 4]) %*% as.matrix(persona2)),2)
+#   ox_exp_util2 <- round(exp(t(choice[, 5]) %*% as.matrix(persona2)),2)
+#   rc_exp_util2 <- round(exp(t(choice[, 6]) %*% as.matrix(persona2)),2)
+#   
+#   ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+#   
+#       persona3 = p_beta3 # Choose the persona
+#   
+#   ai_exp_util3 <- round(exp(t(choice[, 3]) %*% as.matrix(persona3)),2)
+#   gp_exp_util3 <- round(exp(t(choice[, 4]) %*% as.matrix(persona3)),2)
+#   ox_exp_util3 <- round(exp(t(choice[, 5]) %*% as.matrix(persona3)),2)
+#   rc_exp_util3 <- round(exp(t(choice[, 6]) %*% as.matrix(persona3)),2)
+#   
+#   ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+#   
+#   data <- c(rc_exp_util1, rc_rate1, 
+#             rc_exp_util2, rc_rate2,
+#             rc_exp_util3, rc_rate3)
+#   
+#   
+#   df <- as.data.frame(matrix(data, 6, 1))
+#   
+#   df[,2] <- c("Red Cross")
+#   df[,3] <- rep(c("Utility", "Market Share"), length.out = 6)
+#   df[,4] <- c(rep("Persona 1", 2),rep("Persona 2", 2), rep("Persona 3", 2))
+#   colnames(df) <- c('Value', 'Organization', "Type", "Persona")
+#   
+#   ggplotly(df %>% filter(Type == "Market Share") %>% 
+#              ggplot(aes(y = Value, x = Organization, fill = Persona)) +
+#              geom_bar(position = "dodge", stat = "identity") +
+#              labs(x="") + 
+#              scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
+#              theme(legend.position = "none")
+#     )
+# })
+```
+
+```{r valuebox rc commented}
+# renderValueBox({
+#   choice = df()
+#   
+#   persona = p_beta1 # Choose the persona
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(persona)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(persona)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(persona)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(persona)),2)
+#   
+#   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   valueBox(rc_rate,
+#            color = "#660000",
+#            icon = "fa-percent")
+# })
+```
 
 <!-- Persona 2 Page -->
 
