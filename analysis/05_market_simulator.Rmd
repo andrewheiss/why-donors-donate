@@ -1114,7 +1114,7 @@ selectInput("p1_follow_gov",
 
 selectInput("p1_travel_developing",
          label = "Travel to developing country:",
-         choices = c('Yes', 'No'))
+         choices = c("Yes", 'No' = "No Travel to Developing Countries"))
 
 
 
