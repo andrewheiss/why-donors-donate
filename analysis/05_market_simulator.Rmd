@@ -172,13 +172,6 @@ p <- reactive({
     beta_persona$p1_value[beta_persona$levels == 'Persona 1'] <- 1
     
     beta_persona$p1_value[beta_persona$levels %in% input$p1_political_pref] <- 1
-    # beta_persona$p1_value[beta_persona$levels %in% input == '1'] <- 1
-    # beta_persona$p1_value[beta_persona$levels %in% input == '2'] <- 2
-    # beta_persona$p1_value[beta_persona$levels %in% input == '3'] <- 3
-    # beta_persona$p1_value[beta_persona$levels %in% input == '4'] <- 4
-    # beta_persona$p1_value[beta_persona$levels %in% input == '5'] <- 5
-    # beta_persona$p1_value[beta_persona$levels %in% input == '6'] <- 6
-    # beta_persona$p1_value[beta_persona$levels %in% input == '7'] <- 7
     
     beta_persona$p1_value[beta_persona$levels %in% input$p1_national_news] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_international_news] <- 1
