@@ -529,7 +529,7 @@ renderPlotly({
   
   df[,2] <- c(input$ai_id, input$gp_id, input$ox_id, input$rc_id)
   df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
-  df[,4] <- c(rep("Persona 1",8), rep("Persona 2", 8), rep("Persona 3", 8))
+  df[,4] <- c(rep(input$p1_id,8), rep(input$p2_id, 8), rep(input$p3_id, 8))
  
   colnames(df) <- c('Value', 'Organization', "Type", "Persona")
   
@@ -540,7 +540,7 @@ renderPlotly({
              geom_bar(position = "dodge", stat = "identity") +
              labs(x="") + 
              scale_fill_manual(values = c( "#FFC30B", "#3fad48", "#006633", "#660000")) +
-             theme(legend.position = "none")
+             theme(legend.position = "right")
     )
 })
 
@@ -984,6 +984,11 @@ renderGauge({
 #        min = 0,
 #        max = 7,
 #        value = 0)
+
+textInput("p1_id",
+          label = "Persona Name",
+          value = "Persona 1",
+          placeholder = "Enter Persona Name")
 
 
 selectInput("p1_national_news",
@@ -1463,10 +1468,10 @@ renderGauge({
 
 ```{r persona 2 inputs}
 
-
-# selectInput("model_choice",
-#             label = "Select Model:",
-#             choices = c("public_political_social_charity_demo"))
+textInput("p2_id",
+          label = "Persona Name",
+          value = "Persona 2",
+          placeholder = "Enter Persona Name")
 
 selectInput("p2_national_news",
          label = "Follow national news:",
@@ -1856,10 +1861,10 @@ renderGauge({
 ```{r persona 3 inputs}
 
 
-# selectInput("model_choice",
-#             label = "Select Model:",
-#             choices = c("public_political_social_charity_demo"))
-
+textInput("p3_id",
+          label = "Persona Name",
+          value = "Persona 3",
+          placeholder = "Enter Persona Name")
 
 selectInput("p3_national_news",
          label = "Follow national news:",
