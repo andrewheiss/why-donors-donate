@@ -1,5 +1,5 @@
 ---
-title: "Market Simulator"
+title: "Why Donors Donate?"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -171,16 +171,12 @@ p <- reactive({
 
     beta_persona$p1_value[beta_persona$levels == 'Persona 1'] <- 1
     
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_political_pref] <- 1
-    
     beta_persona$p1_value[beta_persona$levels %in% input$p1_national_news] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_international_news] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_news_medium] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_follow_gov] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_travel_developing] <- 1
-    
-    # beta_persona$p1_value[beta_persona$levels == "Political Preference"] <- 1
-    
+    beta_persona$p1_value[beta_persona$levels %in% input$p1_political_pref] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_institution_trust] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_others_charitable] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_worship_attendence] <- 1
@@ -263,10 +259,6 @@ p <- reactive({
     beta_persona$p3_value[beta_persona$levels %in% input$p3_follow_gov] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_travel_developing] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_political_pref] <- 1
-    # 
-    # beta_persona$p3_value[beta_persona$levels == "Political Preference"] <- input$p3_political_pref
-    
-    
     beta_persona$p3_value[beta_persona$levels %in% input$p3_institution_trust] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_others_charitable] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_worship_attendence] <- 1
@@ -299,9 +291,6 @@ p <- reactive({
     beta_persona
 
 })
-
-
-# reactive slider input ----
 
 
 ```
@@ -474,7 +463,7 @@ p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona
 
 <!-- Main page Chart with All Personas -->
 
-Market Share Per Persona
+Market Share
 --------------------------------------
 
 ```{r plot all personas}
@@ -541,9 +530,11 @@ renderPlotly({
                Persona = factor(Persona, levels = c(input$p1_id, input$p2_id, input$p3_id), ordered = TRUE)) %>% 
              ggplot(aes(y = Value, x = Organization, fill = Persona)) +
              geom_bar(position = "dodge", stat = "identity") +
-             labs(x="") + 
+             labs(x="", y = "Market Share") + 
              scale_fill_manual(values = c( "#FFC30B", "#006633", "#660000")) +
-             theme(legend.position = "right")
+             theme(legend.position = "right",
+                   panel.background = element_blank(),
+                   panel.grid.major.y = element_line(color = "#D3D3D3"))
     )
 })
 
