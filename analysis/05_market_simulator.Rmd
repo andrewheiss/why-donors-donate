@@ -531,7 +531,7 @@ renderPlotly({
              ggplot(aes(y = Value, x = Organization, fill = Persona)) +
              geom_bar(position = "dodge", stat = "identity") +
              labs(x="", y = "Market Share") + 
-             scale_fill_manual(values = c( "#FFC30B", "#006633", "#660000")) +
+             scale_fill_manual(values = c( "#FFC30B", "#28a153", "#c23838")) +
              theme(legend.position = "right",
                    panel.background = element_blank(),
                    panel.grid.major.y = element_line(color = "#D3D3D3"))
@@ -542,427 +542,9 @@ renderPlotly({
 
 <!-- Organizational Tabs -->
 
-Organizations and Personas {.tabset .tabset-fade}
+Personas And Organizations {.tabset .tabset-fade}
 --------------------------------------------------
-### Org 1
 
-```{r ai org inputs}
-
-# Some kind of Org Id that could select the organization you are looking at? Not sure how to make it change the label in the graph
-
-textInput("ai_id",
-          label = "Organization Name",
-          value = "Organization 1",
-          placeholder = "Enter Organiation Name",
-          width = "200px")
-
-selectInput("ai_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"),
-            width = "200px")
-
-selectInput("ai_fin_trans",
-            label = "Select Financial transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"),
-            width = "200px")
-
-selectInput("ai_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in financial accountability",
-                        "Engages in financial accountability"),
-            width = "200px")
-
-selectInput("ai_funding",
-            label = "Select Funding source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government Grants"),
-            width = "200px")
-
-selectInput("ai_gov_relat",
-            label = "Select Relationship with host government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"),
-            width = "200px")
-
-
-```
-
-```{r ai gauge}
-renderGauge({
-  choice = df()
-  per_choice = p()
-    
-    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
-
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(ai_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#FFC30B"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
-
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(ai_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#3fad48"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
-
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(ai_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#006633"),
-        symbol = "%")
-})
-```
-
-### Org 2
-
-```{r gp org inputs}
-
-
-textInput("gp_id",
-          label = "Organization Name",
-          value = "Organization 2",
-          placeholder = "Enter Organiation Name"
-)
-
-selectInput("gp_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"))
-
-selectInput("gp_fin_trans",
-            label = "Select Financial transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"))
-
-selectInput("gp_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in financial accountability"))
-
-selectInput("gp_funding",
-            label = "Select Funding source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government Grants"))
-
-selectInput("gp_gov_relat",
-            label = "Select Relationship with host government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"))
-```
-
-```{r gp gauge}
-renderGauge({
-  choice = df()
-  per_choice = p()
-    
-    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
-
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(gp_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#FFC30B"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
-
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(gp_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#3fad48"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
-
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(gp_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#006633"),
-        symbol = "%")
-})
-```
-
-### Org 3
-
-```{r ox org inputs}
-
-textInput("ox_id",
-          label = "Organization Name",
-          value = "Organization 3",
-          placeholder = "Enter Organiation Name"
-)
-
-
-selectInput("ox_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"))
-
-selectInput("ox_fin_trans",
-            label = "Select Financial transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"))
-
-selectInput("ox_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in financial accountability"))
-
-selectInput("ox_funding",
-            label = "Select Funding source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government Grants"))
-
-selectInput("ox_gov_relat",
-            label = "Select Relationship with host government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"))
-```
-
-```{r ox gauge}
-renderGauge({
-  choice = df()
-  per_choice = p()
-    
-    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
-
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(ox_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#FFC30B"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
-
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(ox_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#3fad48"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
-
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(ox_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#006633"),
-        symbol = "%")
-})
-```
-
-### Org 4
-
-```{r rc org inputs}
-
-textInput("rc_id",
-          label = "Organization Name",
-          value = "Organization 4",
-          placeholder = "Enter Organiation Name"
-)
-
-
-selectInput("rc_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"))
-
-selectInput("rc_fin_trans",
-            label = "Select Financial transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"))
-
-selectInput("rc_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in financial accountability"))
-
-selectInput("rc_funding",
-            label = "Select Funding source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government Grants"))
-
-selectInput("rc_gov_relat",
-            label = "Select Relationship with host government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"))
-```
-
-```{r rc gauge}
-renderGauge({
-  choice = df()
-  per_choice = p()
-    
-    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
-
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(rc_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#FFC30B"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
-
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(rc_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#3fad48"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
-
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(rc_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#006633"),
-        symbol = "%")
-})
-```
 
 ### Persona 1
 
@@ -1279,87 +861,7 @@ selectInput("p1_age",
 
 ```
 
-```{r persona 1 gauge}
-renderGauge({
-  choice = df()
-  per_choice = p()
-    
-    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
 
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(ai_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#FFC30B"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
-
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(gp_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#3fad48"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
-
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(ox_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#006633"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
-
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(rc_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#660000"),
-        symbol = "%")
-})
-```
 
 ### Persona 2
 
@@ -1678,87 +1180,6 @@ selectInput("p2_age",
 
 ```
 
-```{r persona 2 gauge}
-renderGauge({
-  choice = df()
-  per_choice = p()
-    
-    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
-
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(ai_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#FFC30B"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
-
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(gp_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#3fad48"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
-
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(ox_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#006633"),
-        symbol = "%")
-})
-
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
-
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(rc_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#660000"),
-        symbol = "%")
-})
-```
 
 ### Persona 3
 
@@ -2077,94 +1498,496 @@ selectInput("p3_age",
 
 ```
 
-```{r persona 3 gauge}
-renderGauge({
-  choice = df()
-  per_choice = p()
-    
-    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
 
-  ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(ai_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#FFC30B"),
-        symbol = "%")
-})
 
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+### Org 1
 
-  gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(gp_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#3fad48"),
-        symbol = "%")
-})
+```{r ai org inputs}
 
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+# Some kind of Org Id that could select the organization you are looking at? Not sure how to make it change the label in the graph
 
-  ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(ox_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#006633"),
-        symbol = "%")
-})
+textInput("ai_id",
+          label = "Organization Name",
+          value = "Organization 1",
+          placeholder = "Enter Organiation Name")
 
-renderGauge({
-  choice = df()
-  per_choice = p()
-  
-    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
-   
-  ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
-  gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
-  ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
-  rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+selectInput("ai_issue", 
+            label = "Select Issue Area:",
+            choices = c("Emergency response",
+                        "Environment",
+                        "Human rights",
+                        "Refugee relief"))
 
-  rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
-  
-  gauge(rc_rate,
-        min = 0,
-        max = 100,
-        gaugeSectors(colors = "#660000"),
-        symbol = "%")
-})
+selectInput("ai_fin_trans",
+            label = "Select Financial transparency:",
+            choices = c("Doesn’t engage in transparency",
+                        "Engages in transparency"))
+
+selectInput("ai_account",
+            label = "Select Financial Accountability:",
+            choices = c("Doesn’t engage in financial accountability",
+                        "Engages in financial accountability"))
+
+selectInput("ai_funding",
+            label = "Select Funding source:",
+            choices = c("Many small private donations",
+                        "Handful of wealthy private donors",
+                        "Government Grants"))
+
+selectInput("ai_gov_relat",
+            label = "Select Relationship with host government",
+            choices = c("Friendly relationship with government",
+                        "Criticized by government", 
+                        "Under government crackdown"))
+
+
 ```
+
+
+
+### Org 2
+
+```{r gp org inputs}
+
+
+textInput("gp_id",
+          label = "Organization Name",
+          value = "Organization 2",
+          placeholder = "Enter Organiation Name"
+)
+
+selectInput("gp_issue", 
+            label = "Select Issue Area:",
+            choices = c("Emergency response",
+                        "Environment",
+                        "Human rights",
+                        "Refugee relief"))
+
+selectInput("gp_fin_trans",
+            label = "Select Financial transparency:",
+            choices = c("Doesn’t engage in transparency",
+                        "Engages in transparency"))
+
+selectInput("gp_account",
+            label = "Select Financial Accountability:",
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in financial accountability"))
+
+selectInput("gp_funding",
+            label = "Select Funding source:",
+            choices = c("Many small private donations",
+                        "Handful of wealthy private donors",
+                        "Government Grants"))
+
+selectInput("gp_gov_relat",
+            label = "Select Relationship with host government",
+            choices = c("Friendly relationship with government",
+                        "Criticized by government", 
+                        "Under government crackdown"))
+```
+
+
+
+### Org 3
+
+```{r ox org inputs}
+
+textInput("ox_id",
+          label = "Organization Name",
+          value = "Organization 3",
+          placeholder = "Enter Organiation Name"
+)
+
+
+selectInput("ox_issue", 
+            label = "Select Issue Area:",
+            choices = c("Emergency response",
+                        "Environment",
+                        "Human rights",
+                        "Refugee relief"))
+
+selectInput("ox_fin_trans",
+            label = "Select Financial transparency:",
+            choices = c("Doesn’t engage in transparency",
+                        "Engages in transparency"))
+
+selectInput("ox_account",
+            label = "Select Financial Accountability:",
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in financial accountability"))
+
+selectInput("ox_funding",
+            label = "Select Funding source:",
+            choices = c("Many small private donations",
+                        "Handful of wealthy private donors",
+                        "Government Grants"))
+
+selectInput("ox_gov_relat",
+            label = "Select Relationship with host government",
+            choices = c("Friendly relationship with government",
+                        "Criticized by government", 
+                        "Under government crackdown"))
+```
+
+
+
+### Org 4
+
+```{r rc org inputs}
+
+textInput("rc_id",
+          label = "Organization Name",
+          value = "Organization 4",
+          placeholder = "Enter Organiation Name"
+)
+
+
+selectInput("rc_issue", 
+            label = "Select Issue Area:",
+            choices = c("Emergency response",
+                        "Environment",
+                        "Human rights",
+                        "Refugee relief"))
+
+selectInput("rc_fin_trans",
+            label = "Select Financial transparency:",
+            choices = c("Doesn’t engage in transparency",
+                        "Engages in transparency"))
+
+selectInput("rc_account",
+            label = "Select Financial Accountability:",
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in financial accountability"))
+
+selectInput("rc_funding",
+            label = "Select Funding source:",
+            choices = c("Many small private donations",
+                        "Handful of wealthy private donors",
+                        "Government Grants"))
+
+selectInput("rc_gov_relat",
+            label = "Select Relationship with host government",
+            choices = c("Friendly relationship with government",
+                        "Criticized by government", 
+                        "Under government crackdown"))
+```
+
 
 <!-- There is an issue of not being able to see the last selectInput options when drop down box appears -->
 
 
 <!-- This is for commented out code -->
 
-```{r plot ai plot}
+```{r persona 1 gauge commented}
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#     
+#     p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
+# 
+#   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(ai_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#FFC30B"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+# 
+#   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(gp_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#3fad48"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+# 
+#   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(ox_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#006633"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+# 
+#   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(rc_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#660000"),
+#         symbol = "%")
+# })
+```
+
+```{r persona 2 gauge commented}
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#     
+#     p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
+# 
+#   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(ai_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#FFC30B"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+# 
+#   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(gp_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#3fad48"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+# 
+#   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(ox_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#006633"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+# 
+#   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(rc_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#660000"),
+#         symbol = "%")
+# })
+```
+
+```{r persona 3 gauge commented}
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#     
+#     p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
+# 
+#   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(ai_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#FFC30B"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+# 
+#   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(gp_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#3fad48"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+# 
+#   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(ox_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#006633"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+# 
+#   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(rc_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#660000"),
+#         symbol = "%")
+# })
+```
+
+
+```{r ai gauge commented}
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#     
+#     p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
+# 
+#   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(ai_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#FFC30B"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+# 
+#   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(ai_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#006633"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+# 
+#   ai_rate <- round(100 * ai_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(ai_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#b50909"),
+#         symbol = "%")
+# })
+```
+
+```{r plot ai plot commented}
 # renderPlotly({
 #   choice = df()
 #   
@@ -2246,7 +2069,69 @@ renderGauge({
 ```
 
 
-```{r plot gp plot}
+```{r gp gauge commented}
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#     
+#     p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
+# 
+#   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(gp_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#FFC30B"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+# 
+#   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(gp_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#3fad48"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+# 
+#   gp_rate <- round(100 * gp_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(gp_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#006633"),
+#         symbol = "%")
+# })
+```
+
+```{r plot gp plot commented}
 # renderPlotly({
 #   choice = df()
 #   
@@ -2327,7 +2212,69 @@ renderGauge({
 ```
 
 
-```{r plot ox plot}
+```{r ox gauge commented}
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#     
+#     p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
+# 
+#   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(ox_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#FFC30B"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+# 
+#   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(ox_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#3fad48"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+# 
+#   ox_rate <- round(100 * ox_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(ox_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#006633"),
+#         symbol = "%")
+# })
+```
+
+```{r plot ox plot commented}
 # renderPlotly({
 #   choice = df()
 #   
@@ -2409,7 +2356,69 @@ renderGauge({
 ```
 
 
-```{r plot rc plot}
+```{r rc gauge commented}
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#     
+#     p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta1)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta1)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta1)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta1)),2)
+# 
+#   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(rc_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#FFC30B"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta2)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta2)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta2)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta2)),2)
+# 
+#   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(rc_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#3fad48"),
+#         symbol = "%")
+# })
+# 
+# renderGauge({
+#   choice = df()
+#   per_choice = p()
+#   
+#     p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+#    
+#   ai_exp_util <- round(exp(t(choice[, 3]) %*% as.matrix(p_beta3)),2)
+#   gp_exp_util <- round(exp(t(choice[, 4]) %*% as.matrix(p_beta3)),2)
+#   ox_exp_util <- round(exp(t(choice[, 5]) %*% as.matrix(p_beta3)),2)
+#   rc_exp_util <- round(exp(t(choice[, 6]) %*% as.matrix(p_beta3)),2)
+# 
+#   rc_rate <- round(100 * rc_exp_util/sum(ai_exp_util, gp_exp_util, ox_exp_util, rc_exp_util))
+#   
+#   gauge(rc_rate,
+#         min = 0,
+#         max = 100,
+#         gaugeSectors(colors = "#006633"),
+#         symbol = "%")
+# })
+```
+
+```{r plot rc plot commented}
 # renderPlotly({
 #   choice = df()
 #   
