@@ -1559,7 +1559,6 @@ selectInput("ai_gov_relat",
 ```
 
 
-
 ### Org 2
 
 ```{r gp org inputs}
@@ -1602,7 +1601,6 @@ selectInput("gp_gov_relat",
 ```
 
 
-
 ### Org 3
 
 ```{r ox org inputs}
@@ -1643,7 +1641,6 @@ selectInput("ox_gov_relat",
                         "Criticized by government", 
                         "Under government crackdown"))
 ```
-
 
 
 ### Org 4
