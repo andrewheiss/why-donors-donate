@@ -472,59 +472,75 @@ renderPlotly({
   org_choice = df()
   per_choice = p()
     
+  # Persona 1 
     p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
-#add step to matrix multiply the persona reactive element to the persona data and the public_political beta table.
   
+  # Expected Utility
   ai_exp_util1 <- round(exp(t(org_choice[, 3]) %*% as.matrix(p_beta1)),2)
   gp_exp_util1 <- round(exp(t(org_choice[, 4]) %*% as.matrix(p_beta1)),2)
   ox_exp_util1 <- round(exp(t(org_choice[, 5]) %*% as.matrix(p_beta1)),2)
   rc_exp_util1 <- round(exp(t(org_choice[, 6]) %*% as.matrix(p_beta1)),2)
   
+  # Market Share
   ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
   gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
   ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
   rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
   
+  # Persona 2
     p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
   
+  # Expected Utility
   ai_exp_util2 <- round(exp(t(org_choice[, 3]) %*% as.matrix(p_beta2)),2)
   gp_exp_util2 <- round(exp(t(org_choice[, 4]) %*% as.matrix(p_beta2)),2)
   ox_exp_util2 <- round(exp(t(org_choice[, 5]) %*% as.matrix(p_beta2)),2)
   rc_exp_util2 <- round(exp(t(org_choice[, 6]) %*% as.matrix(p_beta2)),2)
   
+  # Market Share
   ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
   gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
   ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
   rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
   
+  # Persona 3
     p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
   
+  # Expected Utility
   ai_exp_util3 <- round(exp(t(org_choice[, 3]) %*% as.matrix(p_beta3)),2)
   gp_exp_util3 <- round(exp(t(org_choice[, 4]) %*% as.matrix(p_beta3)),2)
   ox_exp_util3 <- round(exp(t(org_choice[, 5]) %*% as.matrix(p_beta3)),2)
   rc_exp_util3 <- round(exp(t(org_choice[, 6]) %*% as.matrix(p_beta3)),2)
   
+  # Market Share
   ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
   gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
   ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
   rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
   
+  # Data for Plotly
   data <- c(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1, ai_rate1, gp_rate1, ox_rate1, rc_rate1, 
             ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2, ai_rate2, gp_rate2, ox_rate2, rc_rate2,
             ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3, ai_rate3, gp_rate3, ox_rate3, rc_rate3)
   
   
+  # Empty dataframe
   df <- as.data.frame(matrix(data, 24, 1))
   
+  # Organization name inputs
   df[,2] <- c(input$ai_id, input$gp_id, input$ox_id, input$rc_id)
+  # Type of value
   df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
+  # Persona name inputs
   df[,4] <- c(rep(input$p1_id,8), rep(input$p2_id, 8), rep(input$p3_id, 8))
  
+  # Rename columns
   colnames(df) <- c('Value', 'Organization', "Type", "Persona")
   
-
   
-  ggplotly(df %>% filter(Type == "Market Share") %>%
+  ggplotly(df %>% 
+             # Only care about the Market Share right now
+             filter(Type == "Market Share") %>% 
+             # Factor Organization and Persona with ordered=TRUE so the order doesn't change to alphabetical as names are created
              mutate(
                Organization = factor(Organization, levels = c(input$ai_id, input$gp_id, input$ox_id, input$rc_id), ordered = TRUE),
                Persona = factor(Persona, levels = c(input$p1_id, input$p2_id, input$p3_id), ordered = TRUE)) %>% 
@@ -860,7 +876,6 @@ selectInput("p1_age",
 
 
 ```
-
 
 
 ### Persona 2
