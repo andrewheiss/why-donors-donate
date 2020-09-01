@@ -250,6 +250,15 @@ data <- data %>%
       ),
       levels = c("Rarely", "Once a week", "At least once a day")
     ),
+    # *Q2.2*: How often do you follow international news? 
+    # 
+    # - Always
+    # - Sometimes
+    # - Never
+    Q2.2 = fct_relevel(
+      factor(Q2.2, labels = c("Always", "Sometimes", "Never")), 
+      c("Never", "Sometimes", "Always")
+    ),
     # *Q2.4*: How often would you say you follow what's going on in government and public affairs?
     # 
     # - Most of the time → Often
@@ -282,6 +291,64 @@ data <- data %>%
       ),
       levels = c("More than once a month, less than once a year", "At least once a month")
     ),
+    # *Q2.6*: How much did you donate to charity last year?
+    # 
+    # - \$1 to \$49
+    # - \$50 to \$99
+    # - \$100 to \$499
+    # - \$500 to \$999
+    # - \$1000 to \$4,999
+    # - \$5000 to \$9,999
+    # - \$10,000 or more
+    Q2.6 = factor(
+      Q2.6, 
+      labels = c(
+        "$1-$49", "$50-$99", "$100-$499", "$500-$999", 
+        "$1000-$4,999", "$5000-$9,999", "$10,000+"),
+      ordered = TRUE
+    ),
+    # *Q2.7*: On a scale of not at all important (1) to essential (7), how important is it for you to trust charities?
+    # 
+    # - 1 (Not at all important)
+    # - 2
+    # - 3
+    # - 4
+    # - 5
+    # - 6
+    # - 7 (Essential)
+    Q2.7 = factor(
+      Q2.7,
+      labels = c(
+        "Not at all important", "Very unimportant", "Somewhat unimportant", 
+        "Neutral", "Somewhat important", "Very important", "Essential"
+      ),
+      ordered = TRUE
+    ),
+    # *Q2.8*: On a scale of no trust at all (1) to complete trust (7), how much do you trust charities?
+    # 
+    # - 1 (No trust at all)
+    # - 2
+    # - 3
+    # - 4
+    # - 5
+    # - 6
+    # - 7 (Complete trust)
+    Q2.8 = factor(
+      Q2.8,
+      labels = c(
+        "No trust at all", "Very little trust", "Little trust", 
+        "Neutral", "Some trust", "A lot of trust", "Complete trust"
+      ),
+      ordered = TRUE
+    ),
+    # *Q2.9*: Have you volunteered in the past 12 months?
+    # 
+    # - Yes
+    # - No
+    Q2.9 = fct_relevel(
+      factor(Q2.9, labels = c("Yes", "No")), 
+      c("No", "Yes")
+    ),
     # *Q2.10*: How often do you volunteer?
     # 
     # - NA → Haven't volunteered in past 12 months (base case)
@@ -302,6 +369,31 @@ data <- data %>%
         Q2.10 == 6 ~ "Rarely"
       ),
       levels = c("Haven't volunteered in past 12 months", "Rarely", "More than once a month, less than once a year", "At least once a month")
+    ),
+    # *Q5.1*: Did you vote in the last election?
+    # 
+    # - Yes
+    # - No
+    Q5.1 = fct_relevel(
+      factor(Q5.1, labels = c("Yes", "No")), 
+      c("No", "Yes")
+    ),
+    # *Q5.2*: On a scale of extremely liberal (1) to extremely conservative (7), how would you describe your political views?
+    # 
+    # - 1 (Extremely liberal)
+    # - 2
+    # - 3
+    # - 4
+    # - 5
+    # - 6
+    # - 7 (Extremely conservative)
+    Q5.2 = factor(
+      Q5.2,
+      labels = c(
+        "Extremely liberal", "Somewhat liberal", "Slightly liberal", "Moderate",
+        "Slightly conservative", "Somewhat conservative", "Extremely conservative"
+      ),
+      ordered = TRUE
     ),
     # *Q5.4*: Historically, how involved have you been in activist causes?
     # 
@@ -336,6 +428,31 @@ data <- data %>%
         Q5.5 == 5 ~ "Not involved"
       ),
       levels = c("Not involved", "Involved")
+    ),
+    # *Q5.6*: On a scale of no trust (1) to complete trust (7), how much do you trust political institutions and the state?
+    # 
+    # - 1 (No trust)
+    # - 2
+    # - 3
+    # - 4
+    # - 5
+    # - 6
+    # - 7 (Complete trust)
+    Q5.6 = factor(
+      Q5.6,
+      labels = c(
+        "No trust at all", "Very little trust", "Little trust", 
+        "Neutral", "Some trust", "A lot of trust", "Complete trust"
+      ),
+      ordered = TRUE
+    ),
+    # *Q5.7*: Have you ever traveled to a developing country? 
+    # 
+    # - Yes
+    # - No
+    Q5.7 = fct_relevel(
+      factor(Q5.7, labels = c("Yes", "No")), 
+      c("No", "Yes")
     ),
     # *Q5.8*: How often do you attend religious or worship services, not including weddings and funerals?
     # 
@@ -374,6 +491,76 @@ data <- data %>%
         Q5.9 == 5 ~ "Not important"
       ),
       levels = c("Not important", "Important")
+    ),
+    # *Q5.11*: On a scale of strongly agree (1) to strongly disagree (7), rate your response to the following statement: People should be more charitable towards others in society.
+    # 
+    # - 1 (Strongly agree)
+    # - 2
+    # - 3
+    # - 4
+    # - 5
+    # - 6
+    # - 7 (Strongly disagree)
+    Q5.11 = fct_relevel(
+      factor(
+        Q5.11,
+        labels = c(
+          "Strongly agree", "Agree", "Somewhat agree", 
+          "Neutral", "Somewhat disagree", "Disagree", "Strongly disagree"
+        ),
+        c(
+          "Strongly disagree", "Disagree", "Somewhat disagree",
+          "Neutral", "Somewhat agree", "Agree", "Strongly agree"
+        )
+      )
+    ),
+    # *Q5.12*: What is your gender?
+    # 
+    # - Male
+    # - Female
+    # - Transgender
+    # - Prefer not to say
+    # - Other: _________
+    Q5.12 = factor(
+      Q5.12, 
+      labels = c(
+        "Male", "Female", "Transgender", 
+        "Prefer not to say", "Other"
+      ), 
+      ordered = TRUE
+    ),
+    # *Q5.13*: Are you now married, widowed, divorced, separated, or never married?
+    # 
+    # - Married
+    # - Widowed
+    # - Divorced
+    # - Separated
+    # - Never married
+    Q5.13 = factor(
+      Q5.13, 
+      labels = c(
+        "Married", "Widowed", "Divorced", 
+        "Separated", "Never married"
+      ), 
+      ordered = TRUE
+    ),
+    # *Q5.14*: What is the highest degree or level of school you have completed?
+    # 
+    # - Less than high school
+    # - High school graduate
+    # - Some college
+    # - 2 year degree
+    # - 4 year degree 
+    # - Graduate or professional degree
+    # - Doctorate
+    Q5.14 = factor(
+      Q5.14, 
+      labels = c(
+        "Less than high school", "High school graduate", 
+        "Some college", "2 year degree", "4 year degree", 
+        "Graduate or professional degree", "Doctorate"
+      ),
+      ordered = TRUE
     ),
     # *Q5.15*: What is your annual household income before taxes?
     # 
@@ -416,35 +603,6 @@ data <- data %>%
       ),
       levels = c("Less than median", "More than median")
     )
-  )
-
-# Add other factor levels
-data <- data %>% 
-  mutate(
-    Q2.2 = factor(Q2.2, labels = c("Always", "Sometimes", "Never"), ordered = TRUE),
-    Q2.6 = factor(Q2.6, 
-                  labels = c("$1-$49", "$50-$99", "$100-$499", "$500-$999", 
-                             "$1000-$4,999", "$5000-$9,999", "$10,000+"),
-                  ordered = TRUE),
-    Q2.7_f = factor(Q2.7, ordered = TRUE),
-    Q2.8_f = factor(Q2.8, ordered = TRUE),
-    Q2.9 = factor(Q2.9, labels = c("Yes", "No"), ordered = TRUE),
-    Q5.1 = factor(Q5.1, labels = c("Yes", "No"), ordered = TRUE),
-    Q5.2_f = factor(Q5.2, ordered = TRUE),
-    Q5.6_f = factor(Q5.6, ordered = TRUE),
-    Q5.7 = factor(Q5.7, labels = c("Yes", "No"), ordered = TRUE),
-    Q5.11_f = factor(Q5.11, ordered = TRUE),
-    Q5.12 = factor(Q5.12, labels = c("Male", "Female", "Transgender", 
-                                     "Prefer not to say", "Other"), 
-                   ordered = TRUE),
-    Q5.13 = factor(Q5.13, labels = c("Married", "Widowed", "Divorced", 
-                                     "Separated", "Never married"), 
-                   ordered = TRUE),
-    Q5.14 = factor(Q5.14, 
-                   labels = c("Less than high school", "High school graduate", 
-                              "Some college", "2 year degree", "4 year degree", 
-                              "Graduate or professional degree", "Doctorate"),
-                   ordered = TRUE)
   )
 ```
 

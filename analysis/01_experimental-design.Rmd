@@ -11,6 +11,8 @@ editor_options:
 
 # Load the design and check level balance
 
+The experimental design was created as part of the conjoint study in Qualtrics. Here we check to make sure that there is a balance across attribute levels (i.e., levels show up a roughly equal number of times for each attribute).
+
 ```{r check-design, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(donorheuristics)
@@ -28,7 +30,10 @@ as_tibble(design) %>%
   facet_wrap(~ atts, scales = "free", nrow = 2)
 ```
 
+
 # Dummy-code the design
+
+Now we prepare the experimental design for use in estimating the model by dropping the first level of each attribute, which are all discrete, as the reference level.
 
 ```{r check-design, warning=FALSE, message=FALSE}
 # Convert the attributes in design into factors
