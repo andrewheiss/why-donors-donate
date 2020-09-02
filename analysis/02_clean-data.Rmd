@@ -225,6 +225,7 @@ The design matrix as reported in the survey is correct. We can use the separate 
 data <- data_clean %>% 
   mutate(id = row_number()) %>% 
   rename(version = vers_CBCONJOINT) %>% 
+  select(-contains("_TEXT")) %>% 
   select(id, version, Q1.1:Q5.18)
 ```
 
@@ -258,7 +259,21 @@ data <- data %>%
     Q2.2 = fct_relevel(
       factor(Q2.2, labels = c("Always", "Sometimes", "Never")), 
       c("Never", "Sometimes", "Always")
-    ),
+    )
+  ) %>% 
+  mutate_at(
+    # *Q2.3*: Which mediums do you use to follow news? (Select all that apply.)
+    # 
+    # - TV
+    # - Print 
+    # - Online (excluding social media) 
+    # - Social media
+    # - Radio
+    # - Email newsletters
+    # - News app
+    vars(contains("Q2.3")), coalesce, 0
+  ) %>%
+  mutate(
     # *Q2.4*: How often would you say you follow what's going on in government and public affairs?
     # 
     # - Most of the time → Often
@@ -492,6 +507,25 @@ data <- data %>%
       ),
       levels = c("Not important", "Important")
     ),
+    # *Q5.10*: What is your current religion, if any?
+    # 
+    # - Catholic (including Roman Catholic and Orthodox)
+    # - Protestant (United Church of Canada, Anglican, Orthodox, Baptist, Lutheran)
+    # - Christian Orthodox
+    # - Jewish
+    # - Muslim
+    # - Sikh
+    # - Hindu
+    # - Buddhist
+    # - Atheist (do not believe in God)
+    # - Other: _________
+    Q5.10 = factor(
+      Q5.10, 
+      labels = c(
+        "Catholic", "Protestant", "Christian Orthodox", "Jewish", 
+        "Muslim", "Sikh", "Hindu", "Buddhist", "Atheist", "Other"), 
+      ordered = TRUE
+    ),
     # *Q5.11*: On a scale of strongly agree (1) to strongly disagree (7), rate your response to the following statement: People should be more charitable towards others in society.
     # 
     # - 1 (Strongly agree)
@@ -584,7 +618,20 @@ data <- data %>%
         Q5.15 <= 5 ~ "Less than median"
       ),
       levels = c("Less than median", "More than median")
-    ),
+    )
+  ) %>% 
+  mutate_at(
+    # *Q5.16*: Choose one or more races that you consider yourself to be:
+    # 
+    # - White
+    # - Black or African American
+    # - American Indian or Alaska Native
+    # - Asian
+    # - Native Hawaiian or Pacific Islander
+    # - Other: _________
+    vars(contains("Q5.16")), coalesce, 0
+  ) %>% 
+  mutate(
     # *Q5.17*: How old are you?
     # 
     # - Under 18 → More/less than median (base case = less than median)
