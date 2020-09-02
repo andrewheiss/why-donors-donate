@@ -637,6 +637,7 @@ selectInput("p1_worship_attendance",
          choices = c('Multiple times a week',
                      'Once a week',
                      "Once a month",
+                     "Few times a year",
                      "Once a year",
                      "Never"))
 
@@ -711,8 +712,7 @@ selectInput("p1_volunteer_frequency",
                      'Once every three months',
                      'Once every six months',
                      'Once a year',
-                     'Once every few years',
-                     'Never'))
+                     'Once every few years'))
 
 # Need to Fix
 selectInput("p1_personal_activism",
