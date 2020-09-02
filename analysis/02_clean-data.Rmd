@@ -420,6 +420,60 @@ data <- data %>%
       ),
       ordered = TRUE
     ),
+    # *Q5.3*: Here is a list of different types of voluntary organizations. For each organization, indicate whether you are an active member, an inactive member, or not a member of that type of organization:
+    # 
+    # |                                         | Active member | Inactive member | Don't belong |
+    # | --------------------------------------- | :-----------: | :-------------: | :----------: |
+    # | Church or religious organization        |       •       |        •        |      •       |
+    # | Sport or recreational organization      |       •       |        •        |      •       |
+    # | Art, music, or educational organization |       •       |        •        |      •       |
+    # | Labor union                             |       •       |        •        |      •       |
+    # | Political party                         |       •       |        •        |      •       |
+    # | Environmental organization              |       •       |        •        |      •       |
+    # | Professional association                |       •       |        •        |      •       |
+    # | Humanitarian or charitable organization |       •       |        •        |      •       |
+    # | Consumer organization                   |       •       |        •        |      •       |
+    # | Other organization                      |       •       |        •        |      •       |
+    Q5.3_1 = fct_relevel(
+      factor(Q5.3_1, labels = c("Active member", "Inactive member", "Don't belong")), 
+      c("Don't belong", "Inactive member", "Active member")
+    ),
+    Q5.3_2 = fct_relevel(
+      factor(Q5.3_2, labels = c("Active member", "Inactive member", "Don't belong")), 
+      c("Don't belong", "Inactive member", "Active member")
+    ),
+    Q5.3_3 = fct_relevel(
+      factor(Q5.3_3, labels = c("Active member", "Inactive member", "Don't belong")), 
+      c("Don't belong", "Inactive member", "Active member")
+    ),
+    Q5.3_4 = fct_relevel(
+      factor(Q5.3_4, labels = c("Active member", "Inactive member", "Don't belong")), 
+      c("Don't belong", "Inactive member", "Active member")
+    ),
+    Q5.3_5 = fct_relevel(
+      factor(Q5.3_5, labels = c("Active member", "Inactive member", "Don't belong")), 
+      c("Don't belong", "Inactive member", "Active member")
+    ),
+    Q5.3_6 = fct_relevel(
+      factor(Q5.3_6, labels = c("Active member", "Inactive member", "Don't belong")), 
+      c("Don't belong", "Inactive member", "Active member")
+    ),
+    Q5.3_7 = fct_relevel(
+      factor(Q5.3_7, labels = c("Active member", "Inactive member", "Don't belong")), 
+      c("Don't belong", "Inactive member", "Active member")
+    ),
+    Q5.3_8 = fct_relevel(
+      factor(Q5.3_8, labels = c("Active member", "Inactive member", "Don't belong")), 
+      c("Don't belong", "Inactive member", "Active member")
+    ),
+    Q5.3_9 = fct_relevel(
+      factor(Q5.3_9, labels = c("Active member", "Inactive member", "Don't belong")), 
+      c("Don't belong", "Inactive member", "Active member")
+    ),
+    Q5.3_10 = fct_relevel(
+      factor(Q5.3_10, labels = c("Active member", "Inactive member", "Don't belong")), 
+      c("Don't belong", "Inactive member", "Active member")
+    ),
     # *Q5.4*: Historically, how involved have you been in activist causes?
     # 
     # - Extremely involved → Involved
@@ -551,11 +605,11 @@ data <- data %>%
         labels = c(
           "Strongly agree", "Agree", "Somewhat agree", 
           "Neutral", "Somewhat disagree", "Disagree", "Strongly disagree"
-        ),
-        c(
-          "Strongly disagree", "Disagree", "Somewhat disagree",
-          "Neutral", "Somewhat agree", "Agree", "Strongly agree"
         )
+      ),
+      c(
+        "Strongly disagree", "Disagree", "Somewhat disagree",
+        "Neutral", "Somewhat agree", "Agree", "Strongly agree"
       )
     ),
     # *Q5.12*: What is your gender?

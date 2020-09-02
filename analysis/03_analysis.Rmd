@@ -396,9 +396,16 @@ if (public_political_social_charity_demo == 1) write_rds(draws, here::here("anal
 ```
 
 
-# Plot marginals
+# Plot marginals and contrasts
 
 ```{r plot-marginals}
+#########
+
+# Update covariate labels
+# Add contrasts where appropriate (see hypotheses Rmd documents)
+
+#########
+
 intercept <- 0                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
