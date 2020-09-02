@@ -229,9 +229,12 @@ data <- data_clean %>%
   select(id, version, Q1.1:Q5.18)
 ```
 
+
 # Transform data
 
-```{r transform-data}
+## Covariates
+
+```{r transform-covariates}
 data <- data %>% 
   mutate(
     # *Q2.1*: How often do you follow national news? 
@@ -653,10 +656,60 @@ data <- data %>%
   )
 ```
 
+## Design matrix
+
+```{r transform-design}
+# Load design
+design <- read_csv(here::here("data", "derived_data", "dummy_design.csv")) %>%
+  select(-X1) %>%
+  rename(
+    version = question_set,
+    task = question,
+    alt = choice
+  )
+
+# Create the array for design X.
+X <- array(
+  data = NA,
+  dim = c(
+    nrow(data),             # Number of respondents.
+    max(design$task),       # Number of choice tasks per respondent.
+    (max(design$alt) + 1),  # Number of product alternatives per choice task.
+    (ncol(design) - 3 + 1)  # Number of (estimable) attribute levels.
+  )
+)
+
+# Reintroduce org1 and add the outside option coded as all zeros.
+for (n in 1:dim(X)[1]) {
+  # Filter for respondent n.
+  X_n <- design %>% filter(version == data$version[n])
+  for (s in 1:dim(X)[2]) {
+    # Filter for task s and include placeholder for org1.
+    X_s <- X_n %>%
+      filter(task == s) %>%
+      mutate(org1 = 0) %>%
+      select(org1, org2:gov_rel3)
+    for (p in 1:(dim(X)[3]-1)) {
+      # Filter for task s and alt p orgs.
+      X_p <- X_n %>%
+        filter(task == s, alt == p) %>%
+        select(org2:org4) %>%
+        as_vector()
+      # Fill in org1 to complte org intercept.
+      X_s[p, "org1"] <- ifelse(sum(X_p) == 1, 0, 1)
+    }
+    # Save modified design, including outside option.
+    X[n, s,,] <- rbind(X_s, rep(0, ncol(X_s))) %>% as.matrix()
+  }
+}
+```
+
+
 # Save clean data with transformations
 
 ```{r save-clean-data}
 write_rds(data, here("data", "derived_data", "final_data.rds"))
+write_rds(X, here("data", "derived_data", "final_design.rds"))
 ```
 
 <!-- select(-c("732d72a6-25a3-4194-8416-461acae30837.1.1_CBCONJOINT":"revision_CBCONJOINT")) -->
