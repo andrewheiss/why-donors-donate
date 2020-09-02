@@ -277,6 +277,13 @@ data <- data %>%
     vars(contains("Q2.3")), coalesce, 0
   ) %>%
   mutate(
+    Q2.3_1 = factor(Q2.3_1, labels = c("No TV", "TV")),
+    Q2.3_2 = factor(Q2.3_2, labels = c("No Print", "Print")),
+    Q2.3_3 = factor(Q2.3_3, labels = c("No Online (excluding social media)", "Online (excluding social media)")),
+    Q2.3_4 = factor(Q2.3_4, labels = c("No Social media", "Social media")),
+    Q2.3_5 = factor(Q2.3_5, labels = c("No Radio", "Radio")),
+    Q2.3_6 = factor(Q2.3_6, labels = c("No Email newsletters", "Email newsletters")),
+    Q2.3_7 = factor(Q2.3_7, labels = c("No News app", "News app")),
     # *Q2.4*: How often would you say you follow what's going on in government and public affairs?
     # 
     # - Most of the time → Often
