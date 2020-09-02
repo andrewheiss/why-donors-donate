@@ -575,11 +575,10 @@ textInput("p1_id",
 # Need to Fix
 selectInput("p1_national_news",
          label = "Follow national news:",
-         choices = c('Multiple times a day',
-                     'Every day',
+         choices = c("Atleast once a day",
                      "Once a week",
-                     "Hardly ever",
-                     "Never"))
+                     "Rarely"
+                     ))
 
 # Need to Fix
 selectInput("p1_international_news",
