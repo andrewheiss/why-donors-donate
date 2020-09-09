@@ -98,11 +98,9 @@ beta_persona <- as.data.frame(matrix(rep(0), nrow = 61))
 
 beta_persona$levels = c("Intercept",
                         # Follow National News
-                        "Rarely", 
                         "Once a Week",
                         "At least once a day",
                         # Follow International News
-                        "Never",
                         "Sometimes",
                         "Always",
                         # News Mediums
@@ -114,19 +112,35 @@ beta_persona$levels = c("Intercept",
                         "Email",
                         "News app",
                         # Follow Government or Public Affairs
-                        "", 
-                        # Travel to Countries
-                        "Doesn't Travel", 
+                        "Often", 
+                        # Travel to developing Countries
+                        "Yes", 
                         # Political Preference
-                        "Political Preference", 
+                        "Somewhat Liberal",
+                        "Slightly Liberal",
+                        "Moderate",
+                        "Slightly Conservative",
+                        "Somewhat Conservative",
+                        "Extremely Conservative",
                         # Trust in Political Institute
-                        "Trust in Political Institutions",
+                        "Very little trust",
+                        "Little trust",
+                        "Nuetral",
+                        "Some trust",
+                        "A lot of trust",
+                        "Complete trust",
                         # Should Others be Charitable
-                        "Others Should be Charitable",
-                        # Worship Service Attendence
-                        "Worship Service Attendence",
+                        "Disagree",
+                        "Somewhat Disagree",
+                        "Nuetral",
+                        "Somewhat Agree",
+                        "Agree",
+                        "Strongly Agree",
+                        # Worship Service Attendance
+                        "Rarely",
+                        "At least once a month",
                         # Religious Importance
-                        "Religious Importance",
+                        "Important",
                         # Religion
                         "Protestant",
                         "Christian Orthodox",
@@ -138,17 +152,32 @@ beta_persona$levels = c("Intercept",
                         "Atheist",
                         "Other (Religion)",
                         # Charity Trust Importance
-                        "Chartiy Trust Importance",
+                        "Very Unimportant",
+                        "Somewhat Unimportant",
+                        "Nuetral",
+                        "Somewhat Important",
+                        "Very Important",
+                        "Essential",
                         # Trust in Charities
-                        "Trust in Charity", 
+                        "Very little trust",
+                        "Little trust",
+                        "Nuetral",
+                        "Some trust",
+                        "A lot of trust",
+                        "Complete trust",
                         # Donation Frequency
-                        "Donation Frequency", 
+                        "At least once a month", 
                         # Donation Amount
-                        "Donation Amount",
+                        "$50-$99",
+                        "$100-$499",
+                        "$500-$999",
+                        "$1,000-$4,999",
+                        "$5,000-$9,999",
+                        "$10,000 +",
                         # Volunteered last 12 months
-                        "Not Volunteered",
+                        "Yes",
                         # Volunteer Frequency
-                        "Volunteer Frequency",
+                        "Rarely",
                         # Personal Activism
                         "Personal Activism",
                         # Family Activism
