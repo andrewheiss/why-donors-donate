@@ -178,30 +178,42 @@ beta_persona$levels = c("Intercept",
                         "Yes",
                         # Volunteer Frequency
                         "Rarely",
+                        "More than once a month, less than once a year",
+                        "Atleast once a month",
                         # Personal Activism
-                        "Personal Activism",
+                        "Involved",
                         # Family Activism
-                        "Family Activism",
-                        # Relgious Membership
-                        "Religious Membership", 
+                        "Involved",
+                        # Religious Membership
+                        "Inactive Member",
+                        "Active Member",
                         # Sport or Recreational Membership
-                        "Sport or Recreational Membership", 
+                        "Inactive Member",
+                        "Active Member", 
                         # Art, Music, or Educational Membership
-                        "Art, Music, or Educational Membership",
+                        "Inactive Member",
+                        "Active Member",
                         # Labor Union Membership
-                        "Labor Union Membership",
+                        "Inactive Member",
+                        "Active Member",
                         # Political Party Membership
-                        "Political Party Membership",
+                        "Inactive Member",
+                        "Active Member",
                         # Environmental Organization Membership
-                        "Environmental Organization Membership",
+                        "Inactive Member",
+                        "Active Member",
                         # Professional Association
-                        "Professional Association", 
+                        "Inactive Member",
+                        "Active Member",
                         # Humanitarian or Charity Membership
-                        "Humanitarian or Charity Membership",
+                        "Inactive Member",
+                        "Active Member",
                         # Consumer Organization Membership
-                        "Consumer Organization Membership",
+                        "Inactive Member",
+                        "Active Member",
                         #Other Organization Membership
-                        "Other Organization Membership",
+                        "Inactive Member",
+                        "Active Member",
                         # Gender
                         "Female",
                         "Transgender",
@@ -213,9 +225,14 @@ beta_persona$levels = c("Intercept",
                         "Separated",
                         "Never Married",
                         # Education
-                        "Education", 
+                        "Highschool Graduate", 
+                        "Some College",
+                        "2 Year College",
+                        "4 Year College",
+                        "Graduate or Professional Degree",
+                        "Doctorate",
                         # Income
-                        "Income", 
+                        "More than Median - $61,372", 
                         # Race
                         "White", 
                         "Black", 
@@ -224,14 +241,10 @@ beta_persona$levels = c("Intercept",
                         "Pacific Islander", 
                         "Other (Race)", 
                         # Age
-                        "Age")
+                        "More than Median - 36")
 
 
 # p reactive element ----
-
-p1_politic_pref <- reactive({
-  max(input$p1_political_pref)
-})
 
 p <- reactive({
   
