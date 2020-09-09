@@ -753,22 +753,16 @@ selectInput("p1_charity_importance",
 # Need to Fix
 selectInput("p1_trust_in_charity",
             label = "Charity Trust:",
-            choices = c("0", '1', '2', '3','4','5','6','7'))
+            choices = c("Very little Trust"))
 
-# Need to Fix
-
+# Double Check this one
 selectInput("p1_donation_frequency",
          label = "Donation Frequency:",
-         choices = c('Once a week',
-                     'Once a Month',
-                     'Once every three months',
-                     'Once every six months',
-                     'Once a year',
-                     'Once every few years',
-                     'Never'))
+         choices = c('Rarely',
+                     'Atleast once a month'))
 
 
-# Need to Fix
+
 selectInput("p1_donation_amount",
          label = "Donation Amount:",
          choices = c("$1-$49",
@@ -779,110 +773,102 @@ selectInput("p1_donation_amount",
                      '$5,000-$9,999',
                      '$10,000+'))
 
-
+# Need to Change the Inputs
 selectInput("p1_volunteer_12",
          label = "Volunteered in last 12 Months:",
-         choices = c("Volunteered", "Not Volunteered"))
+         choices = c("No", "Yes"))
 
 
 # Need to Fix
 selectInput("p1_volunteer_frequency",
          label = "Volunteer Frequency:",
-         choices = c('Once a week',
-                     'Once a Month',
-                     'Once every three months',
-                     'Once every six months',
-                     'Once a year',
-                     'Once every few years'))
+         choices = c("Haven't Volunteered",
+                     "Rarely",
+                     "More than once a month, less than once a year",
+                     "At least once a month"))
 
 # Need to Fix
 selectInput("p1_personal_activism",
          label = "Personal Activism:",
-         choices = c('Extremely involved',
-                     'Very involved',
-                     'Moderately involved',
-                     'Slightly involved',
-                     'Never involved'))
+         choices = c('Not Involved',
+                     'Involved'))
 
 # Need to Fix
 selectInput("p1_family_activism",
          label = "Family Activism:",
-         choices = c('Extremely involved',
-                     'Very involved',
-                     'Moderately involved',
-                     'Slightly involved',
-                     'Never involved'))
+         choices = c('Not Involved',
+                     'Involved'))
 
 # Need to Fix
 selectInput("p1_religious_member",
          label = "Church Membership:",
-         choices = c('Active Member',
+         choices = c("Don't belong",
                      'Inactive Member',
-                     "Don't belong"))
+                     'Active Member'))
 
 # Need to Fix
 selectInput("p1_sport_member",
          label = "Sport or Recreational Membership:",
-         choices = c('Active Member',
+         choices = c("Don't belong",
                      'Inactive Member',
-                     "Don't belong"))
+                     'Active Member'))
 
 # Need to Fix
 selectInput("p1_art_member",
          label = "Art, Music, or Educational Membership:",
-         choices = c('Active Member',
+         choices = c("Don't belong",
                      'Inactive Member',
-                     "Don't belong"))
+                     'Active Member'))
 
 # Need to Fix
 selectInput("p1_labor_member",
          label = "Labor Union Membership:",
-         choices = c('Active Member',
+         choices = c("Don't belong",
                      'Inactive Member',
-                     "Don't belong"))
+                     'Active Member'))
 
 # Need to Fix
 selectInput("p1_political_member",
          label = "Political Party Membership:",
-         choices = c('Active Member',
+         choices = c("Don't belong",
                      'Inactive Member',
-                     "Don't belong"))
+                     'Active Member'))
 
 # Need to Fix
 selectInput("p1_environmental_member",
          label = "Enviornmental Org. Membership:",
-         choices = c('Active Member',
+         choices = c("Don't belong",
                      'Inactive Member',
-                     "Don't belong"))
+                     'Active Member'))
 
 # Need to Fix
 selectInput("p1_professional_member",
          label = "Professional Membership:",
-         choices = c('Active Member',
+         choices = c("Don't belong",
                      'Inactive Member',
-                     "Don't belong"))
+                     'Active Member'))
 
 # Need to Fix
 selectInput("p1_humanitarian_member",
          label = "Humanitarian Org. Membership:",
-         choices = c('Active Member',
+         choices = c("Don't belong",
                      'Inactive Member',
-                     "Don't belong"))
+                     'Active Member'))
 
 # Need to Fix
 selectInput("p1_consumer_member",
          label = "Consumer Org. Membership:",
-         choices = c('Active Member',
+         choices = c("Don't belong",
                      'Inactive Member',
-                     "Don't belong"))
+                     'Active Member'))
 
 
 # Need to Fix
 selectInput("p1_other_member",
          label = "Other Org. Membership:",
-         choices = c('Active Member',
+         choices = c("Don't belong",
                      'Inactive Member',
-                     "Don't belong"))
+                     'Active Member'))
 
 
 selectInput("p1_gender",
@@ -916,19 +902,7 @@ selectInput("p1_education",
 selectInput("p1_income",
          label = "Income:",
          choices = c('Less than $10,000',
-                     '$10,000 to $19,999',
-                     '$20,000 to $29,999',
-                     '$30,000 to $39,999',
-                     '$40,000 to $49,999',
-                     '$50,000 to $59,999',
-                     '$60,000 to $69,999',
-                     '$70,000 to $79,999',
-                     '$80,000 to $89,999',
-                     '$90,000 to $99,999',
-                     '$100,000 to $149,999',
-                     '$150,000 to $199,999',
-                     '$200,000 to $299,999',
-                     '$300,000 or more'))
+                     'More than Median (>$61,372)'))
 
 
 
