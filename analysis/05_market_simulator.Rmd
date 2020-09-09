@@ -241,7 +241,7 @@ beta_persona$levels = c("Intercept",
                         "Pacific Islander", 
                         "Other (Race)", 
                         # Age
-                        "More than Median - 36")
+                        "More than Median (> 36)")
 
 
 # p reactive element ----
@@ -905,12 +905,12 @@ selectInput("p1_marital_status",
 # Need to Fix
 selectInput("p1_education",
          label = "Education:",
-         choices = c("Less than high school",
-                     "High school",
-                     "Some college",
-                     "2 year degree",
-                     "4 year degree",
-                     "Graduate degree",
+         choices = c("Less than Highschool",
+                     "Highschool Graduate",
+                     "Some College",
+                     "2 Year College",
+                     "4 Year College",
+                     "Graduate or Professional Degree",
                      "Doctorate"))
 # Need to Fix
 selectInput("p1_income",
@@ -945,15 +945,8 @@ selectInput("p1_race",
 # Need to Fix
 selectInput("p1_age",
          label = "Age:",
-         choices = c('Under 18',
-                     '18 - 24',
-                     '25 - 34',
-                     '35 - 44',
-                     '45 - 54',
-                     '55 - 64',
-                     '65 - 74',
-                     '75 - 84',
-                     '85 or older'))
+         choices = c('Less than Median Age (< 36)',
+                     "More than Median Age (> 36)"))
 
 
 ```
@@ -1263,15 +1256,8 @@ selectInput("p2_race",
 # Need to Fix
 selectInput("p2_age",
          label = "Age:",
-         choices = c('Under 18',
-                     '18 - 24',
-                     '25 - 34',
-                     '35 - 44',
-                     '45 - 54',
-                     '55 - 64',
-                     '65 - 74',
-                     '75 - 84',
-                     '85 or older'))
+         choices = c('Less than Median Age (< 36)',
+                     "More than Median Age (> 36)"))
 
 
 ```
@@ -1581,15 +1567,8 @@ selectInput("p3_race",
 # Need to Fix
 selectInput("p3_age",
          label = "Age:",
-         choices = c('Under 18',
-                     '18 - 24',
-                     '25 - 34',
-                     '35 - 44',
-                     '45 - 54',
-                     '55 - 64',
-                     '65 - 74',
-                     '75 - 84',
-                     '85 or older'))
+         choices = c('Less than Median Age (< 36)',
+                     "More than Median Age (> 36)"))
 
 
 ```
