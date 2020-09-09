@@ -97,8 +97,15 @@ df <- reactive({
 beta_persona <- as.data.frame(matrix(rep(0), nrow = 61))
 
 beta_persona$levels = c("Intercept",
-                        "Follow National News", 
-                        "Follow International News",
+                        # Follow National News
+                        "Rarely", 
+                        "Once a Week",
+                        "At least once a day",
+                        # Follow International News
+                        "Never",
+                        "Sometimes",
+                        "Always",
+                        # News Mediums
                         "TV",
                         "Print",
                         "Online (excluding social media)",
@@ -106,13 +113,21 @@ beta_persona$levels = c("Intercept",
                         "Radio",
                         "Email",
                         "News app",
-                        "Follow Government or Public Affairs", 
+                        # Follow Government or Public Affairs
+                        "", 
+                        # Travel to Countries
                         "Doesn't Travel", 
+                        # Political Preference
                         "Political Preference", 
+                        # Trust in Political Institute
                         "Trust in Political Institutions",
+                        # Should Others be Charitable
                         "Others Should be Charitable",
+                        # Worship Service Attendence
                         "Worship Service Attendence",
+                        # Religious Importance
                         "Religious Importance",
+                        # Religion
                         "Protestant",
                         "Christian Orthodox",
                         "Jewish",
@@ -122,41 +137,66 @@ beta_persona$levels = c("Intercept",
                         "Buddhist",
                         "Atheist",
                         "Other (Religion)",
+                        # Charity Trust Importance
                         "Chartiy Trust Importance",
+                        # Trust in Charities
                         "Trust in Charity", 
+                        # Donation Frequency
                         "Donation Frequency", 
+                        # Donation Amount
                         "Donation Amount",
+                        # Volunteered last 12 months
                         "Not Volunteered",
-                        "Volunteer Frequence",
+                        # Volunteer Frequency
+                        "Volunteer Frequency",
+                        # Personal Activism
                         "Personal Activism",
+                        # Family Activism
                         "Family Activism",
+                        # Relgious Membership
                         "Religious Membership", 
+                        # Sport or Recreational Membership
                         "Sport or Recreational Membership", 
+                        # Art, Music, or Educational Membership
                         "Art, Music, or Educational Membership",
+                        # Labor Union Membership
                         "Labor Union Membership",
+                        # Political Party Membership
                         "Political Party Membership",
+                        # Environmental Organization Membership
                         "Environmental Organization Membership",
+                        # Professional Association
                         "Professional Association", 
+                        # Humanitarian or Charity Membership
                         "Humanitarian or Charity Membership",
+                        # Consumer Organization Membership
                         "Consumer Organization Membership",
+                        #Other Organization Membership
                         "Other Organization Membership",
+                        # Gender
                         "Female",
                         "Transgender",
                         "Prefer not to say",
                         "Other (Gender)",
+                        # Marital Status
                         "Widowed",
                         "Divorced",
                         "Separated",
                         "Never Married",
+                        # Education
                         "Education", 
+                        # Income
                         "Income", 
+                        # Race
                         "White", 
                         "Black", 
                         "American Indian", 
                         "Asian", 
                         "Pacific Islander", 
                         "Other (Race)", 
+                        # Age
                         "Age")
+
 
 # p reactive element ----
 
