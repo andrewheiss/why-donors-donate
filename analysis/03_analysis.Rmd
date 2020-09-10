@@ -176,7 +176,7 @@ fit <- stan(
   seed = 42
 )
 run <- list(data = data, fit = fit)
-if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "intercept_noncentered.rds"))
+if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "intercept.rds"))
 if (public_affairs == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_affairs.rds"))
 if (political_ideology == 1) write_rds(run, here::here("analysis", "output", "model_runs", "political_ideology.rds"))
 if (social_views == 1) write_rds(run, here::here("analysis", "output", "model_runs", "social_views.rds"))
@@ -260,13 +260,13 @@ generated quantities {
 
 # Compute model fit and extract draws
 
-The following analysis follows specifying the model we'd like to evaluate. Note that the output of the model calibration is too large to push to GitHub.
+The following analysis follows specifying the model we'd like to evaluate. Note that the output of the model calibration is too large to push to GitHub, but we can push the draws once we extract them.
 
 ## Load model output
 
 ```{r load-data-output, warning=FALSE, message=FALSE, eval=FALSE}
 # Load all model output
-intercept_run <- read_rds(here::here("analysis", "output", "model_runs", "intercept_noncentered.rds"))
+intercept_run <- read_rds(here::here("analysis", "output", "model_runs", "intercept.rds"))
 public_affairs_run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
 political_ideology_run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
 social_views_run <- read_rds(here::here("analysis", "output", "model_runs", "social_views.rds"))
@@ -336,7 +336,7 @@ write_rds(model_fit, here::here("analysis", "output", "model_fit.rds"))
 ## Load model fit and extract and save draws
 
 ```{r extract-draws, eval=FALSE}
-intercept <- 1                            # Intercept-only
+intercept <- 0                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
@@ -345,10 +345,10 @@ demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
-public_political_social_charity_demo <- 0 # + Demographics
+public_political_social_charity_demo <- 1 # + Demographics
 
 # Load and extract data and model output
-if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept_noncentered.rds"))
+if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept.rds"))
 if (public_affairs == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
 if (political_ideology == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
 if (social_views == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "social_views.rds"))
@@ -368,7 +368,7 @@ draws <- fit %>%
   filter(.iteration > 500)
 
 # Save draws
-if (intercept == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
+if (intercept == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept.rds"))
 if (public_affairs == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_affairs.rds"))
 if (political_ideology == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "political_ideology.rds"))
 if (social_views == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "social_views.rds"))
@@ -403,7 +403,7 @@ public_political_social_charity <- 0      # + Charity and voluntarism
 public_political_social_charity_demo <- 1 # + Demographics
 
 # Load draws
-if (intercept == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
+if (intercept == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "intercept.rds"))
 if (public_affairs == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_affairs.rds"))
 if (political_ideology == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "political_ideology.rds"))
 if (social_views == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "social_views.rds"))
