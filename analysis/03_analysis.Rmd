@@ -266,12 +266,12 @@ intercept <- 0                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
-charity_voluntarism <- 1                  # Charity and voluntarism
+charity_voluntarism <- 0                  # Charity and voluntarism
 demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
-public_political_social_charity_demo <- 0 # + Demographics
+public_political_social_charity_demo <- 1 # + Demographics
 
 # Load and extract data and model output (see model-calibration.R)
 if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept_noncentered.rds"))
@@ -294,18 +294,18 @@ fit <- run$fit
 ```{r model-checking}
 source(here::here("R", "stan_utility.R"))
 
-# Thetas
-draws_theta <- fit %>% 
+# Gamma
+draws_gamma <- fit %>% 
   extract(
-    pars = str_c("Theta[", 1:13, ",1]"),
+    pars = str_c("Gamma[", 1:13, ",1]"),
     inc_warmup = TRUE,
     permuted = FALSE
   )
 
-draws_theta %>% 
+draws_gamma %>% 
   mcmc_hist_by_chain()
 
-draws_theta %>% 
+draws_gamma %>% 
   mcmc_trace(
     n_warmup = 2000,
     facet_args = list(
@@ -314,20 +314,20 @@ draws_theta %>%
     )
   )
 
-# Extract the L_Omega parameters only and look at trace plots, etc.
+# Extract the Omega parameters only and look at trace plots, etc.
 
-# L_Omega
-draws_L_Omega <- fit %>% 
+# Omega
+draws_Omega <- fit %>% 
   extract(
-    regex_pars = c("L_Omega"),
+    regex_pars = c("Omega"),
     inc_warmup = TRUE,
     permuted = FALSE
   )
 
-draws_theta %>% 
+draws_gamma %>% 
   mcmc_hist_by_chain()
 
-draws_theta %>% 
+draws_gamma %>% 
   mcmc_trace(
     n_warmup = 2000,
     facet_args = list(
@@ -335,7 +335,6 @@ draws_theta %>%
       labeller = label_parsed
     )
   )
-
 
 # # Check diagnostics
 # check_all_diagnostics(fit)
@@ -357,7 +356,7 @@ fit %>%
     permuted = FALSE
   ) %>%
   mcmc_trace(
-    pars = str_c("Theta[", 1:13, ",1]"),
+    pars = str_c("Gamma[", 1:13, ",1]"),
     n_warmup = 2000,
     facet_args = list(
       nrow = 2, 
@@ -378,7 +377,7 @@ fit %>%
 ```{r extract-draws}
 # Extract posterior draws
 draws <- fit %>% 
-  spread_draws(Theta[i, j]) %>% 
+  spread_draws(Gamma[i, j]) %>% 
   ungroup() %>% 
   filter(.iteration > 500)
 
@@ -619,7 +618,7 @@ if (public_political_social_charity_demo == 1) {
 #     mutate(
 #       levels = factor(i, labels = level_labels)
 #     ) %>%
-#     ggplot(aes(x = Theta, y = levels)) + 
+#     ggplot(aes(x = Gamma, y = levels)) + 
 #     geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
 #     # geom_halfeyeh(.width = .95) +
 #     geom_vline(xintercept = 0, color = "grey") +
@@ -633,7 +632,7 @@ if (public_political_social_charity_demo == 1) {
 #       levels = factor(i, labels = level_labels), 
 #       covariates = factor(j, labels = covariate_labels)  
 #     ) %>%
-#     ggplot(aes(x = Theta, y = covariates)) +
+#     ggplot(aes(x = Gamma, y = covariates)) +
 #        geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
 #        # geom_halfeyeh(.width = .95) +
 #        geom_vline(xintercept = 0, color = "white") +
@@ -712,14 +711,14 @@ if (intercept != 1) {
     ) %>% 
     group_by(category, attribute, j_label) %>% 
     summarize(
-      mean = mean(Theta),
-      ci_lower = quantile(Theta, .025),
-      ci_upper = quantile(Theta, .975),
+      mean = mean(Gamma),
+      ci_lower = quantile(Gamma, .025),
+      ci_upper = quantile(Gamma, .975),
       gt_zero = if_else(ci_lower > 0 & ci_upper > 0, 1, 0),
       lt_zero = if_else(ci_lower < 0 & ci_upper < 0, -1, 0)
     )
   
-  # Heatmap of Theta matrix.
+  # Heatmap of Gamma matrix.
   plot_heatmap <- posterior_means %>% 
     mutate(
       gt_lt_zero = gt_zero + lt_zero,
