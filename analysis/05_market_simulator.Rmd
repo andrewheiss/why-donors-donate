@@ -106,22 +106,22 @@ beta_persona$levels = c("Intercept",
                         # News Mediums
                         "TV",
                         "Print",
-                        "Online (excluding social media)",
-                        "Social Media",
+                        "Online (not social media)",
+                        "Social media",
                         "Radio",
-                        "Email",
+                        "Email newsletter",
                         "News app",
                         # Follow Government or Public Affairs
                         "Often", 
                         # Travel to developing Countries
                         "Yes", 
                         # Political Preference
-                        "Somewhat Liberal",
-                        "Slightly Liberal",
+                        "Somewhat liberal",
+                        "Slightly liberal",
                         "Moderate",
-                        "Slightly Conservative",
-                        "Somewhat Conservative",
-                        "Extremely Conservative",
+                        "Slightly conservative",
+                        "Somewhat conservative",
+                        "Extremely conservative",
                         # Trust in Political Institute
                         "Very little trust",
                         "Little trust",
@@ -131,11 +131,11 @@ beta_persona$levels = c("Intercept",
                         "Complete trust",
                         # Should Others be Charitable
                         "Disagree",
-                        "Somewhat Disagree",
+                        "Somewhat disagree",
                         "Nuetral",
-                        "Somewhat Agree",
+                        "Somewhat agree",
                         "Agree",
-                        "Strongly Agree",
+                        "Strongly agree",
                         # Worship Service Attendance
                         "Rarely",
                         "At least once a month",
@@ -152,11 +152,11 @@ beta_persona$levels = c("Intercept",
                         "Atheist",
                         "Other (Religion)",
                         # Charity Trust Importance
-                        "Very Unimportant",
-                        "Somewhat Unimportant",
+                        "Very unimportant",
+                        "Somewhat unimportant",
                         "Nuetral",
-                        "Somewhat Important",
-                        "Very Important",
+                        "Somewhat important",
+                        "Very important",
                         "Essential",
                         # Trust in Charities
                         "Very little trust",
@@ -179,41 +179,41 @@ beta_persona$levels = c("Intercept",
                         # Volunteer Frequency
                         "Rarely",
                         "More than once a month, less than once a year",
-                        "Atleast once a month",
+                        "At least once a month",
                         # Personal Activism
                         "Involved",
                         # Family Activism
                         "Involved",
                         # Religious Membership
-                        "Inactive Member",
-                        "Active Member",
+                        "Inactive member",
+                        "Active member",
                         # Sport or Recreational Membership
-                        "Inactive Member",
-                        "Active Member", 
+                        "Inactive member",
+                        "Active member", 
                         # Art, Music, or Educational Membership
-                        "Inactive Member",
-                        "Active Member",
+                        "Inactive member",
+                        "Active member",
                         # Labor Union Membership
-                        "Inactive Member",
-                        "Active Member",
+                        "Inactive member",
+                        "Active member",
                         # Political Party Membership
-                        "Inactive Member",
-                        "Active Member",
+                        "Inactive member",
+                        "Active member",
                         # Environmental Organization Membership
-                        "Inactive Member",
-                        "Active Member",
+                        "Inactive member",
+                        "Active member",
                         # Professional Association
-                        "Inactive Member",
-                        "Active Member",
+                        "Inactive member",
+                        "Active member",
                         # Humanitarian or Charity Membership
-                        "Inactive Member",
-                        "Active Member",
+                        "Inactive member",
+                        "Active member",
                         # Consumer Organization Membership
-                        "Inactive Member",
-                        "Active Member",
+                        "Inactive member",
+                        "Active member",
                         #Other Organization Membership
-                        "Inactive Member",
-                        "Active Member",
+                        "Inactive member",
+                        "Active member",
                         # Gender
                         "Female",
                         "Transgender",
@@ -223,25 +223,25 @@ beta_persona$levels = c("Intercept",
                         "Widowed",
                         "Divorced",
                         "Separated",
-                        "Never Married",
+                        "Never married",
                         # Education
-                        "Highschool Graduate", 
-                        "Some College",
-                        "2 Year College",
-                        "4 Year College",
-                        "Graduate or Professional Degree",
+                        "Highschool graduate", 
+                        "Some college",
+                        "2 year college",
+                        "4 year college",
+                        "Graduate or orofessional degree",
                         "Doctorate",
                         # Income
-                        "More than Median - $61,372", 
+                        "More than median of $61,372", 
                         # Race
                         "White", 
-                        "Black", 
-                        "American Indian", 
+                        "Black or African American", 
+                        "American Indian or Alaska Native", 
                         "Asian", 
-                        "Pacific Islander", 
+                        "Native Hawaiian or Pacific Islander", 
                         "Other (Race)", 
                         # Age
-                        "More than Median (> 36)")
+                        "More than median age of 36")
 
 
 # p reactive element ----
@@ -654,52 +654,55 @@ textInput("p1_id",
           placeholder = "Enter Persona Name")
 
 
-# Need to Fix
+
 selectInput("p1_national_news",
          label = "Follow national news:",
-         choices = c("Atleast once a day",
+         choices = c("Rarely",
                      "Once a week",
-                     "Rarely"
-                     ))
+                     "Atleast once a day"))
 
-# Need to Fix
+
 selectInput("p1_international_news",
          label = "Follow international news:",
-         choices = c('Always',
+         choices = c("Never",
                      "Sometimes",
-                     "Never"))
+                     'Always'))
 
 
 selectInput("p1_news_medium",
          label = "Medium to follow news:",
          choices = c('TV',
                      'Print',
-                     "Online (excluding social media)",
-                     "Social Media",
+                     "Online (not social media)",
+                     "Social media",
                      "Radio",
-                     "Email",
+                     "Email newsletter",
                      "News app"),
          multiple = TRUE)
 
 
-# Need to Fix
+# Need to Check on Hold out
 selectInput("p1_follow_gov",
          label = "Follow government & public affairs:",
-         choices = c('Most of the time',
-                     'Some of the time',
-                     "Only now and then",
-                     "Hardly at all"))
+         choices = c("Not Often",
+                     "Often"))
 
 
 selectInput("p1_travel_developing",
          label = "Travel to developing country:",
-         choices = c('Does Travel', "Doesn't Travel"))
+         choices = c('No', "Yes"))
 
 
-# Need to Fix
+
 selectInput("p1_political_pref",
          label = "Political views from liberal to conservative:",
-         choices = c("0", '1', '2', '3','4','5','6','7'))
+         choices = c("Extremely liberal",
+                     "Somewhat liberal",
+                     "Slightly liberal",
+                     "Moderate",
+                     "Slightly conservative",
+                     "Somewhat conservative",
+                     "Extremely conservative"))
 
 # Need to Fix
 selectInput("p1_institution_trust",
