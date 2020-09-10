@@ -225,11 +225,11 @@ beta_persona$levels = c("Intercept",
                         "Separated",
                         "Never married",
                         # Education
-                        "Highschool graduate", 
+                        "High school graduate", 
                         "Some college",
-                        "2 year college",
-                        "4 year college",
-                        "Graduate or orofessional degree",
+                        "2 year degree",
+                        "4 year degree",
+                        "Graduate or professional degree",
                         "Doctorate",
                         # Income
                         "More than median of $61,372", 
@@ -676,7 +676,6 @@ selectInput("p1_news_medium",
                      "News app"),
          multiple = TRUE)
 
-# Need to Check on Hold out
 selectInput("p1_follow_gov",
          label = "Follow government & public affairs:",
          choices = c("Not Often",
@@ -717,10 +716,10 @@ selectInput("p1_others_charitable",
                      "Agree",
                      "Strongly Agree"))
 
-# Need to check hold out 
+
 selectInput("p1_worship_attendance",
          label = "Worship service attendance:",
-         choices = c("Never",
+         choices = c("Not sure",
                      "Rarely",
                      "At least once a month"))
 
@@ -743,10 +742,9 @@ selectInput("p1_religion",
                      'Atheist',
                      'Other (Religion)'))
 
-# Need to check hold out level
 selectInput("p1_charity_importance",
           label = "Charity Importance:",
-          choices = c("Hold out",
+          choices = c("Not at all important",
                       "Very unimportant",
                       "Somewhat unimportant",
                       "Nuetral",
@@ -754,7 +752,6 @@ selectInput("p1_charity_importance",
                       "Very important",
                       "Essential"))
 
-# Need to check hold out level
 selectInput("p1_trust_in_charity",
             label = "Charity Trust:",
             choices = c("No trust at all",
@@ -765,10 +762,9 @@ selectInput("p1_trust_in_charity",
                         "A lot of trust",
                         "Complete trust"))
 
-# Need to check hold out level
 selectInput("p1_donation_frequency",
          label = "Donation Frequency:",
-         choices = c('Rarely',
+         choices = c('More than once a month, less than once a year',
                      'Atleast once a month'))
 
 selectInput("p1_donation_amount",
@@ -781,15 +777,13 @@ selectInput("p1_donation_amount",
                      '$5,000-$9,999',
                      '$10,000+'))
 
-# Need to Change the Inputs
 selectInput("p1_volunteer_12",
          label = "Volunteered in last 12 Months:",
          choices = c("No", "Yes"))
 
-# Need to check hold out level
 selectInput("p1_volunteer_frequency",
          label = "Volunteer Frequency:",
-         choices = c("Haven't volunteered",
+         choices = c("Haven't volunteered in past 12 months",
                      "Rarely",
                      "More than once a month, less than once a year",
                      "At least once a month"))
@@ -882,11 +876,11 @@ selectInput("p1_marital_status",
 
 selectInput("p1_education",
          label = "Education:",
-         choices = c("Less than highschool",
-                     "Highschool graduate",
+         choices = c("Less than high school",
+                     "High school graduate",
                      "Some college",
-                     "2 year college",
-                     "4 year college",
+                     "2 year degree",
+                     "4 year degree",
                      "Graduate or professional degree",
                      "Doctorate"))
 
