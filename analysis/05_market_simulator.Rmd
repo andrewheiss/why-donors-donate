@@ -653,21 +653,17 @@ textInput("p1_id",
           value = "Persona 1",
           placeholder = "Enter Persona Name")
 
-
-
 selectInput("p1_national_news",
          label = "Follow national news:",
          choices = c("Rarely",
                      "Once a week",
                      "Atleast once a day"))
 
-
 selectInput("p1_international_news",
          label = "Follow international news:",
          choices = c("Never",
                      "Sometimes",
                      'Always'))
-
 
 selectInput("p1_news_medium",
          label = "Medium to follow news:",
@@ -680,19 +676,15 @@ selectInput("p1_news_medium",
                      "News app"),
          multiple = TRUE)
 
-
 # Need to Check on Hold out
 selectInput("p1_follow_gov",
          label = "Follow government & public affairs:",
          choices = c("Not Often",
                      "Often"))
 
-
 selectInput("p1_travel_developing",
          label = "Travel to developing country:",
          choices = c('No', "Yes"))
-
-
 
 selectInput("p1_political_pref",
          label = "Political views from liberal to conservative:",
@@ -704,36 +696,39 @@ selectInput("p1_political_pref",
                      "Somewhat conservative",
                      "Extremely conservative"))
 
-# Need to Fix
+# Need to check hold out level
 selectInput("p1_institution_trust",
          label = "Political institution trust from none to complete:",
-         choices = c("0", '1', '2', '3','4','5','6','7'))
+         choices = c("No trust at all",
+                     "Very little trust",
+                     "Little trust",
+                     "Nuetral",
+                     "Some trust",
+                     "A lot of trust",
+                     "Complete trust"))
 
-
-# Need to Fix
 selectInput("p1_others_charitable",
          label = "People should be more charitable:",
-         choices = c("0", '1', '2', '3','4','5','6','7'))
+         choices = c("Strongly Disagree",
+                     "Disagree",
+                     "Somewhat disagree",
+                     "Nuetral",
+                     "Somewhat agree",
+                     "Agree",
+                     "Strongly Agree"))
 
-# Need to Fix
+# Need to check hold out 
 selectInput("p1_worship_attendance",
          label = "Worship service attendance:",
-         choices = c('Multiple times a week',
-                     'Once a week',
-                     "Once a month",
-                     "Few times a year",
-                     "Once a year",
-                     "Never"))
+         choices = c("Never",
+                     "Rarely",
+                     "At least once a month"))
 
-# Need to Fix
+# Need to check hold out
 selectInput("p1_religion_importance",
          label = "Importance of religion:",
-         choices = c('Extremely important',
-                     'Very important',
-                     'Moderately important',
-                     'Slightly important',
-                     'Not at all important'))
-
+         choices = c("Not important",
+                     "Important"))
 
 selectInput("p1_religion",
          label = "Religion:",
@@ -748,23 +743,33 @@ selectInput("p1_religion",
                      'Atheist',
                      'Other (Religion)'))
 
-# Need to Fix
+# Need to check hold out level
 selectInput("p1_charity_importance",
           label = "Charity Importance:",
-          choices = c("0", '1', '2', '3','4','5','6','7'))
+          choices = c("Hold out",
+                      "Very unimportant",
+                      "Somewhat unimportant",
+                      "Nuetral",
+                      "Somewhat important",
+                      "Very important",
+                      "Essential"))
 
-# Need to Fix
+# Need to check hold out level
 selectInput("p1_trust_in_charity",
             label = "Charity Trust:",
-            choices = c("Very little Trust"))
+            choices = c("No trust at all",
+                        "Very little trust",
+                        "Little trust",
+                        "Nuetral",
+                        "Some trust",
+                        "A lot of trust",
+                        "Complete trust"))
 
-# Double Check this one
+# Need to check hold out level
 selectInput("p1_donation_frequency",
          label = "Donation Frequency:",
          choices = c('Rarely',
                      'Atleast once a month'))
-
-
 
 selectInput("p1_donation_amount",
          label = "Donation Amount:",
@@ -781,98 +786,83 @@ selectInput("p1_volunteer_12",
          label = "Volunteered in last 12 Months:",
          choices = c("No", "Yes"))
 
-
-# Need to Fix
+# Need to check hold out level
 selectInput("p1_volunteer_frequency",
          label = "Volunteer Frequency:",
-         choices = c("Haven't Volunteered",
+         choices = c("Haven't volunteered",
                      "Rarely",
                      "More than once a month, less than once a year",
                      "At least once a month"))
 
-# Need to Fix
 selectInput("p1_personal_activism",
          label = "Personal Activism:",
-         choices = c('Not Involved',
+         choices = c('Not involved',
                      'Involved'))
 
-# Need to Fix
 selectInput("p1_family_activism",
          label = "Family Activism:",
-         choices = c('Not Involved',
+         choices = c('Not involved',
                      'Involved'))
 
-# Need to Fix
 selectInput("p1_religious_member",
          label = "Church Membership:",
          choices = c("Don't belong",
-                     'Inactive Member',
-                     'Active Member'))
+                     'Inactive member',
+                     'Active member'))
 
-# Need to Fix
 selectInput("p1_sport_member",
          label = "Sport or Recreational Membership:",
          choices = c("Don't belong",
-                     'Inactive Member',
-                     'Active Member'))
+                     'Inactive member',
+                     'Active member'))
 
-# Need to Fix
 selectInput("p1_art_member",
          label = "Art, Music, or Educational Membership:",
          choices = c("Don't belong",
-                     'Inactive Member',
-                     'Active Member'))
+                     'Inactive member',
+                     'Active member'))
 
-# Need to Fix
 selectInput("p1_labor_member",
          label = "Labor Union Membership:",
          choices = c("Don't belong",
-                     'Inactive Member',
-                     'Active Member'))
+                     'Inactive member',
+                     'Active member'))
 
-# Need to Fix
 selectInput("p1_political_member",
          label = "Political Party Membership:",
          choices = c("Don't belong",
-                     'Inactive Member',
-                     'Active Member'))
+                     'Inactive member',
+                     'Active member'))
 
-# Need to Fix
 selectInput("p1_environmental_member",
          label = "Enviornmental Org. Membership:",
          choices = c("Don't belong",
-                     'Inactive Member',
-                     'Active Member'))
+                     'Inactive member',
+                     'Active member'))
 
-# Need to Fix
 selectInput("p1_professional_member",
          label = "Professional Membership:",
          choices = c("Don't belong",
-                     'Inactive Member',
-                     'Active Member'))
+                     'Inactive member',
+                     'Active member'))
 
-# Need to Fix
 selectInput("p1_humanitarian_member",
          label = "Humanitarian Org. Membership:",
          choices = c("Don't belong",
-                     'Inactive Member',
-                     'Active Member'))
+                     'Inactive member',
+                     'Active member'))
 
-# Need to Fix
 selectInput("p1_consumer_member",
          label = "Consumer Org. Membership:",
          choices = c("Don't belong",
-                     'Inactive Member',
-                     'Active Member'))
+                     'Inactive member',
+                     'Active member'))
 
-
-# Need to Fix
 selectInput("p1_other_member",
          label = "Other Org. Membership:",
          choices = c("Don't belong",
-                     'Inactive Member',
-                     'Active Member'))
-
+                     'Inactive member',
+                     'Active member'))
 
 selectInput("p1_gender",
          label = "Gender:",
@@ -882,7 +872,6 @@ selectInput("p1_gender",
                      "Prefer not to say",
                      "Other (Gender)"))
 
-
 selectInput("p1_marital_status",
          label = "Marital Status:",
          choices = c("Married",
@@ -891,23 +880,20 @@ selectInput("p1_marital_status",
                      "Separated",
                      "Never married"))
 
-# Need to Fix
 selectInput("p1_education",
          label = "Education:",
-         choices = c("Less than Highschool",
-                     "Highschool Graduate",
-                     "Some College",
-                     "2 Year College",
-                     "4 Year College",
-                     "Graduate or Professional Degree",
+         choices = c("Less than highschool",
+                     "Highschool graduate",
+                     "Some college",
+                     "2 year college",
+                     "4 year college",
+                     "Graduate or professional degree",
                      "Doctorate"))
-# Need to Fix
+
 selectInput("p1_income",
          label = "Income:",
-         choices = c('Less than $10,000',
-                     'More than Median (>$61,372)'))
-
-
+         choices = c('Less than median of $61,372',
+                     'More than median of $61,372'))
 
 selectInput("p1_race",
          label = "Race(s):",
@@ -919,12 +905,10 @@ selectInput("p1_race",
                      'Other (Race)'),
          multiple = TRUE)
 
-# Need to Fix
 selectInput("p1_age",
          label = "Age:",
-         choices = c('Less than Median Age (< 36)',
-                     "More than Median Age (> 36)"))
-
+         choices = c('Less than median age of 36',
+                     "More than median age of 36"))
 
 ```
 
