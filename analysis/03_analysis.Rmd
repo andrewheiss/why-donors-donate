@@ -381,17 +381,14 @@ if (public_political_social_charity_demo == 1) write_rds(draws, here::here("anal
 ```
 
 
-# Load draws and plot marginals and contrasts
+# Load draws and plot marginals, contrasts, and heatmaps
 
-```{r plot-marginals}
-#########
+Now that we have the draws extracted, we can load draws from the model of interest and plot marginals, contrasts, and heatmaps.
 
-# Update covariate labels
-# Add contrasts where appropriate (see hypotheses Rmd documents)
+## Load draws and assign labels
 
-#########
-
-intercept <- 0                            # Intercept-only
+```{r load-draws}
+intercept <- 1                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
@@ -400,7 +397,7 @@ demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
-public_political_social_charity_demo <- 1 # + Demographics
+public_political_social_charity_demo <- 0 # + Demographics
 
 # Load draws
 if (intercept == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "intercept.rds"))
@@ -414,7 +411,7 @@ if (public_political_social == 1) draws <- read_rds(here::here("analysis", "outp
 if (public_political_social_charity == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_political_social_charity.rds"))
 if (public_political_social_charity_demo == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_political_social_charity_demo.rds"))
 
-# Name labels
+# Assign level labels
 level_labels <- c(
   str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
   str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief")),
@@ -424,241 +421,267 @@ level_labels <- c(
   str_c("Relationship with host government: ", c("Criticized", "Under crackdown"))
 )
 
-# Name covariates
-if (public_affairs == 1) {
-  covariate_labels <- c(
-    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
-    str_c(
-      "Medium to follow news: ", 
-      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
-    ),
-    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: No"
-  )
-}
-if (political_ideology == 1) {
-  covariate_labels <- c(
-    "Liberal to Conservative"
-  )
-}
-if (social_views == 1) {
-  covariate_labels <- c(
-    "Trust in political institutions: None to Complete", "People should be more charitable: Agree to Disagree",
-    "Religious and worship service attendance: Multiple times a week to Never", "Importance of religion: Extremely to Not at all",
-    str_c(
-      "Religion: ", 
-      c("Protestant", "Christian Orthodox", "Jewish", "Muslim", "Sikh", "Hindu", "Buddhist", "Atheist", "Other")
+# Assign covariate covariates
+public_affairs_labels <- c(
+  # *Q2.1*: How often do you follow national news? 
+  str_c(
+    "Follow national news: ", 
+    c("Once a week", "At least once a day")
+  ),
+  # *Q2.3*: Which mediums do you use to follow news? (Select all that apply.)
+  str_c(
+    "Medium to follow news: ", 
+    c(
+      "TV", "Print", "Online (excluding social media)", "Social media", 
+      "Radio", "Email newsletters", "News app"
+    )
+  ),
+  # *Q2.4*: How often would you say you follow what's going on in government and public affairs?
+  "Follow government and public affairs: Often", 
+  # *Q5.7*: Have you ever traveled to a developing country? 
+  "Traveled to a developing country: No"
+)
+political_ideology_labels <- c(
+  # *Q5.2*: On a scale of extremely liberal (1) to extremely conservative (7), how would you describe your political views?
+  str_c(
+    "Liberal to Conservative: ", 
+    c(
+      "Somewhat liberal", "Slightly liberal", "Moderate",
+      "Slightly conservative", "Somewhat conservative", "Extremely conservative"
     )
   )
-}
-if (charity_voluntarism == 1) {
-  covariate_labels <- c(
-    "Importance of trusing charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
-    "Donated last year: $1-$49 to $10,000 or more", "Volunteered in past 12 months: No", "Volunteer frequency: Weekly to Every few years",
-    "History of activism: Extreme to Never", "History of family activism: Extreme to Never", 
-    str_c(
-      c(
-        "Church or religious organization: ", "Sport or recreational organization: ", "Art, music, or educational organization: ",
-        "Labor union: ", "Political party: ", "Environmental organization: ", "Professional association: ", 
-        "Humanitarian or charitable organization: ", "Consumer organization: ", "Other organization: "
-      ), 
-      "Member to Not"
+)
+social_views_labels <- c(
+  # *Q5.6*: On a scale of no trust (1) to complete trust (7), how much do you trust political institutions and the state?
+  str_c(
+    "Trust in political institutions: ", 
+    c(
+      "Very little trust", "Little trust", 
+      "Neutral", "Some trust", "A lot of trust", "Complete trust"
+    )
+  ),
+  # *Q5.11*: On a scale of strongly agree (1) to strongly disagree (7), rate your response to the following statement: People should be more charitable towards others in society.
+  str_c(
+    "People should be more charitable: ", 
+    c(
+      "Agree", "Somewhat agree", "Neutral", 
+      "Somewhat disagree", "Disagree", "Strongly disagree"
+    )
+  ),
+  # *Q5.8*: How often do you attend religious or worship services, not including weddings and funerals?
+  str_c(
+    "Religious and worship service attendance: ", 
+    c("Rarely", "At least once a month")
+  ),
+  # *Q5.9*: How important is religion in your life?
+  "Importance of religion: Important",
+  # *Q5.10*: What is your current religion, if any?
+  str_c(
+    "Religion: ", 
+    c(
+      "Protestant", "Christian Orthodox", "Jewish", "Muslim", 
+      "Sikh", "Hindu", "Buddhist", "Atheist", "Other"
     )
   )
-}
-if (demographics == 1) {
-  covariate_labels <- c(
-    str_c(
-      "Gender: ", 
-      c("Female", "Transgender", "Prefer not to say", "Other")
-    ), 
-    str_c(
-      "Marital status: ", 
-      c("Widowed", "Divorced", "Separated", "Never married")
-    ), 
-    "Education: Less than high school to Doctorate",
-    "Income: Less than $10,000 to $300,000 or more",
-    str_c(
-      "Race/ethnicity: ", 
-      c("White", "Black or African American", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Pacific Islander", "Other")
-    ),
-    "Age: Under 18 to 85 or older"
+)
+charity_voluntarism_labels <- c(
+  # *Q2.7*: On a scale of not at all important (1) to essential (7), how important is it for you to trust charities?
+  str_c(
+    "Importance of trusing charities: ", 
+    c(
+      "Very unimportant", "Somewhat unimportant", 
+      "Neutral", "Somewhat important", "Very important", "Essential"
+    )
+  ),
+  # *Q2.8*: On a scale of no trust at all (1) to complete trust (7), how much do you trust charities?
+  str_c(
+    "Trust in charities: ", 
+    c(
+      "Very little trust", "Little trust", 
+      "Neutral", "Some trust", "A lot of trust", "Complete trust"
+    )
+  ),
+  # *Q2.5*: How often do you donate to charity (with either cash or in-kind)?
+  "Donation frequency: At least once a month",
+  # *Q2.6*: How much did you donate to charity last year?
+  str_c(
+    "Donated last year: ",
+    c(
+      "$50-$99", "$100-$499", "$500-$999", 
+      "$1000-$4,999", "$5000-$9,999", "$10,000+"
+    )
+  ),
+  # *Q2.9*: Have you volunteered in the past 12 months?
+  "Volunteered in past 12 months: Yes", 
+  # *Q2.10*: How often do you volunteer?
+  str_c(
+    "Volunteer frequency: ",
+    c("Rarely", "More than once a month, less than once a year", "At least once a month")
+  ),
+  # *Q5.4*: Historically, how involved have you been in activist causes?
+  "History of activism: Involved",
+  # *Q5.5*: Historically, how involved has your family been in activist causes?
+  "History of family activism: Involved",
+  # *Q5.3*: Here is a list of different types of voluntary organizations. For each organization, indicate whether you are an active member, an inactive member, or not a member of that type of organization:
+  str_c(
+    "Church or religious organization: ",
+    c("Inactive member", "Active member")
+  ),
+  str_c(
+    "Sport or recreational organization: ",
+    c("Inactive member", "Active member")
+  ),
+  str_c(
+    "Art, music, or educational organization: ",
+    c("Inactive member", "Active member")
+  ),
+  str_c(
+    "Labor union: ",
+    c("Inactive member", "Active member")
+  ),
+  str_c(
+    "Political party: ",
+    c("Inactive member", "Active member")
+  ),
+  str_c(
+    "Environmental organization: ",
+    c("Inactive member", "Active member")
+  ),
+  str_c(
+    "Professional association: ",
+    c("Inactive member", "Active member")
+  ),
+  str_c(
+    "Humanitarian or charitable organization: ",
+    c("Inactive member", "Active member")
+  ),
+  str_c(
+    "Consumer organization: ",
+    c("Inactive member", "Active member")
+  ),
+  str_c(
+    "Other organization: ",
+    c("Inactive member", "Active member")
   )
-}
+)
+demographics_labels <- c(
+  # *Q5.12*: What is your gender?
+  str_c(
+    "Gender: ", 
+    c("Female", "Transgender", "Prefer not to say", "Other")
+  ), 
+  # *Q5.13*: Are you now married, widowed, divorced, separated, or never married?
+  str_c(
+    "Marital status: ", 
+    c("Widowed", "Divorced", "Separated", "Never married")
+  ), 
+  # *Q5.14*: What is the highest degree or level of school you have completed?
+  str_c(
+    "Education: ", 
+    c(
+      "High school graduate", 
+      "Some college", "2 year degree", "4 year degree", 
+      "Graduate or professional degree", "Doctorate"
+    )
+  ), 
+  # *Q5.15*: What is your annual household income before taxes?
+  "Income: More than median",
+  # *Q5.16*: Choose one or more races that you consider yourself to be:
+  str_c(
+    "Race/ethnicity: ",
+    c(
+      "White", "Black or African American", "American Indian or Alaska Native", 
+      "Asian", "Native Hawaiian or Pacific Islander", "Other"
+    )
+  ),
+  # *Q5.17*: How old are you?
+  "Age: More than median"
+)
+if (public_affairs == 1) covariate_labels <- public_affairs_labels
+if (political_ideology == 1) covariate_labels <- political_ideology_labels
+if (social_views == 1) covariate_labels <- social_views_labels
+if (charity_voluntarism == 1) covariate_labels <- charity_voluntarism_labels
+if (demographics == 1) covariate_labels <- demographics_labels
 if (public_political == 1) {
-  covariate_labels <- c(
-    # Public affairs
-    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
-    str_c(
-      "Medium to follow news: ", 
-      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
-    ),
-    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: No",
-    # Political ideology
-    "Liberal to Conservative"
-  )
+  covariate_labels <- c(public_affairs_labels, political_ideology_labels)
 }
 if (public_political_social == 1) {
-  covariate_labels <- c(
-    # Public affairs
-    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
-    str_c(
-      "Medium to follow news: ", 
-      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
-    ),
-    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: No",
-    # Political ideology
-    "Liberal to Conservative",
-    # Social views
-    "Trust in political institutions: None to Complete", "People should be more charitable: Agree to Disagree",
-    "Religious and worship service attendance: Multiple times a week to Never", "Importance of religion: Extremely to Not at all",
-    str_c(
-      "Religion: ", 
-      c("Protestant", "Christian Orthodox", "Jewish", "Muslim", "Sikh", "Hindu", "Buddhist", "Atheist", "Other")
-    )
-  )
+  covariate_labels <- c(public_affairs_labels, political_ideology_labels, social_views_labels)
 }
 if (public_political_social_charity == 1) {
   covariate_labels <- c(
-    # Public affairs
-    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
-    str_c(
-      "Medium to follow news: ", 
-      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
-    ),
-    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: No",
-    # Political ideology
-    "Liberal to Conservative",
-    # Social views
-    "Trust in political institutions: None to Complete", "People should be more charitable: Agree to Disagree",
-    "Religious and worship service attendance: Multiple times a week to Never", "Importance of religion: Extremely to Not at all",
-    str_c(
-      "Religion: ", 
-      c("Protestant", "Christian Orthodox", "Jewish", "Muslim", "Sikh", "Hindu", "Buddhist", "Atheist", "Other")
-    ),
-    # Charity and voluntarism
-    "Importance of trusing charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
-    "Donated last year: $1-$49 to $10,000 or more", "Volunteered in past 12 months: No", "Volunteer frequency: Weekly to Every few years",
-    "History of activism: Extreme to Never", "History of family activism: Extreme to Never", 
-    str_c(
-      c(
-        "Church or religious organization: ", "Sport or recreational organization: ", "Art, music, or educational organization: ",
-        "Labor union: ", "Political party: ", "Environmental organization: ", "Professional association: ", 
-        "Humanitarian or charitable organization: ", "Consumer organization: ", "Other organization: "
-      ), 
-      "Member to Not"
-    )
+    public_affairs_labels, political_ideology_labels, 
+    social_views_labels, charity_voluntarism_labels
   )
 }
 if (public_political_social_charity_demo == 1) {
   covariate_labels <- c(
-    # Public affairs
-    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
-    str_c(
-      "Medium to follow news: ", 
-      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
-    ),
-    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: No",
-    # Political ideology
-    "Liberal to Conservative",
-    # Social views
-    "Trust in political institutions: None to Complete", "People should be more charitable: Agree to Disagree",
-    "Religious and worship service attendance: Multiple times a week to Never", "Importance of religion: Extremely to Not at all",
-    str_c(
-      "Religion: ", 
-      c("Protestant", "Christian Orthodox", "Jewish", "Muslim", "Sikh", "Hindu", "Buddhist", "Atheist", "Other")
-    ),
-    # Charity and voluntarism
-    "Importance of trusing charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
-    "Donated last year: $1-$49 to $10,000 or more", "Volunteered in past 12 months: No", "Volunteer frequency: Weekly to Every few years",
-    "History of activism: Extreme to Never", "History of family activism: Extreme to Never", 
-    str_c(
-      c(
-        "Church or religious organization: ", "Sport or recreational organization: ", "Art, music, or educational organization: ",
-        "Labor union: ", "Political party: ", "Environmental organization: ", "Professional association: ", 
-        "Humanitarian or charitable organization: ", "Consumer organization: ", "Other organization: "
-      ), 
-      "Member to Not"
-    ),
-    # Demographics
-    str_c(
-      "Gender: ", 
-      c("Female", "Transgender", "Prefer not to say", "Other")
-    ), 
-    str_c(
-      "Marital status: ", 
-      c("Widowed", "Divorced", "Separated", "Never married")
-    ), 
-    "Education: Less than high school to Doctorate",
-    "Income: Less than $10,000 to $300,000 or more",
-    str_c(
-      "Race/ethnicity: ", 
-      c("White", "Black or African American", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Pacific Islander", "Other")
-    ),
-    "Age: Under 18 to 85 or older"
+    public_affairs_labels, political_ideology_labels, 
+    social_views_labels, charity_voluntarism_labels, demographics_labels
   )
 }
-
-
-# # Create matrix of Gammas.
-# gamma_draws <- draws %>% 
-#   group_by(i, j) %>% 
-#   summarize(gamma_mean = mean(Gamma))
-# 
-# gamma_matrix <- matrix(as.matrix(gamma_draws)[,3], nrow = max(draws$j), ncol = max(draws$i))
-# write.csv(gamma_matrix, file = here::here("analysis", "output", "posterior_means.csv"))
-
-
-# Plot marginals
-# if (intercept == 1) {
-#   draws %>% 
-#     mutate(
-#       levels = factor(i, labels = level_labels)
-#     ) %>%
-#     ggplot(aes(x = Gamma, y = levels)) + 
-#     geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
-#     # geom_halfeyeh(.width = .95) +
-#     geom_vline(xintercept = 0, color = "grey") +
-#     labs(y = "Attribute Levels")
-# }
-
-# if (intercept != 1) {
-#   draws %>% 
-#     filter(j != 1) %>% 
-#     mutate(
-#       levels = factor(i, labels = level_labels), 
-#       covariates = factor(j, labels = covariate_labels)  
-#     ) %>%
-#     ggplot(aes(x = Gamma, y = covariates)) +
-#        geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
-#        # geom_halfeyeh(.width = .95) +
-#        geom_vline(xintercept = 0, color = "white") +
-#        labs(y = "Covariates") +
-#        facet_wrap(~ levels, ncol = 5)
-# }
-
-# # Save plot
-# if (intercept == 1) file_name <- paste("intercept_marginal-posteriors.png")
-# if (public_affairs == 1) file_name <- paste("public-affairs_marginal-posteriors.png")
-# if (political_ideology == 1) file_name <- paste("political-ideology_marginal-posteriors.png")
-# if (social_views == 1) file_name <- paste("social-views_marginal-posteriors.png")
-# if (charity_voluntarism == 1) file_name <- paste("charity-voluntarism_marginal-posteriors.png")
-# if (demographics == 1) file_name <- paste("demographics_marginal-posteriors.png")
-# if (public_political == 1) file_name <- paste("public-political_marginal-posteriors.png")
-# if (public_political_social == 1) file_name <- paste("public-political-social_marginal-posteriors.png")
-# if (public_political_social_charity == 1) file_name <- paste("public-political-social-charity_marginal-posteriors.png")
-# if (public_political_social_charity_demo == 1) file_name <- paste("public-political-social-charity-demos_marginal-posteriors.png")
-# ggsave(
-#   file_name,
-#   path = here::here("analysis", "output", "figures"),
-#   width = ifelse(intercept == 1, 12, 20), 
-#   height = ifelse(sum(intercept, public_affairs, political_ideology, social_views, charity_voluntarism, demographics) == 1, 12, 20), 
-#   units = "in"
-# )
 ```
 
-As an experiment, it might be helpful to use a heatmap to identify where there are significant differences in the non-intercept models, which can then be narrowed down using the marginal plots.
+## Plot marginals
 
-```{r heatmaps}
+```{r plot-marginals}
+# Plot marginals
+if (intercept == 1) {
+  draws %>%
+    mutate(
+      levels = factor(j, labels = level_labels)
+    ) %>%
+    ggplot(aes(x = Gamma, y = levels)) +
+    geom_halfeye(.width = .95) +
+    geom_vline(xintercept = 0, color = "grey") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+  draws %>%
+    filter(j != 1) %>%
+    mutate(
+      levels = factor(i, labels = level_labels),
+      covariates = factor(j, labels = covariate_labels)
+    ) %>%
+    ggplot(aes(x = Gamma, y = covariates)) +
+       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+       # geom_halfeyeh(.width = .95) +
+       geom_vline(xintercept = 0, color = "white") +
+       labs(y = "Covariates") +
+       facet_wrap(~ levels, ncol = 5)
+}
+
+# Save plot
+if (intercept == 1) file_name <- paste("intercept_marginal-posteriors.png")
+if (public_affairs == 1) file_name <- paste("public-affairs_marginal-posteriors.png")
+if (political_ideology == 1) file_name <- paste("political-ideology_marginal-posteriors.png")
+if (social_views == 1) file_name <- paste("social-views_marginal-posteriors.png")
+if (charity_voluntarism == 1) file_name <- paste("charity-voluntarism_marginal-posteriors.png")
+if (demographics == 1) file_name <- paste("demographics_marginal-posteriors.png")
+if (public_political == 1) file_name <- paste("public-political_marginal-posteriors.png")
+if (public_political_social == 1) file_name <- paste("public-political-social_marginal-posteriors.png")
+if (public_political_social_charity == 1) file_name <- paste("public-political-social-charity_marginal-posteriors.png")
+if (public_political_social_charity_demo == 1) file_name <- paste("public-political-social-charity-demos_marginal-posteriors.png")
+ggsave(
+  file_name,
+  path = here::here("analysis", "output", "figures"),
+  width = ifelse(intercept == 1, 12, 20),
+  height = ifelse(sum(intercept, public_affairs, political_ideology, social_views, charity_voluntarism, demographics) == 1, 12, 20),
+  units = "in"
+)
+```
+
+## Plot contrasts
+
+```{r plot-contrasts}
+
+```
+
+## Plot heatmaps
+
+Instead of plotting marginals or contrasts, we can use a heatmap to identify where there are significant differences in the non-intercept models, which can then be narrowed down using the marginal plots.
+
+```{r plot-heatmaps}
 if (public_affairs == 1) plot_title <- paste("Public Affairs")
 if (political_ideology == 1) plot_title <- paste("Political Ideology")
 if (social_views == 1) plot_title <- paste("Social Views")
