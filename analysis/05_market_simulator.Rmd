@@ -21,12 +21,10 @@ library(here)
 # Beta's of everything. The only model we care about right now
 public_political_social_charity_demo <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political_social_charity_demo.rds')) %>% 
   group_by(i, j) %>% 
-  summarize(theta_mean = mean(Theta)) %>% 
+  summarize(gamma_mean = mean(Gamma)) %>% 
   ungroup() %>% 
-  pivot_wider(names_from = j, values_from = theta_mean) %>% 
+  pivot_wider(names_from = j, values_from = gamma_mean) %>% 
   select(-i)
-
-posterior_means <- read.csv(here("analysis", "output", "posterior_means.csv"))
 
 # Persona Data from Market Simulator Workbook
 persona_data <- readxl::read_xlsx(here('analysis', 'output', "persona_configV06.xlsx"))
