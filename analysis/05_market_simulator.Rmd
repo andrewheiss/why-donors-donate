@@ -26,6 +26,8 @@ public_political_social_charity_demo <- readRDS(here('analysis', 'output', 'post
   pivot_wider(names_from = j, values_from = theta_mean) %>% 
   select(-i)
 
+posterior_means <- read.csv(here("analysis", "output", "posterior_means.csv"))
+
 # Persona Data from Market Simulator Workbook
 persona_data <- readxl::read_xlsx(here('analysis', 'output', "persona_configV06.xlsx"))
 
