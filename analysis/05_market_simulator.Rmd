@@ -396,7 +396,6 @@ p <- reactive({
 ```
 
 <!-- Practice Code -->
-
 ```{r practice code}
 
 #### this chunk is for testing code and making sure things work before adding it into the dashboard
@@ -516,11 +515,10 @@ p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona
 ```
 
 <!-- Main page Chart with All Personas -->
-
 Market Share
 --------------------------------------
 
-```{r plot all personas}
+```{r global plot}
 
 renderPlotly({
   org_choice = df()
@@ -611,7 +609,6 @@ renderPlotly({
 ```
 
 <!-- Persona and Organizational Tabs -->
-
 Personas And Organizations {.tabset .tabset-fade}
 --------------------------------------------------
 
