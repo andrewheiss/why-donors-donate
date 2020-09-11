@@ -640,12 +640,12 @@ selectInput("p1_international_news",
          label = "Follow international news:",
          choices = c("Never",
                      "Sometimes",
-                     'Always'))
+                     "Always"))
 
 selectInput("p1_news_medium",
          label = "Medium to follow news:",
-         choices = c('TV',
-                     'Print',
+         choices = c("TV",
+                     "Print",
                      "Online (not social media)",
                      "Social media",
                      "Radio",
@@ -690,7 +690,7 @@ selectInput("p1_others_charitable",
                      "Nuetral",
                      "Somewhat agree",
                      "Agree",
-                     "Strongly Agree"))
+                     "Strongly agree"))
 
 selectInput("p1_worship_attendance",
          label = "Worship service attendance:",
@@ -739,7 +739,7 @@ selectInput("p1_trust_in_charity",
 selectInput("p1_donation_frequency",
          label = "Donation Frequency:",
          choices = c('More than once a month, less than once a year',
-                     'Atleast once a month'))
+                     'At least once a month'))
 
 selectInput("p1_donation_amount",
          label = "Donation Amount:",
@@ -880,7 +880,6 @@ selectInput("p1_age",
 
 ```
 
-
 ### Persona 2
 
 ```{r persona 2 inputs}
@@ -950,7 +949,7 @@ selectInput("p2_others_charitable",
                      "Nuetral",
                      "Somewhat agree",
                      "Agree",
-                     "Strongly Agree"))
+                     "Strongly agree"))
 
 selectInput("p2_worship_attendance",
          label = "Worship service attendance:",
@@ -999,7 +998,7 @@ selectInput("p2_trust_in_charity",
 selectInput("p2_donation_frequency",
          label = "Donation Frequency:",
          choices = c('More than once a month, less than once a year',
-                     'Atleast once a month'))
+                     'At least once a month'))
 
 selectInput("p2_donation_amount",
          label = "Donation Amount:",
@@ -1140,7 +1139,6 @@ selectInput("p2_age",
 
 ```
 
-
 ### Persona 3
 
 ```{r persona 3 inputs}
@@ -1210,7 +1208,7 @@ selectInput("p3_others_charitable",
                      "Nuetral",
                      "Somewhat agree",
                      "Agree",
-                     "Strongly Agree"))
+                     "Strongly agree"))
 
 selectInput("p3_worship_attendance",
          label = "Worship service attendance:",
@@ -1259,7 +1257,7 @@ selectInput("p3_trust_in_charity",
 selectInput("p3_donation_frequency",
          label = "Donation Frequency:",
          choices = c('More than once a month, less than once a year',
-                     'Atleast once a month'))
+                     'At least once a month'))
 
 selectInput("p3_donation_amount",
          label = "Donation Amount:",
@@ -1439,7 +1437,6 @@ selectInput("ai_gov_relat",
                         "Criticized by government", 
                         "Under government crackdown"))
 
-
 ```
 
 ### Org 2
@@ -1450,8 +1447,7 @@ selectInput("ai_gov_relat",
 textInput("gp_id",
           label = "Organization Name",
           value = "Organization 2",
-          placeholder = "Enter Organiation Name"
-)
+          placeholder = "Enter Organiation Name")
 
 selectInput("gp_issue", 
             label = "Select Issue Area:",
@@ -1490,8 +1486,7 @@ selectInput("gp_gov_relat",
 textInput("ox_id",
           label = "Organization Name",
           value = "Organization 3",
-          placeholder = "Enter Organiation Name"
-)
+          placeholder = "Enter Organiation Name")
 
 
 selectInput("ox_issue", 
@@ -1531,8 +1526,7 @@ selectInput("ox_gov_relat",
 textInput("rc_id",
           label = "Organization Name",
           value = "Organization 4",
-          placeholder = "Enter Organiation Name"
-)
+          placeholder = "Enter Organiation Name")
 
 
 selectInput("rc_issue", 
