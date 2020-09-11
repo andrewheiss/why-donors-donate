@@ -19,6 +19,7 @@ library(donorheuristics)
 library(rstan)
 library(bayesplot)
 library(tidybayes)
+library(loo)
 library(ggridges)
 library(ggraph)
 library(ggdag)
@@ -38,7 +39,7 @@ rstan_options(auto_write = TRUE)
 
 # Model calibration
 
-After selecting the model we'd like to run, model calibration proceeds as follows. Note that model calibration is run in a separate R script given how long it takes to run each model. Model output can be loaded for analysis in the next section.
+After selecting the model we'd like to run, model calibration proceeds as follows. Note that model calibration is run in a separate R script given how long it takes to run each model.
 
 ```{r model-calibration, eval=FALSE}
 intercept <- 0                            # Intercept-only
@@ -175,7 +176,7 @@ fit <- stan(
   seed = 42
 )
 run <- list(data = data, fit = fit)
-if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "intercept_noncentered.rds"))
+if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "intercept.rds"))
 if (public_affairs == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_affairs.rds"))
 if (political_ideology == 1) write_rds(run, here::here("analysis", "output", "model_runs", "political_ideology.rds"))
 if (social_views == 1) write_rds(run, here::here("analysis", "output", "model_runs", "social_views.rds"))
@@ -187,7 +188,7 @@ if (public_political_social_charity == 1) write_rds(run, here::here("analysis", 
 if (public_political_social_charity_demo == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
 ```
 
-The model is calibrated using a non-centered parameterization of a hierarchical multinomial logit model.
+The model is calibrated using a non-centered parameterization of a hierarchical multinomial logit model. Each model passed diagnostics checks, including the absence of divergent transitions, as part of model calibration.
 
 ```{stan hmnl-noncentered, output.var="hmnl_noncentered", eval=FALSE}
 // Index values, hyperprior values, observations, and covariates.
@@ -257,11 +258,84 @@ generated quantities {
 ```
 
 
-# Load data and model output
+# Compute model fit and extract draws
 
-Once we specify the model we'd like to evaluate, the following analysis follows.
+The following analysis follows specifying the model we'd like to evaluate. Note that the output of the model calibration is too large to push to GitHub, but we can push the draws once we extract them.
 
-```{r load-data-output, warning=FALSE, message=FALSE}
+## Load model output
+
+```{r load-data-output, warning=FALSE, message=FALSE, eval=FALSE}
+# Load all model output
+intercept_run <- read_rds(here::here("analysis", "output", "model_runs", "intercept.rds"))
+public_affairs_run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
+political_ideology_run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
+social_views_run <- read_rds(here::here("analysis", "output", "model_runs", "social_views.rds"))
+charity_voluntarism_run <- read_rds(here::here("analysis", "output", "model_runs", "charity_voluntarism.rds"))
+demographics_run <- read_rds(here::here("analysis", "output", "model_runs", "demographics.rds"))
+public_political_run <- read_rds(here::here("analysis", "output", "model_runs", "public_political.rds"))
+public_political_social_run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social.rds"))
+public_political_social_charity_run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity.rds"))
+public_political_social_charity_demo_run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
+```
+
+## Compute model fit
+
+```{r compute-fit, eval=FALSE}
+# Compute fit using PSIS-LOO
+intercept_loo <- loo(intercept_run$fit, save_psis = TRUE)
+public_affairs_loo <- loo(public_affairs_run$fit, save_psis = TRUE)
+political_ideology_loo <- loo(political_ideology_run$fit, save_psis = TRUE)
+social_views_loo <- loo(social_views_run$fit, save_psis = TRUE)
+charity_voluntarism_loo <- loo(charity_voluntarism_run$fit, save_psis = TRUE)
+demographics_loo <- loo(demographics_run$fit, save_psis = TRUE)
+public_political_loo <- loo(public_political_run$fit, save_psis = TRUE)
+public_political_social_loo <- loo(public_political_social_run$fit, save_psis = TRUE)
+public_political_social_charity_loo <- loo(public_political_social_charity_run$fit, save_psis = TRUE)
+public_political_social_charity_demo_loo <- loo(public_political_social_charity_demo_run$fit, save_psis = TRUE)
+
+# Compare model fit
+loo_compare(intercept_loo, public_affairs_loo, political_ideology_loo, social_views_loo, charity_voluntarism_loo, demographics_loo, public_political_loo, public_political_social_loo, public_political_social_charity_loo, public_political_social_charity_demo_loo)
+```
+
+```
+        elpd_diff se_diff
+model1     0.0       0.0 
+model3   -23.5       8.6 
+model2   -37.5      12.9 
+model6   -54.0      15.6 
+model7   -70.2      15.4 
+model4   -74.4      16.6 
+model8  -163.9      23.6 
+model5  -174.4      24.6 
+model9  -401.3      38.4 
+model10 -518.3      44.6
+```
+
+The intercept-only model works best in terms of PSIS-LOO, followed by models with political ideology, public affairs and demographics covariates. While PSIS-LOO doesn't properly account for the specific benefits of a hierarchical model, it suggests that political ideology above all other covariate sets specified, has the most explanatory power.
+
+```{r save-fit, eval=FALSE}
+# Create data frame
+model_fit <- tibble(model = rep(NA, 10), elpd_loo = rep(NA, 10))
+
+# Extract PSIS-LOO fit
+model_fit$model[1] <- "intercept"; model_fit$loo[1] <- intercept_loo$elpd_loo
+model_fit$model[2] <- "public_affairs"; model_fit$loo[2] <- public_affairs_loo$elpd_loo
+model_fit$model[3] <- "political_ideology"; model_fit$loo[3] <- political_ideology_loo$elpd_loo
+model_fit$model[4] <- "social_views"; model_fit$loo[4] <- social_views_loo$elpd_loo
+model_fit$model[5] <- "charity_voluntarism"; model_fit$loo[5] <- charity_voluntarism_loo$elpd_loo
+model_fit$model[6] <- "demographics"; model_fit$loo[6] <- demographics_loo$elpd_loo
+model_fit$model[7] <- "public_political"; model_fit$loo[7] <- public_political_loo$elpd_loo
+model_fit$model[8] <- "public_political_social"; model_fit$loo[8] <- public_political_social_loo$elpd_loo
+model_fit$model[9] <- "public_political_social_charity"; model_fit$loo[9] <- public_political_social_charity_loo$elpd_loo
+model_fit$model[10] <- "public_political_social_charity_demo"; model_fit$loo[10] <- public_political_social_charity_demo_loo$elpd_loo
+
+# Save model output
+write_rds(model_fit, here::here("analysis", "output", "model_fit.rds"))
+```
+
+## Load model fit and extract and save draws
+
+```{r extract-draws, eval=FALSE}
 intercept <- 0                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
@@ -273,8 +347,8 @@ public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
 public_political_social_charity_demo <- 1 # + Demographics
 
-# Load and extract data and model output (see model-calibration.R)
-if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept_noncentered.rds"))
+# Load and extract data and model output
+if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept.rds"))
 if (public_affairs == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
 if (political_ideology == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
 if (social_views == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "social_views.rds"))
@@ -286,95 +360,7 @@ if (public_political_social_charity == 1) run <- read_rds(here::here("analysis",
 if (public_political_social_charity_demo == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
 data <- run$data
 fit <- run$fit
-```
 
-
-# Model checking
-
-```{r model-checking}
-source(here::here("R", "stan_utility.R"))
-
-# Gamma
-draws_gamma <- fit %>% 
-  extract(
-    pars = str_c("Gamma[", 1:13, ",1]"),
-    inc_warmup = TRUE,
-    permuted = FALSE
-  )
-
-draws_gamma %>% 
-  mcmc_hist_by_chain()
-
-draws_gamma %>% 
-  mcmc_trace(
-    n_warmup = 2000,
-    facet_args = list(
-      nrow = 4, 
-      labeller = label_parsed
-    )
-  )
-
-# Extract the Omega parameters only and look at trace plots, etc.
-
-# Omega
-draws_Omega <- fit %>% 
-  extract(
-    regex_pars = c("Omega"),
-    inc_warmup = TRUE,
-    permuted = FALSE
-  )
-
-draws_gamma %>% 
-  mcmc_hist_by_chain()
-
-draws_gamma %>% 
-  mcmc_trace(
-    n_warmup = 2000,
-    facet_args = list(
-      nrow = 4, 
-      labeller = label_parsed
-    )
-  )
-
-# # Check diagnostics
-# check_all_diagnostics(fit)
-
-# Check for divergences
-check_div(fit)
-
-# # Check the effective sample size (NOT WORKING?)
-# check_n_eff(fit)
-# 
-# # Check the Rhat statistic (NOT WORKING?)
-# check_rhat(fit)
-
-# Check trace plots (SUBSET?)
-color_scheme_set("mix-blue-red")
-fit %>%
-  extract(
-    inc_warmup = TRUE,
-    permuted = FALSE
-  ) %>%
-  mcmc_trace(
-    pars = str_c("Gamma[", 1:13, ",1]"),
-    n_warmup = 2000,
-    facet_args = list(
-      nrow = 2, 
-      labeller = label_parsed
-    )
-  )
-
-# ggsave(
-#   "intercept_trace_noncentered.png",
-#   path = here::here("analysis", "output", "figures"),
-#   width = 12, height = 6, units = "in"
-# )
-```
-
-
-# Extract draws
-
-```{r extract-draws}
 # Extract posterior draws
 draws <- fit %>% 
   spread_draws(Gamma[i, j]) %>% 
@@ -382,7 +368,7 @@ draws <- fit %>%
   filter(.iteration > 500)
 
 # Save draws
-if (intercept == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
+if (intercept == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept.rds"))
 if (public_affairs == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_affairs.rds"))
 if (political_ideology == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "political_ideology.rds"))
 if (social_views == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "social_views.rds"))
@@ -395,7 +381,7 @@ if (public_political_social_charity_demo == 1) write_rds(draws, here::here("anal
 ```
 
 
-# Plot marginals and contrasts
+# Load draws and plot marginals and contrasts
 
 ```{r plot-marginals}
 #########
@@ -409,15 +395,15 @@ intercept <- 0                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
-charity_voluntarism <- 1                  # Charity and voluntarism
+charity_voluntarism <- 0                  # Charity and voluntarism
 demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
-public_political_social_charity_demo <- 0 # + Demographics
+public_political_social_charity_demo <- 1 # + Demographics
 
 # Load draws
-if (intercept == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
+if (intercept == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "intercept.rds"))
 if (public_affairs == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_affairs.rds"))
 if (political_ideology == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "political_ideology.rds"))
 if (social_views == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "social_views.rds"))
@@ -611,6 +597,16 @@ if (public_political_social_charity_demo == 1) {
     "Age: Under 18 to 85 or older"
   )
 }
+
+
+# # Create matrix of Gammas.
+# gamma_draws <- draws %>% 
+#   group_by(i, j) %>% 
+#   summarize(gamma_mean = mean(Gamma))
+# 
+# gamma_matrix <- matrix(as.matrix(gamma_draws)[,3], nrow = max(draws$j), ncol = max(draws$i))
+# write.csv(gamma_matrix, file = here::here("analysis", "output", "posterior_means.csv"))
+
 
 # Plot marginals
 # if (intercept == 1) {
