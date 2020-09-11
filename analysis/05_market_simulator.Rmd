@@ -24,7 +24,8 @@ public_political_social_charity_demo <- readRDS(here('analysis', 'output', 'post
   summarize(gamma_mean = mean(Gamma)) %>% 
   ungroup() %>% 
   pivot_wider(names_from = j, values_from = gamma_mean) %>% 
-  select(-i)
+  select(-i) %>% 
+  t()
 
 # Persona Data from Market Simulator Workbook
 persona_data <- readxl::read_xlsx(here('analysis', 'output', "persona_configV06.xlsx"))
@@ -497,47 +498,6 @@ server = function(input, output) {
 persona1 <- persona_data[,2]
 
 p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona1)
-
-# beta_test <- as.data.frame(matrix(rep(0), nrow = 13))
-# 
-# beta_test$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human rights", "Refugee relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
-# 
-# beta_test$ai_issue <- 0
-# beta_test$ai_issue[4] <- 1
-# beta_test$ai_issue[8] <- 1
-# beta_test$ai_issue[9] <- 1
-# 
-# 
-# beta_test$gp_issue <- 0
-# beta_test$gp_issue[4] <- 1
-# beta_test$gp_issue[5] <- 1
-# beta_test$gp_issue[8] <- 1
-# beta_test$gp_issue[9] <- 1
-# 
-# 
-# beta_test$ox_issue <- 0
-# beta_test$ox_issue[4] <- 1
-# beta_test$ox_issue[6] <- 1
-# beta_test$ox_issue[8] <- 1
-# beta_test$ox_issue[9] <- 1
-# 
-# beta_test$rc_issue <- 0
-# beta_test$rc_issue[4] <- 1
-# beta_test$rc_issue[7] <- 1
-# beta_test$rc_issue[8] <- 1
-# beta_test$rc_issue[9] <- 1
-# 
-# 
-# 
-#   ai_exp_util1 <- round(exp(t(beta_test[, 3]) %*% as.matrix(p_beta1)),2)
-#   gp_exp_util1 <- round(exp(t(beta_test[, 4]) %*% as.matrix(p_beta1)),2)
-#   ox_exp_util1 <- round(exp(t(beta_test[, 5]) %*% as.matrix(p_beta1)),2)
-#   rc_exp_util1 <- round(exp(t(beta_test[, 6]) %*% as.matrix(p_beta1)),2)
-# 
-#   ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-#   rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
 
 
 # Persona 2
