@@ -27,7 +27,7 @@ public_political_social_charity_demo <- readRDS(here('analysis', 'output', 'post
   select(-i)
 
 # Persona Data from Market Simulator Workbook
-persona_data <- readxl::read_xlsx(here('analysis', 'output', "persona_config.xlsx"))
+persona_data <- readxl::read_xlsx(here('analysis', 'output', "persona_configV06.xlsx"))
 
 
 #Levels (This is a guess):            Means:
@@ -50,7 +50,24 @@ persona_data <- readxl::read_xlsx(here('analysis', 'output', "persona_config.xls
 
 beta <- as.data.frame(matrix(rep(0), nrow = 13))
 
-beta$levels = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross", "Environment", "Human rights", "Refugee relief", "Engages in transparency", "Engages in financial accountability","Handful of wealthy private donors", "Government Grants", "Criticized by government", "Under government crackdown")
+beta$levels = c("Amnesty International",
+                "Greenpeace", 
+                "Oxfam", 
+                "Red Cross",
+                # Org Issue
+                "Environment", 
+                "Human rights",
+                "Refugee relief",
+                # Transparency
+                "Engages in transparency",
+                # Financial Accountability
+                "Engages in financial accountability",
+                # Funding
+                "Handful of wealthy private donors", 
+                "Government grants",
+                # Gov Relations
+                "Criticized by government",
+                "Under government crackdown")
 
 # Org Reactive Element
 df <- reactive({
@@ -94,7 +111,7 @@ df <- reactive({
 
 # Persona beta levels -----
 
-beta_persona <- as.data.frame(matrix(rep(0), nrow = 61))
+beta_persona <- as.data.frame(matrix(rep(0), nrow = 111))
 
 beta_persona$levels = c("Intercept",
                         # Follow National News
@@ -1456,7 +1473,7 @@ selectInput("ai_funding",
             label = "Select Funding source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
-                        "Government Grants"))
+                        "Government grants"))
 
 selectInput("ai_gov_relat",
             label = "Select Relationship with host government",
@@ -1500,7 +1517,7 @@ selectInput("gp_funding",
             label = "Select Funding source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
-                        "Government Grants"))
+                        "Government grants"))
 
 selectInput("gp_gov_relat",
             label = "Select Relationship with host government",
@@ -1542,7 +1559,7 @@ selectInput("ox_funding",
             label = "Select Funding source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
-                        "Government Grants"))
+                        "Government grants"))
 
 selectInput("ox_gov_relat",
             label = "Select Relationship with host government",
@@ -1584,7 +1601,7 @@ selectInput("rc_funding",
             label = "Select Funding source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
-                        "Government Grants"))
+                        "Government grants"))
 
 selectInput("rc_gov_relat",
             label = "Select Relationship with host government",
