@@ -47,7 +47,7 @@ persona_data <- readxl::read_xlsx(here('analysis', 'output', "persona_configV06.
 #   13. Under Government Crackdown   -1.011
 
 
-################### Org Reactive Element####################################
+################### Org Reactive Element ####################################
 
 beta <- as.data.frame(matrix(rep(0), nrow = 13))
 
@@ -108,7 +108,7 @@ df <- reactive({
     
 })
 
-################### Persona Reactive Element####################################
+################### Persona Reactive Element ####################################
 
 # Persona beta levels -----
 
@@ -395,6 +395,7 @@ p <- reactive({
 
 ```
 
+<!-- Practice Code -->
 
 ```{r practice code}
 
@@ -483,13 +484,7 @@ server = function(input, output) {
 }
 ```
 
-<!-- Persona Inputs  -->
-<!-- ================================================= -->
-
-<!-- ## Persona Inputs -->
-
-
-
+<!-- Persona Inputs -->
 ```{r persona betas}
 
 ### Calculating the Persona betas ###
@@ -535,46 +530,46 @@ renderPlotly({
     p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
   
   # Expected Utility
-  ai_exp_util1 <- round(exp(t(org_choice[, 3]) %*% as.matrix(p_beta1)),2)
-  gp_exp_util1 <- round(exp(t(org_choice[, 4]) %*% as.matrix(p_beta1)),2)
-  ox_exp_util1 <- round(exp(t(org_choice[, 5]) %*% as.matrix(p_beta1)),2)
-  rc_exp_util1 <- round(exp(t(org_choice[, 6]) %*% as.matrix(p_beta1)),2)
+  ai_exp_util1 <- exp(t(org_choice[, 3]) %*% as.matrix(p_beta1))
+  gp_exp_util1 <- exp(t(org_choice[, 4]) %*% as.matrix(p_beta1))
+  ox_exp_util1 <- exp(t(org_choice[, 5]) %*% as.matrix(p_beta1))
+  rc_exp_util1 <- exp(t(org_choice[, 6]) %*% as.matrix(p_beta1))
   
   # Market Share
-  ai_rate1 <- round(100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-  gp_rate1 <- round(100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-  ox_rate1 <- round(100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
-  rc_rate1 <- round(100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1))
+  ai_rate1 <- 100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1)
+  gp_rate1 <- 100 * gp_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1)
+  ox_rate1 <- 100 * ox_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1)
+  rc_rate1 <- 100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1)
   
   # Persona 2
     p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
   
   # Expected Utility
-  ai_exp_util2 <- round(exp(t(org_choice[, 3]) %*% as.matrix(p_beta2)),2)
-  gp_exp_util2 <- round(exp(t(org_choice[, 4]) %*% as.matrix(p_beta2)),2)
-  ox_exp_util2 <- round(exp(t(org_choice[, 5]) %*% as.matrix(p_beta2)),2)
-  rc_exp_util2 <- round(exp(t(org_choice[, 6]) %*% as.matrix(p_beta2)),2)
+  ai_exp_util2 <- exp(t(org_choice[, 3]) %*% as.matrix(p_beta2))
+  gp_exp_util2 <- exp(t(org_choice[, 4]) %*% as.matrix(p_beta2))
+  ox_exp_util2 <- exp(t(org_choice[, 5]) %*% as.matrix(p_beta2))
+  rc_exp_util2 <- exp(t(org_choice[, 6]) %*% as.matrix(p_beta2))
   
   # Market Share
-  ai_rate2 <- round(100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-  gp_rate2 <- round(100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-  ox_rate2 <- round(100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
-  rc_rate2 <- round(100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2))
+  ai_rate2 <- 100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2)
+  gp_rate2 <- 100 * gp_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2)
+  ox_rate2 <- 100 * ox_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2)
+  rc_rate2 <- 100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2)
   
   # Persona 3
     p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
   
   # Expected Utility
-  ai_exp_util3 <- round(exp(t(org_choice[, 3]) %*% as.matrix(p_beta3)),2)
-  gp_exp_util3 <- round(exp(t(org_choice[, 4]) %*% as.matrix(p_beta3)),2)
-  ox_exp_util3 <- round(exp(t(org_choice[, 5]) %*% as.matrix(p_beta3)),2)
-  rc_exp_util3 <- round(exp(t(org_choice[, 6]) %*% as.matrix(p_beta3)),2)
+  ai_exp_util3 <- exp(t(org_choice[, 3]) %*% as.matrix(p_beta3))
+  gp_exp_util3 <- exp(t(org_choice[, 4]) %*% as.matrix(p_beta3))
+  ox_exp_util3 <- exp(t(org_choice[, 5]) %*% as.matrix(p_beta3))
+  rc_exp_util3 <- exp(t(org_choice[, 6]) %*% as.matrix(p_beta3))
   
   # Market Share
-  ai_rate3 <- round(100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-  gp_rate3 <- round(100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-  ox_rate3 <- round(100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
-  rc_rate3 <- round(100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3))
+  ai_rate3 <- 100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3)
+  gp_rate3 <- 100 * gp_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3)
+  ox_rate3 <- 100 * ox_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3)
+  rc_rate3 <- 100 * rc_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3)
   
   # Data for Plotly
   data <- c(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1, ai_rate1, gp_rate1, ox_rate1, rc_rate1, 
@@ -615,11 +610,10 @@ renderPlotly({
 
 ```
 
-<!-- Organizational Tabs -->
+<!-- Persona and Organizational Tabs -->
 
 Personas And Organizations {.tabset .tabset-fade}
 --------------------------------------------------
-
 
 ### Persona 1
 
