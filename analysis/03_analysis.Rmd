@@ -683,12 +683,6 @@ ggsave(
 )
 ```
 
-## Plot contrasts
-
-```{r plot-contrasts}
-
-```
-
 ## Plot heatmaps
 
 Instead of plotting marginals or contrasts, we can use a heatmap to identify where there are significant differences in the non-intercept models, which can then be narrowed down using the marginal plots.
@@ -803,6 +797,247 @@ ggsave(
   units = "in"
 )
 ```
+
+## Plot contrasts/hypotheses?
+
+A better approach to address the hypotheses (taken from the former 03b and 03c).
+
+- We theorize that structural characteristics like an NGO’s host-country political and legal environment can serve as heuristics and shortcuts for donors.
+- Donors who see that an NGO faces general legal trouble abroad will use that knowledge to decide whether or not to donate.
+- We also theorize that non-structural organizational characteristics like managerial practices, funding sources, and issue area also serve as heuristics and influence donation patterns.
+- In this study, we simultaneously account for the interaction between legal crackdown, issue area, funding source, and managerial practices as well as donor characteristics. We hypothesize that each of these structural and organizational characteristics will have a significant effect on donor behavior, but we’re unsure of the direction of that effect.
+
+> In this study, we simultaneously account for the interaction between legal crackdown, issue area, funding source, and managerial practices as well as donor characteristics. We hypothesize that each of these structural and organizational characteristics will have a significant effect on donor behavior, but we're unsure of the direction of that effect.
+
+### Combined Results
+
+```{r combined-results, echo = FALSE, warning = FALSE}
+if (intercept == 1) {
+  draws %>% 
+    mutate(
+      levels = factor(i, labels = level_labels)
+    ) %>%
+   # filter(levels == str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief"))) %>%
+    ggplot(aes(x = Theta, y = levels)) + 
+    geom_halfeyeh(.width = .95) +
+    geom_vline(xintercept = 0, color = "white") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+    draws %>% 
+    filter(j != 1) %>% 
+    mutate(
+      levels = factor(i, labels = level_labels), 
+      covariates = factor(j, labels = covariate_labels)  
+    ) %>%
+    filter(
+      # levels == str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
+      covariates == str_c("Gender: ", 
+      c("Female", "Transgender", "Prefer not to say", "Other")
+    ))  %>% 
+    ggplot(aes(x = Theta, y = covariates)) +
+       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+       geom_vline(xintercept = 0, color = "white") +
+       labs(y = "Covariates") +
+       facet_wrap(~ levels, ncol = 5)
+}
+```
+
+### Relationship With Host Government
+
+We theorize that structural characteristics like an NGO’s host-country political and legal environment can serve as heuristics and shortcuts for donors. Donors who see that an NGO faces general legal trouble abroad will use that knowledge to decide whether or not to donate.
+
+```{r relationship-with-gov, echo = FALSE}
+# Plot marginals
+if (intercept == 1) {
+  draws %>% 
+    mutate(
+      levels = factor(i, labels = level_labels)
+    ) %>%
+    filter(levels == str_c("Relationship with host government: ", c("Criticized", "Under crackdown"))) %>% 
+    ggplot(aes(x = Theta, y = levels)) + 
+    geom_halfeyeh(.width = .95) +
+    geom_vline(xintercept = 0, color = "grey") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+  draws %>% 
+    filter(j != 1) %>% 
+    mutate(
+      levels = factor(i, labels = level_labels), 
+      covariates = factor(j, labels = covariate_labels)  
+    ) %>%
+    filter(covariates == c("Follow national news: Multiple times a day to Never", "Follow international news: Always to Never")) %>% 
+    ggplot(aes(x = Theta, y = covariates)) +
+       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+       geom_vline(xintercept = 0, color = "white") +
+       labs(y = "Covariates") +
+       facet_wrap(~ levels, ncol = 5)
+}
+
+```
+
+### Organizational Characteristics
+
+We theorize that non-structural organizational characteristics like managerial practices, funding sources, and issue area also serve as heuristics and influence donation patterns.
+
+#### 1. Managerial Practices
+
+```{r managerial-practices, echo = FALSE}
+# Plot marginals
+if (intercept == 1) {
+  draws %>% 
+    mutate(
+      levels = factor(i, labels = level_labels)
+    ) %>%
+    filter(levels == c( "Financial transparency: Yes",
+  "Accountability: Yes")) %>% 
+    ggplot(aes(x = Theta, y = levels)) + 
+    geom_halfeyeh(.width = .95) +
+    geom_vline(xintercept = 0, color = "grey") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+  draws %>% 
+    filter(j != 1) %>% 
+    mutate(
+      levels = factor(i, labels = level_labels), 
+      covariates = factor(j, labels = covariate_labels)  
+    ) %>%
+    ggplot(aes(x = Theta, y = covariates)) +
+       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+       geom_vline(xintercept = 0, color = "white") +
+       labs(y = "Covariates") +
+       facet_wrap(~ levels, ncol = 5)
+}
+```
+
+#### 2. Funding Sources
+
+```{r funding_sources, echo = FALSE}
+# Plot marginals
+if (intercept == 1) {
+  draws %>% 
+    mutate(
+      levels = factor(i, labels = level_labels)
+    ) %>%
+    filter(levels ==  str_c("Funding sources: ", c("Handful of wealthy private donors", "Government grants"))) %>% 
+    ggplot(aes(x = Theta, y = levels)) + 
+    geom_halfeyeh(.width = .95) +
+    geom_vline(xintercept = 0, color = "grey") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+  draws %>% 
+    filter(j != 1) %>% 
+    mutate(
+      levels = factor(i, labels = level_labels), 
+      covariates = factor(j, labels = covariate_labels)  
+    ) %>%
+    ggplot(aes(x = Theta, y = covariates)) +
+       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+       geom_vline(xintercept = 0, color = "white") +
+       labs(y = "Covariates") +
+       facet_wrap(~ levels, ncol = 5)
+}
+```
+
+#### 3. Issue Areas
+
+```{r issue-areas, echo = FALSE, warning = FALSE}
+# Plot marginals
+if (intercept == 1) {
+  draws %>% 
+    mutate(
+      levels = factor(i, labels = level_labels),
+      Theta_exp = exp(Theta)
+    ) %>%
+    filter(levels == str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief"))) %>% 
+    ggplot(aes(x = Theta_exp, y = levels)) + 
+    geom_halfeyeh(.width = .95) +
+    geom_vline(xintercept = 1, color = "grey") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+  draws %>% 
+    filter(j != 1) %>% 
+    mutate(
+      levels = factor(i, labels = level_labels), 
+      covariates = factor(j, labels = covariate_labels)  
+    ) %>%
+    ggplot(aes(x = Theta, y = covariates)) +
+       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+       geom_vline(xintercept = 0, color = "white") +
+       labs(y = "Covariates") +
+       facet_wrap(~ levels, ncol = 5)
+}
+
+```
+
+### Organization
+
+```{r organization, echo = FALSE, warning = FALSE}
+# Plot marginals
+if (intercept == 1) {
+  draws %>% 
+    mutate(
+      levels = factor(i, labels = level_labels)
+    ) %>%
+    filter(levels == str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"))) %>% 
+    ggplot(aes(x = exp(Theta), y = levels)) +
+    geom_halfeyeh(.width = .95) +
+    geom_vline(xintercept = 1, color = "grey") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+  draws %>% 
+    filter(j != 1) %>% 
+    mutate(
+      levels = factor(i, labels = level_labels), 
+      covariates = factor(j, labels = covariate_labels)  
+    ) %>%
+    ggplot(aes(x = Theta, y = covariates)) +
+       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+       geom_vline(xintercept = 0, color = "white") +
+       labs(y = "Covariates") +
+       facet_wrap(~ levels, ncol = 5)
+}
+
+```
+
+### Do donors care if nonprofits they care about are criticized by or kicked out of the countries they work in?
+
+```{r}
+# Plot marginals
+if (intercept == 1) {
+  draws %>% 
+    mutate(
+      levels = factor(i, labels = level_labels)
+    ) %>%
+    filter(levels == str_c("Relationship with host government: ", c("Criticized", "Under crackdown"))) %>% 
+    ggplot(aes(x = Theta, y = levels)) + 
+    geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+    geom_vline(xintercept = 0, color = "grey") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+  draws %>% 
+    filter(j != 1) %>% 
+    mutate(
+      levels = factor(i, labels = level_labels), 
+      covariates = factor(j, labels = covariate_labels)  
+    ) %>%
+    ggplot(aes(x = Theta, y = covariates)) +
+       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
+       geom_vline(xintercept = 0, color = "white") +
+       labs(y = "Covariates") +
+       facet_wrap(~ levels, ncol = 5)
+}
+
+```
+
+### Do managerial practices (financial transparency and accountability systems), funding sources (private donations and government grants), and issue areas (emergency response, environmental issues, human rights, and refugee relief) also serve as heuristics that signal an organization’s deservingness to donors?
+
 
 # Original computing environment
 
