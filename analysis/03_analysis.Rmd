@@ -336,7 +336,7 @@ write_rds(model_fit, here::here("analysis", "output", "model_fit.rds"))
 ## Load model fit and extract and save draws
 
 ```{r extract-draws, eval=FALSE}
-intercept <- 0                            # Intercept-only
+intercept <- 1                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
@@ -345,7 +345,7 @@ demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
-public_political_social_charity_demo <- 1 # + Demographics
+public_political_social_charity_demo <- 0 # + Demographics
 
 # Load and extract data and model output
 if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept.rds"))
@@ -365,7 +365,11 @@ fit <- run$fit
 draws <- fit %>% 
   spread_draws(Gamma[i, j]) %>% 
   ungroup() %>% 
-  filter(.iteration > 500)
+  filter(.iteration > 500) %>% 
+  rename(
+    i = j,
+    j = i
+  )
 
 # Save draws
 if (intercept == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept.rds"))
@@ -388,7 +392,7 @@ Now that we have the draws extracted, we can load draws from the model of intere
 ## Load draws and assign labels
 
 ```{r load-draws}
-intercept <- 1                            # Intercept-only
+intercept <- 0                            # Intercept-only
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
@@ -396,7 +400,7 @@ charity_voluntarism <- 0                  # Charity and voluntarism
 demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
-public_political_social_charity <- 0      # + Charity and voluntarism
+public_political_social_charity <- 1      # + Charity and voluntarism
 public_political_social_charity_demo <- 0 # + Demographics
 
 # Load draws
@@ -427,6 +431,11 @@ public_affairs_labels <- c(
   str_c(
     "Follow national news: ", 
     c("Once a week", "At least once a day")
+  ),
+  # *Q2.2*: How often do you follow international news? 
+  str_c(
+    "Follow international news: ", 
+    c("Sometimes", "Always")
   ),
   # *Q2.3*: Which mediums do you use to follow news? (Select all that apply.)
   str_c(
@@ -629,10 +638,10 @@ if (public_political_social_charity_demo == 1) {
 if (intercept == 1) {
   draws %>%
     mutate(
-      levels = factor(j, labels = level_labels)
+      levels = factor(i, labels = level_labels)
     ) %>%
     ggplot(aes(x = Gamma, y = levels)) +
-    geom_halfeye(.width = .95) +
+    stat_halfeye(.width = .95) +
     geom_vline(xintercept = 0, color = "grey") +
     labs(y = "Attribute Levels")
 }
@@ -644,29 +653,32 @@ if (intercept != 1) {
       covariates = factor(j, labels = covariate_labels)
     ) %>%
     ggplot(aes(x = Gamma, y = covariates)) +
-       geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
-       # geom_halfeyeh(.width = .95) +
-       geom_vline(xintercept = 0, color = "white") +
-       labs(y = "Covariates") +
-       facet_wrap(~ levels, ncol = 5)
+      stat_halfeye(.width = .95) +
+      geom_vline(xintercept = 0, color = "white") +
+      labs(y = "Covariates") +
+      facet_wrap(~ levels, ncol = 5)
 }
 
 # Save plot
-if (intercept == 1) file_name <- paste("intercept_marginal-posteriors.png")
-if (public_affairs == 1) file_name <- paste("public-affairs_marginal-posteriors.png")
-if (political_ideology == 1) file_name <- paste("political-ideology_marginal-posteriors.png")
-if (social_views == 1) file_name <- paste("social-views_marginal-posteriors.png")
-if (charity_voluntarism == 1) file_name <- paste("charity-voluntarism_marginal-posteriors.png")
-if (demographics == 1) file_name <- paste("demographics_marginal-posteriors.png")
-if (public_political == 1) file_name <- paste("public-political_marginal-posteriors.png")
-if (public_political_social == 1) file_name <- paste("public-political-social_marginal-posteriors.png")
-if (public_political_social_charity == 1) file_name <- paste("public-political-social-charity_marginal-posteriors.png")
-if (public_political_social_charity_demo == 1) file_name <- paste("public-political-social-charity-demos_marginal-posteriors.png")
+if (intercept == 1) file_name <- paste("marginal-posteriors_intercept.png")
+if (public_affairs == 1) file_name <- paste("marginal-posteriors_public-affairs.png")
+if (political_ideology == 1) file_name <- paste("marginal-posteriors_political-ideology.png")
+if (social_views == 1) file_name <- paste("marginal-posteriors_social-views.png")
+if (charity_voluntarism == 1) file_name <- paste("marginal-posteriors_charity-voluntarism.png")
+if (demographics == 1) file_name <- paste("marginal-posteriors_demographics.png")
+if (public_political == 1) file_name <- paste("marginal-posteriors_public-political.png")
+if (public_political_social == 1) file_name <- paste("marginal-posteriors_public-political-social.png")
+if (public_political_social_charity == 1) file_name <- paste("marginal-posteriors_public-political-social-charity.png")
+if (public_political_social_charity_demo == 1) file_name <- paste("marginal-posteriors_public-political-social-charity-demos.png")
+if (intercept == 1) width_length <- c(10, 10)
+if (intercept != 1) width_length <- c(20, 20)
+if (public_political_social_charity == 1) width_length <- c(20, 30)
+if (public_political_social_charity_demo == 1) width_length <- c(20, 30)
 ggsave(
   file_name,
   path = here::here("analysis", "output", "figures"),
-  width = ifelse(intercept == 1, 12, 20),
-  height = ifelse(sum(intercept, public_affairs, political_ideology, social_views, charity_voluntarism, demographics) == 1, 12, 20),
+  width = width_length[1],
+  height = width_length[2],
   units = "in"
 )
 ```
