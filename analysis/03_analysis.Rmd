@@ -400,8 +400,8 @@ charity_voluntarism <- 0                  # Charity and voluntarism
 demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
-public_political_social_charity <- 1      # + Charity and voluntarism
-public_political_social_charity_demo <- 0 # + Demographics
+public_political_social_charity <- 0      # + Charity and voluntarism
+public_political_social_charity_demo <- 1 # + Demographics
 
 # Load draws
 if (intercept == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "intercept.rds"))
@@ -653,10 +653,10 @@ if (intercept != 1) {
       covariates = factor(j, labels = covariate_labels)
     ) %>%
     ggplot(aes(x = Gamma, y = covariates)) +
-      stat_halfeye(.width = .95) +
-      geom_vline(xintercept = 0, color = "white") +
-      labs(y = "Covariates") +
-      facet_wrap(~ levels, ncol = 5)
+    stat_halfeye(.width = .95) +
+    geom_vline(xintercept = 0, color = "white") +
+    labs(y = "Covariates") +
+    facet_wrap(~ levels, ncol = 5)
 }
 
 # Save plot
@@ -685,7 +685,7 @@ ggsave(
 
 ## Plot heatmaps
 
-Instead of plotting marginals or contrasts, we can use a heatmap to identify where there are significant differences in the non-intercept models, which can then be narrowed down using the marginal plots.
+Instead of plotting marginals, we can use a heatmap to identify where there are significant differences in the non-intercept models, which can then be narrowed down using the marginal plots.
 
 ```{r plot-heatmaps}
 if (public_affairs == 1) plot_title <- paste("Public Affairs")
@@ -731,7 +731,6 @@ if (intercept != 1) {
     left_join(level_lookup, by = "i") %>% 
     mutate(
       levels = factor(i, labels = level_labels), 
-      # covariates = factor(j, labels = covariate_labels)
       covariates = factor(j, labels = 1:length(covariate_labels))
     ) %>% 
     group_by(category, attribute, j_label) %>% 
@@ -798,7 +797,7 @@ ggsave(
 )
 ```
 
-## Plot contrasts/hypotheses?
+## Plot contrasts
 
 A better approach to address the hypotheses (taken from the former 03b and 03c).
 
@@ -1005,7 +1004,7 @@ if (intercept != 1) {
 
 ```
 
-### Do donors care if nonprofits they care about are criticized by or kicked out of the countries they work in?
+Do donors care if nonprofits they care about are criticized by or kicked out of the countries they work in?
 
 ```{r}
 # Plot marginals
@@ -1036,7 +1035,7 @@ if (intercept != 1) {
 
 ```
 
-### Do managerial practices (financial transparency and accountability systems), funding sources (private donations and government grants), and issue areas (emergency response, environmental issues, human rights, and refugee relief) also serve as heuristics that signal an organization’s deservingness to donors?
+Do managerial practices (financial transparency and accountability systems), funding sources (private donations and government grants), and issue areas (emergency response, environmental issues, human rights, and refugee relief) also serve as heuristics that signal an organization’s deservingness to donors?
 
 
 # Original computing environment
