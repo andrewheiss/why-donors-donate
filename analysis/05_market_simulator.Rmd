@@ -28,7 +28,10 @@ public_political_social_charity_demo <- readRDS(here('analysis', 'output', 'post
   t()
 
 # Persona Data from Market Simulator Workbook
-persona_data <- readxl::read_xlsx(here('analysis', 'output', "persona_configV06.xlsx"))
+persona_data <- readxl::read_xlsx(here('analysis', 'output', "persona_configV07.xlsx"))
+
+# Org Data from Market Simulator Workbook
+org_data <- readxl::read_xlsx(here('analysis', 'output', "org_config.xlsx"))
 
 
 #Levels (This is a guess):            Means:
@@ -74,7 +77,8 @@ beta$levels = c("Amnesty International",
 df <- reactive({
   #Amnesty International
     beta$ai_value <- 0
-    beta$ai_value[beta$levels == 'Amnesty International'] <- 1
+    # beta$ai_value[beta$levels == 'Amnesty International'] <- 1
+    beta$ai_value[beta$levels %in% input$org1_id] <- 1
     beta$ai_value[beta$levels %in% input$ai_issue] <- 1
     beta$ai_value[beta$levels %in% input$ai_fin_trans] <- 1
     beta$ai_value[beta$levels %in% input$ai_account] <- 1
@@ -82,7 +86,8 @@ df <- reactive({
     beta$ai_value[beta$levels %in% input$ai_gov_relat] <- 1
   #Greenpeace
     beta$gp_value <- 0
-    beta$gp_value[beta$levels == 'Greenpeace'] <- 1
+    # beta$gp_value[beta$levels == 'Greenpeace'] <- 1
+    beta$ai_value[beta$levels %in% input$org2_id] <- 1
     beta$gp_value[beta$levels %in% input$gp_issue] <- 1
     beta$gp_value[beta$levels %in% input$gp_fin_trans] <- 1
     beta$gp_value[beta$levels %in% input$gp_account] <- 1
@@ -90,7 +95,8 @@ df <- reactive({
     beta$gp_value[beta$levels %in% input$gp_gov_relat] <- 1
   #Oxfam
     beta$ox_value <- 0
-    beta$ox_value[beta$levels == 'Oxfam'] <- 1
+    # beta$ox_value[beta$levels == 'Oxfam'] <- 1
+    beta$ai_value[beta$levels %in% input$org3_id] <- 1
     beta$ox_value[beta$levels %in% input$ox_issue] <- 1
     beta$ox_value[beta$levels %in% input$ox_fin_trans] <- 1
     beta$ox_value[beta$levels %in% input$ox_account] <- 1
@@ -98,7 +104,8 @@ df <- reactive({
     beta$ox_value[beta$levels %in% input$ox_gov_relat] <- 1
   #Redcross
     beta$rc_value <- 0
-    beta$rc_value[beta$levels == 'Red Cross'] <- 1
+    # beta$rc_value[beta$levels == 'Red Cross'] <- 1
+    beta$ai_value[beta$levels %in% input$org4_id] <- 1
     beta$rc_value[beta$levels %in% input$rc_issue] <- 1
     beta$rc_value[beta$levels %in% input$rc_fin_trans] <- 1
     beta$rc_value[beta$levels %in% input$rc_account] <- 1
@@ -269,7 +276,7 @@ p <- reactive({
   #Persona 1
     beta_persona$p1_value <- 0
 
-    beta_persona$p1_value[beta_persona$levels == 'Persona 1'] <- 1
+    beta_persona$p1_value[beta_persona$levels == 'Intercept'] <- 1
     
     beta_persona$p1_value[beta_persona$levels %in% input$p1_national_news] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_international_news] <- 1
@@ -310,7 +317,7 @@ p <- reactive({
   #Persona 2
     beta_persona$p2_value <- 0
 
-    beta_persona$p2_value[beta_persona$levels == 'Persona 2'] <- 1
+    beta_persona$p2_value[beta_persona$levels == 'Intercept'] <- 1
     
     beta_persona$p2_value[beta_persona$levels %in% input$p2_national_news] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_international_news] <- 1
@@ -351,7 +358,7 @@ p <- reactive({
   #Persona 3
     beta_persona$p3_value <- 0
 
-    beta_persona$p3_value[beta_persona$levels == 'Persona 3'] <- 1
+    beta_persona$p3_value[beta_persona$levels == 'Intercept'] <- 1
 
     beta_persona$p3_value[beta_persona$levels %in% input$p3_national_news] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_international_news] <- 1
@@ -484,33 +491,64 @@ server = function(input, output) {
 ```
 
 <!-- Persona Inputs -->
-```{r persona betas}
+```{r Manual Testing Matrix Multiplication}
 
 ### Calculating the Persona betas ###
 
 # Persona 1
 persona1 <- persona_data[,2]
 
-p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona1)
+# matrix multiplication between persona data and betas
+beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona1)
 
 
 # Persona 2
 persona2 <- persona_data[,3]
 
-p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona2)
-
-
-# 
-# exp_util2 <- round(exp(t(beta_test[, 4]) %*% as.matrix(p_beta2)),2)
+# matrix multiplication between persona data and betas
+beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona2)
 
 
 # Persona 3
 persona3 <- persona_data[,4]
 
-p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona3)
+# matrix multiplication between persona data and betas
+beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona3)
 
+# Orgnization
+org1 <- org_data[,2]
+
+org2 <- org_data[,3]
+
+org3 <- org_data[,4]
+
+org4 <- org_data[,5]
+
+# Expected utility matrix multiplication between computed persona betas and org data for persona 1
+org1_exp_util1 <- exp(t(org1) %*% as.matrix(beta1))
+org2_exp_util1 <- exp(t(org2) %*% as.matrix(beta1))
+org3_exp_util1 <- exp(t(org3) %*% as.matrix(beta1))
+org4_exp_util1 <- exp(t(org4) %*% as.matrix(beta1))
+
+# Market Share computation from expected utilities between organization
+org1_rate1 <- 100 * org1_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
+org2_rate1 <- 100 * org2_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
+org3_rate1 <- 100 * org3_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
+org4_rate1 <- 100 * org4_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
+
+
+
+# org1_exp_util2 <- exp(t(org1) %*% as.matrix(p_beta2))
+# org2_exp_util2 <- exp(t(org2) %*% as.matrix(p_beta2))
+# org3_exp_util2 <- exp(t(org3) %*% as.matrix(p_beta2))
+# org4_exp_util2 <- exp(t(org4) %*% as.matrix(p_beta2))
 # 
-# exp_util3 <- round(exp(t(beta_test[, 5]) %*% as.matrix(p_beta3)),2)
+# 
+# org1_exp_util3 <- exp(t(org1) %*% as.matrix(p_beta3))
+# org2_exp_util3 <- exp(t(org2) %*% as.matrix(p_beta3))
+# org3_exp_util3 <- exp(t(org3) %*% as.matrix(p_beta3))
+# org4_exp_util3 <- exp(t(org4) %*% as.matrix(p_beta3))
+
 
 ```
 
@@ -1399,6 +1437,13 @@ textInput("ai_id",
           value = "Organization 1",
           placeholder = "Enter Organiation Name")
 
+selectInput("org1_id",
+            label = "Select Organization:",
+            choice = c("Amnesty International",
+                       "Green Peace",
+                       "Oxfam",
+                       "Red Cross"))
+
 selectInput("ai_issue", 
             label = "Select Issue Area:",
             choices = c("Emergency response",
@@ -1440,6 +1485,13 @@ textInput("gp_id",
           value = "Organization 2",
           placeholder = "Enter Organiation Name")
 
+selectInput("org2_id",
+            label = "Select Organization:",
+            choice = c("Amnesty International",
+                       "Green Peace",
+                       "Oxfam",
+                       "Red Cross"))
+
 selectInput("gp_issue", 
             label = "Select Issue Area:",
             choices = c("Emergency response",
@@ -1478,6 +1530,13 @@ textInput("ox_id",
           label = "Organization Name",
           value = "Organization 3",
           placeholder = "Enter Organiation Name")
+
+selectInput("org3_id",
+            label = "Select Organization:",
+            choice = c("Amnesty International",
+                       "Green Peace",
+                       "Oxfam",
+                       "Red Cross"))
 
 
 selectInput("ox_issue", 
@@ -1518,6 +1577,13 @@ textInput("rc_id",
           label = "Organization Name",
           value = "Organization 4",
           placeholder = "Enter Organiation Name")
+
+selectInput("org4_id",
+            label = "Select Organization:",
+            choice = c("Amnesty International",
+                       "Green Peace",
+                       "Oxfam",
+                       "Red Cross"))
 
 
 selectInput("rc_issue", 
