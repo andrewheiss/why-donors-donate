@@ -992,33 +992,39 @@ selectInput("p2_national_news",
          label = "Follow national news:",
          choices = c("Rarely",
                      "Once a week",
-                     "At least once a day"))
+                     "At least once a day"),
+         selected = "At least once a day")
 
 selectInput("p2_international_news",
          label = "Follow international news:",
          choices = c("Never",
                      "Sometimes",
-                     'Always'))
+                     "Always"),
+         selected = "Always")
 
 selectInput("p2_news_medium",
          label = "Medium to follow news:",
-         choices = c('TV',
-                     'Print',
+         choices = c("TV",
+                     "Print",
                      "Online (not social media)",
                      "Social media",
                      "Radio",
                      "Email newsletter",
                      "News app"),
-         multiple = TRUE)
+         multiple = TRUE,
+         selected = c("TV", "Print", "Social media"))
 
 selectInput("p2_follow_gov",
          label = "Follow government & public affairs:",
          choices = c("Not Often",
-                     "Often"))
+                     "Often"),
+         selected = "Often")
 
+#Fix
 selectInput("p2_travel_developing",
          label = "Travel to developing country:",
-         choices = c('No', "Yes"))
+         choices = c("Doesn't travel", "Does travel"),
+         selected = "Does travel")
 
 selectInput("p2_political_pref",
          label = "Political views from liberal to conservative:",
@@ -1028,17 +1034,20 @@ selectInput("p2_political_pref",
                      "Moderate",
                      "Slightly conservative",
                      "Somewhat conservative",
-                     "Extremely conservative"))
+                     "Extremely conservative"),
+         selected = "Somewhat liberal")
 
+#Fix
 selectInput("p2_institution_trust",
          label = "Political institution trust from none to complete:",
-         choices = c("No trust at all",
-                     "Very little trust",
-                     "Little trust",
-                     "Nuetral",
-                     "Some trust",
-                     "A lot of trust",
-                     "Complete trust"))
+         choices = c("No trust at all in political institutions",
+                     "Very little trust in political institutions",
+                     "Little trust in political institutions",
+                     "Nuetral trust in political institutions",
+                     "Some trust in political institutions",
+                     "A lot of trust in political institutions",
+                     "Complete trust in political institutions"),
+         selected = "Complete trust in political institutions ")
 
 selectInput("p2_others_charitable",
          label = "People should be more charitable:",
@@ -1048,18 +1057,22 @@ selectInput("p2_others_charitable",
                      "Nuetral",
                      "Somewhat agree",
                      "Agree",
-                     "Strongly agree"))
+                     "Strongly agree",),
+         selected = "Strongly agree")
 
+# Fix
 selectInput("p2_worship_attendance",
          label = "Worship service attendance:",
          choices = c("Not sure",
-                     "Rarely",
-                     "At least once a month"))
+                     "Rarely attend services",
+                     "Attend at least once a month"),
+         selected = "Attend at least once a month")
 
 selectInput("p2_religion_importance",
          label = "Importance of religion:",
          choices = c("Not important",
-                     "Important"))
+                     "Important"),
+         selected = "Important")
 
 selectInput("p2_religion",
          label = "Religion:",
@@ -1072,7 +1085,8 @@ selectInput("p2_religion",
                      'Hindu',
                      'Buddhist',
                      'Atheist',
-                     'Other (Religion)'))
+                     'Other (Religion)'),
+         selected = 'Protestant')
 
 selectInput("p2_charity_importance",
           label = "Charity Importance:",
@@ -1082,22 +1096,27 @@ selectInput("p2_charity_importance",
                       "Nuetral",
                       "Somewhat important",
                       "Very important",
-                      "Essential"))
+                      "Essential"),
+          selected = "Somewhat unimportant")
 
+#Fix
 selectInput("p2_trust_in_charity",
             label = "Charity Trust:",
-            choices = c("No trust at all",
-                        "Very little trust",
-                        "Little trust",
-                        "Nuetral",
-                        "Some trust",
-                        "A lot of trust",
-                        "Complete trust"))
+            choices = c("No trust at all in charities",
+                        "Very little trust in charities",
+                        "Little trust in charities",
+                        "Nuetral trust in charities",
+                        "Some trust in charities",
+                        "A lot of trust in charities",
+                        "Complete trust in charities"),
+            selected = "Complete trust in charities")
 
+#Fix
 selectInput("p2_donation_frequency",
          label = "Donation Frequency:",
-         choices = c('More than once a month, less than once a year',
-                     'At least once a month'))
+         choices = c('Donate more than once a month, less than once a year',
+                     'Donate at least once a month'),
+         selected = "Donate at least once a month")
 
 selectInput("p2_donation_amount",
          label = "Donation Amount:",
@@ -1107,88 +1126,111 @@ selectInput("p2_donation_amount",
                      '$500-$999',
                      '$1,000-$4,999',
                      '$5,000-$9,999',
-                     '$10,000+'))
+                     '$10,000+'),
+         selected = "$100-$499")
 
+#Fix
 selectInput("p2_volunteer_12",
          label = "Volunteered in last 12 Months:",
-         choices = c("No", "Yes"))
+         choices = c("Haven't volunteered", "Have volunteered"),
+         selected = "Have volunteered")
 
+#Fix
 selectInput("p2_volunteer_frequency",
          label = "Volunteer Frequency:",
          choices = c("Haven't volunteered in past 12 months",
-                     "Rarely",
-                     "More than once a month, less than once a year",
-                     "At least once a month"))
+                     "Rarely volunteer",
+                     "Volunteer more than once a month, less than once a year",
+                     "Volunteer at least once a month"),
+         selected = "Volunteer at least once a month")
 
+# fix
 selectInput("p2_personal_activism",
          label = "Personal Activism:",
-         choices = c('Not involved',
-                     'Involved'))
+         choices = c('Not personally involved ',
+                     'Personally involved'),
+         selected = "Personally involved")
 
+#Fix
 selectInput("p2_family_activism",
          label = "Family Activism:",
-         choices = c('Not involved',
-                     'Involved'))
+         choices = c('Family not involved',
+                     'Family involved'),
+         selected = "Family involved")
 
+#Fix
 selectInput("p2_religious_member",
          label = "Church Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
+         choices = c("Don't belong to church membership",
+                     'Inactive church member',
+                     'Active church member'),
+         selected = "Don't belong to church membership")
 
+#Fix
 selectInput("p2_sport_member",
          label = "Sport or Recreational Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
-
+         choices = c("Don't belong to sports membership",
+                     'Inactive sports member',
+                     'Active sports member'),
+         selected = "Don't belong to sports membership")
+#Fix
 selectInput("p2_art_member",
          label = "Art, Music, or Educational Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
-
+         choices = c("Don't belong to educational membership",
+                     'Inactive educational member',
+                     'Active educational member'),
+         selected = "Don't belong to educational membership")
+#Fix
 selectInput("p2_labor_member",
          label = "Labor Union Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
+         choices = c("Don't belong to union",
+                     'Inactive union member',
+                     'Active union member'),
+         selected = "Don't belong to union")
 
+#Fix
 selectInput("p2_political_member",
          label = "Political Party Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
-
+         choices = c("Don't belong to party",
+                     'Inactive party member',
+                     'Active party member'),
+         selected = "Active party member")
+# Fix
 selectInput("p2_environmental_member",
-         label = "Enviornmental Org. Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
-
+         label = "Environmental Org. Membership:",
+         choices = c("Don't belong to environmental organization",
+                     'Inactive environmental member',
+                     'Active environmental member'),
+         selected = "Don't belong to environmental organization")
+# Fix
 selectInput("p2_professional_member",
          label = "Professional Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
-
+         choices = c("Don't belong to professional membership",
+                     'Inactive professional member',
+                     'Active professional member'),
+         selected = "Don't belong to professional membership")
+# Fix
 selectInput("p2_humanitarian_member",
          label = "Humanitarian Org. Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
+         choices = c("Don't belong to humanitarian organization",
+                     'Inactive humanitarian member',
+                     'Active humanitarian member'),
+         selected = "Active humanitarian member")
 
+# Fix
 selectInput("p2_consumer_member",
          label = "Consumer Org. Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
-
+         choices = c("Don't belong to consumer organization",
+                     'Inactive consumer member',
+                     'Active consumer member'),
+         selected = "Don't belong to consumer organization")
+# Fix
 selectInput("p2_other_member",
          label = "Other Org. Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
+         choices = c("Don't belong to other organization",
+                     'Inactive other member',
+                     'Active other member'),
+         selected = "Don't belong to other organization")
 
 selectInput("p2_gender",
          label = "Gender:",
@@ -1196,7 +1238,8 @@ selectInput("p2_gender",
                      "Female",
                      "Transgender",
                      "Prefer not to say",
-                     "Other (Gender)"))
+                     "Other (Gender)"),
+         selected = "Male")
 
 selectInput("p2_marital_status",
          label = "Marital Status:",
@@ -1204,7 +1247,8 @@ selectInput("p2_marital_status",
                      "Widowed",
                      "Divorced",
                      "Separated",
-                     "Never married"))
+                     "Never married"),
+         selected = "Married")
 
 selectInput("p2_education",
          label = "Education:",
@@ -1214,12 +1258,14 @@ selectInput("p2_education",
                      "2 year degree",
                      "4 year degree",
                      "Graduate or professional degree",
-                     "Doctorate"))
+                     "Doctorate"),
+         selected = "Some college")
 
 selectInput("p2_income",
          label = "Income:",
          choices = c('Less than median of $61,372',
-                     'More than median of $61,372'))
+                     'More than median of $61,372'),
+         selected = "More than median of $61,372")
 
 selectInput("p2_race",
          label = "Race(s):",
@@ -1229,12 +1275,14 @@ selectInput("p2_race",
                      'Asian',
                      'Native Hawaiian or Pacific Islander',
                      'Other (Race)'),
-         multiple = TRUE)
+         multiple = TRUE,
+         selected = "American Indian or Alaska Native")
 
 selectInput("p2_age",
          label = "Age:",
          choices = c('Less than median age of 36',
-                     "More than median age of 36"))
+                     "More than median age of 36"),
+         selected = "Less than median age of 36")
 
 ```
 
@@ -1244,40 +1292,46 @@ selectInput("p2_age",
 
 textInput("p3_id",
           label = "Persona Name",
-          value = "Persona 3",
+          value = "Persona 1",
           placeholder = "Enter Persona Name")
 
 selectInput("p3_national_news",
          label = "Follow national news:",
          choices = c("Rarely",
                      "Once a week",
-                     "At least once a day"))
+                     "At least once a day"),
+         selected = "At least once a day")
 
 selectInput("p3_international_news",
          label = "Follow international news:",
          choices = c("Never",
                      "Sometimes",
-                     'Always'))
+                     "Always"),
+         selected = "Always")
 
 selectInput("p3_news_medium",
          label = "Medium to follow news:",
-         choices = c('TV',
-                     'Print',
+         choices = c("TV",
+                     "Print",
                      "Online (not social media)",
                      "Social media",
                      "Radio",
                      "Email newsletter",
                      "News app"),
-         multiple = TRUE)
+         multiple = TRUE,
+         selected = c("TV", "Print", "Social media"))
 
 selectInput("p3_follow_gov",
          label = "Follow government & public affairs:",
          choices = c("Not Often",
-                     "Often"))
+                     "Often"),
+         selected = "Often")
 
+#Fix
 selectInput("p3_travel_developing",
          label = "Travel to developing country:",
-         choices = c('No', "Yes"))
+         choices = c("Doesn't travel", "Does travel"),
+         selected = "Does travel")
 
 selectInput("p3_political_pref",
          label = "Political views from liberal to conservative:",
@@ -1287,17 +1341,20 @@ selectInput("p3_political_pref",
                      "Moderate",
                      "Slightly conservative",
                      "Somewhat conservative",
-                     "Extremely conservative"))
+                     "Extremely conservative"),
+         selected = "Somewhat liberal")
 
+#Fix
 selectInput("p3_institution_trust",
          label = "Political institution trust from none to complete:",
-         choices = c("No trust at all",
-                     "Very little trust",
-                     "Little trust",
-                     "Nuetral",
-                     "Some trust",
-                     "A lot of trust",
-                     "Complete trust"))
+         choices = c("No trust at all in political institutions",
+                     "Very little trust in political institutions",
+                     "Little trust in political institutions",
+                     "Nuetral trust in political institutions",
+                     "Some trust in political institutions",
+                     "A lot of trust in political institutions",
+                     "Complete trust in political institutions"),
+         selected = "Complete trust in political institutions ")
 
 selectInput("p3_others_charitable",
          label = "People should be more charitable:",
@@ -1307,18 +1364,22 @@ selectInput("p3_others_charitable",
                      "Nuetral",
                      "Somewhat agree",
                      "Agree",
-                     "Strongly agree"))
+                     "Strongly agree",),
+         selected = "Strongly agree")
 
+# Fix
 selectInput("p3_worship_attendance",
          label = "Worship service attendance:",
          choices = c("Not sure",
-                     "Rarely",
-                     "At least once a month"))
+                     "Rarely attend services",
+                     "Attend at least once a month"),
+         selected = "Attend at least once a month")
 
 selectInput("p3_religion_importance",
          label = "Importance of religion:",
          choices = c("Not important",
-                     "Important"))
+                     "Important"),
+         selected = "Important")
 
 selectInput("p3_religion",
          label = "Religion:",
@@ -1331,7 +1392,8 @@ selectInput("p3_religion",
                      'Hindu',
                      'Buddhist',
                      'Atheist',
-                     'Other (Religion)'))
+                     'Other (Religion)'),
+         selected = 'Protestant')
 
 selectInput("p3_charity_importance",
           label = "Charity Importance:",
@@ -1341,22 +1403,27 @@ selectInput("p3_charity_importance",
                       "Nuetral",
                       "Somewhat important",
                       "Very important",
-                      "Essential"))
+                      "Essential"),
+          selected = "Somewhat unimportant")
 
+#Fix
 selectInput("p3_trust_in_charity",
             label = "Charity Trust:",
-            choices = c("No trust at all",
-                        "Very little trust",
-                        "Little trust",
-                        "Nuetral",
-                        "Some trust",
-                        "A lot of trust",
-                        "Complete trust"))
+            choices = c("No trust at all in charities",
+                        "Very little trust in charities",
+                        "Little trust in charities",
+                        "Nuetral trust in charities",
+                        "Some trust in charities",
+                        "A lot of trust in charities",
+                        "Complete trust in charities"),
+            selected = "Complete trust in charities")
 
+#Fix
 selectInput("p3_donation_frequency",
          label = "Donation Frequency:",
-         choices = c('More than once a month, less than once a year',
-                     'At least once a month'))
+         choices = c('Donate more than once a month, less than once a year',
+                     'Donate at least once a month'),
+         selected = "Donate at least once a month")
 
 selectInput("p3_donation_amount",
          label = "Donation Amount:",
@@ -1366,88 +1433,111 @@ selectInput("p3_donation_amount",
                      '$500-$999',
                      '$1,000-$4,999',
                      '$5,000-$9,999',
-                     '$10,000+'))
+                     '$10,000+'),
+         selected = "$100-$499")
 
+#Fix
 selectInput("p3_volunteer_12",
          label = "Volunteered in last 12 Months:",
-         choices = c("No", "Yes"))
+         choices = c("Haven't volunteered", "Have volunteered"),
+         selected = "Have volunteered")
 
+#Fix
 selectInput("p3_volunteer_frequency",
          label = "Volunteer Frequency:",
          choices = c("Haven't volunteered in past 12 months",
-                     "Rarely",
-                     "More than once a month, less than once a year",
-                     "At least once a month"))
+                     "Rarely volunteer",
+                     "Volunteer more than once a month, less than once a year",
+                     "Volunteer at least once a month"),
+         selected = "Volunteer at least once a month")
 
+# fix
 selectInput("p3_personal_activism",
          label = "Personal Activism:",
-         choices = c('Not involved',
-                     'Involved'))
+         choices = c('Not personally involved ',
+                     'Personally involved'),
+         selected = "Personally involved")
 
+#Fix
 selectInput("p3_family_activism",
          label = "Family Activism:",
-         choices = c('Not involved',
-                     'Involved'))
+         choices = c('Family not involved',
+                     'Family involved'),
+         selected = "Family involved")
 
+#Fix
 selectInput("p3_religious_member",
          label = "Church Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
+         choices = c("Don't belong to church membership",
+                     'Inactive church member',
+                     'Active church member'),
+         selected = "Don't belong to church membership")
 
+#Fix
 selectInput("p3_sport_member",
          label = "Sport or Recreational Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
-
+         choices = c("Don't belong to sports membership",
+                     'Inactive sports member',
+                     'Active sports member'),
+         selected = "Don't belong to sports membership")
+#Fix
 selectInput("p3_art_member",
          label = "Art, Music, or Educational Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
-
+         choices = c("Don't belong to educational membership",
+                     'Inactive educational member',
+                     'Active educational member'),
+         selected = "Don't belong to educational membership")
+#Fix
 selectInput("p3_labor_member",
          label = "Labor Union Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
+         choices = c("Don't belong to union",
+                     'Inactive union member',
+                     'Active union member'),
+         selected = "Don't belong to union")
 
+#Fix
 selectInput("p3_political_member",
          label = "Political Party Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
-
+         choices = c("Don't belong to party",
+                     'Inactive party member',
+                     'Active party member'),
+         selected = "Active party member")
+# Fix
 selectInput("p3_environmental_member",
-         label = "Enviornmental Org. Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
-
+         label = "Environmental Org. Membership:",
+         choices = c("Don't belong to environmental organization",
+                     'Inactive environmental member',
+                     'Active environmental member'),
+         selected = "Don't belong to environmental organization")
+# Fix
 selectInput("p3_professional_member",
          label = "Professional Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
-
+         choices = c("Don't belong to professional membership",
+                     'Inactive professional member',
+                     'Active professional member'),
+         selected = "Don't belong to professional membership")
+# Fix
 selectInput("p3_humanitarian_member",
          label = "Humanitarian Org. Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
+         choices = c("Don't belong to humanitarian organization",
+                     'Inactive humanitarian member',
+                     'Active humanitarian member'),
+         selected = "Active humanitarian member")
 
+# Fix
 selectInput("p3_consumer_member",
          label = "Consumer Org. Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
-
+         choices = c("Don't belong to consumer organization",
+                     'Inactive consumer member',
+                     'Active consumer member'),
+         selected = "Don't belong to consumer organization")
+# Fix
 selectInput("p3_other_member",
          label = "Other Org. Membership:",
-         choices = c("Don't belong",
-                     'Inactive member',
-                     'Active member'))
+         choices = c("Don't belong to other organization",
+                     'Inactive other member',
+                     'Active other member'),
+         selected = "Don't belong to other organization")
 
 selectInput("p3_gender",
          label = "Gender:",
@@ -1455,7 +1545,8 @@ selectInput("p3_gender",
                      "Female",
                      "Transgender",
                      "Prefer not to say",
-                     "Other (Gender)"))
+                     "Other (Gender)"),
+         selected = "Female")
 
 selectInput("p3_marital_status",
          label = "Marital Status:",
@@ -1463,7 +1554,8 @@ selectInput("p3_marital_status",
                      "Widowed",
                      "Divorced",
                      "Separated",
-                     "Never married"))
+                     "Never married"),
+         selected = "Married")
 
 selectInput("p3_education",
          label = "Education:",
@@ -1473,12 +1565,14 @@ selectInput("p3_education",
                      "2 year degree",
                      "4 year degree",
                      "Graduate or professional degree",
-                     "Doctorate"))
+                     "Doctorate"),
+         selected = "Graduate or professional degree")
 
 selectInput("p3_income",
          label = "Income:",
          choices = c('Less than median of $61,372',
-                     'More than median of $61,372'))
+                     'More than median of $61,372'),
+         selected = "More than median of $61,372")
 
 selectInput("p3_race",
          label = "Race(s):",
@@ -1488,12 +1582,14 @@ selectInput("p3_race",
                      'Asian',
                      'Native Hawaiian or Pacific Islander',
                      'Other (Race)'),
-         multiple = TRUE)
+         multiple = TRUE,
+         selected = c("Black or African American", "American Indian or Alaska Native"))
 
 selectInput("p3_age",
          label = "Age:",
          choices = c('Less than median age of 36',
-                     "More than median age of 36"))
+                     "More than median age of 36"),
+         selected = "Less than median age of 36")
 
 ```
 
