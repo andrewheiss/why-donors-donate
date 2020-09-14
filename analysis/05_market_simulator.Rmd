@@ -143,7 +143,7 @@ beta_persona$levels = c("Intercept",
                         # Follow Government or Public Affairs
                         "Often", 
                         # Travel to developing Countries
-                        "Yes (1)", 
+                        "Does travel", 
                         # Political Preference
                         "Somewhat liberal",
                         "Slightly liberal",
@@ -152,12 +152,12 @@ beta_persona$levels = c("Intercept",
                         "Somewhat conservative",
                         "Extremely conservative",
                         # Trust in Political Institute
-                        "Very little trust",
-                        "Little trust",
-                        "Nuetral",
-                        "Some trust",
-                        "A lot of trust",
-                        "Complete trust (1)",
+                        "Very little trust in polticial institutions",
+                        "Little trust in polticial institutions",
+                        "Nuetral trust in polticial institutions",
+                        "Some trust in polticial institutions",
+                        "A lot of trust in polticial institutions",
+                        "Complete trust in polticial institutions",
                         # Should Others be Charitable
                         "Disagree",
                         "Somewhat disagree",
@@ -166,8 +166,8 @@ beta_persona$levels = c("Intercept",
                         "Agree",
                         "Strongly agree",
                         # Worship Service Attendance
-                        "Rarely",
-                        "At least once a month (1)",
+                        "Rarely attend services",
+                        "Attend at least once a month",
                         # Religious Importance
                         "Important",
                         # Religion
@@ -188,14 +188,14 @@ beta_persona$levels = c("Intercept",
                         "Very important",
                         "Essential",
                         # Trust in Charities
-                        "Very little trust",
-                        "Little trust",
-                        "Nuetral",
-                        "Some trust",
-                        "A lot of trust",
-                        "Complete trust (2)",
+                        "Very little trust in charities",
+                        "Little trust in charities",
+                        "Nuetral trust in charities",
+                        "Some trust in charities",
+                        "A lot of trust in charities",
+                        "Complete trust in charities",
                         # Donation Frequency
-                        "At least once a month (2)", 
+                        "Donate At least once a month", 
                         # Donation Amount
                         "$50-$99",
                         "$100-$499",
@@ -204,45 +204,45 @@ beta_persona$levels = c("Intercept",
                         "$5,000-$9,999",
                         "$10,000 +",
                         # Volunteered last 12 months
-                        "Yes (2)",
+                        "Have volunteered",
                         # Volunteer Frequency
-                        "Rarely",
-                        "More than once a month, less than once a year",
-                        "At least once a month (3)",
+                        "Rarely volunteer",
+                        "Volunteer more than once a month, less than once a year",
+                        "Volunteer at least once a month",
                         # Personal Activism
-                        "Involved (1)",
+                        "Personally involved",
                         # Family Activism
-                        "Involved (2)",
+                        "Family involved",
                         # Religious Membership
-                        "Inactive member",
-                        "Active member",
+                        "Inactive church member",
+                        "Active church member",
                         # Sport or Recreational Membership
-                        "Inactive member",
-                        "Active member", 
+                        "Inactive sports member",
+                        "Active sports member", 
                         # Art, Music, or Educational Membership
-                        "Inactive member",
-                        "Active member",
+                        "Inactive educational member",
+                        "Active educational member",
                         # Labor Union Membership
-                        "Inactive member",
-                        "Active member",
+                        "Inactive union member",
+                        "Active union member",
                         # Political Party Membership
-                        "Inactive member",
-                        "Active member (1)",
+                        "Inactive party member",
+                        "Active party member",
                         # Environmental Organization Membership
-                        "Inactive member",
-                        "Active member",
+                        "Inactive environmental member",
+                        "Active environmental member",
                         # Professional Association
-                        "Inactive member",
-                        "Active member",
+                        "Inactive professional member",
+                        "Active professional member",
                         # Humanitarian or Charity Membership
-                        "Inactive member",
-                        "Active member (2)",
+                        "Inactive humanitarian member",
+                        "Active humanitarian member",
                         # Consumer Organization Membership
-                        "Inactive member",
-                        "Active member",
+                        "Inactive consumer member",
+                        "Active sonsumer member",
                         #Other Organization Membership
-                        "Inactive member",
-                        "Active member",
+                        "Inactive other member",
+                        "Active other member",
                         # Gender
                         "Female",
                         "Transgender",
@@ -750,7 +750,7 @@ selectInput("p1_others_charitable",
                      "Nuetral",
                      "Somewhat agree",
                      "Agree",
-                     "Strongly agree",),
+                     "Strongly agree"),
          selected = "Strongly agree")
 
 # Fix
@@ -1057,7 +1057,7 @@ selectInput("p2_others_charitable",
                      "Nuetral",
                      "Somewhat agree",
                      "Agree",
-                     "Strongly agree",),
+                     "Strongly agree"),
          selected = "Strongly agree")
 
 # Fix
@@ -1364,7 +1364,7 @@ selectInput("p3_others_charitable",
                      "Nuetral",
                      "Somewhat agree",
                      "Agree",
-                     "Strongly agree",),
+                     "Strongly agree"),
          selected = "Strongly agree")
 
 # Fix
