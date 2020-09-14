@@ -639,7 +639,7 @@ renderPlotly({
   df <- as.data.frame(matrix(data, 24, 1))
   
   # Organization name inputs
-  df[,2] <- rep(c(input$ai_id, input$gp_id, input$ox_id, input$rc_id),6)
+  df[,2] <- c(input$ai_id, input$gp_id, input$ox_id, input$rc_id)
   # Type of value
   df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
   # Persona name inputs
@@ -679,21 +679,24 @@ Personas And Organizations {.tabset .tabset-fade}
 textInput("p1_id",
           label = "Persona Name",
           value = "Persona 1",
-          placeholder = "Enter Persona Name")
+          placeholder = "Enter Persona Name",
+          width = "450px")
 
 selectInput("p1_national_news",
          label = "Follow national news:",
          choices = c("Rarely",
                      "Once a week",
                      "At least once a day"),
-         selected = "At least once a day")
+         selected = "At least once a day",
+         width = "450px")
 
 selectInput("p1_international_news",
          label = "Follow international news:",
          choices = c("Never",
                      "Sometimes",
                      "Always"),
-         selected = "Always")
+         selected = "Always",
+         width = "450px")
 
 selectInput("p1_news_medium",
          label = "Medium to follow news:",
@@ -705,19 +708,22 @@ selectInput("p1_news_medium",
                      "Email newsletter",
                      "News app"),
          multiple = TRUE,
-         selected = c("TV", "Print", "Social media"))
+         selected = c("TV", "Print", "Social media"),
+         width = "450px")
 
 selectInput("p1_follow_gov",
          label = "Follow government & public affairs:",
          choices = c("Not Often",
                      "Often"),
-         selected = "Often")
+         selected = "Often",
+         width = "450px")
 
 #Fix
 selectInput("p1_travel_developing",
          label = "Travel to developing country:",
          choices = c("Doesn't travel", "Does travel"),
-         selected = "Does travel")
+         selected = "Does travel",
+         width = "450px")
 
 selectInput("p1_political_pref",
          label = "Political views from liberal to conservative:",
@@ -728,7 +734,8 @@ selectInput("p1_political_pref",
                      "Slightly conservative",
                      "Somewhat conservative",
                      "Extremely conservative"),
-         selected = "Somewhat liberal")
+         selected = "Somewhat liberal",
+         width = "450px")
 
 #Fix
 selectInput("p1_institution_trust",
@@ -740,7 +747,8 @@ selectInput("p1_institution_trust",
                      "Some trust in political institutions",
                      "A lot of trust in political institutions",
                      "Complete trust in political institutions"),
-         selected = "Complete trust in political institutions ")
+         selected = "Complete trust in political institutions",
+         width = "450px")
 
 selectInput("p1_others_charitable",
          label = "People should be more charitable:",
@@ -751,7 +759,8 @@ selectInput("p1_others_charitable",
                      "Somewhat agree",
                      "Agree",
                      "Strongly agree"),
-         selected = "Strongly agree")
+         selected = "Strongly agree",
+         width = "450px")
 
 # Fix
 selectInput("p1_worship_attendance",
@@ -759,13 +768,15 @@ selectInput("p1_worship_attendance",
          choices = c("Not sure",
                      "Rarely attend services",
                      "Attend at least once a month"),
-         selected = "Attend at least once a month")
+         selected = "Attend at least once a month",
+         width = "450px")
 
 selectInput("p1_religion_importance",
          label = "Importance of religion:",
          choices = c("Not important",
                      "Important"),
-         selected = "Important")
+         selected = "Important",
+         width = "450px")
 
 selectInput("p1_religion",
          label = "Religion:",
@@ -779,7 +790,8 @@ selectInput("p1_religion",
                      'Buddhist',
                      'Atheist',
                      'Other (Religion)'),
-         selected = 'Protestant')
+         selected = 'Protestant',
+         width = "450px")
 
 selectInput("p1_charity_importance",
           label = "Charity Importance:",
@@ -790,7 +802,8 @@ selectInput("p1_charity_importance",
                       "Somewhat important",
                       "Very important",
                       "Essential"),
-          selected = "Somewhat unimportant")
+          selected = "Somewhat unimportant",
+          width = "450px")
 
 #Fix
 selectInput("p1_trust_in_charity",
@@ -802,14 +815,16 @@ selectInput("p1_trust_in_charity",
                         "Some trust in charities",
                         "A lot of trust in charities",
                         "Complete trust in charities"),
-            selected = "Complete trust in charities")
+            selected = "Complete trust in charities",
+            width = "450px")
 
 #Fix
 selectInput("p1_donation_frequency",
          label = "Donation Frequency:",
          choices = c('Donate more than once a month, less than once a year',
                      'Donate at least once a month'),
-         selected = "Donate at least once a month")
+         selected = "Donate at least once a month",
+         width = "450px")
 
 selectInput("p1_donation_amount",
          label = "Donation Amount:",
@@ -820,13 +835,15 @@ selectInput("p1_donation_amount",
                      '$1,000-$4,999',
                      '$5,000-$9,999',
                      '$10,000+'),
-         selected = "$100-$499")
+         selected = "$100-$499",
+         width = "450px")
 
 #Fix
 selectInput("p1_volunteer_12",
          label = "Volunteered in last 12 Months:",
          choices = c("Haven't volunteered", "Have volunteered"),
-         selected = "Have volunteered")
+         selected = "Have volunteered",
+         width = "450px")
 
 #Fix
 selectInput("p1_volunteer_frequency",
@@ -835,21 +852,24 @@ selectInput("p1_volunteer_frequency",
                      "Rarely volunteer",
                      "Volunteer more than once a month, less than once a year",
                      "Volunteer at least once a month"),
-         selected = "Volunteer at least once a month")
+         selected = "Volunteer at least once a month",
+         width = "450px")
 
 # fix
 selectInput("p1_personal_activism",
          label = "Personal Activism:",
          choices = c('Not personally involved ',
                      'Personally involved'),
-         selected = "Personally involved")
+         selected = "Personally involved",
+         width = "450px")
 
 #Fix
 selectInput("p1_family_activism",
          label = "Family Activism:",
          choices = c('Family not involved',
                      'Family involved'),
-         selected = "Family involved")
+         selected = "Family involved",
+         width = "450px")
 
 #Fix
 selectInput("p1_religious_member",
@@ -857,7 +877,8 @@ selectInput("p1_religious_member",
          choices = c("Don't belong to church membership",
                      'Inactive church member',
                      'Active church member'),
-         selected = "Don't belong to church membership")
+         selected = "Don't belong to church membership",
+         width = "450px")
 
 #Fix
 selectInput("p1_sport_member",
@@ -865,21 +886,24 @@ selectInput("p1_sport_member",
          choices = c("Don't belong to sports membership",
                      'Inactive sports member',
                      'Active sports member'),
-         selected = "Don't belong to sports membership")
+         selected = "Don't belong to sports membership",
+         width = "450px")
 #Fix
 selectInput("p1_art_member",
          label = "Art, Music, or Educational Membership:",
          choices = c("Don't belong to educational membership",
                      'Inactive educational member',
                      'Active educational member'),
-         selected = "Don't belong to educational membership")
+         selected = "Don't belong to educational membership",
+         width = "450px")
 #Fix
 selectInput("p1_labor_member",
          label = "Labor Union Membership:",
          choices = c("Don't belong to union",
                      'Inactive union member',
                      'Active union member'),
-         selected = "Don't belong to union")
+         selected = "Don't belong to union",
+         width = "450px")
 
 #Fix
 selectInput("p1_political_member",
@@ -887,28 +911,32 @@ selectInput("p1_political_member",
          choices = c("Don't belong to party",
                      'Inactive party member',
                      'Active party member'),
-         selected = "Active party member")
+         selected = "Active party member",
+         width = "450px")
 # Fix
 selectInput("p1_environmental_member",
          label = "Environmental Org. Membership:",
          choices = c("Don't belong to environmental organization",
                      'Inactive environmental member',
                      'Active environmental member'),
-         selected = "Don't belong to environmental organization")
+         selected = "Don't belong to environmental organization",
+         width = "450px")
 # Fix
 selectInput("p1_professional_member",
          label = "Professional Membership:",
          choices = c("Don't belong to professional membership",
                      'Inactive professional member',
                      'Active professional member'),
-         selected = "Don't belong to professional membership")
+         selected = "Don't belong to professional membership",
+         width = "450px")
 # Fix
 selectInput("p1_humanitarian_member",
          label = "Humanitarian Org. Membership:",
          choices = c("Don't belong to humanitarian organization",
                      'Inactive humanitarian member',
                      'Active humanitarian member'),
-         selected = "Active humanitarian member")
+         selected = "Active humanitarian member",
+         width = "450px")
 
 # Fix
 selectInput("p1_consumer_member",
@@ -916,14 +944,16 @@ selectInput("p1_consumer_member",
          choices = c("Don't belong to consumer organization",
                      'Inactive consumer member',
                      'Active consumer member'),
-         selected = "Don't belong to consumer organization")
+         selected = "Don't belong to consumer organization",
+         width = "450px")
 # Fix
 selectInput("p1_other_member",
          label = "Other Org. Membership:",
          choices = c("Don't belong to other organization",
                      'Inactive other member',
                      'Active other member'),
-         selected = "Don't belong to other organization")
+         selected = "Don't belong to other organization",
+         width = "450px")
 
 selectInput("p1_gender",
          label = "Gender:",
@@ -932,7 +962,8 @@ selectInput("p1_gender",
                      "Transgender",
                      "Prefer not to say",
                      "Other (Gender)"),
-         selected = "Male")
+         selected = "Male",
+         width = "450px")
 
 selectInput("p1_marital_status",
          label = "Marital Status:",
@@ -941,7 +972,8 @@ selectInput("p1_marital_status",
                      "Divorced",
                      "Separated",
                      "Never married"),
-         selected = "Married")
+         selected = "Married",
+         width = "450px")
 
 selectInput("p1_education",
          label = "Education:",
@@ -952,13 +984,15 @@ selectInput("p1_education",
                      "4 year degree",
                      "Graduate or professional degree",
                      "Doctorate"),
-         selected = "2 year degree")
+         selected = "2 year degree",
+         width = "450px")
 
 selectInput("p1_income",
          label = "Income:",
          choices = c('Less than median of $61,372',
                      'More than median of $61,372'),
-         selected = "More than median of $61,372")
+         selected = "More than median of $61,372",
+         width = "450px")
 
 selectInput("p1_race",
          label = "Race(s):",
@@ -969,13 +1003,15 @@ selectInput("p1_race",
                      'Native Hawaiian or Pacific Islander',
                      'Other (Race)'),
          multiple = TRUE,
-         selected = "White")
+         selected = "White",
+         width = "450px")
 
 selectInput("p1_age",
          label = "Age:",
          choices = c('Less than median age of 36',
                      "More than median age of 36"),
-         selected = "Less than median age of 36")
+         selected = "Less than median age of 36",
+         width = "450px")
 
 ```
 
@@ -986,21 +1022,24 @@ selectInput("p1_age",
 textInput("p2_id",
           label = "Persona Name",
           value = "Persona 2",
-          placeholder = "Enter Persona Name")
+          placeholder = "Enter Persona Name",
+          width = "450px")
 
 selectInput("p2_national_news",
          label = "Follow national news:",
          choices = c("Rarely",
                      "Once a week",
                      "At least once a day"),
-         selected = "At least once a day")
+         selected = "At least once a day",
+         width = "450px")
 
 selectInput("p2_international_news",
          label = "Follow international news:",
          choices = c("Never",
                      "Sometimes",
                      "Always"),
-         selected = "Always")
+         selected = "Always",
+         width = "450px")
 
 selectInput("p2_news_medium",
          label = "Medium to follow news:",
@@ -1012,19 +1051,22 @@ selectInput("p2_news_medium",
                      "Email newsletter",
                      "News app"),
          multiple = TRUE,
-         selected = c("TV", "Print", "Social media"))
+         selected = c("TV", "Print", "Social media"),
+         width = "450px")
 
 selectInput("p2_follow_gov",
          label = "Follow government & public affairs:",
          choices = c("Not Often",
                      "Often"),
-         selected = "Often")
+         selected = "Often",
+         width = "450px")
 
 #Fix
 selectInput("p2_travel_developing",
          label = "Travel to developing country:",
          choices = c("Doesn't travel", "Does travel"),
-         selected = "Does travel")
+         selected = "Does travel",
+         width = "450px")
 
 selectInput("p2_political_pref",
          label = "Political views from liberal to conservative:",
@@ -1035,7 +1077,8 @@ selectInput("p2_political_pref",
                      "Slightly conservative",
                      "Somewhat conservative",
                      "Extremely conservative"),
-         selected = "Somewhat liberal")
+         selected = "Somewhat liberal",
+         width = "450px")
 
 #Fix
 selectInput("p2_institution_trust",
@@ -1047,7 +1090,8 @@ selectInput("p2_institution_trust",
                      "Some trust in political institutions",
                      "A lot of trust in political institutions",
                      "Complete trust in political institutions"),
-         selected = "Complete trust in political institutions ")
+         selected = "Complete trust in political institutions",
+         width = "450px")
 
 selectInput("p2_others_charitable",
          label = "People should be more charitable:",
@@ -1058,7 +1102,8 @@ selectInput("p2_others_charitable",
                      "Somewhat agree",
                      "Agree",
                      "Strongly agree"),
-         selected = "Strongly agree")
+         selected = "Strongly agree",
+         width = "450px")
 
 # Fix
 selectInput("p2_worship_attendance",
@@ -1066,13 +1111,15 @@ selectInput("p2_worship_attendance",
          choices = c("Not sure",
                      "Rarely attend services",
                      "Attend at least once a month"),
-         selected = "Attend at least once a month")
+         selected = "Attend at least once a month",
+         width = "450px")
 
 selectInput("p2_religion_importance",
          label = "Importance of religion:",
          choices = c("Not important",
                      "Important"),
-         selected = "Important")
+         selected = "Important",
+         width = "450px")
 
 selectInput("p2_religion",
          label = "Religion:",
@@ -1086,7 +1133,8 @@ selectInput("p2_religion",
                      'Buddhist',
                      'Atheist',
                      'Other (Religion)'),
-         selected = 'Protestant')
+         selected = 'Protestant',
+         width = "450px")
 
 selectInput("p2_charity_importance",
           label = "Charity Importance:",
@@ -1097,7 +1145,8 @@ selectInput("p2_charity_importance",
                       "Somewhat important",
                       "Very important",
                       "Essential"),
-          selected = "Somewhat unimportant")
+          selected = "Somewhat unimportant",
+          width = "450px")
 
 #Fix
 selectInput("p2_trust_in_charity",
@@ -1109,14 +1158,16 @@ selectInput("p2_trust_in_charity",
                         "Some trust in charities",
                         "A lot of trust in charities",
                         "Complete trust in charities"),
-            selected = "Complete trust in charities")
+            selected = "Complete trust in charities",
+            width = "450px")
 
 #Fix
 selectInput("p2_donation_frequency",
          label = "Donation Frequency:",
          choices = c('Donate more than once a month, less than once a year',
                      'Donate at least once a month'),
-         selected = "Donate at least once a month")
+         selected = "Donate at least once a month",
+         width = "450px")
 
 selectInput("p2_donation_amount",
          label = "Donation Amount:",
@@ -1127,13 +1178,15 @@ selectInput("p2_donation_amount",
                      '$1,000-$4,999',
                      '$5,000-$9,999',
                      '$10,000+'),
-         selected = "$100-$499")
+         selected = "$100-$499",
+         width = "450px")
 
 #Fix
 selectInput("p2_volunteer_12",
          label = "Volunteered in last 12 Months:",
          choices = c("Haven't volunteered", "Have volunteered"),
-         selected = "Have volunteered")
+         selected = "Have volunteered",
+         width = "450px")
 
 #Fix
 selectInput("p2_volunteer_frequency",
@@ -1142,21 +1195,24 @@ selectInput("p2_volunteer_frequency",
                      "Rarely volunteer",
                      "Volunteer more than once a month, less than once a year",
                      "Volunteer at least once a month"),
-         selected = "Volunteer at least once a month")
+         selected = "Volunteer at least once a month",
+         width = "450px")
 
 # fix
 selectInput("p2_personal_activism",
          label = "Personal Activism:",
          choices = c('Not personally involved ',
                      'Personally involved'),
-         selected = "Personally involved")
+         selected = "Personally involved",
+         width = "450px")
 
 #Fix
 selectInput("p2_family_activism",
          label = "Family Activism:",
          choices = c('Family not involved',
                      'Family involved'),
-         selected = "Family involved")
+         selected = "Family involved",
+         width = "450px")
 
 #Fix
 selectInput("p2_religious_member",
@@ -1164,7 +1220,8 @@ selectInput("p2_religious_member",
          choices = c("Don't belong to church membership",
                      'Inactive church member',
                      'Active church member'),
-         selected = "Don't belong to church membership")
+         selected = "Don't belong to church membership",
+         width = "450px")
 
 #Fix
 selectInput("p2_sport_member",
@@ -1172,21 +1229,24 @@ selectInput("p2_sport_member",
          choices = c("Don't belong to sports membership",
                      'Inactive sports member',
                      'Active sports member'),
-         selected = "Don't belong to sports membership")
+         selected = "Don't belong to sports membership",
+         width = "450px")
 #Fix
 selectInput("p2_art_member",
          label = "Art, Music, or Educational Membership:",
          choices = c("Don't belong to educational membership",
                      'Inactive educational member',
                      'Active educational member'),
-         selected = "Don't belong to educational membership")
+         selected = "Don't belong to educational membership",
+         width = "450px")
 #Fix
 selectInput("p2_labor_member",
          label = "Labor Union Membership:",
          choices = c("Don't belong to union",
                      'Inactive union member',
                      'Active union member'),
-         selected = "Don't belong to union")
+         selected = "Don't belong to union",
+         width = "450px")
 
 #Fix
 selectInput("p2_political_member",
@@ -1194,28 +1254,32 @@ selectInput("p2_political_member",
          choices = c("Don't belong to party",
                      'Inactive party member',
                      'Active party member'),
-         selected = "Active party member")
+         selected = "Active party member",
+         width = "450px")
 # Fix
 selectInput("p2_environmental_member",
          label = "Environmental Org. Membership:",
          choices = c("Don't belong to environmental organization",
                      'Inactive environmental member',
                      'Active environmental member'),
-         selected = "Don't belong to environmental organization")
+         selected = "Don't belong to environmental organization",
+         width = "450px")
 # Fix
 selectInput("p2_professional_member",
          label = "Professional Membership:",
          choices = c("Don't belong to professional membership",
                      'Inactive professional member',
                      'Active professional member'),
-         selected = "Don't belong to professional membership")
+         selected = "Don't belong to professional membership",
+         width = "450px")
 # Fix
 selectInput("p2_humanitarian_member",
          label = "Humanitarian Org. Membership:",
          choices = c("Don't belong to humanitarian organization",
                      'Inactive humanitarian member',
                      'Active humanitarian member'),
-         selected = "Active humanitarian member")
+         selected = "Active humanitarian member",
+         width = "450px")
 
 # Fix
 selectInput("p2_consumer_member",
@@ -1223,14 +1287,16 @@ selectInput("p2_consumer_member",
          choices = c("Don't belong to consumer organization",
                      'Inactive consumer member',
                      'Active consumer member'),
-         selected = "Don't belong to consumer organization")
+         selected = "Don't belong to consumer organization",
+         width = "450px")
 # Fix
 selectInput("p2_other_member",
          label = "Other Org. Membership:",
          choices = c("Don't belong to other organization",
                      'Inactive other member',
                      'Active other member'),
-         selected = "Don't belong to other organization")
+         selected = "Don't belong to other organization",
+         width = "450px")
 
 selectInput("p2_gender",
          label = "Gender:",
@@ -1239,7 +1305,8 @@ selectInput("p2_gender",
                      "Transgender",
                      "Prefer not to say",
                      "Other (Gender)"),
-         selected = "Male")
+         selected = "Male",
+         width = "450px")
 
 selectInput("p2_marital_status",
          label = "Marital Status:",
@@ -1248,7 +1315,8 @@ selectInput("p2_marital_status",
                      "Divorced",
                      "Separated",
                      "Never married"),
-         selected = "Married")
+         selected = "Married",
+         width = "450px")
 
 selectInput("p2_education",
          label = "Education:",
@@ -1259,13 +1327,15 @@ selectInput("p2_education",
                      "4 year degree",
                      "Graduate or professional degree",
                      "Doctorate"),
-         selected = "Some college")
+         selected = "Some college",
+         width = "450px")
 
 selectInput("p2_income",
          label = "Income:",
          choices = c('Less than median of $61,372',
                      'More than median of $61,372'),
-         selected = "More than median of $61,372")
+         selected = "More than median of $61,372",
+         width = "450px")
 
 selectInput("p2_race",
          label = "Race(s):",
@@ -1276,13 +1346,15 @@ selectInput("p2_race",
                      'Native Hawaiian or Pacific Islander',
                      'Other (Race)'),
          multiple = TRUE,
-         selected = "American Indian or Alaska Native")
+         selected = "American Indian or Alaska Native",
+         width = "450px")
 
 selectInput("p2_age",
          label = "Age:",
          choices = c('Less than median age of 36',
                      "More than median age of 36"),
-         selected = "Less than median age of 36")
+         selected = "Less than median age of 36",
+         width = "450px")
 
 ```
 
@@ -1292,22 +1364,25 @@ selectInput("p2_age",
 
 textInput("p3_id",
           label = "Persona Name",
-          value = "Persona 1",
-          placeholder = "Enter Persona Name")
+          value = "Persona 3",
+          placeholder = "Enter Persona Name",
+          width = "450px")
 
 selectInput("p3_national_news",
          label = "Follow national news:",
          choices = c("Rarely",
                      "Once a week",
                      "At least once a day"),
-         selected = "At least once a day")
+         selected = "At least once a day",
+         width = "450px")
 
 selectInput("p3_international_news",
          label = "Follow international news:",
          choices = c("Never",
                      "Sometimes",
                      "Always"),
-         selected = "Always")
+         selected = "Always",
+         width = "450px")
 
 selectInput("p3_news_medium",
          label = "Medium to follow news:",
@@ -1319,19 +1394,22 @@ selectInput("p3_news_medium",
                      "Email newsletter",
                      "News app"),
          multiple = TRUE,
-         selected = c("TV", "Print", "Social media"))
+         selected = c("TV", "Print", "Social media"),
+         width = "450px")
 
 selectInput("p3_follow_gov",
          label = "Follow government & public affairs:",
          choices = c("Not Often",
                      "Often"),
-         selected = "Often")
+         selected = "Often",
+         width = "450px")
 
 #Fix
 selectInput("p3_travel_developing",
          label = "Travel to developing country:",
          choices = c("Doesn't travel", "Does travel"),
-         selected = "Does travel")
+         selected = "Does travel",
+         width = "450px")
 
 selectInput("p3_political_pref",
          label = "Political views from liberal to conservative:",
@@ -1342,7 +1420,8 @@ selectInput("p3_political_pref",
                      "Slightly conservative",
                      "Somewhat conservative",
                      "Extremely conservative"),
-         selected = "Somewhat liberal")
+         selected = "Somewhat liberal",
+         width = "450px")
 
 #Fix
 selectInput("p3_institution_trust",
@@ -1354,7 +1433,8 @@ selectInput("p3_institution_trust",
                      "Some trust in political institutions",
                      "A lot of trust in political institutions",
                      "Complete trust in political institutions"),
-         selected = "Complete trust in political institutions ")
+         selected = "Complete trust in political institutions",
+         width = "450px")
 
 selectInput("p3_others_charitable",
          label = "People should be more charitable:",
@@ -1365,7 +1445,8 @@ selectInput("p3_others_charitable",
                      "Somewhat agree",
                      "Agree",
                      "Strongly agree"),
-         selected = "Strongly agree")
+         selected = "Strongly agree",
+         width = "450px")
 
 # Fix
 selectInput("p3_worship_attendance",
@@ -1373,13 +1454,15 @@ selectInput("p3_worship_attendance",
          choices = c("Not sure",
                      "Rarely attend services",
                      "Attend at least once a month"),
-         selected = "Attend at least once a month")
+         selected = "Attend at least once a month",
+         width = "450px")
 
 selectInput("p3_religion_importance",
          label = "Importance of religion:",
          choices = c("Not important",
                      "Important"),
-         selected = "Important")
+         selected = "Important",
+         width = "450px")
 
 selectInput("p3_religion",
          label = "Religion:",
@@ -1393,7 +1476,8 @@ selectInput("p3_religion",
                      'Buddhist',
                      'Atheist',
                      'Other (Religion)'),
-         selected = 'Protestant')
+         selected = 'Protestant',
+         width = "450px")
 
 selectInput("p3_charity_importance",
           label = "Charity Importance:",
@@ -1404,7 +1488,8 @@ selectInput("p3_charity_importance",
                       "Somewhat important",
                       "Very important",
                       "Essential"),
-          selected = "Somewhat unimportant")
+          selected = "Somewhat unimportant",
+          width = "450px")
 
 #Fix
 selectInput("p3_trust_in_charity",
@@ -1416,14 +1501,16 @@ selectInput("p3_trust_in_charity",
                         "Some trust in charities",
                         "A lot of trust in charities",
                         "Complete trust in charities"),
-            selected = "Complete trust in charities")
+            selected = "Complete trust in charities",
+            width = "450px")
 
 #Fix
 selectInput("p3_donation_frequency",
          label = "Donation Frequency:",
          choices = c('Donate more than once a month, less than once a year',
                      'Donate at least once a month'),
-         selected = "Donate at least once a month")
+         selected = "Donate at least once a month",
+         width = "450px")
 
 selectInput("p3_donation_amount",
          label = "Donation Amount:",
@@ -1434,13 +1521,15 @@ selectInput("p3_donation_amount",
                      '$1,000-$4,999',
                      '$5,000-$9,999',
                      '$10,000+'),
-         selected = "$100-$499")
+         selected = "$100-$499",
+         width = "450px")
 
 #Fix
 selectInput("p3_volunteer_12",
          label = "Volunteered in last 12 Months:",
          choices = c("Haven't volunteered", "Have volunteered"),
-         selected = "Have volunteered")
+         selected = "Have volunteered",
+         width = "450px")
 
 #Fix
 selectInput("p3_volunteer_frequency",
@@ -1449,21 +1538,24 @@ selectInput("p3_volunteer_frequency",
                      "Rarely volunteer",
                      "Volunteer more than once a month, less than once a year",
                      "Volunteer at least once a month"),
-         selected = "Volunteer at least once a month")
+         selected = "Volunteer at least once a month",
+         width = "450px")
 
 # fix
 selectInput("p3_personal_activism",
          label = "Personal Activism:",
          choices = c('Not personally involved ',
                      'Personally involved'),
-         selected = "Personally involved")
+         selected = "Personally involved",
+         width = "450px")
 
 #Fix
 selectInput("p3_family_activism",
          label = "Family Activism:",
          choices = c('Family not involved',
                      'Family involved'),
-         selected = "Family involved")
+         selected = "Family involved",
+         width = "450px")
 
 #Fix
 selectInput("p3_religious_member",
@@ -1471,7 +1563,8 @@ selectInput("p3_religious_member",
          choices = c("Don't belong to church membership",
                      'Inactive church member',
                      'Active church member'),
-         selected = "Don't belong to church membership")
+         selected = "Don't belong to church membership",
+         width = "450px")
 
 #Fix
 selectInput("p3_sport_member",
@@ -1479,21 +1572,24 @@ selectInput("p3_sport_member",
          choices = c("Don't belong to sports membership",
                      'Inactive sports member',
                      'Active sports member'),
-         selected = "Don't belong to sports membership")
+         selected = "Don't belong to sports membership",
+         width = "450px")
 #Fix
 selectInput("p3_art_member",
          label = "Art, Music, or Educational Membership:",
          choices = c("Don't belong to educational membership",
                      'Inactive educational member',
                      'Active educational member'),
-         selected = "Don't belong to educational membership")
+         selected = "Don't belong to educational membership",
+         width = "450px")
 #Fix
 selectInput("p3_labor_member",
          label = "Labor Union Membership:",
          choices = c("Don't belong to union",
                      'Inactive union member',
                      'Active union member'),
-         selected = "Don't belong to union")
+         selected = "Don't belong to union",
+         width = "450px")
 
 #Fix
 selectInput("p3_political_member",
@@ -1501,28 +1597,32 @@ selectInput("p3_political_member",
          choices = c("Don't belong to party",
                      'Inactive party member',
                      'Active party member'),
-         selected = "Active party member")
+         selected = "Active party member",
+         width = "450px")
 # Fix
 selectInput("p3_environmental_member",
          label = "Environmental Org. Membership:",
          choices = c("Don't belong to environmental organization",
                      'Inactive environmental member',
                      'Active environmental member'),
-         selected = "Don't belong to environmental organization")
+         selected = "Don't belong to environmental organization",
+         width = "450px")
 # Fix
 selectInput("p3_professional_member",
          label = "Professional Membership:",
          choices = c("Don't belong to professional membership",
                      'Inactive professional member',
                      'Active professional member'),
-         selected = "Don't belong to professional membership")
+         selected = "Don't belong to professional membership",
+         width = "450px")
 # Fix
 selectInput("p3_humanitarian_member",
          label = "Humanitarian Org. Membership:",
          choices = c("Don't belong to humanitarian organization",
                      'Inactive humanitarian member',
                      'Active humanitarian member'),
-         selected = "Active humanitarian member")
+         selected = "Active humanitarian member",
+         width = "450px")
 
 # Fix
 selectInput("p3_consumer_member",
@@ -1530,14 +1630,16 @@ selectInput("p3_consumer_member",
          choices = c("Don't belong to consumer organization",
                      'Inactive consumer member',
                      'Active consumer member'),
-         selected = "Don't belong to consumer organization")
+         selected = "Don't belong to consumer organization",
+         width = "450px")
 # Fix
 selectInput("p3_other_member",
          label = "Other Org. Membership:",
          choices = c("Don't belong to other organization",
                      'Inactive other member',
                      'Active other member'),
-         selected = "Don't belong to other organization")
+         selected = "Don't belong to other organization",
+         width = "450px")
 
 selectInput("p3_gender",
          label = "Gender:",
@@ -1546,7 +1648,8 @@ selectInput("p3_gender",
                      "Transgender",
                      "Prefer not to say",
                      "Other (Gender)"),
-         selected = "Female")
+         selected = "Female",
+         width = "450px")
 
 selectInput("p3_marital_status",
          label = "Marital Status:",
@@ -1555,7 +1658,8 @@ selectInput("p3_marital_status",
                      "Divorced",
                      "Separated",
                      "Never married"),
-         selected = "Married")
+         selected = "Married",
+         width = "450px")
 
 selectInput("p3_education",
          label = "Education:",
@@ -1566,13 +1670,15 @@ selectInput("p3_education",
                      "4 year degree",
                      "Graduate or professional degree",
                      "Doctorate"),
-         selected = "Graduate or professional degree")
+         selected = "Graduate or professional degree",
+         width = "450px")
 
 selectInput("p3_income",
          label = "Income:",
          choices = c('Less than median of $61,372',
                      'More than median of $61,372'),
-         selected = "More than median of $61,372")
+         selected = "More than median of $61,372",
+         width = "450px")
 
 selectInput("p3_race",
          label = "Race(s):",
@@ -1583,13 +1689,15 @@ selectInput("p3_race",
                      'Native Hawaiian or Pacific Islander',
                      'Other (Race)'),
          multiple = TRUE,
-         selected = c("Black or African American", "American Indian or Alaska Native"))
+         selected = c("Black or African American", "American Indian or Alaska Native"),
+         width = "450px")
 
 selectInput("p3_age",
          label = "Age:",
          choices = c('Less than median age of 36',
                      "More than median age of 36"),
-         selected = "Less than median age of 36")
+         selected = "Less than median age of 36",
+         width = "450px")
 
 ```
 
@@ -1601,7 +1709,8 @@ selectInput("p3_age",
 textInput("ai_id",
           label = "Organization Name",
           value = "Organization 1",
-          placeholder = "Enter Organization Name")
+          placeholder = "Enter Organization Name",
+          width = "450px")
 
 selectInput("org1_id",
             label = "Select Organization:",
@@ -1609,7 +1718,8 @@ selectInput("org1_id",
                        "Greenpeace",
                        "Oxfam",
                        "Red Cross"),
-            selected = "Red Cross")
+            selected = "Red Cross",
+            width = "450px")
 
 selectInput("ai_issue", 
             label = "Select Issue Area:",
@@ -1617,31 +1727,36 @@ selectInput("ai_issue",
                         "Environment",
                         "Human rights",
                         "Refugee relief"),
-            selected = "Emergency response")
+            selected = "Emergency response",
+            width = "450px")
 
 selectInput("ai_fin_trans",
             label = "Select Financial Transparency:",
             choices = c("Doesn’t engage in transparency",
                         "Engages in transparency"),
-            selected = "Engages in transparency")
+            selected = "Engages in transparency",
+            width = "450px")
 
 selectInput("ai_account",
             label = "Select Financial Accountability:",
             choices = c("Doesn’t engage in accountability",
                         "Engages in accountability"),
-            selected = "Engages in accountability")
+            selected = "Engages in accountability",
+            width = "450px")
 
 selectInput("ai_funding",
             label = "Select Funding Source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
-                        "Government grants"))
+                        "Government grants"),
+            width = "450px")
 
 selectInput("ai_gov_relat",
             label = "Select Relationship With Host Government",
             choices = c("Friendly relationship with government",
                         "Criticized by government", 
-                        "Under government crackdown"))
+                        "Under government crackdown"),
+            width = "450px")
 
 ```
 
@@ -1653,7 +1768,8 @@ selectInput("ai_gov_relat",
 textInput("gp_id",
           label = "Organization Name",
           value = "Organization 2",
-          placeholder = "Enter Organiation Name")
+          placeholder = "Enter Organiation Name",
+          width = "450px")
 
 selectInput("org2_id",
             label = "Select Organization:",
@@ -1661,7 +1777,8 @@ selectInput("org2_id",
                        "Greenpeace",
                        "Oxfam",
                        "Red Cross"),
-            selected = "Red Cross")
+            selected = "Red Cross",
+            width = "450px")
 
 selectInput("gp_issue", 
             label = "Select Issue Area:",
@@ -1669,31 +1786,36 @@ selectInput("gp_issue",
                         "Environment",
                         "Human rights",
                         "Refugee relief"),
-            selected = "Environment")
+            selected = "Environment",
+            width = "450px")
 
 selectInput("gp_fin_trans",
             label = "Select Financial Transparency:",
             choices = c("Doesn’t engage in transparency",
                         "Engages in transparency"),
-            selected = "Engages in transparency")
+            selected = "Engages in transparency",
+            width = "450px")
 
 selectInput("gp_account",
             label = "Select Financial Accountability:",
             choices = c("Doesn’t engage in accountability",
                         "Engages in accountability"),
-            selected = "Engages in accountability")
+            selected = "Engages in accountability",
+            width = "450px")
 
 selectInput("gp_funding",
             label = "Select Funding Source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
-                        "Government grants"))
+                        "Government grants"),
+            width = "450px")
 
 selectInput("gp_gov_relat",
             label = "Select Relationship With Host Government",
             choices = c("Friendly relationship with government",
                         "Criticized by government", 
-                        "Under government crackdown"))
+                        "Under government crackdown"),
+            width = "450px")
 ```
 
 ### Org 3
@@ -1703,7 +1825,8 @@ selectInput("gp_gov_relat",
 textInput("ox_id",
           label = "Organization Name",
           value = "Organization 3",
-          placeholder = "Enter Organiation Name")
+          placeholder = "Enter Organiation Name",
+          width = "450px")
 
 selectInput("org3_id",
             label = "Select Organization:",
@@ -1711,7 +1834,8 @@ selectInput("org3_id",
                        "Greenpeace",
                        "Oxfam",
                        "Red Cross"),
-            selected = "Red Cross")
+            selected = "Red Cross",
+            width = "450px")
 
 
 selectInput("ox_issue", 
@@ -1720,31 +1844,36 @@ selectInput("ox_issue",
                         "Environment",
                         "Human rights",
                         "Refugee relief"),
-            selected = "Human rights")
+            selected = "Human rights",
+            width = "450px")
 
 selectInput("ox_fin_trans",
             label = "Select Financial Transparency:",
             choices = c("Doesn’t engage in transparency",
                         "Engages in transparency"),
-            selected = "Engages in transparency")
+            selected = "Engages in transparency",
+            width = "450px")
 
 selectInput("ox_account",
             label = "Select Financial Accountability:",
             choices = c("Doesn’t engage in accountability",
                         "Engages in accountability"),
-            selected = "Engages in accountability")
+            selected = "Engages in accountability",
+            width = "450px")
 
 selectInput("ox_funding",
             label = "Select Funding Source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
-                        "Government grants"))
+                        "Government grants"),
+            width = "450px")
 
 selectInput("ox_gov_relat",
             label = "Select Relationship With Host Government",
             choices = c("Friendly relationship with government",
                         "Criticized by government", 
-                        "Under government crackdown"))
+                        "Under government crackdown"),
+            width = "450px")
 ```
 
 ### Org 4
@@ -1754,7 +1883,8 @@ selectInput("ox_gov_relat",
 textInput("rc_id",
           label = "Organization Name",
           value = "Organization 4",
-          placeholder = "Enter Organiation Name")
+          placeholder = "Enter Organiation Name",
+          width = "450px")
 
 selectInput("org4_id",
             label = "Select Organization:",
@@ -1762,7 +1892,8 @@ selectInput("org4_id",
                        "Greenpeace",
                        "Oxfam",
                        "Red Cross"),
-            selected = "Red Cross")
+            selected = "Red Cross",
+            width = "450px")
 
 
 selectInput("rc_issue", 
@@ -1771,31 +1902,36 @@ selectInput("rc_issue",
                         "Environment",
                         "Human rights",
                         "Refugee relief"),
-            selected = "Refugee relief")
+            selected = "Refugee relief",
+            width = "450px")
 
 selectInput("rc_fin_trans",
             label = "Select Financial Transparency:",
             choices = c("Doesn’t engage in transparency",
                         "Engages in transparency"),
-            selected = "Engages in transparency")
+            selected = "Engages in transparency",
+            width = "450px")
 
 selectInput("rc_account",
             label = "Select Financial Accountability:",
             choices = c("Doesn’t engage in accountability",
                         "Engages in accountability"),
-            selected = "Engages in accountability")
+            selected = "Engages in accountability",
+            width = "450px")
 
 selectInput("rc_funding",
             label = "Select Funding Source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
-                        "Government grants"))
+                        "Government grants"),
+            width = "450px")
 
 selectInput("rc_gov_relat",
             label = "Select Relationship With Host Government",
             choices = c("Friendly relationship with government",
                         "Criticized by government", 
-                        "Under government crackdown"))
+                        "Under government crackdown"),
+            width = "450px")
 ```
 
 
