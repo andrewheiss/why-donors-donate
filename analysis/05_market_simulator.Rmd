@@ -62,10 +62,10 @@ beta$levels = c("Amnesty International",
                 "Environment", 
                 "Human rights",
                 "Refugee relief",
-                # Transparency
+                # Financial Transparency
                 "Engages in transparency",
                 # Financial Accountability
-                "Engages in financial accountability",
+                "Engages in accountability",
                 # Funding
                 "Handful of wealthy private donors", 
                 "Government grants",
@@ -75,6 +75,7 @@ beta$levels = c("Amnesty International",
 
 # Org Reactive Element
 df <- reactive({
+  
   #Amnesty International
     beta$ai_value <- 0
     # beta$ai_value[beta$levels == 'Amnesty International'] <- 1
@@ -84,28 +85,31 @@ df <- reactive({
     beta$ai_value[beta$levels %in% input$ai_account] <- 1
     beta$ai_value[beta$levels %in% input$ai_funding] <- 1
     beta$ai_value[beta$levels %in% input$ai_gov_relat] <- 1
+    
   #Greenpeace
     beta$gp_value <- 0
     # beta$gp_value[beta$levels == 'Greenpeace'] <- 1
-    beta$ai_value[beta$levels %in% input$org2_id] <- 1
+    beta$gp_value[beta$levels %in% input$org2_id] <- 1
     beta$gp_value[beta$levels %in% input$gp_issue] <- 1
     beta$gp_value[beta$levels %in% input$gp_fin_trans] <- 1
     beta$gp_value[beta$levels %in% input$gp_account] <- 1
     beta$gp_value[beta$levels %in% input$gp_funding] <- 1
     beta$gp_value[beta$levels %in% input$gp_gov_relat] <- 1
+    
   #Oxfam
     beta$ox_value <- 0
     # beta$ox_value[beta$levels == 'Oxfam'] <- 1
-    beta$ai_value[beta$levels %in% input$org3_id] <- 1
+    beta$ox_value[beta$levels %in% input$org3_id] <- 1
     beta$ox_value[beta$levels %in% input$ox_issue] <- 1
     beta$ox_value[beta$levels %in% input$ox_fin_trans] <- 1
     beta$ox_value[beta$levels %in% input$ox_account] <- 1
     beta$ox_value[beta$levels %in% input$ox_funding] <- 1
     beta$ox_value[beta$levels %in% input$ox_gov_relat] <- 1
+    
   #Redcross
     beta$rc_value <- 0
     # beta$rc_value[beta$levels == 'Red Cross'] <- 1
-    beta$ai_value[beta$levels %in% input$org4_id] <- 1
+    beta$rc_value[beta$levels %in% input$org4_id] <- 1
     beta$rc_value[beta$levels %in% input$rc_issue] <- 1
     beta$rc_value[beta$levels %in% input$rc_fin_trans] <- 1
     beta$rc_value[beta$levels %in% input$rc_account] <- 1
@@ -139,7 +143,7 @@ beta_persona$levels = c("Intercept",
                         # Follow Government or Public Affairs
                         "Often", 
                         # Travel to developing Countries
-                        "Yes", 
+                        "Yes (1)", 
                         # Political Preference
                         "Somewhat liberal",
                         "Slightly liberal",
@@ -153,7 +157,7 @@ beta_persona$levels = c("Intercept",
                         "Nuetral",
                         "Some trust",
                         "A lot of trust",
-                        "Complete trust",
+                        "Complete trust (1)",
                         # Should Others be Charitable
                         "Disagree",
                         "Somewhat disagree",
@@ -163,7 +167,7 @@ beta_persona$levels = c("Intercept",
                         "Strongly agree",
                         # Worship Service Attendance
                         "Rarely",
-                        "At least once a month",
+                        "At least once a month (1)",
                         # Religious Importance
                         "Important",
                         # Religion
@@ -189,9 +193,9 @@ beta_persona$levels = c("Intercept",
                         "Nuetral",
                         "Some trust",
                         "A lot of trust",
-                        "Complete trust",
+                        "Complete trust (2)",
                         # Donation Frequency
-                        "At least once a month", 
+                        "At least once a month (2)", 
                         # Donation Amount
                         "$50-$99",
                         "$100-$499",
@@ -200,15 +204,15 @@ beta_persona$levels = c("Intercept",
                         "$5,000-$9,999",
                         "$10,000 +",
                         # Volunteered last 12 months
-                        "Yes",
+                        "Yes (2)",
                         # Volunteer Frequency
                         "Rarely",
                         "More than once a month, less than once a year",
-                        "At least once a month",
+                        "At least once a month (3)",
                         # Personal Activism
-                        "Involved",
+                        "Involved (1)",
                         # Family Activism
-                        "Involved",
+                        "Involved (2)",
                         # Religious Membership
                         "Inactive member",
                         "Active member",
@@ -223,7 +227,7 @@ beta_persona$levels = c("Intercept",
                         "Active member",
                         # Political Party Membership
                         "Inactive member",
-                        "Active member",
+                        "Active member (1)",
                         # Environmental Organization Membership
                         "Inactive member",
                         "Active member",
@@ -232,7 +236,7 @@ beta_persona$levels = c("Intercept",
                         "Active member",
                         # Humanitarian or Charity Membership
                         "Inactive member",
-                        "Active member",
+                        "Active member (2)",
                         # Consumer Organization Membership
                         "Inactive member",
                         "Active member",
@@ -283,31 +287,37 @@ p <- reactive({
     beta_persona$p1_value[beta_persona$levels %in% input$p1_news_medium] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_follow_gov] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_travel_developing] <- 1
+    
     beta_persona$p1_value[beta_persona$levels %in% input$p1_political_pref] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_institution_trust] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_others_charitable] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_worship_attendence] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_religion_importance] <- 1
+    
     beta_persona$p1_value[beta_persona$levels %in% input$p1_religion] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_charity_importance] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_trust_in_charity] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_donation_frequency] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_donation_amount] <- 1
+    
     beta_persona$p1_value[beta_persona$levels %in% input$p1_volunteer_12] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_volunteer_frequency] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_personal_activism] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_family_activism] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_religious_member] <- 1
+    
     beta_persona$p1_value[beta_persona$levels %in% input$p1_sport_member] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_art_member] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_labor_member] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_political_member] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_environmental_member] <- 1
+    
     beta_persona$p1_value[beta_persona$levels %in% input$p1_professional_member] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_humanitarian_member] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_consumer_member] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_other_member] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_gender] <- 1
+    
     beta_persona$p1_value[beta_persona$levels %in% input$p1_marital_status] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_education] <- 1
     beta_persona$p1_value[beta_persona$levels %in% input$p1_income] <- 1
@@ -324,31 +334,37 @@ p <- reactive({
     beta_persona$p2_value[beta_persona$levels %in% input$p2_news_medium] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_follow_gov] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_travel_developing] <- 1
+    
     beta_persona$p2_value[beta_persona$levels %in% input$p2_political_pref] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_institution_trust] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_others_charitable] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_worship_attendence] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_religion_importance] <- 1
+    
     beta_persona$p2_value[beta_persona$levels %in% input$p2_religion] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_charity_importance] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_trust_in_charity] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_donation_frequency] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_donation_amount] <- 1
+    
     beta_persona$p2_value[beta_persona$levels %in% input$p2_volunteer_12] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_volunteer_frequency] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_personal_activism] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_family_activism] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_religious_member] <- 1
+    
     beta_persona$p2_value[beta_persona$levels %in% input$p2_sport_member] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_art_member] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_labor_member] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_political_member] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_environmental_member] <- 1
+    
     beta_persona$p2_value[beta_persona$levels %in% input$p2_professional_member] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_humanitarian_member] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_consumer_member] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_other_member] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_gender] <- 1
+    
     beta_persona$p2_value[beta_persona$levels %in% input$p2_marital_status] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_education] <- 1
     beta_persona$p2_value[beta_persona$levels %in% input$p2_income] <- 1
@@ -365,31 +381,37 @@ p <- reactive({
     beta_persona$p3_value[beta_persona$levels %in% input$p3_news_medium] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_follow_gov] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_travel_developing] <- 1
+    
     beta_persona$p3_value[beta_persona$levels %in% input$p3_political_pref] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_institution_trust] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_others_charitable] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_worship_attendence] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_religion_importance] <- 1
+    
     beta_persona$p3_value[beta_persona$levels %in% input$p3_religion] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_charity_importance] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_trust_in_charity] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_donation_frequency] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_donation_amount] <- 1
+    
     beta_persona$p3_value[beta_persona$levels %in% input$p3_volunteer_12] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_volunteer_frequency] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_personal_activism] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_family_activism] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_religious_member] <- 1
+    
     beta_persona$p3_value[beta_persona$levels %in% input$p3_sport_member] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_art_member] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_labor_member] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_political_member] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_environmental_member] <- 1
+    
     beta_persona$p3_value[beta_persona$levels %in% input$p3_professional_member] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_humanitarian_member] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_consumer_member] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_other_member] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_gender] <- 1
+    
     beta_persona$p3_value[beta_persona$levels %in% input$p3_marital_status] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_education] <- 1
     beta_persona$p3_value[beta_persona$levels %in% input$p3_income] <- 1
@@ -515,7 +537,7 @@ persona3 <- persona_data[,4]
 # matrix multiplication between persona data and betas
 beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona3)
 
-# Orgnization
+# Organization
 org1 <- org_data[,2]
 
 org2 <- org_data[,3]
@@ -617,7 +639,7 @@ renderPlotly({
   df <- as.data.frame(matrix(data, 24, 1))
   
   # Organization name inputs
-  df[,2] <- c(input$ai_id, input$gp_id, input$ox_id, input$rc_id)
+  df[,2] <- rep(c(input$ai_id, input$gp_id, input$ox_id, input$rc_id),6)
   # Type of value
   df[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
   # Persona name inputs
@@ -637,7 +659,7 @@ renderPlotly({
              ggplot(aes(y = Value, x = Organization, fill = Persona)) +
              geom_bar(position = "dodge", stat = "identity") +
              labs(x="", y = "Market Share") + 
-             scale_fill_manual(values = c( "#FFC30B", "#28a153", "#c23838")) +
+             scale_fill_manual(values = c("#FFC30B", "#28a153", "#c23838")) +
              theme(legend.position = "right",
                    panel.background = element_blank(),
                    panel.grid.major.y = element_line(color = "#D3D3D3"))
@@ -689,7 +711,7 @@ selectInput("p1_follow_gov",
 
 selectInput("p1_travel_developing",
          label = "Travel to developing country:",
-         choices = c('No', "Yes"))
+         choices = c('No', "Yes (1)"))
 
 selectInput("p1_political_pref",
          label = "Political views from liberal to conservative:",
@@ -709,7 +731,7 @@ selectInput("p1_institution_trust",
                      "Nuetral",
                      "Some trust",
                      "A lot of trust",
-                     "Complete trust"))
+                     "Complete trust (1)"))
 
 selectInput("p1_others_charitable",
          label = "People should be more charitable:",
@@ -725,7 +747,7 @@ selectInput("p1_worship_attendance",
          label = "Worship service attendance:",
          choices = c("Not sure",
                      "Rarely",
-                     "At least once a month"))
+                     "At least once a month (1)"))
 
 selectInput("p1_religion_importance",
          label = "Importance of religion:",
@@ -763,12 +785,12 @@ selectInput("p1_trust_in_charity",
                         "Nuetral",
                         "Some trust",
                         "A lot of trust",
-                        "Complete trust"))
+                        "Complete trust (2)"))
 
 selectInput("p1_donation_frequency",
          label = "Donation Frequency:",
          choices = c('More than once a month, less than once a year',
-                     'At least once a month'))
+                     'At least once a month (2)'))
 
 selectInput("p1_donation_amount",
          label = "Donation Amount:",
@@ -782,24 +804,24 @@ selectInput("p1_donation_amount",
 
 selectInput("p1_volunteer_12",
          label = "Volunteered in last 12 Months:",
-         choices = c("No", "Yes"))
+         choices = c("No", "Yes (2)"))
 
 selectInput("p1_volunteer_frequency",
          label = "Volunteer Frequency:",
          choices = c("Haven't volunteered in past 12 months",
                      "Rarely",
                      "More than once a month, less than once a year",
-                     "At least once a month"))
+                     "At least once a month (3)"))
 
 selectInput("p1_personal_activism",
          label = "Personal Activism:",
          choices = c('Not involved',
-                     'Involved'))
+                     'Involved (1)'))
 
 selectInput("p1_family_activism",
          label = "Family Activism:",
          choices = c('Not involved',
-                     'Involved'))
+                     'Involved (2)'))
 
 selectInput("p1_religious_member",
          label = "Church Membership:",
@@ -829,7 +851,7 @@ selectInput("p1_political_member",
          label = "Political Party Membership:",
          choices = c("Don't belong",
                      'Inactive member',
-                     'Active member'))
+                     'Active member (1)'))
 
 selectInput("p1_environmental_member",
          label = "Enviornmental Org. Membership:",
@@ -847,7 +869,7 @@ selectInput("p1_humanitarian_member",
          label = "Humanitarian Org. Membership:",
          choices = c("Don't belong",
                      'Inactive member',
-                     'Active member'))
+                     'Active member (2)'))
 
 selectInput("p1_consumer_member",
          label = "Consumer Org. Membership:",
@@ -1435,12 +1457,12 @@ selectInput("p3_age",
 textInput("ai_id",
           label = "Organization Name",
           value = "Organization 1",
-          placeholder = "Enter Organiation Name")
+          placeholder = "Enter Organization Name")
 
 selectInput("org1_id",
             label = "Select Organization:",
             choice = c("Amnesty International",
-                       "Green Peace",
+                       "Greenpeace",
                        "Oxfam",
                        "Red Cross"))
 
@@ -1458,8 +1480,8 @@ selectInput("ai_fin_trans",
 
 selectInput("ai_account",
             label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in financial accountability",
-                        "Engages in financial accountability"))
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in accountability"))
 
 selectInput("ai_funding",
             label = "Select Funding Source:",
@@ -1488,7 +1510,7 @@ textInput("gp_id",
 selectInput("org2_id",
             label = "Select Organization:",
             choice = c("Amnesty International",
-                       "Green Peace",
+                       "Greenpeace",
                        "Oxfam",
                        "Red Cross"))
 
@@ -1506,8 +1528,8 @@ selectInput("gp_fin_trans",
 
 selectInput("gp_account",
             label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in financial accountability",
-                        "Engages in financial accountability"))
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in accountability"))
 
 selectInput("gp_funding",
             label = "Select Funding Source:",
@@ -1534,7 +1556,7 @@ textInput("ox_id",
 selectInput("org3_id",
             label = "Select Organization:",
             choice = c("Amnesty International",
-                       "Green Peace",
+                       "Greenpeace",
                        "Oxfam",
                        "Red Cross"))
 
@@ -1553,8 +1575,8 @@ selectInput("ox_fin_trans",
 
 selectInput("ox_account",
             label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in financial accountability",
-                        "Engages in financial accountability"))
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in accountability"))
 
 selectInput("ox_funding",
             label = "Select Funding Source:",
@@ -1581,7 +1603,7 @@ textInput("rc_id",
 selectInput("org4_id",
             label = "Select Organization:",
             choice = c("Amnesty International",
-                       "Green Peace",
+                       "Greenpeace",
                        "Oxfam",
                        "Red Cross"))
 
@@ -1600,8 +1622,8 @@ selectInput("rc_fin_trans",
 
 selectInput("rc_account",
             label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in financial accountability",
-                        "Engages in financial accountability"))
+            choices = c("Doesn’t engage in accountability",
+                        "Engages in accountability"))
 
 selectInput("rc_funding",
             label = "Select Funding Source:",
