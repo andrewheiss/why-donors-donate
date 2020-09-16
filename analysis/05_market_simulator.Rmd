@@ -1,5 +1,5 @@
 ---
-title: "Why Donors Donate?"
+title: "Market simulator"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -7,19 +7,17 @@ output:
 runtime: shiny
 ---
 
-```{r packages, include=FALSE}
+```{r load-packages, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(flexdashboard)
 library(plotly)
 library(shiny)
-library(here)
 ```
 
-```{r load data}
-
-# Beta's of everything. The only model we care about right now
-public_political_social_charity_demo <- readRDS(here('analysis', 'output', 'posterior_draws', 'public_political_social_charity_demo.rds')) %>% 
+```{r load-data}
+# Gammas of the "everything" model
+public_political_social_charity_demo <- read_rds(here::here('analysis', 'output', 'posterior_draws', 'public_political_social_charity_demo.rds')) %>% 
   group_by(i, j) %>% 
   summarize(gamma_mean = mean(Gamma)) %>% 
   ungroup() %>% 
@@ -27,407 +25,395 @@ public_political_social_charity_demo <- readRDS(here('analysis', 'output', 'post
   select(-i) %>% 
   t()
 
-# Persona Data from Market Simulator Workbook
-persona_data <- readxl::read_xlsx(here('analysis', 'output', "persona_configV07.xlsx"))
+# Starting organization configuration
+organization_data <- read_csv(here::here('analysis', 'output', 'configurations', 'organization_config01.csv'))
 
-# Org Data from Market Simulator Workbook
-org_data <- readxl::read_xlsx(here('analysis', 'output', "org_config.xlsx"))
+# Starting persona configuration
+persona_data <- read_csv(here::here('analysis', 'output', 'configurations', 'persona_config01.csv'))
+```
 
+```{r organization-reactive-table}
+# Placeholder for organization gammas
+gamma <- as.data.frame(matrix(rep(0), nrow = 13))
 
-#Levels (This is a guess):            Means:
-#   1. Amnesty International          0.805
-#   2. Greenpeace                     0.923
-#   3. Oxfam                          0.620
-#   4. Red Cross                      1.820
-#   5. Environment                   -0.444
-#   6. Human Rights                  -0.164
-#   7. Refugee Relief                -0.582
-#   8. Financially Transparent        1.080
-#   9. Accountable                    1.130
-#   10. Small wealthy donors         -0.376
-#   11. Government Grants            -0.252
-#   12. Criticized by Government       -0.663
-#   13. Under Government Crackdown   -1.011
+# Assign level labels
+gamma$levels = c(
+  # Organization
+  "Amnesty International",
+  "Greenpeace", 
+  "Oxfam", 
+  "Red Cross",
+  # Issue Area
+  "Environment", 
+  "Human rights",
+  "Refugee relief",
+  # Financial Transparency
+  "Engages in financial transparency",
+  # Financial Accountability
+  "Engages in financial accountability",
+  # Funding Sourcs
+  "Handful of wealthy private donors", 
+  "Government grants",
+  # Relationship with Host Government
+  "Criticized by government",
+  "Under government crackdown"
+)
 
-
-################### Org Reactive Element ####################################
-
-beta <- as.data.frame(matrix(rep(0), nrow = 13))
-
-beta$levels = c("Amnesty International",
-                "Greenpeace", 
-                "Oxfam", 
-                "Red Cross",
-                # Org Issue
-                "Environment", 
-                "Human rights",
-                "Refugee relief",
-                # Financial Transparency
-                "Engages in transparency",
-                # Financial Accountability
-                "Engages in accountability",
-                # Funding
-                "Handful of wealthy private donors", 
-                "Government grants",
-                # Gov Relations
-                "Criticized by government",
-                "Under government crackdown")
-
-# Org Reactive Element
+# Organization configuration reactive element
 df <- reactive({
   
-  #Amnesty International
-    beta$ai_value <- 0
-    # beta$ai_value[beta$levels == 'Amnesty International'] <- 1
-    beta$ai_value[beta$levels %in% input$org1_id] <- 1
-    beta$ai_value[beta$levels %in% input$ai_issue] <- 1
-    beta$ai_value[beta$levels %in% input$ai_fin_trans] <- 1
-    beta$ai_value[beta$levels %in% input$ai_account] <- 1
-    beta$ai_value[beta$levels %in% input$ai_funding] <- 1
-    beta$ai_value[beta$levels %in% input$ai_gov_relat] <- 1
+  # Amnesty International
+    gamma$ai_value <- 0
+    gamma$ai_value[gamma$levels %in% input$org1_id] <- 1
+    gamma$ai_value[gamma$levels %in% input$ai_issue] <- 1
+    gamma$ai_value[gamma$levels %in% input$ai_fin_trans] <- 1
+    gamma$ai_value[gamma$levels %in% input$ai_account] <- 1
+    gamma$ai_value[gamma$levels %in% input$ai_funding] <- 1
+    gamma$ai_value[gamma$levels %in% input$ai_gov_relat] <- 1
     
   #Greenpeace
-    beta$gp_value <- 0
-    # beta$gp_value[beta$levels == 'Greenpeace'] <- 1
-    beta$gp_value[beta$levels %in% input$org2_id] <- 1
-    beta$gp_value[beta$levels %in% input$gp_issue] <- 1
-    beta$gp_value[beta$levels %in% input$gp_fin_trans] <- 1
-    beta$gp_value[beta$levels %in% input$gp_account] <- 1
-    beta$gp_value[beta$levels %in% input$gp_funding] <- 1
-    beta$gp_value[beta$levels %in% input$gp_gov_relat] <- 1
+    gamma$gp_value <- 0
+    # gamma$gp_value[gamma$levels == 'Greenpeace'] <- 1
+    gamma$gp_value[gamma$levels %in% input$org2_id] <- 1
+    gamma$gp_value[gamma$levels %in% input$gp_issue] <- 1
+    gamma$gp_value[gamma$levels %in% input$gp_fin_trans] <- 1
+    gamma$gp_value[gamma$levels %in% input$gp_account] <- 1
+    gamma$gp_value[gamma$levels %in% input$gp_funding] <- 1
+    gamma$gp_value[gamma$levels %in% input$gp_gov_relat] <- 1
     
   #Oxfam
-    beta$ox_value <- 0
-    # beta$ox_value[beta$levels == 'Oxfam'] <- 1
-    beta$ox_value[beta$levels %in% input$org3_id] <- 1
-    beta$ox_value[beta$levels %in% input$ox_issue] <- 1
-    beta$ox_value[beta$levels %in% input$ox_fin_trans] <- 1
-    beta$ox_value[beta$levels %in% input$ox_account] <- 1
-    beta$ox_value[beta$levels %in% input$ox_funding] <- 1
-    beta$ox_value[beta$levels %in% input$ox_gov_relat] <- 1
+    gamma$ox_value <- 0
+    # gamma$ox_value[gamma$levels == 'Oxfam'] <- 1
+    gamma$ox_value[gamma$levels %in% input$org3_id] <- 1
+    gamma$ox_value[gamma$levels %in% input$ox_issue] <- 1
+    gamma$ox_value[gamma$levels %in% input$ox_fin_trans] <- 1
+    gamma$ox_value[gamma$levels %in% input$ox_account] <- 1
+    gamma$ox_value[gamma$levels %in% input$ox_funding] <- 1
+    gamma$ox_value[gamma$levels %in% input$ox_gov_relat] <- 1
     
   #Redcross
-    beta$rc_value <- 0
-    # beta$rc_value[beta$levels == 'Red Cross'] <- 1
-    beta$rc_value[beta$levels %in% input$org4_id] <- 1
-    beta$rc_value[beta$levels %in% input$rc_issue] <- 1
-    beta$rc_value[beta$levels %in% input$rc_fin_trans] <- 1
-    beta$rc_value[beta$levels %in% input$rc_account] <- 1
-    beta$rc_value[beta$levels %in% input$rc_funding] <- 1
-    beta$rc_value[beta$levels %in% input$rc_gov_relat] <- 1
-    beta
+    gamma$rc_value <- 0
+    # gamma$rc_value[gamma$levels == 'Red Cross'] <- 1
+    gamma$rc_value[gamma$levels %in% input$org4_id] <- 1
+    gamma$rc_value[gamma$levels %in% input$rc_issue] <- 1
+    gamma$rc_value[gamma$levels %in% input$rc_fin_trans] <- 1
+    gamma$rc_value[gamma$levels %in% input$rc_account] <- 1
+    gamma$rc_value[gamma$levels %in% input$rc_funding] <- 1
+    gamma$rc_value[gamma$levels %in% input$rc_gov_relat] <- 1
+    gamma
     
 })
+```
 
-################### Persona Reactive Element ####################################
+```{r persona-reactive-table}
+# Placeholder for persona gammas
+gamma_persona <- as.data.frame(matrix(rep(0), nrow = 111))
 
-# Persona beta levels -----
-
-beta_persona <- as.data.frame(matrix(rep(0), nrow = 111))
-
-beta_persona$levels = c("Intercept",
-                        # Follow National News
-                        "Once a Week",
-                        "At least once a day",
-                        # Follow International News
-                        "Sometimes",
-                        "Always",
-                        # News Mediums
-                        "TV",
-                        "Print",
-                        "Online (not social media)",
-                        "Social media",
-                        "Radio",
-                        "Email newsletter",
-                        "News app",
-                        # Follow Government or Public Affairs
-                        "Often", 
-                        # Travel to developing Countries
-                        "Does travel", 
-                        # Political Preference
-                        "Somewhat liberal",
-                        "Slightly liberal",
-                        "Moderate",
-                        "Slightly conservative",
-                        "Somewhat conservative",
-                        "Extremely conservative",
-                        # Trust in Political Institute
-                        "Very little trust in polticial institutions",
-                        "Little trust in polticial institutions",
-                        "Nuetral trust in polticial institutions",
-                        "Some trust in polticial institutions",
-                        "A lot of trust in polticial institutions",
-                        "Complete trust in polticial institutions",
-                        # Should Others be Charitable
-                        "Disagree",
-                        "Somewhat disagree",
-                        "Nuetral",
-                        "Somewhat agree",
-                        "Agree",
-                        "Strongly agree",
-                        # Worship Service Attendance
-                        "Rarely attend services",
-                        "Attend at least once a month",
-                        # Religious Importance
-                        "Important",
-                        # Religion
-                        "Protestant",
-                        "Christian Orthodox",
-                        "Jewish",
-                        "Muslim",
-                        "Sikh",
-                        "Hindu",
-                        "Buddhist",
-                        "Atheist",
-                        "Other (Religion)",
-                        # Charity Trust Importance
-                        "Very unimportant",
-                        "Somewhat unimportant",
-                        "Nuetral",
-                        "Somewhat important",
-                        "Very important",
-                        "Essential",
-                        # Trust in Charities
-                        "Very little trust in charities",
-                        "Little trust in charities",
-                        "Nuetral trust in charities",
-                        "Some trust in charities",
-                        "A lot of trust in charities",
-                        "Complete trust in charities",
-                        # Donation Frequency
-                        "Donate At least once a month", 
-                        # Donation Amount
-                        "$50-$99",
-                        "$100-$499",
-                        "$500-$999",
-                        "$1,000-$4,999",
-                        "$5,000-$9,999",
-                        "$10,000 +",
-                        # Volunteered last 12 months
-                        "Have volunteered",
-                        # Volunteer Frequency
-                        "Rarely volunteer",
-                        "Volunteer more than once a month, less than once a year",
-                        "Volunteer at least once a month",
-                        # Personal Activism
-                        "Personally involved",
-                        # Family Activism
-                        "Family involved",
-                        # Religious Membership
-                        "Inactive church member",
-                        "Active church member",
-                        # Sport or Recreational Membership
-                        "Inactive sports member",
-                        "Active sports member", 
-                        # Art, Music, or Educational Membership
-                        "Inactive educational member",
-                        "Active educational member",
-                        # Labor Union Membership
-                        "Inactive union member",
-                        "Active union member",
-                        # Political Party Membership
-                        "Inactive party member",
-                        "Active party member",
-                        # Environmental Organization Membership
-                        "Inactive environmental member",
-                        "Active environmental member",
-                        # Professional Association
-                        "Inactive professional member",
-                        "Active professional member",
-                        # Humanitarian or Charity Membership
-                        "Inactive humanitarian member",
-                        "Active humanitarian member",
-                        # Consumer Organization Membership
-                        "Inactive consumer member",
-                        "Active sonsumer member",
-                        #Other Organization Membership
-                        "Inactive other member",
-                        "Active other member",
-                        # Gender
-                        "Female",
-                        "Transgender",
-                        "Prefer not to say",
-                        "Other (Gender)",
-                        # Marital Status
-                        "Widowed",
-                        "Divorced",
-                        "Separated",
-                        "Never married",
-                        # Education
-                        "High school graduate", 
-                        "Some college",
-                        "2 year degree",
-                        "4 year degree",
-                        "Graduate or professional degree",
-                        "Doctorate",
-                        # Income
-                        "More than median of $61,372", 
-                        # Race
-                        "White", 
-                        "Black or African American", 
-                        "American Indian or Alaska Native", 
-                        "Asian", 
-                        "Native Hawaiian or Pacific Islander", 
-                        "Other (Race)", 
-                        # Age
-                        "More than median age of 36")
-
+# Assign covariate labels
+gamma_persona$levels <- c(
+  "Intercept",
+  # Follow national news
+  "Once a week",
+  "At least once a day",
+  # Follow international news
+  "Sometimes",
+  "Always",
+  # Mediums to follow news
+  "TV",
+  "Print",
+  "Online (not social media)",
+  "Social media",
+  "Radio",
+  "Email newsletter",
+  "News app",
+  # Follow government and public affairs
+  "Often", 
+  # Traveled to a developing country
+  "Traveled to a developing country", 
+  # Liberal to Conservative
+  "Somewhat liberal",
+  "Slightly liberal",
+  "Moderate",
+  "Slightly conservative",
+  "Somewhat conservative",
+  "Extremely conservative",
+  # Trust in political institutions
+  "Very little trust in political institutions",
+  "Little trust in political institutions",
+  "Neutral trust in political institutions",
+  "Some trust in political institutions",
+  "A lot of trust in political institutions",
+  "Complete trust in political institutions",
+  # People should be more charitable
+  "Disagree",
+  "Somewhat disagree",
+  "Neutral",
+  "Somewhat agree",
+  "Agree",
+  "Strongly agree",
+  # Religious attendance
+  "Rarely attend",
+  "Attend at least once a month",
+  # Importance of religion
+  "Important",
+  # Religion
+  "Protestant",
+  "Christian Orthodox",
+  "Jewish",
+  "Muslim",
+  "Sikh",
+  "Hindu",
+  "Buddhist",
+  "Atheist",
+  "Other religion",
+  # Importance of trusing charities
+  "Very unimportant",
+  "Somewhat unimportant",
+  "Neutral",
+  "Somewhat important",
+  "Very important",
+  "Essential",
+  # Trust in charities
+  "Very little trust in charities",
+  "Little trust in charities",
+  "Neutral trust in charities",
+  "Some trust in charities",
+  "A lot of trust in charities",
+  "Complete trust in charities",
+  # Donation frequency
+  "Donate at least once a month", 
+  # Donated last year
+  "$50-$99",
+  "$100-$499",
+  "$500-$999",
+  "$1,000-$4,999",
+  "$5,000-$9,999",
+  "$10,000 +",
+  # Volunteered in past 12 months
+  "Volunteered in past 12 months",
+  # Volunteer frequency
+  "Rarely volunteer",
+  "Volunteer more than once a month, less than once a year",
+  "Volunteer at least once a month",
+  # History of activism
+  "Personally involved",
+  # History of family activism
+  "Family involved",
+  # Church or religious organization
+  "Inactive church member",
+  "Active church member",
+  # Sport or recreational organization
+  "Inactive sports or rec organization member",
+  "Active sports or rec organization member", 
+  # Art, music, or educational organization
+  "Inactive art, music, or educational organization member",
+  "Active art, music, or educational organization member",
+  # Labor union
+  "Inactive union member",
+  "Active union member",
+  # Political party
+  "Inactive political party member",
+  "Active political party member",
+  # Environmental organization
+  "Inactive environmental organization member",
+  "Active environmental organization member",
+  # Professional association
+  "Inactive professional association member",
+  "Active professional association member",
+  # Humanitarian or charitable organization
+  "Inactive humanitarian or charitable organization member",
+  "Active humanitarian or charitable organization member",
+  # Consumer organization
+  "Inactive consumer organization member",
+  "Active consumer organization member",
+  # Other organization
+  "Inactive member in another organization",
+  "Active member in another organization",
+  # Gender
+  "Female",
+  "Transgender",
+  "Prefer not to say",
+  "Other gender",
+  # Marital status
+  "Widowed",
+  "Divorced",
+  "Separated",
+  "Never married",
+  # Education
+  "High school graduate", 
+  "Some college",
+  "2 year degree",
+  "4 year degree",
+  "Graduate or professional degree",
+  "Doctorate",
+  # Income
+  "More than median of $61,372", 
+  # Race
+  "White", 
+  "Black or African American", 
+  "American Indian or Alaskan Native", 
+  "Asian", 
+  "Native Hawaiian or Pacific Islander",
+  "Other race",
+  # Age
+  "More than median age of 36"
+)
 
 # p reactive element ----
 
 p <- reactive({
   
   #Persona 1
-    beta_persona$p1_value <- 0
+    gamma_persona$p1_value <- 0
 
-    beta_persona$p1_value[beta_persona$levels == 'Intercept'] <- 1
+    gamma_persona$p1_value[gamma_persona$levels == 'Intercept'] <- 1
     
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_national_news] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_international_news] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_news_medium] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_follow_gov] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_travel_developing] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_national_news] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_international_news] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_news_medium] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_follow_gov] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_travel_developing] <- 1
     
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_political_pref] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_institution_trust] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_others_charitable] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_worship_attendence] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_religion_importance] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_political_pref] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_institution_trust] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_others_charitable] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_worship_attendence] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_religion_importance] <- 1
     
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_religion] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_charity_importance] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_trust_in_charity] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_donation_frequency] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_donation_amount] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_religion] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_charity_importance] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_trust_in_charity] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_donation_frequency] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_donation_amount] <- 1
     
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_volunteer_12] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_volunteer_frequency] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_personal_activism] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_family_activism] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_religious_member] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_volunteer_12] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_volunteer_frequency] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_personal_activism] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_family_activism] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_religious_member] <- 1
     
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_sport_member] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_art_member] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_labor_member] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_political_member] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_environmental_member] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_sport_member] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_art_member] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_labor_member] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_political_member] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_environmental_member] <- 1
     
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_professional_member] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_humanitarian_member] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_consumer_member] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_other_member] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_gender] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_professional_member] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_humanitarian_member] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_consumer_member] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_other_member] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_gender] <- 1
     
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_marital_status] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_education] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_income] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_race] <- 1
-    beta_persona$p1_value[beta_persona$levels %in% input$p1_age] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_marital_status] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_education] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_income] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_race] <- 1
+    gamma_persona$p1_value[gamma_persona$levels %in% input$p1_age] <- 1
     
   #Persona 2
-    beta_persona$p2_value <- 0
+    gamma_persona$p2_value <- 0
 
-    beta_persona$p2_value[beta_persona$levels == 'Intercept'] <- 1
+    gamma_persona$p2_value[gamma_persona$levels == 'Intercept'] <- 1
     
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_national_news] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_international_news] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_news_medium] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_follow_gov] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_travel_developing] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_national_news] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_international_news] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_news_medium] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_follow_gov] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_travel_developing] <- 1
     
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_political_pref] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_institution_trust] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_others_charitable] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_worship_attendence] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_religion_importance] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_political_pref] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_institution_trust] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_others_charitable] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_worship_attendence] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_religion_importance] <- 1
     
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_religion] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_charity_importance] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_trust_in_charity] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_donation_frequency] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_donation_amount] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_religion] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_charity_importance] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_trust_in_charity] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_donation_frequency] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_donation_amount] <- 1
     
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_volunteer_12] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_volunteer_frequency] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_personal_activism] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_family_activism] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_religious_member] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_volunteer_12] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_volunteer_frequency] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_personal_activism] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_family_activism] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_religious_member] <- 1
     
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_sport_member] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_art_member] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_labor_member] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_political_member] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_environmental_member] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_sport_member] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_art_member] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_labor_member] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_political_member] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_environmental_member] <- 1
     
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_professional_member] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_humanitarian_member] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_consumer_member] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_other_member] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_gender] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_professional_member] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_humanitarian_member] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_consumer_member] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_other_member] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_gender] <- 1
     
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_marital_status] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_education] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_income] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_race] <- 1
-    beta_persona$p2_value[beta_persona$levels %in% input$p2_age] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_marital_status] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_education] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_income] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_race] <- 1
+    gamma_persona$p2_value[gamma_persona$levels %in% input$p2_age] <- 1
     
   #Persona 3
-    beta_persona$p3_value <- 0
+    gamma_persona$p3_value <- 0
 
-    beta_persona$p3_value[beta_persona$levels == 'Intercept'] <- 1
+    gamma_persona$p3_value[gamma_persona$levels == 'Intercept'] <- 1
 
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_national_news] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_international_news] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_news_medium] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_follow_gov] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_travel_developing] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_national_news] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_international_news] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_news_medium] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_follow_gov] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_travel_developing] <- 1
     
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_political_pref] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_institution_trust] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_others_charitable] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_worship_attendence] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_religion_importance] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_political_pref] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_institution_trust] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_others_charitable] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_worship_attendence] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_religion_importance] <- 1
     
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_religion] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_charity_importance] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_trust_in_charity] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_donation_frequency] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_donation_amount] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_religion] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_charity_importance] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_trust_in_charity] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_donation_frequency] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_donation_amount] <- 1
     
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_volunteer_12] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_volunteer_frequency] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_personal_activism] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_family_activism] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_religious_member] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_volunteer_12] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_volunteer_frequency] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_personal_activism] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_family_activism] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_religious_member] <- 1
     
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_sport_member] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_art_member] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_labor_member] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_political_member] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_environmental_member] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_sport_member] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_art_member] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_labor_member] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_political_member] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_environmental_member] <- 1
     
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_professional_member] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_humanitarian_member] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_consumer_member] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_other_member] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_gender] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_professional_member] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_humanitarian_member] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_consumer_member] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_other_member] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_gender] <- 1
     
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_marital_status] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_education] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_income] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_race] <- 1
-    beta_persona$p3_value[beta_persona$levels %in% input$p3_age] <- 1
-    beta_persona
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_marital_status] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_education] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_income] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_race] <- 1
+    gamma_persona$p3_value[gamma_persona$levels %in% input$p3_age] <- 1
+    gamma_persona
 
 })
 
 
 ```
 
-<!-- Practice Code -->
-```{r practice code}
 
-#### this chunk is for testing code and making sure things work before adding it into the dashboard
+```{r practice-code}
+
+# this chunk is for testing code and making sure things work before adding it into the dashboard
 
 
 # df <- as.data.frame(matrix(rep(0), nrow = 1))
@@ -451,36 +437,31 @@ p <- reactive({
 
 
 
-# beta_persona_test <- as.data.frame(matrix(rep(0), nrow = 38))
+# gamma_persona_test <- as.data.frame(matrix(rep(0), nrow = 38))
 # 
-# beta_persona_test$levels = c("Persona 1", "Persona 2", "Persona 3", "Chartiy Importance", "Trust in Charity", "Donation Frequency", "Donation Amount", "Volunteer 12 Months", "Volunteer Frequence","Personal Activism", "Family Activism", "Religious Membership", "Sport or Recreational Membership", "Art, Music, or Educational Membership","Labor Union Membership", "Political Party Membership", "Environmental Organization Membership", "Professional Association", "Humanitarian or Charity Membership","Consumer Organization Membership", "Other Organization Membership", "Follow National News", "Follow International News", "News Medium","Follow Government or Public Affairs", "Travel to Developing Countries", "Political Preference", "Trust in Political Institutions", "Others Should be Charitable", "Worship Service Attendence", "Religious Importance", "Religion", "Gender", "Marital Status", "Education", "Income", "Race", "Age")
+# gamma_persona_test$levels = c("Persona 1", "Persona 2", "Persona 3", "Chartiy Importance", "Trust in Charity", "Donation Frequency", "Donation Amount", "Volunteer 12 Months", "Volunteer Frequence","Personal Activism", "Family Activism", "Religious Membership", "Sport or Recreational Membership", "Art, Music, or Educational Membership","Labor Union Membership", "Political Party Membership", "Environmental Organization Membership", "Professional Association", "Humanitarian or Charity Membership","Consumer Organization Membership", "Other Organization Membership", "Follow National News", "Follow International News", "News Medium","Follow Government or Public Affairs", "Travel to Developing Countries", "Political Preference", "Trust in Political Institutions", "Others Should be Charitable", "Worship Service Attendence", "Religious Importance", "Religion", "Gender", "Marital Status", "Education", "Income", "Race", "Age")
 # 
 # 
 # 
 # # Persona Reactive Element
 # 
-# beta_persona_test$p1 <- 1
+# gamma_persona_test$p1 <- 1
 # 
-# beta_persona_test$p2 <- 2
+# gamma_persona_test$p2 <- 2
 # 
-# beta_persona_test$p3 <- 3
+# gamma_persona_test$p3 <- 3
 #         
 # persona1 <- persona_data[,2]
 # 
-# p_beta1 <- as.matrix(public_political_social_charity_demo) %*%   
+# p_gamma1 <- as.matrix(public_political_social_charity_demo) %*%   
 #   
-#   as.matrix(persona1) %*% beta_persona_test[,3]
-
-
-  
-
-
+#   as.matrix(persona1) %*% gamma_persona_test[,3]
 ```
 
 ```{r matrix multiplication, eval=FALSE, include=FALSE}
 library(shiny)
 
-beta <- data.frame(
+gamma <- data.frame(
   value = c(0,0,0),
   levels = c("Environment", "Human rights", "Refugee relief")
 )
@@ -490,7 +471,7 @@ ui <- fluidPage(
     column(6,
       selectInput("ai_issue", 
                   label = "Select Issue Area:",
-                  choices = beta$levels,
+                  choices = gamma$levels,
                   multiple = TRUE)
     ),
     column(6,
@@ -502,8 +483,8 @@ ui <- fluidPage(
 server = function(input, output) {
 
   df <- reactive({
-    beta$value[beta$levels %in% input$ai_issue] <- 1
-    beta
+    gamma$value[gamma$levels %in% input$ai_issue] <- 1
+    gamma
   })
 
   output$data <- renderTable({
@@ -515,27 +496,27 @@ server = function(input, output) {
 <!-- Persona Inputs -->
 ```{r Manual Testing Matrix Multiplication}
 
-### Calculating the Persona betas ###
+### Calculating the Persona gammas ###
 
 # Persona 1
 persona1 <- persona_data[,2]
 
-# matrix multiplication between persona data and betas
-beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona1)
+# matrix multiplication between persona data and gammas
+gamma1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona1)
 
 
 # Persona 2
 persona2 <- persona_data[,3]
 
-# matrix multiplication between persona data and betas
-beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona2)
+# matrix multiplication between persona data and gammas
+gamma2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona2)
 
 
 # Persona 3
 persona3 <- persona_data[,4]
 
-# matrix multiplication between persona data and betas
-beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona3)
+# matrix multiplication between persona data and gammas
+gamma3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona3)
 
 # Organization
 org1 <- org_data[,2]
@@ -546,11 +527,11 @@ org3 <- org_data[,4]
 
 org4 <- org_data[,5]
 
-# Expected utility matrix multiplication between computed persona betas and org data for persona 1
-org1_exp_util1 <- exp(t(org1) %*% as.matrix(beta1))
-org2_exp_util1 <- exp(t(org2) %*% as.matrix(beta1))
-org3_exp_util1 <- exp(t(org3) %*% as.matrix(beta1))
-org4_exp_util1 <- exp(t(org4) %*% as.matrix(beta1))
+# Expected utility matrix multiplication between computed persona gammas and org data for persona 1
+org1_exp_util1 <- exp(t(org1) %*% as.matrix(gamma1))
+org2_exp_util1 <- exp(t(org2) %*% as.matrix(gamma1))
+org3_exp_util1 <- exp(t(org3) %*% as.matrix(gamma1))
+org4_exp_util1 <- exp(t(org4) %*% as.matrix(gamma1))
 
 # Market Share computation from expected utilities between organization
 org1_rate1 <- 100 * org1_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
@@ -560,16 +541,16 @@ org4_rate1 <- 100 * org4_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_
 
 
 
-# org1_exp_util2 <- exp(t(org1) %*% as.matrix(p_beta2))
-# org2_exp_util2 <- exp(t(org2) %*% as.matrix(p_beta2))
-# org3_exp_util2 <- exp(t(org3) %*% as.matrix(p_beta2))
-# org4_exp_util2 <- exp(t(org4) %*% as.matrix(p_beta2))
+# org1_exp_util2 <- exp(t(org1) %*% as.matrix(p_gamma2))
+# org2_exp_util2 <- exp(t(org2) %*% as.matrix(p_gamma2))
+# org3_exp_util2 <- exp(t(org3) %*% as.matrix(p_gamma2))
+# org4_exp_util2 <- exp(t(org4) %*% as.matrix(p_gamma2))
 # 
 # 
-# org1_exp_util3 <- exp(t(org1) %*% as.matrix(p_beta3))
-# org2_exp_util3 <- exp(t(org2) %*% as.matrix(p_beta3))
-# org3_exp_util3 <- exp(t(org3) %*% as.matrix(p_beta3))
-# org4_exp_util3 <- exp(t(org4) %*% as.matrix(p_beta3))
+# org1_exp_util3 <- exp(t(org1) %*% as.matrix(p_gamma3))
+# org2_exp_util3 <- exp(t(org2) %*% as.matrix(p_gamma3))
+# org3_exp_util3 <- exp(t(org3) %*% as.matrix(p_gamma3))
+# org4_exp_util3 <- exp(t(org4) %*% as.matrix(p_gamma3))
 
 
 ```
@@ -585,13 +566,13 @@ renderPlotly({
   per_choice = p()
     
   # Persona 1 
-    p_beta1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+    p_gamma1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
   
   # Expected Utility
-  ai_exp_util1 <- exp(t(org_choice[, 3]) %*% as.matrix(p_beta1))
-  gp_exp_util1 <- exp(t(org_choice[, 4]) %*% as.matrix(p_beta1))
-  ox_exp_util1 <- exp(t(org_choice[, 5]) %*% as.matrix(p_beta1))
-  rc_exp_util1 <- exp(t(org_choice[, 6]) %*% as.matrix(p_beta1))
+  ai_exp_util1 <- exp(t(org_choice[, 3]) %*% as.matrix(p_gamma1))
+  gp_exp_util1 <- exp(t(org_choice[, 4]) %*% as.matrix(p_gamma1))
+  ox_exp_util1 <- exp(t(org_choice[, 5]) %*% as.matrix(p_gamma1))
+  rc_exp_util1 <- exp(t(org_choice[, 6]) %*% as.matrix(p_gamma1))
   
   # Market Share
   ai_rate1 <- 100 * ai_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1)
@@ -600,13 +581,13 @@ renderPlotly({
   rc_rate1 <- 100 * rc_exp_util1/sum(ai_exp_util1, gp_exp_util1, ox_exp_util1, rc_exp_util1)
   
   # Persona 2
-    p_beta2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+    p_gamma2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
   
   # Expected Utility
-  ai_exp_util2 <- exp(t(org_choice[, 3]) %*% as.matrix(p_beta2))
-  gp_exp_util2 <- exp(t(org_choice[, 4]) %*% as.matrix(p_beta2))
-  ox_exp_util2 <- exp(t(org_choice[, 5]) %*% as.matrix(p_beta2))
-  rc_exp_util2 <- exp(t(org_choice[, 6]) %*% as.matrix(p_beta2))
+  ai_exp_util2 <- exp(t(org_choice[, 3]) %*% as.matrix(p_gamma2))
+  gp_exp_util2 <- exp(t(org_choice[, 4]) %*% as.matrix(p_gamma2))
+  ox_exp_util2 <- exp(t(org_choice[, 5]) %*% as.matrix(p_gamma2))
+  rc_exp_util2 <- exp(t(org_choice[, 6]) %*% as.matrix(p_gamma2))
   
   # Market Share
   ai_rate2 <- 100 * ai_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2)
@@ -615,13 +596,13 @@ renderPlotly({
   rc_rate2 <- 100 * rc_exp_util2/sum(ai_exp_util2, gp_exp_util2, ox_exp_util2, rc_exp_util2)
   
   # Persona 3
-    p_beta3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+    p_gamma3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
   
   # Expected Utility
-  ai_exp_util3 <- exp(t(org_choice[, 3]) %*% as.matrix(p_beta3))
-  gp_exp_util3 <- exp(t(org_choice[, 4]) %*% as.matrix(p_beta3))
-  ox_exp_util3 <- exp(t(org_choice[, 5]) %*% as.matrix(p_beta3))
-  rc_exp_util3 <- exp(t(org_choice[, 6]) %*% as.matrix(p_beta3))
+  ai_exp_util3 <- exp(t(org_choice[, 3]) %*% as.matrix(p_gamma3))
+  gp_exp_util3 <- exp(t(org_choice[, 4]) %*% as.matrix(p_gamma3))
+  ox_exp_util3 <- exp(t(org_choice[, 5]) %*% as.matrix(p_gamma3))
+  rc_exp_util3 <- exp(t(org_choice[, 6]) %*% as.matrix(p_gamma3))
   
   # Market Share
   ai_rate3 <- 100 * ai_exp_util3/sum(ai_exp_util3, gp_exp_util3, ox_exp_util3, rc_exp_util3)
