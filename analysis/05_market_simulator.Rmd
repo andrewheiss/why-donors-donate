@@ -451,25 +451,24 @@ p <- reactive({
 
 
 
-# beta_persona_test <- as.data.frame(matrix(rep(0), nrow = 38))
-# 
-# beta_persona_test$levels = c("Persona 1", "Persona 2", "Persona 3", "Chartiy Importance", "Trust in Charity", "Donation Frequency", "Donation Amount", "Volunteer 12 Months", "Volunteer Frequence","Personal Activism", "Family Activism", "Religious Membership", "Sport or Recreational Membership", "Art, Music, or Educational Membership","Labor Union Membership", "Political Party Membership", "Environmental Organization Membership", "Professional Association", "Humanitarian or Charity Membership","Consumer Organization Membership", "Other Organization Membership", "Follow National News", "Follow International News", "News Medium","Follow Government or Public Affairs", "Travel to Developing Countries", "Political Preference", "Trust in Political Institutions", "Others Should be Charitable", "Worship Service Attendence", "Religious Importance", "Religion", "Gender", "Marital Status", "Education", "Income", "Race", "Age")
-# 
-# 
-# 
-# # Persona Reactive Element
-# 
-# beta_persona_test$p1 <- 1
-# 
-# beta_persona_test$p2 <- 2
-# 
-# beta_persona_test$p3 <- 3
-#         
-# persona1 <- persona_data[,2]
-# 
-# p_beta1 <- as.matrix(public_political_social_charity_demo) %*%   
-#   
-#   as.matrix(persona1) %*% beta_persona_test[,3]
+test_beta <- as.data.frame(matrix(rep(0), nrow = 12))
+
+test_beta$levels = c("Persona 1", "Persona 2", "Persona 3", "input1", "input2", "input3", "input4", "input5", "input6", "input7", "input8", "input9")
+
+
+
+# Persona Reactive Element
+
+test_beta$p1 <- 0
+test_beta$p1[1] <- 1
+
+test_beta$p2 <- 0
+test_beta$p2[2] <- 1
+
+test_beta$p3 <- 0
+test_beta$p3[3] <- 1
+
+test1 <- test_beta[,3]
 
 
   
@@ -1314,7 +1313,7 @@ selectInput("p2_education",
                      "4 year degree",
                      "Graduate or professional degree",
                      "Doctorate"),
-         selected = "2 year degree",
+         selected = "Some college",
          width = "450px")
 
 selectInput("p2_income",
@@ -1333,7 +1332,7 @@ selectInput("p2_race",
                      'Native Hawaiian or Pacific Islander',
                      'Other (Race)'),
          multiple = TRUE,
-         selected = "White",
+         selected = 'American Indian or Alaska Native',
          width = "450px")
 
 selectInput("p2_age",
@@ -1622,7 +1621,7 @@ selectInput("p3_gender",
                      "Transgender",
                      "Prefer not to say",
                      "Other (Gender)"),
-         selected = "Male",
+         selected = "Female",
          width = "450px")
 
 selectInput("p3_marital_status",
@@ -1644,7 +1643,7 @@ selectInput("p3_education",
                      "4 year degree",
                      "Graduate or professional degree",
                      "Doctorate"),
-         selected = "2 year degree",
+         selected = "Graduate or professional degree",
          width = "450px")
 
 selectInput("p3_income",
@@ -1663,7 +1662,7 @@ selectInput("p3_race",
                      'Native Hawaiian or Pacific Islander',
                      'Other (Race)'),
          multiple = TRUE,
-         selected = "White",
+         selected = c("Black or African American",'American Indian or Alaska Native'),
          width = "450px")
 
 selectInput("p3_age",
@@ -1681,13 +1680,13 @@ selectInput("p3_age",
 ```{r ai org inputs}
 
 textInput("ai_id",
-          label = "Organization Name",
+          label = "Organization name",
           value = "Organization 1",
-          placeholder = "Enter Organization Name",
+          placeholder = "Enter organization name",
           width = "450px")
 
 selectInput("org1_id",
-            label = "Select Organization:",
+            label = "Organization:",
             choice = c("Amnesty International",
                        "Greenpeace",
                        "Oxfam",
@@ -1696,7 +1695,7 @@ selectInput("org1_id",
             width = "450px")
 
 selectInput("ai_issue", 
-            label = "Select Issue Area:",
+            label = "Issue area:",
             choices = c("Emergency response",
                         "Environment",
                         "Human rights",
@@ -1705,31 +1704,33 @@ selectInput("ai_issue",
             width = "450px")
 
 selectInput("ai_fin_trans",
-            label = "Select Financial Transparency:",
+            label = "Financial transparency:",
             choices = c("Doesn’t engage in transparency",
                         "Engages in transparency"),
             selected = "Engages in transparency",
             width = "450px")
 
 selectInput("ai_account",
-            label = "Select Financial Accountability:",
+            label = "Financial accountability:",
             choices = c("Doesn’t engage in accountability",
                         "Engages in accountability"),
             selected = "Engages in accountability",
             width = "450px")
 
 selectInput("ai_funding",
-            label = "Select Funding Source:",
+            label = "Funding source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
                         "Government grants"),
+            selected = "Many small private donations",
             width = "450px")
 
 selectInput("ai_gov_relat",
-            label = "Select Relationship With Host Government",
+            label = "Relationship with host government",
             choices = c("Friendly relationship with government",
                         "Criticized by government", 
                         "Under government crackdown"),
+            selected = "Friendly relationship with government",
             width = "450px")
 
 ```
@@ -1738,15 +1739,14 @@ selectInput("ai_gov_relat",
 
 ```{r gp org inputs}
 
-
 textInput("gp_id",
-          label = "Organization Name",
+          label = "Organization name",
           value = "Organization 2",
-          placeholder = "Enter Organiation Name",
+          placeholder = "Enter organization name",
           width = "450px")
 
 selectInput("org2_id",
-            label = "Select Organization:",
+            label = "Organization:",
             choice = c("Amnesty International",
                        "Greenpeace",
                        "Oxfam",
@@ -1755,7 +1755,7 @@ selectInput("org2_id",
             width = "450px")
 
 selectInput("gp_issue", 
-            label = "Select Issue Area:",
+            label = "Issue area:",
             choices = c("Emergency response",
                         "Environment",
                         "Human rights",
@@ -1764,32 +1764,35 @@ selectInput("gp_issue",
             width = "450px")
 
 selectInput("gp_fin_trans",
-            label = "Select Financial Transparency:",
+            label = "Financial transparency:",
             choices = c("Doesn’t engage in transparency",
                         "Engages in transparency"),
             selected = "Engages in transparency",
             width = "450px")
 
 selectInput("gp_account",
-            label = "Select Financial Accountability:",
+            label = "Financial accountability:",
             choices = c("Doesn’t engage in accountability",
                         "Engages in accountability"),
             selected = "Engages in accountability",
             width = "450px")
 
 selectInput("gp_funding",
-            label = "Select Funding Source:",
+            label = "Funding source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
                         "Government grants"),
+            selected = "Many small private donations",
             width = "450px")
 
 selectInput("gp_gov_relat",
-            label = "Select Relationship With Host Government",
+            label = "Relationship with host government",
             choices = c("Friendly relationship with government",
                         "Criticized by government", 
                         "Under government crackdown"),
+            selected = "Friendly relationship with government",
             width = "450px")
+
 ```
 
 ### Org 3
@@ -1797,13 +1800,13 @@ selectInput("gp_gov_relat",
 ```{r ox org inputs}
 
 textInput("ox_id",
-          label = "Organization Name",
+          label = "Organization name",
           value = "Organization 3",
-          placeholder = "Enter Organiation Name",
+          placeholder = "Enter organization name",
           width = "450px")
 
 selectInput("org3_id",
-            label = "Select Organization:",
+            label = "Organization:",
             choice = c("Amnesty International",
                        "Greenpeace",
                        "Oxfam",
@@ -1811,9 +1814,8 @@ selectInput("org3_id",
             selected = "Red Cross",
             width = "450px")
 
-
 selectInput("ox_issue", 
-            label = "Select Issue Area:",
+            label = "Issue area:",
             choices = c("Emergency response",
                         "Environment",
                         "Human rights",
@@ -1822,32 +1824,35 @@ selectInput("ox_issue",
             width = "450px")
 
 selectInput("ox_fin_trans",
-            label = "Select Financial Transparency:",
+            label = "Financial transparency:",
             choices = c("Doesn’t engage in transparency",
                         "Engages in transparency"),
             selected = "Engages in transparency",
             width = "450px")
 
 selectInput("ox_account",
-            label = "Select Financial Accountability:",
+            label = "Financial accountability:",
             choices = c("Doesn’t engage in accountability",
                         "Engages in accountability"),
             selected = "Engages in accountability",
             width = "450px")
 
 selectInput("ox_funding",
-            label = "Select Funding Source:",
+            label = "Funding source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
                         "Government grants"),
+            selected = "Many small private donations",
             width = "450px")
 
 selectInput("ox_gov_relat",
-            label = "Select Relationship With Host Government",
+            label = "Relationship with host government",
             choices = c("Friendly relationship with government",
                         "Criticized by government", 
                         "Under government crackdown"),
+            selected = "Friendly relationship with government",
             width = "450px")
+
 ```
 
 ### Org 4
@@ -1855,13 +1860,13 @@ selectInput("ox_gov_relat",
 ```{r rc org inputs}
 
 textInput("rc_id",
-          label = "Organization Name",
+          label = "Organization name",
           value = "Organization 4",
-          placeholder = "Enter Organiation Name",
+          placeholder = "Enter organization name",
           width = "450px")
 
 selectInput("org4_id",
-            label = "Select Organization:",
+            label = "Organization:",
             choice = c("Amnesty International",
                        "Greenpeace",
                        "Oxfam",
@@ -1869,9 +1874,8 @@ selectInput("org4_id",
             selected = "Red Cross",
             width = "450px")
 
-
 selectInput("rc_issue", 
-            label = "Select Issue Area:",
+            label = "Issue area:",
             choices = c("Emergency response",
                         "Environment",
                         "Human rights",
@@ -1880,32 +1884,35 @@ selectInput("rc_issue",
             width = "450px")
 
 selectInput("rc_fin_trans",
-            label = "Select Financial Transparency:",
+            label = "Financial transparency:",
             choices = c("Doesn’t engage in transparency",
                         "Engages in transparency"),
             selected = "Engages in transparency",
             width = "450px")
 
 selectInput("rc_account",
-            label = "Select Financial Accountability:",
+            label = "Financial accountability:",
             choices = c("Doesn’t engage in accountability",
                         "Engages in accountability"),
             selected = "Engages in accountability",
             width = "450px")
 
 selectInput("rc_funding",
-            label = "Select Funding Source:",
+            label = "Funding source:",
             choices = c("Many small private donations",
                         "Handful of wealthy private donors",
                         "Government grants"),
+            selected = "Many small private donations",
             width = "450px")
 
 selectInput("rc_gov_relat",
-            label = "Select Relationship With Host Government",
+            label = "Relationship with host government",
             choices = c("Friendly relationship with government",
                         "Criticized by government", 
                         "Under government crackdown"),
+            selected = "Friendly relationship with government",
             width = "450px")
+
 ```
 
 
