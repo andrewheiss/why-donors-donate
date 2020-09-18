@@ -17,7 +17,7 @@ library(shiny)
 
 ```{r load-data}
 # Gammas of the "everything" model
-public_political_social_charity_demo <- read_rds(
+gammas <- read_rds(
   here::here('analysis', 'output', 'posterior_draws', 'public_political_social_charity_demo.rds')
   ) %>% 
   group_by(i, j) %>% 
@@ -107,8 +107,8 @@ org_reactive <- reactive({
 ```
 
 ```{r persona-reactive-table}
-# Placeholder for persona gammas
-per_table <- as.data.frame(matrix(rep(0), nrow = 111))
+# Placeholder for persona reactive table
+per_table <- as.data.frame(matrix(rep(0), nrow = nrow(persona_data)))
 
 # Assign covariate labels
 per_table$levels <- c(
@@ -381,8 +381,6 @@ per_reactive <- reactive({
   per_table$per3_value[per_table$levels %in% input$per3_age] <- 1
   per_table
 })
-
-
 ```
 
 ```{r matrix-multiplication, eval=FALSE, include=FALSE}
@@ -420,1407 +418,1820 @@ per_reactive <- reactive({
 
 ```{r Manual Testing Matrix Multiplication}
 
-### Calculating the Persona gammas ###
-
-# Persona 1
-persona1 <- persona_data[,2]
-
-# matrix multiplication between persona data and gammas
-gamma1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona1)
-
-
-# Persona 2
-persona2 <- persona_data[,3]
-
-# matrix multiplication between persona data and gammas
-gamma2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona2)
-
-
-# Persona 3
-persona3 <- persona_data[,4]
-
-# matrix multiplication between persona data and gammas
-gamma3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(persona3)
-
-# Organization
-org1 <- organization_data[,2]
-
-org2 <- organization_data[,3]
-
-org3 <- organization_data[,4]
-
-org4 <- organization_data[,5]
-
-# Expected utility matrix multiplication between computed persona gammas and org data for persona 1
-org1_exp_util1 <- exp(t(org1) %*% as.matrix(gamma1))
-org2_exp_util1 <- exp(t(org2) %*% as.matrix(gamma1))
-org3_exp_util1 <- exp(t(org3) %*% as.matrix(gamma1))
-org4_exp_util1 <- exp(t(org4) %*% as.matrix(gamma1))
-
-# Market Share computation from expected utilities between organization
-org1_rate1 <- 100 * org1_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
-org2_rate1 <- 100 * org2_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
-org3_rate1 <- 100 * org3_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
-org4_rate1 <- 100 * org4_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
+# ### Calculating the Persona gammas ###
+# 
+# # Persona 1
+# persona1 <- persona_data[,2]
+# 
+# # matrix multiplication between persona data and gammas
+# gamma1 <- as.matrix(gammas) %*% as.matrix(persona1)
+# 
+# 
+# # Persona 2
+# persona2 <- persona_data[,3]
+# 
+# # matrix multiplication between persona data and gammas
+# gamma2 <- as.matrix(gammas) %*% as.matrix(persona2)
+# 
+# 
+# # Persona 3
+# persona3 <- persona_data[,4]
+# 
+# # matrix multiplication between persona data and gammas
+# gamma3 <- as.matrix(gammas) %*% as.matrix(persona3)
+# 
+# # Organization
+# org1 <- organization_data[,2]
+# 
+# org2 <- organization_data[,3]
+# 
+# org3 <- organization_data[,4]
+# 
+# org4 <- organization_data[,5]
+# 
+# # Expected utility matrix multiplication between computed persona gammas and org data for persona 1
+# per1_org1_exp <- exp(t(org1) %*% as.matrix(gamma1))
+# per1_org2_exp <- exp(t(org2) %*% as.matrix(gamma1))
+# per1_org3_exp <- exp(t(org3) %*% as.matrix(gamma1))
+# per1_org4_exp <- exp(t(org4) %*% as.matrix(gamma1))
+# 
+# # Market Share computation from expected utilities between organization
+# per1_org1_share <- 100 * per1_org1_exp/sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
+# per1_org2_share <- 100 * per1_org2_exp/sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
+# per1_org3_share <- 100 * per1_org3_exp/sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
+# per1_org4_share <- 100 * per1_org4_exp/sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
 
 
 ```
 
-<!-- Main page Chart with All Personas -->
 Market Share
 --------------------------------------
 
-```{r global plot}
+```{r compute-and-plot}
+# Compute and render the market share plot
 renderPlotly({
   org_choice = org_reactive()
   per_choice = per_reactive()
     
-  # Persona 1 
-  p_gamma1 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,3])
+  # Persona 1 predicted betas
+  per1_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,3])
   
-  # Expected Utility
-  org1_exp_util1 <- exp(t(org_choice[, 3]) %*% as.matrix(p_gamma1))
-  org2_exp_util1 <- exp(t(org_choice[, 4]) %*% as.matrix(p_gamma1))
-  org3_exp_util1 <- exp(t(org_choice[, 5]) %*% as.matrix(p_gamma1))
-  org4_exp_util1 <- exp(t(org_choice[, 6]) %*% as.matrix(p_gamma1))
+  # Persona 1 expected utilities
+  per1_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per1_betas))
+  per1_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per1_betas))
+  per1_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per1_betas))
+  per1_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per1_betas))
   
-  # Market Share
-  org1_rate1 <- 100 * org1_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
-  org2_rate1 <- 100 * org2_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
-  org3_rate1 <- 100 * org3_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
-  org4_rate1 <- 100 * org4_exp_util1/sum(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1)
+  # Persona 1 market shares
+  per1_share_denom <- sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
+  per1_org1_share <- 100 * (per1_org1_exp / per1_share_denom)
+  per1_org2_share <- 100 * (per1_org2_exp / per1_share_denom)
+  per1_org3_share <- 100 * (per1_org3_exp / per1_share_denom)
+  per1_org4_share <- 100 * (per1_org4_exp / per1_share_denom)
   
-  # Persona 2
-  p_gamma2 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,4])
+  # Persona 2 predicted betas
+  per2_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,4])
   
-  # Expected Utility
-  org1_exp_util2 <- exp(t(org_choice[, 3]) %*% as.matrix(p_gamma2))
-  org2_exp_util2 <- exp(t(org_choice[, 4]) %*% as.matrix(p_gamma2))
-  org3_exp_util2 <- exp(t(org_choice[, 5]) %*% as.matrix(p_gamma2))
-  org4_exp_util2 <- exp(t(org_choice[, 6]) %*% as.matrix(p_gamma2))
+  # Persona 2 expected utilities
+  per2_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per2_betas))
+  per2_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per2_betas))
+  per2_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per2_betas))
+  per2_org3_exp <- exp(t(org_choice[,6]) %*% as.matrix(per2_betas))
   
-  # Market Share
-  org1_rate2 <- 100 * org1_exp_util2/sum(org1_exp_util2, org2_exp_util2, org3_exp_util2, org4_exp_util2)
-  org2_rate2 <- 100 * org2_exp_util2/sum(org1_exp_util2, org2_exp_util2, org3_exp_util2, org4_exp_util2)
-  org3_rate2 <- 100 * org3_exp_util2/sum(org1_exp_util2, org2_exp_util2, org3_exp_util2, org4_exp_util2)
-  org4_rate2 <- 100 * org4_exp_util2/sum(org1_exp_util2, org2_exp_util2, org3_exp_util2, org4_exp_util2)
+  # Persona 2 market shares
+  per2_share_denom <- sum(per2_org1_exp, per2_org2_exp, per2_org3_exp, per2_org3_exp)
+  per2_org1_share <- 100 * (per2_org1_exp / per2_share_denom)
+  per2_org2_share <- 100 * (per2_org2_exp / per2_share_denom)
+  per2_org3_share <- 100 * (per2_org3_exp / per2_share_denom)
+  per2_org4_share <- 100 * (per2_org4_exp / per2_share_denom)
   
-  # Persona 3
-  p_gamma3 <- as.matrix(public_political_social_charity_demo) %*% as.matrix(per_choice[,5])
+  # Persona 3 predicted betas
+  per3_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,5])
   
-  # Expected Utility
-  org1_exp_util3 <- exp(t(org_choice[, 3]) %*% as.matrix(p_gamma3))
-  org2_exp_util3 <- exp(t(org_choice[, 4]) %*% as.matrix(p_gamma3))
-  org3_exp_util3 <- exp(t(org_choice[, 5]) %*% as.matrix(p_gamma3))
-  org4_exp_util3 <- exp(t(org_choice[, 6]) %*% as.matrix(p_gamma3))
+  # Persona 3 expected utilities
+  per3_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per3_betas))
+  per3_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per3_betas))
+  per3_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per3_betas))
+  per3_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per3_betas))
   
-  # Market Share
-  org1_rate3 <- 100 * org1_exp_util3/sum(org1_exp_util3, org2_exp_util3, org3_exp_util3, org4_exp_util3)
-  org2_rate3 <- 100 * org2_exp_util3/sum(org1_exp_util3, org2_exp_util3, org3_exp_util3, org4_exp_util3)
-  org3_rate3 <- 100 * org3_exp_util3/sum(org1_exp_util3, org2_exp_util3, org3_exp_util3, org4_exp_util3)
-  org4_rate3 <- 100 * org4_exp_util3/sum(org1_exp_util3, org2_exp_util3, org3_exp_util3, org4_exp_util3)
+  # Persona 3 market shares
+  per3_share_denom <- sum(per3_org1_exp, per3_org2_exp, per3_org3_exp, per3_org4_exp)
+  per3_org1_share <- 100 * (per3_org1_exp / per3_share_denom)
+  per3_org2_share <- 100 * (per3_org2_exp / per3_share_denom)
+  per3_org3_share <- 100 * (per3_org3_exp / per3_share_denom)
+  per3_org4_share <- 100 * (per3_org4_exp / per3_share_denom)
   
-  # Data for Plotly
-  data <- c(org1_exp_util1, org2_exp_util1, org3_exp_util1, org4_exp_util1, org1_rate1, org2_rate1, org3_rate1, org4_rate1, 
-            org1_exp_util2, org2_exp_util2, org3_exp_util2, org4_exp_util2, org1_rate2, org2_rate2, org3_rate2, org4_rate2,
-            org1_exp_util3, org2_exp_util3, org3_exp_util3, org4_exp_util3, org1_rate3, org2_rate3, org3_rate3, org4_rate3)
+  # Data for plotly
+  data <- c(
+    # Persona 1
+    per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp, 
+    per1_org1_share, per1_org2_share, per1_org3_share, per1_org4_share, 
+    # Persona 2
+    per2_org1_exp, per2_org2_exp, per2_org3_exp, per2_org3_exp, 
+    per2_org1_share, per2_org2_share, per2_org3_share, per2_org4_share,
+    # Persona 3
+    per3_org1_exp, per3_org2_exp, per3_org3_exp, per3_org4_exp, 
+    per3_org1_share, per3_org2_share, per3_org3_share, per3_org4_share
+  )
   
-  
-  # Empty dataframe
+  # Empty organization reactive table
   org_reactive <- as.data.frame(matrix(data, 24, 1))
   
   # Organization name inputs
   org_reactive[,2] <- c(input$org1_id, input$org2_id, input$org3_id, input$org4_id)
-  # Type of value
-  org_reactive[,3] <- c(rep("Utility", 4), rep("Market Share", 4))
+  # Expected utilities and market shares
+  org_reactive[,3] <- c(rep('Expected Utility', 4), rep('Market Share', 4))
   # Persona name inputs
-  org_reactive[,4] <- c(rep(input$per1_id,8), rep(input$per2_id, 8), rep(input$per3_id, 8))
+  org_reactive[,4] <- c(rep(input$per1_id, 8), rep(input$per2_id, 8), rep(input$per3_id, 8))
  
   # Rename columns
-  colnames(org_reactive) <- c('Value', 'Organization', "Type", "Persona")
+  colnames(org_reactive) <- c('Value', 'Organization', 'Type', 'Persona')
   
-  
-  ggplotly(org_reactive %>% 
-             # Only care about the Market Share right now
-             filter(Type == "Market Share") %>% 
-             # Factor Organization and Persona with ordered=TRUE so the order doesn't change to alphabetical as names are created
-             mutate(
-               Organization = factor(Organization, levels = c(input$org1_id, input$org2_id, input$org3_id, input$org4_id), ordered = TRUE),
-               Persona = factor(Persona, levels = c(input$per1_id, input$per2_id, input$per3_id), ordered = TRUE)) %>% 
-             ggplot(aes(y = Value, x = Organization, fill = Persona)) +
-             geom_bar(position = "dodge", stat = "identity") +
-             labs(x="", y = "Market Share") + 
-             scale_fill_manual(values = c("#FFC30B", "#28a153", "#c23838")) +
-             theme(legend.position = "right",
-                   panel.background = element_blank(),
-                   panel.grid.major.y = element_line(color = "#D3D3D3"))
+  ggplotly(
+    org_reactive %>% 
+      # Only care about the Market Share right now
+      filter(Type == "Market Share") %>% 
+      # Factor Organization and Persona with ordered=TRUE so the order doesn't change to alphabetical as names are created
+      mutate(
+        Organization = factor(
+          Organization, 
+          levels = c(input$org1_id, input$org2_id, input$org3_id, input$org4_id), 
+          ordered = TRUE
+        ),
+        Persona = factor(
+          Persona, 
+          levels = c(input$per1_id, input$per2_id, input$per3_id), 
+          ordered = TRUE
+        )
+      ) %>% 
+      ggplot(aes(y = Value, x = Organization, fill = Persona)) +
+      geom_bar(position = "dodge", stat = "identity") +
+      labs(x="", y = "Market Share") + 
+      scale_fill_manual(values = c("#FFC30B", "#28a153", "#c23838")) +
+      theme(
+        legend.position = "right",
+        panel.background = element_blank(),
+        panel.grid.major.y = element_line(color = "#D3D3D3")
+      )
     )
 })
-
 ```
 
-<!-- Persona and Organizational Tabs -->
-Personas And Organizations {.tabset .tabset-fade}
+Organizations and Personas {.tabset .tabset-fade}
 --------------------------------------------------
+
+### Organization 1
+
+```{r org1-inputs}
+# Naming
+textInput(
+  "org1_id",
+  label = "Organization Name",
+  value = "Organization 1",
+  placeholder = "Enter Organization Name",
+  width = "450px"
+)
+
+# Organization
+selectInput(
+  "org1_id",
+  label = "Select Organization:",
+  choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
+  selected = "Red Cross",
+  width = "450px"
+)
+
+# Issue area
+selectInput(
+  "org1_issue", 
+  label = "Select Issue Area:",
+  choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
+  selected = "Emergency response",
+  width = "450px"
+)
+
+# Financial transparency
+selectInput(
+  "org1_fin_trans",
+  label = "Select Financial Transparency:",
+  choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
+  selected = "Engages in financial transparency",
+  width = "450px"
+)
+
+# Financial accountability
+selectInput(
+  "org1_fin_account",
+  label = "Select Financial Accountability:",
+  choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
+  selected = "Engages in financial accountability",
+  width = "450px"
+)
+
+# Funding sources
+selectInput(
+  "org1_funding",
+  label = "Select Funding Source:",
+  choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+  width = "450px"
+)
+
+# Relationship with host government
+selectInput(
+  "org1_host_gov",
+  label = "Select Relationship With Host Government",
+  choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+  width = "450px"
+)
+```
+
+### Organization 2
+
+```{r org2-inputs}
+# Naming
+textInput(
+  "org2_id",
+  label = "Organization Name",
+  value = "Organization 2",
+  placeholder = "Enter Organization Name",
+  width = "450px"
+)
+
+# Organization
+selectInput(
+  "org2_id",
+  label = "Select Organization:",
+  choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
+  selected = "Red Cross",
+  width = "450px"
+)
+
+# Issue area
+selectInput(
+  "org2_issue", 
+  label = "Select Issue Area:",
+  choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
+  selected = "Emergency response",
+  width = "450px"
+)
+
+# Financial transparency
+selectInput(
+  "org2_fin_trans",
+  label = "Select Financial Transparency:",
+  choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
+  selected = "Engages in financial transparency",
+  width = "450px"
+)
+
+# Financial accountability
+selectInput(
+  "org2_fin_account",
+  label = "Select Financial Accountability:",
+  choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
+  selected = "Engages in financial accountability",
+  width = "450px"
+)
+
+# Funding sources
+selectInput(
+  "org2_funding",
+  label = "Select Funding Source:",
+  choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+  width = "450px"
+)
+
+# Relationship with host government
+selectInput(
+  "org2_host_gov",
+  label = "Select Relationship With Host Government",
+  choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+  width = "450px"
+)
+```
+
+### Organization 3
+
+```{r org3-inputs}
+# Naming
+textInput(
+  "org3_id",
+  label = "Organization Name",
+  value = "Organization 3",
+  placeholder = "Enter Organization Name",
+  width = "450px"
+)
+
+# Organization
+selectInput(
+  "org3_id",
+  label = "Select Organization:",
+  choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
+  selected = "Red Cross",
+  width = "450px"
+)
+
+# Issue area
+selectInput(
+  "org3_issue", 
+  label = "Select Issue Area:",
+  choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
+  selected = "Emergency response",
+  width = "450px"
+)
+
+# Financial transparency
+selectInput(
+  "org3_fin_trans",
+  label = "Select Financial Transparency:",
+  choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
+  selected = "Engages in financial transparency",
+  width = "450px"
+)
+
+# Financial accountability
+selectInput(
+  "org3_fin_account",
+  label = "Select Financial Accountability:",
+  choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
+  selected = "Engages in financial accountability",
+  width = "450px"
+)
+
+# Funding sources
+selectInput(
+  "org3_funding",
+  label = "Select Funding Source:",
+  choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+  width = "450px"
+)
+
+# Relationship with host government
+selectInput(
+  "org3_host_gov",
+  label = "Select Relationship With Host Government",
+  choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+  width = "450px"
+)
+```
+
+### Organization 4
+
+```{r org4-inputs}
+# Naming
+textInput(
+  "org4_id",
+  label = "Organization Name",
+  value = "Organization 4",
+  placeholder = "Enter Organization Name",
+  width = "450px"
+)
+
+# Organization
+selectInput(
+  "org4_id",
+  label = "Select Organization:",
+  choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
+  selected = "Red Cross",
+  width = "450px"
+)
+
+# Issue area
+selectInput(
+  "org4_issue", 
+  label = "Select Issue Area:",
+  choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
+  selected = "Emergency response",
+  width = "450px"
+)
+
+# Financial transparency
+selectInput(
+  "org4_fin_trans",
+  label = "Select Financial Transparency:",
+  choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
+  selected = "Engages in financial transparency",
+  width = "450px"
+)
+
+# Financial accountability
+selectInput(
+  "org4_fin_account",
+  label = "Select Financial Accountability:",
+  choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
+  selected = "Engages in financial accountability",
+  width = "450px"
+)
+
+# Funding sources
+selectInput(
+  "org4_funding",
+  label = "Select Funding Source:",
+  choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+  width = "450px"
+)
+
+# Relationship with host government
+selectInput(
+  "org4_host_gov",
+  label = "Select Relationship With Host Government",
+  choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+  width = "450px"
+)
+```
 
 ### Persona 1
 
-```{r persona 1 inputs}
+```{r per1-inputs}
+# Naming
+textInput(
+  "per1_id",
+  label = "Persona Name",
+  value = "Persona 1",
+  placeholder = "Enter Persona Name",
+  width = "450px"
+)
 
-textInput("per1_id",
-          label = "Persona Name",
-          value = "Persona 1",
-          placeholder = "Enter Persona Name",
-          width = "450px")
+# Follow national news
+selectInput(
+  "per1_national_news",
+  label = "Follow national news:",
+  choices = c("Rarely", "Once a week", "At least once a day"),
+  selected = "At least once a day",
+  width = "450px"
+)
 
-selectInput("per1_national_news",
-         label = "Follow national news:",
-         choices = c("Rarely",
-                     "Once a week",
-                     "At least once a day"),
-         selected = "At least once a day",
-         width = "450px")
+# Follow international news
+selectInput(
+  "per1_international_news",
+  label = "Follow international news:",
+  choices = c("Never", "Sometimes", "Always"),
+  selected = "Always",
+  width = "450px"
+)
 
-selectInput("per1_international_news",
-         label = "Follow international news:",
-         choices = c("Never",
-                     "Sometimes",
-                     "Always"),
-         selected = "Always",
-         width = "450px")
+# Mediums to follow news
+selectInput(
+  "per1_news_medium",
+  label = "Medium to follow news:",
+  choices = c(
+    "TV",
+    "Print",
+    "Online (not social media)",
+    "Social media",
+    "Radio",
+    "Email newsletter",
+    "News app"
+  ),
+  multiple = TRUE,
+  selected = c("TV", "Print", "Social media"),
+  width = "450px"
+)
 
-selectInput("per1_news_medium",
-         label = "Medium to follow news:",
-         choices = c("TV",
-                     "Print",
-                     "Online (not social media)",
-                     "Social media",
-                     "Radio",
-                     "Email newsletter",
-                     "News app"),
-         multiple = TRUE,
-         selected = c("TV", "Print", "Social media"),
-         width = "450px")
+# Follow government and public affairs
+selectInput(
+  "per1_follow_gov",
+  label = "Follow government & public affairs:",
+  choices = c("Not Often", "Often"),
+  selected = "Often",
+  width = "450px"
+)
 
-selectInput("per1_follow_gov",
-         label = "Follow government & public affairs:",
-         choices = c("Not Often",
-                     "Often"),
-         selected = "Often",
-         width = "450px")
+# Traveled to a developing country
+selectInput(
+  "per1_travel_developing",
+  label = "Travel to developing country:",
+  choices = c("Hasn't traveled to a developing country", "Traveled to a developing country"),
+  selected = "Traveled to a developing country",
+  width = "450px"
+)
 
-#Fix
-selectInput("per1_travel_developing",
-         label = "Travel to developing country:",
-         choices = c("Doesn't travel", "Does travel"),
-         selected = "Does travel",
-         width = "450px")
+# Liberal to Conservative
+selectInput(
+  "per1_political_pref",
+  label = "Political views from liberal to conservative:",
+  choices = c(
+    "Extremely liberal",
+    "Somewhat liberal",
+    "Slightly liberal",
+    "Moderate",
+    "Slightly conservative",
+    "Somewhat conservative",
+    "Extremely conservative"
+  ),
+  selected = "Somewhat liberal",
+  width = "450px"
+)
 
-selectInput("per1_political_pref",
-         label = "Political views from liberal to conservative:",
-         choices = c("Extremely liberal",
-                     "Somewhat liberal",
-                     "Slightly liberal",
-                     "Moderate",
-                     "Slightly conservative",
-                     "Somewhat conservative",
-                     "Extremely conservative"),
-         selected = "Somewhat liberal",
-         width = "450px")
+# Trust in political institutions
+selectInput(
+  "per1_institution_trust",
+  label = "Political institution trust from none to complete:",
+  choices = c(
+    "No trust at all in political institutions",
+    "Very little trust in political institutions",
+    "Little trust in political institutions",
+    "Neutral trust in political institutions",
+    "Some trust in political institutions",
+    "A lot of trust in political institutions",
+    "Complete trust in political institutions"
+  ),
+  selected = "Complete trust in political institutions",
+  width = "450px"
+)
 
-#Fix
-selectInput("per1_institution_trust",
-         label = "Political institution trust from none to complete:",
-         choices = c("No trust at all in political institutions",
-                     "Very little trust in political institutions",
-                     "Little trust in political institutions",
-                     "Nuetral trust in political institutions",
-                     "Some trust in political institutions",
-                     "A lot of trust in political institutions",
-                     "Complete trust in political institutions"),
-         selected = "Complete trust in political institutions",
-         width = "450px")
+# People should be more charitable
+selectInput(
+  "per1_others_charitable",
+  label = "People should be more charitable:",
+  choices = c(
+    "Strongly Disagree",
+    "Disagree",
+    "Somewhat disagree",
+    "Neutral",
+    "Somewhat agree",
+    "Agree",
+    "Strongly agree"
+  ),
+  selected = "Strongly agree",
+  width = "450px"
+)
 
-selectInput("per1_others_charitable",
-         label = "People should be more charitable:",
-         choices = c("Strongly Disagree",
-                     "Disagree",
-                     "Somewhat disagree",
-                     "Nuetral",
-                     "Somewhat agree",
-                     "Agree",
-                     "Strongly agree"),
-         selected = "Strongly agree",
-         width = "450px")
+# Religious attendance
+selectInput(
+  "per1_worship_attendance",
+  label = "Worship service attendance:",
+  choices = c(
+    "Not sure",
+    "Rarely attend",
+    "Attend at least once a month"
+  ),
+  selected = "Attend at least once a month",
+  width = "450px"
+)
 
-# Fix
-selectInput("per1_worship_attendance",
-         label = "Worship service attendance:",
-         choices = c("Not sure",
-                     "Rarely attend services",
-                     "Attend at least once a month"),
-         selected = "Attend at least once a month",
-         width = "450px")
+# Importance of religion
+selectInput(
+  "per1_religion_importance",
+  label = "Importance of religion:",
+  choices = c("Not important", "Important"),
+  selected = "Important",
+  width = "450px"
+)
 
-selectInput("per1_religion_importance",
-         label = "Importance of religion:",
-         choices = c("Not important",
-                     "Important"),
-         selected = "Important",
-         width = "450px")
+# Religion
+selectInput(
+  "per1_religion",
+  label = "Religion:",
+  choices = c(
+    'Catholic',
+    'Protestant',
+    'Christian Orthodox',
+    'Jewish',
+    'Muslim',
+    'Sikh',
+    'Hindu',
+    'Buddhist',
+    'Atheist',
+    'Other religion'
+  ),
+  selected = 'Protestant',
+  width = "450px"
+)
 
-selectInput("per1_religion",
-         label = "Religion:",
-         choices = c('Catholic',
-                     'Protestant',
-                     'Christian Orthodox',
-                     'Jewish',
-                     'Muslim',
-                     'Sikh',
-                     'Hindu',
-                     'Buddhist',
-                     'Atheist',
-                     'Other (Religion)'),
-         selected = 'Protestant',
-         width = "450px")
+# Importance of trusting charities
+selectInput(
+  "per1_charity_importance",
+  label = "Charity Importance:",
+  choices = c(
+    "Not at all important",
+    "Very unimportant",
+    "Somewhat unimportant",
+    "Neutral",
+    "Somewhat important",
+    "Very important",
+    "Essential"
+  ),
+  selected = "Somewhat unimportant",
+  width = "450px"
+)
 
-selectInput("per1_charity_importance",
-          label = "Charity Importance:",
-          choices = c("Not at all important",
-                      "Very unimportant",
-                      "Somewhat unimportant",
-                      "Nuetral",
-                      "Somewhat important",
-                      "Very important",
-                      "Essential"),
-          selected = "Somewhat unimportant",
-          width = "450px")
+# Trust in charities
+selectInput(
+  "per1_trust_in_charity",
+  label = "Charity Trust:",
+  choices = c(
+    "No trust at all in charities",
+    "Very little trust in charities",
+    "Little trust in charities",
+    "Neutral trust in charities",
+    "Some trust in charities",
+    "A lot of trust in charities",
+    "Complete trust in charities"
+  ),
+  selected = "Complete trust in charities",
+  width = "450px"
+)
 
-#Fix
-selectInput("per1_trust_in_charity",
-            label = "Charity Trust:",
-            choices = c("No trust at all in charities",
-                        "Very little trust in charities",
-                        "Little trust in charities",
-                        "Nuetral trust in charities",
-                        "Some trust in charities",
-                        "A lot of trust in charities",
-                        "Complete trust in charities"),
-            selected = "Complete trust in charities",
-            width = "450px")
+# Donation frequency
+selectInput(
+  "per1_donation_frequency",
+  label = "Donation Frequency:",
+  choices = c('Donate more than once a month, less than once a year', 'Donate at least once a month'),
+  selected = "Donate at least once a month",
+  width = "450px"
+)
 
-#Fix
-selectInput("per1_donation_frequency",
-         label = "Donation Frequency:",
-         choices = c('Donate more than once a month, less than once a year',
-                     'Donate at least once a month'),
-         selected = "Donate at least once a month",
-         width = "450px")
+# Donated last year
+selectInput(
+  "per1_donation_amount",
+  label = "Donation Amount:",
+  choices = c(
+    '$1-$49',
+    '$50-$99',
+    '$100-$499',
+    '$500-$999',
+    '$1,000-$4,999',
+    '$5,000-$9,999',
+    '$10,000+'
+  ),
+  selected = "$100-$499",
+  width = "450px"
+)
 
-selectInput("per1_donation_amount",
-         label = "Donation Amount:",
-         choices = c("$1-$49",
-                     '$50-$99',
-                     '$100-$499',
-                     '$500-$999',
-                     '$1,000-$4,999',
-                     '$5,000-$9,999',
-                     '$10,000+'),
-         selected = "$100-$499",
-         width = "450px")
+# Volunteered in past 12 months
+selectInput(
+  "per1_volunteer_12",
+  label = "Volunteered in last 12 Months:",
+  choices = c("Haven't volunteered in past 12 months", "Volunteered in past 12 months"),
+  selected = "Volunteered in past 12 months",
+  width = "450px"
+)
 
-#Fix
-selectInput("per1_volunteer_12",
-         label = "Volunteered in last 12 Months:",
-         choices = c("Haven't volunteered", "Have volunteered"),
-         selected = "Have volunteered",
-         width = "450px")
+# Volunteer frequency
+selectInput(
+  "per1_volunteer_frequency",
+  label = "Volunteer Frequency:",
+  choices = c(
+    "Haven't volunteered in past 12 months",
+    "Rarely volunteer",
+    "Volunteer more than once a month, less than once a year",
+    "Volunteer at least once a month"
+  ),
+  selected = "Volunteer at least once a month",
+  width = "450px"
+)
 
-#Fix
-selectInput("per1_volunteer_frequency",
-         label = "Volunteer Frequency:",
-         choices = c("Haven't volunteered in past 12 months",
-                     "Rarely volunteer",
-                     "Volunteer more than once a month, less than once a year",
-                     "Volunteer at least once a month"),
-         selected = "Volunteer at least once a month",
-         width = "450px")
+# History of activism
+selectInput(
+  "per1_personal_activism",
+  label = "Personal Activism:",
+  choices = c('Not personally involved', 'Personally involved'),
+  selected = "Personally involved",
+  width = "450px"
+)
 
-# fix
-selectInput("per1_personal_activism",
-         label = "Personal Activism:",
-         choices = c('Not personally involved ',
-                     'Personally involved'),
-         selected = "Personally involved",
-         width = "450px")
+# History of family activism
+selectInput(
+  "per1_family_activism",
+  label = "Family Activism:",
+  choices = c('Family not involved', 'Family involved'),
+  selected = "Family involved",
+  width = "450px"
+)
 
-#Fix
-selectInput("per1_family_activism",
-         label = "Family Activism:",
-         choices = c('Family not involved',
-                     'Family involved'),
-         selected = "Family involved",
-         width = "450px")
+# Church or religious organization
+selectInput(
+  "per1_religious_member",
+  label = "Church Membership:",
+  choices = c("Don't belong to church",'Inactive church member', 'Active church member'),
+  selected = "Don't belong to church",
+  width = "450px"
+)
 
-#Fix
-selectInput("per1_religious_member",
-         label = "Church Membership:",
-         choices = c("Don't belong to church membership",
-                     'Inactive church member',
-                     'Active church member'),
-         selected = "Don't belong to church membership",
-         width = "450px")
+# Sport or recreational organization
+selectInput(
+  "per1_sport_member",
+  label = "Sport or Recreational Membership:",
+  choices = c(
+    "Don't belong to sports or rec organization", 
+    'Inactive sports or rec organization member',
+    'Active sports or rec organization member'
+  ),
+  selected = "Don't belong to sports or rec organization",
+  width = "450px"
+)
 
-#Fix
-selectInput("per1_sport_member",
-         label = "Sport or Recreational Membership:",
-         choices = c("Don't belong to sports membership",
-                     'Inactive sports member',
-                     'Active sports member'),
-         selected = "Don't belong to sports membership",
-         width = "450px")
-#Fix
-selectInput("per1_art_member",
-         label = "Art, Music, or Educational Membership:",
-         choices = c("Don't belong to educational membership",
-                     'Inactive educational member',
-                     'Active educational member'),
-         selected = "Don't belong to educational membership",
-         width = "450px")
-#Fix
-selectInput("per1_labor_member",
-         label = "Labor Union Membership:",
-         choices = c("Don't belong to union",
-                     'Inactive union member',
-                     'Active union member'),
-         selected = "Don't belong to union",
-         width = "450px")
+# Art, music, or educational organization
+selectInput(
+  "per1_art_member",
+  label = "Art, Music, or Educational Membership:",
+  choices = c(
+    "Don't belong to educational organization",
+    'Inactive art, music, or educational organization member',
+    'Active art, music, or educational organization member'
+  ),
+  selected = "Don't belong to educational organization",
+  width = "450px"
+)
 
-#Fix
-selectInput("per1_political_member",
-         label = "Political Party Membership:",
-         choices = c("Don't belong to party",
-                     'Inactive party member',
-                     'Active party member'),
-         selected = "Active party member",
-         width = "450px")
-# Fix
-selectInput("per1_environmental_member",
-         label = "Environmental Org. Membership:",
-         choices = c("Don't belong to environmental organization",
-                     'Inactive environmental member',
-                     'Active environmental member'),
-         selected = "Don't belong to environmental organization",
-         width = "450px")
-# Fix
-selectInput("per1_professional_member",
-         label = "Professional Membership:",
-         choices = c("Don't belong to professional membership",
-                     'Inactive professional member',
-                     'Active professional member'),
-         selected = "Don't belong to professional membership",
-         width = "450px")
-# Fix
-selectInput("per1_humanitarian_member",
-         label = "Humanitarian Org. Membership:",
-         choices = c("Don't belong to humanitarian organization",
-                     'Inactive humanitarian member',
-                     'Active humanitarian member'),
-         selected = "Active humanitarian member",
-         width = "450px")
+# Labor union
+selectInput(
+  "per1_labor_member",
+  label = "Labor Union Membership:",
+  choices = c("Don't belong to union", 'Inactive union member', 'Active union member'),
+  selected = "Don't belong to union",
+  width = "450px"
+)
 
-# Fix
-selectInput("per1_consumer_member",
-         label = "Consumer Org. Membership:",
-         choices = c("Don't belong to consumer organization",
-                     'Inactive consumer member',
-                     'Active consumer member'),
-         selected = "Don't belong to consumer organization",
-         width = "450px")
-# Fix
-selectInput("per1_other_member",
-         label = "Other Org. Membership:",
-         choices = c("Don't belong to other organization",
-                     'Inactive other member',
-                     'Active other member'),
-         selected = "Don't belong to other organization",
-         width = "450px")
+# Political party
+selectInput(
+  "per1_political_member",
+  label = "Political Party Membership:",
+  choices = c(
+    "Don't belong to political party",
+    'Inactive political party member',
+    'Active political party member'
+  ),
+  selected = "Active political party member",
+  width = "450px"
+)
 
-selectInput("per1_gender",
-         label = "Gender:",
-         choices = c("Male",
-                     "Female",
-                     "Transgender",
-                     "Prefer not to say",
-                     "Other (Gender)"),
-         selected = "Male",
-         width = "450px")
+# Environmental organization
+selectInput(
+  "per1_environmental_member",
+  label = "Environmental Organization Membership:",
+  choices = c(
+    "Don't belong to environmental organization",
+    'Inactive environmental organization member',
+    'Active environmental organization member'
+  ),
+  selected = "Don't belong to environmental organization",
+  width = "450px"
+)
 
-selectInput("per1_marital_status",
-         label = "Marital Status:",
-         choices = c("Married",
-                     "Widowed",
-                     "Divorced",
-                     "Separated",
-                     "Never married"),
-         selected = "Married",
-         width = "450px")
+# Professional association
+selectInput(
+  "per1_professional_member",
+  label = "Professional Association Membership:",
+  choices = c(
+    "Don't belong to professional association",
+    'Inactive professional association member',
+    'Active professional association member'
+  ),
+  selected = "Don't belong to professional association",
+  width = "450px"
+)
 
-selectInput("per1_education",
-         label = "Education:",
-         choices = c("Less than high school",
-                     "High school graduate",
-                     "Some college",
-                     "2 year degree",
-                     "4 year degree",
-                     "Graduate or professional degree",
-                     "Doctorate"),
-         selected = "2 year degree",
-         width = "450px")
+# Humanitarian or charitable organization
+selectInput(
+  "per1_humanitarian_member",
+  label = "Humanitarian or Charitable Organization Membership:",
+  choices = c(
+    "Don't belong to humanitarian or charitable organization",
+    'Inactive humanitarian or charitable organization member',
+    'Active humanitarian or charitable organization member'
+  ),
+  selected = "Active humanitarian or charitable organization member",
+  width = "450px"
+)
 
-selectInput("per1_income",
-         label = "Income:",
-         choices = c('Less than median of $61,372',
-                     'More than median of $61,372'),
-         selected = "More than median of $61,372",
-         width = "450px")
+# Consumer organization
+selectInput(
+  "per1_consumer_member",
+  label = "Consumer Organization Membership:",
+  choices = c(
+    "Don't belong to consumer organization",
+    'Inactive consumer organization member',
+    'Active consumer organization member'
+  ),
+  selected = "Don't belong to consumer organization",
+  width = "450px"
+)
 
-selectInput("per1_race",
-         label = "Race(s):",
-         choices = c('White',
-                     'Black or African American',
-                     'American Indian or Alaska Native',
-                     'Asian',
-                     'Native Hawaiian or Pacific Islander',
-                     'Other (Race)'),
-         multiple = TRUE,
-         selected = "White",
-         width = "450px")
+# Other organization
+selectInput(
+  "per1_other_member",
+  label = "Other Organization Membership:",
+  choices = c(
+    "Don't belong to another organization",
+    'Inactive member in another organization',
+    'Active member in another organization'
+  ),
+  selected = "Don't belong to another organization",
+  width = "450px"
+)
 
-selectInput("per1_age",
-         label = "Age:",
-         choices = c('Less than median age of 36',
-                     "More than median age of 36"),
-         selected = "Less than median age of 36",
-         width = "450px")
+# Gender
+selectInput(
+  "per1_gender",
+  label = "Gender:",
+  choices = c(
+    "Male",
+    "Female",
+    "Transgender",
+    "Prefer not to say",
+    "Other gender"
+  ),
+  selected = "Male",
+  width = "450px"
+)
 
+# Marital status
+selectInput(
+  "per1_marital_status",
+  label = "Marital Status:",
+  choices = c(
+    "Married",
+    "Widowed",
+    "Divorced",
+    "Separated",
+    "Never married"
+  ),
+  selected = "Married",
+  width = "450px"
+)
+
+# Education
+selectInput(
+  "per1_education",
+  label = "Education:",
+  choices = c(
+    "Less than high school",
+    "High school graduate",
+    "Some college",
+    "2 year degree",
+    "4 year degree",
+    "Graduate or professional degree",
+    "Doctorate"
+  ),
+  selected = "2 year degree",
+  width = "450px"
+)
+
+# Income
+selectInput(
+  "per1_income",
+  label = "Income:",
+  choices = c('Less than median of $61,372', 'More than median of $61,372'),
+  selected = "More than median of $61,372",
+  width = "450px"
+)
+
+# Race
+selectInput(
+  "per1_race",
+  label = "Race:",
+  choices = c(
+    'White',
+    'Black or African American',
+    'American Indian or Alaskan Native',
+    'Asian',
+    'Native Hawaiian or Pacific Islander',
+    'Other race'
+  ),
+  multiple = TRUE,
+  selected = "White",
+  width = "450px"
+)
+
+# Age
+selectInput(
+  "per1_age",
+  label = "Age:",
+  choices = c('Less than median age of 36', "More than median age of 36"),
+  selected = "Less than median age of 36",
+  width = "450px"
+)
 ```
 
 ### Persona 2
 
-```{r persona 2 inputs}
+```{r per2-inputs}
+# Naming
+textInput(
+  "per2_id",
+  label = "Persona Name",
+  value = "Persona 1",
+  placeholder = "Enter Persona Name",
+  width = "450px"
+)
 
-textInput("per2_id",
-          label = "Persona Name",
-          value = "Persona 2",
-          placeholder = "Enter Persona Name",
-          width = "450px")
+# Follow national news
+selectInput(
+  "per2_national_news",
+  label = "Follow national news:",
+  choices = c("Rarely", "Once a week", "At least once a day"),
+  selected = "At least once a day",
+  width = "450px"
+)
 
-selectInput("per2_national_news",
-         label = "Follow national news:",
-         choices = c("Rarely",
-                     "Once a week",
-                     "At least once a day"),
-         selected = "At least once a day",
-         width = "450px")
+# Follow international news
+selectInput(
+  "per2_international_news",
+  label = "Follow international news:",
+  choices = c("Never", "Sometimes", "Always"),
+  selected = "Always",
+  width = "450px"
+)
 
-selectInput("per2_international_news",
-         label = "Follow international news:",
-         choices = c("Never",
-                     "Sometimes",
-                     "Always"),
-         selected = "Always",
-         width = "450px")
+# Mediums to follow news
+selectInput(
+  "per2_news_medium",
+  label = "Medium to follow news:",
+  choices = c(
+    "TV",
+    "Print",
+    "Online (not social media)",
+    "Social media",
+    "Radio",
+    "Email newsletter",
+    "News app"
+  ),
+  multiple = TRUE,
+  selected = c("TV", "Print", "Social media"),
+  width = "450px"
+)
 
-selectInput("per2_news_medium",
-         label = "Medium to follow news:",
-         choices = c("TV",
-                     "Print",
-                     "Online (not social media)",
-                     "Social media",
-                     "Radio",
-                     "Email newsletter",
-                     "News app"),
-         multiple = TRUE,
-         selected = c("TV", "Print", "Social media"),
-         width = "450px")
+# Follow government and public affairs
+selectInput(
+  "per2_follow_gov",
+  label = "Follow government & public affairs:",
+  choices = c("Not Often", "Often"),
+  selected = "Often",
+  width = "450px"
+)
 
-selectInput("per2_follow_gov",
-         label = "Follow government & public affairs:",
-         choices = c("Not Often",
-                     "Often"),
-         selected = "Often",
-         width = "450px")
+# Traveled to a developing country
+selectInput(
+  "per2_travel_developing",
+  label = "Travel to developing country:",
+  choices = c("Hasn't traveled to a developing country", "Traveled to a developing country"),
+  selected = "Traveled to a developing country",
+  width = "450px"
+)
 
-#Fix
-selectInput("per2_travel_developing",
-         label = "Travel to developing country:",
-         choices = c("Doesn't travel", "Does travel"),
-         selected = "Does travel",
-         width = "450px")
+# Liberal to Conservative
+selectInput(
+  "per2_political_pref",
+  label = "Political views from liberal to conservative:",
+  choices = c(
+    "Extremely liberal",
+    "Somewhat liberal",
+    "Slightly liberal",
+    "Moderate",
+    "Slightly conservative",
+    "Somewhat conservative",
+    "Extremely conservative"
+  ),
+  selected = "Somewhat liberal",
+  width = "450px"
+)
 
-selectInput("per2_political_pref",
-         label = "Political views from liberal to conservative:",
-         choices = c("Extremely liberal",
-                     "Somewhat liberal",
-                     "Slightly liberal",
-                     "Moderate",
-                     "Slightly conservative",
-                     "Somewhat conservative",
-                     "Extremely conservative"),
-         selected = "Somewhat liberal",
-         width = "450px")
+# Trust in political institutions
+selectInput(
+  "per2_institution_trust",
+  label = "Political institution trust from none to complete:",
+  choices = c(
+    "No trust at all in political institutions",
+    "Very little trust in political institutions",
+    "Little trust in political institutions",
+    "Neutral trust in political institutions",
+    "Some trust in political institutions",
+    "A lot of trust in political institutions",
+    "Complete trust in political institutions"
+  ),
+  selected = "Complete trust in political institutions",
+  width = "450px"
+)
 
-#Fix
-selectInput("per2_institution_trust",
-         label = "Political institution trust from none to complete:",
-         choices = c("No trust at all in political institutions",
-                     "Very little trust in political institutions",
-                     "Little trust in political institutions",
-                     "Nuetral trust in political institutions",
-                     "Some trust in political institutions",
-                     "A lot of trust in political institutions",
-                     "Complete trust in political institutions"),
-         selected = "Complete trust in political institutions",
-         width = "450px")
+# People should be more charitable
+selectInput(
+  "per2_others_charitable",
+  label = "People should be more charitable:",
+  choices = c(
+    "Strongly Disagree",
+    "Disagree",
+    "Somewhat disagree",
+    "Neutral",
+    "Somewhat agree",
+    "Agree",
+    "Strongly agree"
+  ),
+  selected = "Strongly agree",
+  width = "450px"
+)
 
-selectInput("per2_others_charitable",
-         label = "People should be more charitable:",
-         choices = c("Strongly Disagree",
-                     "Disagree",
-                     "Somewhat disagree",
-                     "Nuetral",
-                     "Somewhat agree",
-                     "Agree",
-                     "Strongly agree"),
-         selected = "Strongly agree",
-         width = "450px")
+# Religious attendance
+selectInput(
+  "per2_worship_attendance",
+  label = "Worship service attendance:",
+  choices = c(
+    "Not sure",
+    "Rarely attend",
+    "Attend at least once a month"
+  ),
+  selected = "Attend at least once a month",
+  width = "450px"
+)
 
-# Fix
-selectInput("per2_worship_attendance",
-         label = "Worship service attendance:",
-         choices = c("Not sure",
-                     "Rarely attend services",
-                     "Attend at least once a month"),
-         selected = "Attend at least once a month",
-         width = "450px")
+# Importance of religion
+selectInput(
+  "per2_religion_importance",
+  label = "Importance of religion:",
+  choices = c("Not important", "Important"),
+  selected = "Important",
+  width = "450px"
+)
 
-selectInput("per2_religion_importance",
-         label = "Importance of religion:",
-         choices = c("Not important",
-                     "Important"),
-         selected = "Important",
-         width = "450px")
+# Religion
+selectInput(
+  "per2_religion",
+  label = "Religion:",
+  choices = c(
+    'Catholic',
+    'Protestant',
+    'Christian Orthodox',
+    'Jewish',
+    'Muslim',
+    'Sikh',
+    'Hindu',
+    'Buddhist',
+    'Atheist',
+    'Other religion'
+  ),
+  selected = 'Protestant',
+  width = "450px"
+)
 
-selectInput("per2_religion",
-         label = "Religion:",
-         choices = c('Catholic',
-                     'Protestant',
-                     'Christian Orthodox',
-                     'Jewish',
-                     'Muslim',
-                     'Sikh',
-                     'Hindu',
-                     'Buddhist',
-                     'Atheist',
-                     'Other (Religion)'),
-         selected = 'Protestant',
-         width = "450px")
+# Importance of trusting charities
+selectInput(
+  "per2_charity_importance",
+  label = "Charity Importance:",
+  choices = c(
+    "Not at all important",
+    "Very unimportant",
+    "Somewhat unimportant",
+    "Neutral",
+    "Somewhat important",
+    "Very important",
+    "Essential"
+  ),
+  selected = "Somewhat unimportant",
+  width = "450px"
+)
 
-selectInput("per2_charity_importance",
-          label = "Charity Importance:",
-          choices = c("Not at all important",
-                      "Very unimportant",
-                      "Somewhat unimportant",
-                      "Nuetral",
-                      "Somewhat important",
-                      "Very important",
-                      "Essential"),
-          selected = "Somewhat unimportant",
-          width = "450px")
+# Trust in charities
+selectInput(
+  "per2_trust_in_charity",
+  label = "Charity Trust:",
+  choices = c(
+    "No trust at all in charities",
+    "Very little trust in charities",
+    "Little trust in charities",
+    "Neutral trust in charities",
+    "Some trust in charities",
+    "A lot of trust in charities",
+    "Complete trust in charities"
+  ),
+  selected = "Complete trust in charities",
+  width = "450px"
+)
 
-#Fix
-selectInput("per2_trust_in_charity",
-            label = "Charity Trust:",
-            choices = c("No trust at all in charities",
-                        "Very little trust in charities",
-                        "Little trust in charities",
-                        "Nuetral trust in charities",
-                        "Some trust in charities",
-                        "A lot of trust in charities",
-                        "Complete trust in charities"),
-            selected = "Complete trust in charities",
-            width = "450px")
+# Donation frequency
+selectInput(
+  "per2_donation_frequency",
+  label = "Donation Frequency:",
+  choices = c('Donate more than once a month, less than once a year', 'Donate at least once a month'),
+  selected = "Donate at least once a month",
+  width = "450px"
+)
 
-#Fix
-selectInput("per2_donation_frequency",
-         label = "Donation Frequency:",
-         choices = c('Donate more than once a month, less than once a year',
-                     'Donate at least once a month'),
-         selected = "Donate at least once a month",
-         width = "450px")
+# Donated last year
+selectInput(
+  "per2_donation_amount",
+  label = "Donation Amount:",
+  choices = c(
+    '$1-$49',
+    '$50-$99',
+    '$100-$499',
+    '$500-$999',
+    '$1,000-$4,999',
+    '$5,000-$9,999',
+    '$10,000+'
+  ),
+  selected = "$100-$499",
+  width = "450px"
+)
 
-selectInput("per2_donation_amount",
-         label = "Donation Amount:",
-         choices = c("$1-$49",
-                     '$50-$99',
-                     '$100-$499',
-                     '$500-$999',
-                     '$1,000-$4,999',
-                     '$5,000-$9,999',
-                     '$10,000+'),
-         selected = "$100-$499",
-         width = "450px")
+# Volunteered in past 12 months
+selectInput(
+  "per2_volunteer_12",
+  label = "Volunteered in last 12 Months:",
+  choices = c("Haven't volunteered in past 12 months", "Volunteered in past 12 months"),
+  selected = "Volunteered in past 12 months",
+  width = "450px"
+)
 
-#Fix
-selectInput("per2_volunteer_12",
-         label = "Volunteered in last 12 Months:",
-         choices = c("Haven't volunteered", "Have volunteered"),
-         selected = "Have volunteered",
-         width = "450px")
+# Volunteer frequency
+selectInput(
+  "per2_volunteer_frequency",
+  label = "Volunteer Frequency:",
+  choices = c(
+    "Haven't volunteered in past 12 months",
+    "Rarely volunteer",
+    "Volunteer more than once a month, less than once a year",
+    "Volunteer at least once a month"
+  ),
+  selected = "Volunteer at least once a month",
+  width = "450px"
+)
 
-#Fix
-selectInput("per2_volunteer_frequency",
-         label = "Volunteer Frequency:",
-         choices = c("Haven't volunteered in past 12 months",
-                     "Rarely volunteer",
-                     "Volunteer more than once a month, less than once a year",
-                     "Volunteer at least once a month"),
-         selected = "Volunteer at least once a month",
-         width = "450px")
+# History of activism
+selectInput(
+  "per2_personal_activism",
+  label = "Personal Activism:",
+  choices = c('Not personally involved', 'Personally involved'),
+  selected = "Personally involved",
+  width = "450px"
+)
 
-# fix
-selectInput("per2_personal_activism",
-         label = "Personal Activism:",
-         choices = c('Not personally involved ',
-                     'Personally involved'),
-         selected = "Personally involved",
-         width = "450px")
+# History of family activism
+selectInput(
+  "per2_family_activism",
+  label = "Family Activism:",
+  choices = c('Family not involved', 'Family involved'),
+  selected = "Family involved",
+  width = "450px"
+)
 
-#Fix
-selectInput("per2_family_activism",
-         label = "Family Activism:",
-         choices = c('Family not involved',
-                     'Family involved'),
-         selected = "Family involved",
-         width = "450px")
+# Church or religious organization
+selectInput(
+  "per2_religious_member",
+  label = "Church Membership:",
+  choices = c("Don't belong to church",'Inactive church member', 'Active church member'),
+  selected = "Don't belong to church",
+  width = "450px"
+)
 
-#Fix
-selectInput("per2_religious_member",
-         label = "Church Membership:",
-         choices = c("Don't belong to church membership",
-                     'Inactive church member',
-                     'Active church member'),
-         selected = "Don't belong to church membership",
-         width = "450px")
+# Sport or recreational organization
+selectInput(
+  "per2_sport_member",
+  label = "Sport or Recreational Membership:",
+  choices = c(
+    "Don't belong to sports or rec organization", 
+    'Inactive sports or rec organization member',
+    'Active sports or rec organization member'
+  ),
+  selected = "Don't belong to sports or rec organization",
+  width = "450px"
+)
 
-#Fix
-selectInput("per2_sport_member",
-         label = "Sport or Recreational Membership:",
-         choices = c("Don't belong to sports membership",
-                     'Inactive sports member',
-                     'Active sports member'),
-         selected = "Don't belong to sports membership",
-         width = "450px")
-#Fix
-selectInput("per2_art_member",
-         label = "Art, Music, or Educational Membership:",
-         choices = c("Don't belong to educational membership",
-                     'Inactive educational member',
-                     'Active educational member'),
-         selected = "Don't belong to educational membership",
-         width = "450px")
-#Fix
-selectInput("per2_labor_member",
-         label = "Labor Union Membership:",
-         choices = c("Don't belong to union",
-                     'Inactive union member',
-                     'Active union member'),
-         selected = "Don't belong to union",
-         width = "450px")
+# Art, music, or educational organization
+selectInput(
+  "per2_art_member",
+  label = "Art, Music, or Educational Membership:",
+  choices = c(
+    "Don't belong to educational organization",
+    'Inactive art, music, or educational organization member',
+    'Active art, music, or educational organization member'
+  ),
+  selected = "Don't belong to educational organization",
+  width = "450px"
+)
 
-#Fix
-selectInput("per2_political_member",
-         label = "Political Party Membership:",
-         choices = c("Don't belong to party",
-                     'Inactive party member',
-                     'Active party member'),
-         selected = "Active party member",
-         width = "450px")
-# Fix
-selectInput("per2_environmental_member",
-         label = "Environmental Org. Membership:",
-         choices = c("Don't belong to environmental organization",
-                     'Inactive environmental member',
-                     'Active environmental member'),
-         selected = "Don't belong to environmental organization",
-         width = "450px")
-# Fix
-selectInput("per2_professional_member",
-         label = "Professional Membership:",
-         choices = c("Don't belong to professional membership",
-                     'Inactive professional member',
-                     'Active professional member'),
-         selected = "Don't belong to professional membership",
-         width = "450px")
-# Fix
-selectInput("per2_humanitarian_member",
-         label = "Humanitarian Org. Membership:",
-         choices = c("Don't belong to humanitarian organization",
-                     'Inactive humanitarian member',
-                     'Active humanitarian member'),
-         selected = "Active humanitarian member",
-         width = "450px")
+# Labor union
+selectInput(
+  "per2_labor_member",
+  label = "Labor Union Membership:",
+  choices = c("Don't belong to union", 'Inactive union member', 'Active union member'),
+  selected = "Don't belong to union",
+  width = "450px"
+)
 
-# Fix
-selectInput("per2_consumer_member",
-         label = "Consumer Org. Membership:",
-         choices = c("Don't belong to consumer organization",
-                     'Inactive consumer member',
-                     'Active consumer member'),
-         selected = "Don't belong to consumer organization",
-         width = "450px")
-# Fix
-selectInput("per2_other_member",
-         label = "Other Org. Membership:",
-         choices = c("Don't belong to other organization",
-                     'Inactive other member',
-                     'Active other member'),
-         selected = "Don't belong to other organization",
-         width = "450px")
+# Political party
+selectInput(
+  "per2_political_member",
+  label = "Political Party Membership:",
+  choices = c(
+    "Don't belong to political party",
+    'Inactive political party member',
+    'Active political party member'
+  ),
+  selected = "Active political party member",
+  width = "450px"
+)
 
-selectInput("per2_gender",
-         label = "Gender:",
-         choices = c("Male",
-                     "Female",
-                     "Transgender",
-                     "Prefer not to say",
-                     "Other (Gender)"),
-         selected = "Male",
-         width = "450px")
+# Environmental organization
+selectInput(
+  "per2_environmental_member",
+  label = "Environmental Organization Membership:",
+  choices = c(
+    "Don't belong to environmental organization",
+    'Inactive environmental organization member',
+    'Active environmental organization member'
+  ),
+  selected = "Don't belong to environmental organization",
+  width = "450px"
+)
 
-selectInput("per2_marital_status",
-         label = "Marital Status:",
-         choices = c("Married",
-                     "Widowed",
-                     "Divorced",
-                     "Separated",
-                     "Never married"),
-         selected = "Married",
-         width = "450px")
+# Professional association
+selectInput(
+  "per2_professional_member",
+  label = "Professional Association Membership:",
+  choices = c(
+    "Don't belong to professional association",
+    'Inactive professional association member',
+    'Active professional association member'
+  ),
+  selected = "Don't belong to professional association",
+  width = "450px"
+)
 
-selectInput("per2_education",
-         label = "Education:",
-         choices = c("Less than high school",
-                     "High school graduate",
-                     "Some college",
-                     "2 year degree",
-                     "4 year degree",
-                     "Graduate or professional degree",
-                     "Doctorate"),
-         selected = "Some college",
-         width = "450px")
+# Humanitarian or charitable organization
+selectInput(
+  "per2_humanitarian_member",
+  label = "Humanitarian or Charitable Organization Membership:",
+  choices = c(
+    "Don't belong to humanitarian or charitable organization",
+    'Inactive humanitarian or charitable organization member',
+    'Active humanitarian or charitable organization member'
+  ),
+  selected = "Active humanitarian or charitable organization member",
+  width = "450px"
+)
 
-selectInput("per2_income",
-         label = "Income:",
-         choices = c('Less than median of $61,372',
-                     'More than median of $61,372'),
-         selected = "More than median of $61,372",
-         width = "450px")
+# Consumer organization
+selectInput(
+  "per2_consumer_member",
+  label = "Consumer Organization Membership:",
+  choices = c(
+    "Don't belong to consumer organization",
+    'Inactive consumer organization member',
+    'Active consumer organization member'
+  ),
+  selected = "Don't belong to consumer organization",
+  width = "450px"
+)
 
-selectInput("per2_race",
-         label = "Race(s):",
-         choices = c('White',
-                     'Black or African American',
-                     'American Indian or Alaska Native',
-                     'Asian',
-                     'Native Hawaiian or Pacific Islander',
-                     'Other (Race)'),
-         multiple = TRUE,
-         selected = "American Indian or Alaska Native",
-         width = "450px")
+# Other organization
+selectInput(
+  "per2_other_member",
+  label = "Other Organization Membership:",
+  choices = c(
+    "Don't belong to another organization",
+    'Inactive member in another organization',
+    'Active member in another organization'
+  ),
+  selected = "Don't belong to another organization",
+  width = "450px"
+)
 
-selectInput("per2_age",
-         label = "Age:",
-         choices = c('Less than median age of 36',
-                     "More than median age of 36"),
-         selected = "Less than median age of 36",
-         width = "450px")
+# Gender
+selectInput(
+  "per2_gender",
+  label = "Gender:",
+  choices = c(
+    "Male",
+    "Female",
+    "Transgender",
+    "Prefer not to say",
+    "Other gender"
+  ),
+  selected = "Male",
+  width = "450px"
+)
 
+# Marital status
+selectInput(
+  "per2_marital_status",
+  label = "Marital Status:",
+  choices = c(
+    "Married",
+    "Widowed",
+    "Divorced",
+    "Separated",
+    "Never married"
+  ),
+  selected = "Married",
+  width = "450px"
+)
+
+# Education
+selectInput(
+  "per2_education",
+  label = "Education:",
+  choices = c(
+    "Less than high school",
+    "High school graduate",
+    "Some college",
+    "2 year degree",
+    "4 year degree",
+    "Graduate or professional degree",
+    "Doctorate"
+  ),
+  selected = "2 year degree",
+  width = "450px"
+)
+
+# Income
+selectInput(
+  "per2_income",
+  label = "Income:",
+  choices = c('Less than median of $61,372', 'More than median of $61,372'),
+  selected = "More than median of $61,372",
+  width = "450px"
+)
+
+# Race
+selectInput(
+  "per2_race",
+  label = "Race:",
+  choices = c(
+    'White',
+    'Black or African American',
+    'American Indian or Alaskan Native',
+    'Asian',
+    'Native Hawaiian or Pacific Islander',
+    'Other race'
+  ),
+  multiple = TRUE,
+  selected = "White",
+  width = "450px"
+)
+
+# Age
+selectInput(
+  "per2_age",
+  label = "Age:",
+  choices = c('Less than median age of 36', "More than median age of 36"),
+  selected = "Less than median age of 36",
+  width = "450px"
+)
 ```
 
 ### Persona 3
 
-```{r persona 3 inputs}
+```{r per3-inputs}
+# Naming
+textInput(
+  "per3_id",
+  label = "Persona Name",
+  value = "Persona 1",
+  placeholder = "Enter Persona Name",
+  width = "450px"
+)
 
-textInput("per3_id",
-          label = "Persona Name",
-          value = "Persona 3",
-          placeholder = "Enter Persona Name",
-          width = "450px")
+# Follow national news
+selectInput(
+  "per3_national_news",
+  label = "Follow national news:",
+  choices = c("Rarely", "Once a week", "At least once a day"),
+  selected = "At least once a day",
+  width = "450px"
+)
 
-selectInput("per3_national_news",
-         label = "Follow national news:",
-         choices = c("Rarely",
-                     "Once a week",
-                     "At least once a day"),
-         selected = "At least once a day",
-         width = "450px")
+# Follow international news
+selectInput(
+  "per3_international_news",
+  label = "Follow international news:",
+  choices = c("Never", "Sometimes", "Always"),
+  selected = "Always",
+  width = "450px"
+)
 
-selectInput("per3_international_news",
-         label = "Follow international news:",
-         choices = c("Never",
-                     "Sometimes",
-                     "Always"),
-         selected = "Always",
-         width = "450px")
+# Mediums to follow news
+selectInput(
+  "per3_news_medium",
+  label = "Medium to follow news:",
+  choices = c(
+    "TV",
+    "Print",
+    "Online (not social media)",
+    "Social media",
+    "Radio",
+    "Email newsletter",
+    "News app"
+  ),
+  multiple = TRUE,
+  selected = c("TV", "Print", "Social media"),
+  width = "450px"
+)
 
-selectInput("per3_news_medium",
-         label = "Medium to follow news:",
-         choices = c("TV",
-                     "Print",
-                     "Online (not social media)",
-                     "Social media",
-                     "Radio",
-                     "Email newsletter",
-                     "News app"),
-         multiple = TRUE,
-         selected = c("TV", "Print", "Social media"),
-         width = "450px")
+# Follow government and public affairs
+selectInput(
+  "per3_follow_gov",
+  label = "Follow government & public affairs:",
+  choices = c("Not Often", "Often"),
+  selected = "Often",
+  width = "450px"
+)
 
-selectInput("per3_follow_gov",
-         label = "Follow government & public affairs:",
-         choices = c("Not Often",
-                     "Often"),
-         selected = "Often",
-         width = "450px")
+# Traveled to a developing country
+selectInput(
+  "per3_travel_developing",
+  label = "Travel to developing country:",
+  choices = c("Hasn't traveled to a developing country", "Traveled to a developing country"),
+  selected = "Traveled to a developing country",
+  width = "450px"
+)
 
-#Fix
-selectInput("per3_travel_developing",
-         label = "Travel to developing country:",
-         choices = c("Doesn't travel", "Does travel"),
-         selected = "Does travel",
-         width = "450px")
+# Liberal to Conservative
+selectInput(
+  "per3_political_pref",
+  label = "Political views from liberal to conservative:",
+  choices = c(
+    "Extremely liberal",
+    "Somewhat liberal",
+    "Slightly liberal",
+    "Moderate",
+    "Slightly conservative",
+    "Somewhat conservative",
+    "Extremely conservative"
+  ),
+  selected = "Somewhat liberal",
+  width = "450px"
+)
 
-selectInput("per3_political_pref",
-         label = "Political views from liberal to conservative:",
-         choices = c("Extremely liberal",
-                     "Somewhat liberal",
-                     "Slightly liberal",
-                     "Moderate",
-                     "Slightly conservative",
-                     "Somewhat conservative",
-                     "Extremely conservative"),
-         selected = "Somewhat liberal",
-         width = "450px")
+# Trust in political institutions
+selectInput(
+  "per3_institution_trust",
+  label = "Political institution trust from none to complete:",
+  choices = c(
+    "No trust at all in political institutions",
+    "Very little trust in political institutions",
+    "Little trust in political institutions",
+    "Neutral trust in political institutions",
+    "Some trust in political institutions",
+    "A lot of trust in political institutions",
+    "Complete trust in political institutions"
+  ),
+  selected = "Complete trust in political institutions",
+  width = "450px"
+)
 
-#Fix
-selectInput("per3_institution_trust",
-         label = "Political institution trust from none to complete:",
-         choices = c("No trust at all in political institutions",
-                     "Very little trust in political institutions",
-                     "Little trust in political institutions",
-                     "Nuetral trust in political institutions",
-                     "Some trust in political institutions",
-                     "A lot of trust in political institutions",
-                     "Complete trust in political institutions"),
-         selected = "Complete trust in political institutions",
-         width = "450px")
+# People should be more charitable
+selectInput(
+  "per3_others_charitable",
+  label = "People should be more charitable:",
+  choices = c(
+    "Strongly Disagree",
+    "Disagree",
+    "Somewhat disagree",
+    "Neutral",
+    "Somewhat agree",
+    "Agree",
+    "Strongly agree"
+  ),
+  selected = "Strongly agree",
+  width = "450px"
+)
 
-selectInput("per3_others_charitable",
-         label = "People should be more charitable:",
-         choices = c("Strongly Disagree",
-                     "Disagree",
-                     "Somewhat disagree",
-                     "Nuetral",
-                     "Somewhat agree",
-                     "Agree",
-                     "Strongly agree"),
-         selected = "Strongly agree",
-         width = "450px")
+# Religious attendance
+selectInput(
+  "per3_worship_attendance",
+  label = "Worship service attendance:",
+  choices = c(
+    "Not sure",
+    "Rarely attend",
+    "Attend at least once a month"
+  ),
+  selected = "Attend at least once a month",
+  width = "450px"
+)
 
-# Fix
-selectInput("per3_worship_attendance",
-         label = "Worship service attendance:",
-         choices = c("Not sure",
-                     "Rarely attend services",
-                     "Attend at least once a month"),
-         selected = "Attend at least once a month",
-         width = "450px")
+# Importance of religion
+selectInput(
+  "per3_religion_importance",
+  label = "Importance of religion:",
+  choices = c("Not important", "Important"),
+  selected = "Important",
+  width = "450px"
+)
 
-selectInput("per3_religion_importance",
-         label = "Importance of religion:",
-         choices = c("Not important",
-                     "Important"),
-         selected = "Important",
-         width = "450px")
+# Religion
+selectInput(
+  "per3_religion",
+  label = "Religion:",
+  choices = c(
+    'Catholic',
+    'Protestant',
+    'Christian Orthodox',
+    'Jewish',
+    'Muslim',
+    'Sikh',
+    'Hindu',
+    'Buddhist',
+    'Atheist',
+    'Other religion'
+  ),
+  selected = 'Protestant',
+  width = "450px"
+)
 
-selectInput("per3_religion",
-         label = "Religion:",
-         choices = c('Catholic',
-                     'Protestant',
-                     'Christian Orthodox',
-                     'Jewish',
-                     'Muslim',
-                     'Sikh',
-                     'Hindu',
-                     'Buddhist',
-                     'Atheist',
-                     'Other (Religion)'),
-         selected = 'Protestant',
-         width = "450px")
+# Importance of trusting charities
+selectInput(
+  "per3_charity_importance",
+  label = "Charity Importance:",
+  choices = c(
+    "Not at all important",
+    "Very unimportant",
+    "Somewhat unimportant",
+    "Neutral",
+    "Somewhat important",
+    "Very important",
+    "Essential"
+  ),
+  selected = "Somewhat unimportant",
+  width = "450px"
+)
 
-selectInput("per3_charity_importance",
-          label = "Charity Importance:",
-          choices = c("Not at all important",
-                      "Very unimportant",
-                      "Somewhat unimportant",
-                      "Nuetral",
-                      "Somewhat important",
-                      "Very important",
-                      "Essential"),
-          selected = "Somewhat unimportant",
-          width = "450px")
+# Trust in charities
+selectInput(
+  "per3_trust_in_charity",
+  label = "Charity Trust:",
+  choices = c(
+    "No trust at all in charities",
+    "Very little trust in charities",
+    "Little trust in charities",
+    "Neutral trust in charities",
+    "Some trust in charities",
+    "A lot of trust in charities",
+    "Complete trust in charities"
+  ),
+  selected = "Complete trust in charities",
+  width = "450px"
+)
 
-#Fix
-selectInput("per3_trust_in_charity",
-            label = "Charity Trust:",
-            choices = c("No trust at all in charities",
-                        "Very little trust in charities",
-                        "Little trust in charities",
-                        "Nuetral trust in charities",
-                        "Some trust in charities",
-                        "A lot of trust in charities",
-                        "Complete trust in charities"),
-            selected = "Complete trust in charities",
-            width = "450px")
+# Donation frequency
+selectInput(
+  "per3_donation_frequency",
+  label = "Donation Frequency:",
+  choices = c('Donate more than once a month, less than once a year', 'Donate at least once a month'),
+  selected = "Donate at least once a month",
+  width = "450px"
+)
 
-#Fix
-selectInput("per3_donation_frequency",
-         label = "Donation Frequency:",
-         choices = c('Donate more than once a month, less than once a year',
-                     'Donate at least once a month'),
-         selected = "Donate at least once a month",
-         width = "450px")
+# Donated last year
+selectInput(
+  "per3_donation_amount",
+  label = "Donation Amount:",
+  choices = c(
+    '$1-$49',
+    '$50-$99',
+    '$100-$499',
+    '$500-$999',
+    '$1,000-$4,999',
+    '$5,000-$9,999',
+    '$10,000+'
+  ),
+  selected = "$100-$499",
+  width = "450px"
+)
 
-selectInput("per3_donation_amount",
-         label = "Donation Amount:",
-         choices = c("$1-$49",
-                     '$50-$99',
-                     '$100-$499',
-                     '$500-$999',
-                     '$1,000-$4,999',
-                     '$5,000-$9,999',
-                     '$10,000+'),
-         selected = "$100-$499",
-         width = "450px")
+# Volunteered in past 12 months
+selectInput(
+  "per3_volunteer_12",
+  label = "Volunteered in last 12 Months:",
+  choices = c("Haven't volunteered in past 12 months", "Volunteered in past 12 months"),
+  selected = "Volunteered in past 12 months",
+  width = "450px"
+)
 
-#Fix
-selectInput("per3_volunteer_12",
-         label = "Volunteered in last 12 Months:",
-         choices = c("Haven't volunteered", "Have volunteered"),
-         selected = "Have volunteered",
-         width = "450px")
+# Volunteer frequency
+selectInput(
+  "per3_volunteer_frequency",
+  label = "Volunteer Frequency:",
+  choices = c(
+    "Haven't volunteered in past 12 months",
+    "Rarely volunteer",
+    "Volunteer more than once a month, less than once a year",
+    "Volunteer at least once a month"
+  ),
+  selected = "Volunteer at least once a month",
+  width = "450px"
+)
 
-#Fix
-selectInput("per3_volunteer_frequency",
-         label = "Volunteer Frequency:",
-         choices = c("Haven't volunteered in past 12 months",
-                     "Rarely volunteer",
-                     "Volunteer more than once a month, less than once a year",
-                     "Volunteer at least once a month"),
-         selected = "Volunteer at least once a month",
-         width = "450px")
+# History of activism
+selectInput(
+  "per3_personal_activism",
+  label = "Personal Activism:",
+  choices = c('Not personally involved', 'Personally involved'),
+  selected = "Personally involved",
+  width = "450px"
+)
 
-# fix
-selectInput("per3_personal_activism",
-         label = "Personal Activism:",
-         choices = c('Not personally involved ',
-                     'Personally involved'),
-         selected = "Personally involved",
-         width = "450px")
+# History of family activism
+selectInput(
+  "per3_family_activism",
+  label = "Family Activism:",
+  choices = c('Family not involved', 'Family involved'),
+  selected = "Family involved",
+  width = "450px"
+)
 
-#Fix
-selectInput("per3_family_activism",
-         label = "Family Activism:",
-         choices = c('Family not involved',
-                     'Family involved'),
-         selected = "Family involved",
-         width = "450px")
+# Church or religious organization
+selectInput(
+  "per3_religious_member",
+  label = "Church Membership:",
+  choices = c("Don't belong to church",'Inactive church member', 'Active church member'),
+  selected = "Don't belong to church",
+  width = "450px"
+)
 
-#Fix
-selectInput("per3_religious_member",
-         label = "Church Membership:",
-         choices = c("Don't belong to church membership",
-                     'Inactive church member',
-                     'Active church member'),
-         selected = "Don't belong to church membership",
-         width = "450px")
+# Sport or recreational organization
+selectInput(
+  "per3_sport_member",
+  label = "Sport or Recreational Membership:",
+  choices = c(
+    "Don't belong to sports or rec organization", 
+    'Inactive sports or rec organization member',
+    'Active sports or rec organization member'
+  ),
+  selected = "Don't belong to sports or rec organization",
+  width = "450px"
+)
 
-#Fix
-selectInput("per3_sport_member",
-         label = "Sport or Recreational Membership:",
-         choices = c("Don't belong to sports membership",
-                     'Inactive sports member',
-                     'Active sports member'),
-         selected = "Don't belong to sports membership",
-         width = "450px")
-#Fix
-selectInput("per3_art_member",
-         label = "Art, Music, or Educational Membership:",
-         choices = c("Don't belong to educational membership",
-                     'Inactive educational member',
-                     'Active educational member'),
-         selected = "Don't belong to educational membership",
-         width = "450px")
-#Fix
-selectInput("per3_labor_member",
-         label = "Labor Union Membership:",
-         choices = c("Don't belong to union",
-                     'Inactive union member',
-                     'Active union member'),
-         selected = "Don't belong to union",
-         width = "450px")
+# Art, music, or educational organization
+selectInput(
+  "per3_art_member",
+  label = "Art, Music, or Educational Membership:",
+  choices = c(
+    "Don't belong to educational organization",
+    'Inactive art, music, or educational organization member',
+    'Active art, music, or educational organization member'
+  ),
+  selected = "Don't belong to educational organization",
+  width = "450px"
+)
 
-#Fix
-selectInput("per3_political_member",
-         label = "Political Party Membership:",
-         choices = c("Don't belong to party",
-                     'Inactive party member',
-                     'Active party member'),
-         selected = "Active party member",
-         width = "450px")
-# Fix
-selectInput("per3_environmental_member",
-         label = "Environmental Org. Membership:",
-         choices = c("Don't belong to environmental organization",
-                     'Inactive environmental member',
-                     'Active environmental member'),
-         selected = "Don't belong to environmental organization",
-         width = "450px")
-# Fix
-selectInput("per3_professional_member",
-         label = "Professional Membership:",
-         choices = c("Don't belong to professional membership",
-                     'Inactive professional member',
-                     'Active professional member'),
-         selected = "Don't belong to professional membership",
-         width = "450px")
-# Fix
-selectInput("per3_humanitarian_member",
-         label = "Humanitarian Org. Membership:",
-         choices = c("Don't belong to humanitarian organization",
-                     'Inactive humanitarian member',
-                     'Active humanitarian member'),
-         selected = "Active humanitarian member",
-         width = "450px")
+# Labor union
+selectInput(
+  "per3_labor_member",
+  label = "Labor Union Membership:",
+  choices = c("Don't belong to union", 'Inactive union member', 'Active union member'),
+  selected = "Don't belong to union",
+  width = "450px"
+)
 
-# Fix
-selectInput("per3_consumer_member",
-         label = "Consumer Org. Membership:",
-         choices = c("Don't belong to consumer organization",
-                     'Inactive consumer member',
-                     'Active consumer member'),
-         selected = "Don't belong to consumer organization",
-         width = "450px")
-# Fix
-selectInput("per3_other_member",
-         label = "Other Org. Membership:",
-         choices = c("Don't belong to other organization",
-                     'Inactive other member',
-                     'Active other member'),
-         selected = "Don't belong to other organization",
-         width = "450px")
+# Political party
+selectInput(
+  "per3_political_member",
+  label = "Political Party Membership:",
+  choices = c(
+    "Don't belong to political party",
+    'Inactive political party member',
+    'Active political party member'
+  ),
+  selected = "Active political party member",
+  width = "450px"
+)
 
-selectInput("per3_gender",
-         label = "Gender:",
-         choices = c("Male",
-                     "Female",
-                     "Transgender",
-                     "Prefer not to say",
-                     "Other (Gender)"),
-         selected = "Female",
-         width = "450px")
+# Environmental organization
+selectInput(
+  "per3_environmental_member",
+  label = "Environmental Organization Membership:",
+  choices = c(
+    "Don't belong to environmental organization",
+    'Inactive environmental organization member',
+    'Active environmental organization member'
+  ),
+  selected = "Don't belong to environmental organization",
+  width = "450px"
+)
 
-selectInput("per3_marital_status",
-         label = "Marital Status:",
-         choices = c("Married",
-                     "Widowed",
-                     "Divorced",
-                     "Separated",
-                     "Never married"),
-         selected = "Married",
-         width = "450px")
+# Professional association
+selectInput(
+  "per3_professional_member",
+  label = "Professional Association Membership:",
+  choices = c(
+    "Don't belong to professional association",
+    'Inactive professional association member',
+    'Active professional association member'
+  ),
+  selected = "Don't belong to professional association",
+  width = "450px"
+)
 
-selectInput("per3_education",
-         label = "Education:",
-         choices = c("Less than high school",
-                     "High school graduate",
-                     "Some college",
-                     "2 year degree",
-                     "4 year degree",
-                     "Graduate or professional degree",
-                     "Doctorate"),
-         selected = "Graduate or professional degree",
-         width = "450px")
+# Humanitarian or charitable organization
+selectInput(
+  "per3_humanitarian_member",
+  label = "Humanitarian or Charitable Organization Membership:",
+  choices = c(
+    "Don't belong to humanitarian or charitable organization",
+    'Inactive humanitarian or charitable organization member',
+    'Active humanitarian or charitable organization member'
+  ),
+  selected = "Active humanitarian or charitable organization member",
+  width = "450px"
+)
 
-selectInput("per3_income",
-         label = "Income:",
-         choices = c('Less than median of $61,372',
-                     'More than median of $61,372'),
-         selected = "More than median of $61,372",
-         width = "450px")
+# Consumer organization
+selectInput(
+  "per3_consumer_member",
+  label = "Consumer Organization Membership:",
+  choices = c(
+    "Don't belong to consumer organization",
+    'Inactive consumer organization member',
+    'Active consumer organization member'
+  ),
+  selected = "Don't belong to consumer organization",
+  width = "450px"
+)
 
-selectInput("per3_race",
-         label = "Race(s):",
-         choices = c('White',
-                     'Black or African American',
-                     'American Indian or Alaska Native',
-                     'Asian',
-                     'Native Hawaiian or Pacific Islander',
-                     'Other (Race)'),
-         multiple = TRUE,
-         selected = c("Black or African American", "American Indian or Alaska Native"),
-         width = "450px")
+# Other organization
+selectInput(
+  "per3_other_member",
+  label = "Other Organization Membership:",
+  choices = c(
+    "Don't belong to another organization",
+    'Inactive member in another organization',
+    'Active member in another organization'
+  ),
+  selected = "Don't belong to another organization",
+  width = "450px"
+)
 
-selectInput("per3_age",
-         label = "Age:",
-         choices = c('Less than median age of 36',
-                     "More than median age of 36"),
-         selected = "Less than median age of 36",
-         width = "450px")
+# Gender
+selectInput(
+  "per3_gender",
+  label = "Gender:",
+  choices = c(
+    "Male",
+    "Female",
+    "Transgender",
+    "Prefer not to say",
+    "Other gender"
+  ),
+  selected = "Male",
+  width = "450px"
+)
 
+# Marital status
+selectInput(
+  "per3_marital_status",
+  label = "Marital Status:",
+  choices = c(
+    "Married",
+    "Widowed",
+    "Divorced",
+    "Separated",
+    "Never married"
+  ),
+  selected = "Married",
+  width = "450px"
+)
+
+# Education
+selectInput(
+  "per3_education",
+  label = "Education:",
+  choices = c(
+    "Less than high school",
+    "High school graduate",
+    "Some college",
+    "2 year degree",
+    "4 year degree",
+    "Graduate or professional degree",
+    "Doctorate"
+  ),
+  selected = "2 year degree",
+  width = "450px"
+)
+
+# Income
+selectInput(
+  "per3_income",
+  label = "Income:",
+  choices = c('Less than median of $61,372', 'More than median of $61,372'),
+  selected = "More than median of $61,372",
+  width = "450px"
+)
+
+# Race
+selectInput(
+  "per3_race",
+  label = "Race:",
+  choices = c(
+    'White',
+    'Black or African American',
+    'American Indian or Alaskan Native',
+    'Asian',
+    'Native Hawaiian or Pacific Islander',
+    'Other race'
+  ),
+  multiple = TRUE,
+  selected = "White",
+  width = "450px"
+)
+
+# Age
+selectInput(
+  "per3_age",
+  label = "Age:",
+  choices = c('Less than median age of 36', "More than median age of 36"),
+  selected = "Less than median age of 36",
+  width = "450px"
+)
 ```
 
-
-### Org 1
-
-```{r org1 org inputs}
-
-textInput("org1_id",
-          label = "Organization Name",
-          value = "Organization 1",
-          placeholder = "Enter Organization Name",
-          width = "450px")
-
-selectInput("org1_id",
-            label = "Select Organization:",
-            choice = c("Amnesty International",
-                       "Greenpeace",
-                       "Oxfam",
-                       "Red Cross"),
-            selected = "Red Cross",
-            width = "450px")
-
-selectInput("org1_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"),
-            selected = "Emergency response",
-            width = "450px")
-
-selectInput("org1_fin_trans",
-            label = "Select Financial Transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"),
-            selected = "Engages in transparency",
-            width = "450px")
-
-selectInput("org1_fin_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in accountability"),
-            selected = "Engages in accountability",
-            width = "450px")
-
-selectInput("org1_funding",
-            label = "Select Funding Source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government grants"),
-            width = "450px")
-
-selectInput("org1_host_gov",
-            label = "Select Relationship With Host Government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"),
-            width = "450px")
-
-```
-
-### Org 2
-
-```{r org2 org inputs}
-
-
-textInput("org2_id",
-          label = "Organization Name",
-          value = "Organization 2",
-          placeholder = "Enter Organiation Name",
-          width = "450px")
-
-selectInput("org2_id",
-            label = "Select Organization:",
-            choice = c("Amnesty International",
-                       "Greenpeace",
-                       "Oxfam",
-                       "Red Cross"),
-            selected = "Red Cross",
-            width = "450px")
-
-selectInput("org2_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"),
-            selected = "Environment",
-            width = "450px")
-
-selectInput("org2_fin_trans",
-            label = "Select Financial Transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"),
-            selected = "Engages in transparency",
-            width = "450px")
-
-selectInput("org2_fin_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in accountability"),
-            selected = "Engages in accountability",
-            width = "450px")
-
-selectInput("org2_funding",
-            label = "Select Funding Source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government grants"),
-            width = "450px")
-
-selectInput("org2_host_gov",
-            label = "Select Relationship With Host Government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"),
-            width = "450px")
-```
-
-### Org 3
-
-```{r org3 org inputs}
-
-textInput("org3_id",
-          label = "Organization Name",
-          value = "Organization 3",
-          placeholder = "Enter Organiation Name",
-          width = "450px")
-
-selectInput("org3_id",
-            label = "Select Organization:",
-            choice = c("Amnesty International",
-                       "Greenpeace",
-                       "Oxfam",
-                       "Red Cross"),
-            selected = "Red Cross",
-            width = "450px")
-
-
-selectInput("org3_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"),
-            selected = "Human rights",
-            width = "450px")
-
-selectInput("org3_fin_trans",
-            label = "Select Financial Transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"),
-            selected = "Engages in transparency",
-            width = "450px")
-
-selectInput("org3_fin_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in accountability"),
-            selected = "Engages in accountability",
-            width = "450px")
-
-selectInput("org3_funding",
-            label = "Select Funding Source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government grants"),
-            width = "450px")
-
-selectInput("org3_host_gov",
-            label = "Select Relationship With Host Government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"),
-            width = "450px")
-```
-
-### Org 4
-
-```{r org4 org inputs}
-
-textInput("org4_id",
-          label = "Organization Name",
-          value = "Organization 4",
-          placeholder = "Enter Organiation Name",
-          width = "450px")
-
-selectInput("org4_id",
-            label = "Select Organization:",
-            choice = c("Amnesty International",
-                       "Greenpeace",
-                       "Oxfam",
-                       "Red Cross"),
-            selected = "Red Cross",
-            width = "450px")
-
-
-selectInput("org4_issue", 
-            label = "Select Issue Area:",
-            choices = c("Emergency response",
-                        "Environment",
-                        "Human rights",
-                        "Refugee relief"),
-            selected = "Refugee relief",
-            width = "450px")
-
-selectInput("org4_fin_trans",
-            label = "Select Financial Transparency:",
-            choices = c("Doesn’t engage in transparency",
-                        "Engages in transparency"),
-            selected = "Engages in transparency",
-            width = "450px")
-
-selectInput("org4_fin_account",
-            label = "Select Financial Accountability:",
-            choices = c("Doesn’t engage in accountability",
-                        "Engages in accountability"),
-            selected = "Engages in accountability",
-            width = "450px")
-
-selectInput("org4_funding",
-            label = "Select Funding Source:",
-            choices = c("Many small private donations",
-                        "Handful of wealthy private donors",
-                        "Government grants"),
-            width = "450px")
-
-selectInput("org4_host_gov",
-            label = "Select Relationship With Host Government",
-            choices = c("Friendly relationship with government",
-                        "Criticized by government", 
-                        "Under government crackdown"),
-            width = "450px")
-```
