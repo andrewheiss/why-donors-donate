@@ -15,7 +15,7 @@ library(plotly)
 library(shiny)
 ```
 
-```{r load-data}
+```{r load-data, message=FALSE}
 # Gammas of the "everything" model
 gammas <- read_rds(
   here::here('analysis', 'output', 'posterior_draws', 'public_political_social_charity_demo.rds')
@@ -464,7 +464,7 @@ per_reactive <- reactive({
 
 ```
 
-Market Share
+Market share
 --------------------------------------
 
 ```{r compute-and-plot}
@@ -496,7 +496,7 @@ renderPlotly({
   per2_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per2_betas))
   per2_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per2_betas))
   per2_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per2_betas))
-  per2_org3_exp <- exp(t(org_choice[,6]) %*% as.matrix(per2_betas))
+  per2_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per2_betas))
   
   # Persona 2 market shares
   per2_share_denom <- sum(per2_org1_exp, per2_org2_exp, per2_org3_exp, per2_org3_exp)
@@ -538,7 +538,7 @@ renderPlotly({
   org_reactive <- as.data.frame(matrix(data, 24, 1))
   
   # Organization name inputs
-  org_reactive[,2] <- c(input$org1_id, input$org2_id, input$org3_id, input$org4_id)
+  org_reactive[,2] <- c(input$org1_name, input$org2_name, input$org3_name, input$org4_name)
   # Expected utilities and market shares
   org_reactive[,3] <- c(rep('Expected Utility', 4), rep('Market Share', 4))
   # Persona name inputs
@@ -555,7 +555,7 @@ renderPlotly({
       mutate(
         Organization = factor(
           Organization, 
-          levels = c(input$org1_id, input$org2_id, input$org3_id, input$org4_id), 
+          levels = c(input$org1_name, input$org2_name, input$org3_name, input$org4_name), 
           ordered = TRUE
         ),
         Persona = factor(
@@ -577,7 +577,7 @@ renderPlotly({
 })
 ```
 
-Organizations and Personas {.tabset .tabset-fade}
+Configurations {.tabset .tabset-fade}
 --------------------------------------------------
 
 ### Organization 1
@@ -585,7 +585,7 @@ Organizations and Personas {.tabset .tabset-fade}
 ```{r org1-inputs}
 # Naming
 textInput(
-  "org1_id",
+  "org1_name",
   label = "Organization Name",
   value = "Organization 1",
   placeholder = "Enter Organization Name",
@@ -650,7 +650,7 @@ selectInput(
 ```{r org2-inputs}
 # Naming
 textInput(
-  "org2_id",
+  "org2_name",
   label = "Organization Name",
   value = "Organization 2",
   placeholder = "Enter Organization Name",
@@ -715,7 +715,7 @@ selectInput(
 ```{r org3-inputs}
 # Naming
 textInput(
-  "org3_id",
+  "org3_name",
   label = "Organization Name",
   value = "Organization 3",
   placeholder = "Enter Organization Name",
@@ -780,7 +780,7 @@ selectInput(
 ```{r org4-inputs}
 # Naming
 textInput(
-  "org4_id",
+  "org4_name",
   label = "Organization Name",
   value = "Organization 4",
   placeholder = "Enter Organization Name",
@@ -1312,7 +1312,7 @@ selectInput(
 textInput(
   "per2_id",
   label = "Persona Name",
-  value = "Persona 1",
+  value = "Persona 2",
   placeholder = "Enter Persona Name",
   width = "450px"
 )
@@ -1777,7 +1777,7 @@ selectInput(
 textInput(
   "per3_id",
   label = "Persona Name",
-  value = "Persona 1",
+  value = "Persona 3",
   placeholder = "Enter Persona Name",
   width = "450px"
 )
