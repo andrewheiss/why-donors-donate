@@ -27,15 +27,15 @@ gammas <- read_rds(
   select(-i) %>% 
   t()
 
-# Initial organization configuration
-organization_data <- read_csv(
-  here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
-)
-
-# Initial persona configuration
-persona_data <- read_csv(
-  here::here('analysis', 'output', 'configurations', 'persona_config01.csv')
-)
+# # Initial organization configuration
+# organization_data <- read_csv(
+#   here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
+# )
+# 
+# # Initial persona configuration
+# persona_data <- read_csv(
+#   here::here('analysis', 'output', 'configurations', 'persona_config01.csv')
+# )
 ```
 
 ```{r organization-reactive-table}
@@ -534,21 +534,21 @@ renderPlotly({
     per3_org1_share, per3_org2_share, per3_org3_share, per3_org4_share
   )
   
-  # Empty organization reactive table
-  org_reactive <- as.data.frame(matrix(data, 24, 1))
+  # Make data into a data frame
+  plot_data <- as.data.frame(matrix(data, 24, 1))
   
   # Organization name inputs
-  org_reactive[,2] <- c(input$org1_name, input$org2_name, input$org3_name, input$org4_name)
+  plot_data[,2] <- c(input$org1_name, input$org2_name, input$org3_name, input$org4_name)
   # Expected utilities and market shares
-  org_reactive[,3] <- c(rep('Expected Utility', 4), rep('Market Share', 4))
+  plot_data[,3] <- c(rep('Expected Utility', 4), rep('Market Share', 4))
   # Persona name inputs
-  org_reactive[,4] <- c(rep(input$per1_id, 8), rep(input$per2_id, 8), rep(input$per3_id, 8))
+  plot_data[,4] <- c(rep(input$per1_id, 8), rep(input$per2_id, 8), rep(input$per3_id, 8))
  
   # Rename columns
-  colnames(org_reactive) <- c('Value', 'Organization', 'Type', 'Persona')
+  colnames(plot_data) <- c('Value', 'Organization', 'Type', 'Persona')
   
   ggplotly(
-    org_reactive %>% 
+    plot_data %>% 
       # Only care about the Market Share right now
       filter(Type == "Market Share") %>% 
       # Factor Organization and Persona with ordered=TRUE so the order doesn't change to alphabetical as names are created
@@ -671,7 +671,7 @@ selectInput(
   "org2_issue", 
   label = "Select Issue Area:",
   choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
-  selected = "Emergency response",
+  selected = "Environment",
   width = "450px"
 )
 
@@ -736,7 +736,7 @@ selectInput(
   "org3_issue", 
   label = "Select Issue Area:",
   choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
-  selected = "Emergency response",
+  selected = "Human rights",
   width = "450px"
 )
 
@@ -801,7 +801,7 @@ selectInput(
   "org4_issue", 
   label = "Select Issue Area:",
   choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
-  selected = "Emergency response",
+  selected = "Refugee relief",
   width = "450px"
 )
 
