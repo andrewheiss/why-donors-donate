@@ -27,15 +27,15 @@ gammas <- read_rds(
   select(-i) %>% 
   t()
 
-# # Initial organization configuration
-# organization_data <- read_csv(
-#   here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
-# )
-# 
-# # Initial persona configuration
-# persona_data <- read_csv(
-#   here::here('analysis', 'output', 'configurations', 'persona_config01.csv')
-# )
+# Initial organization configuration
+organization_data <- read_csv(
+  here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
+)
+
+# Initial persona configuration
+persona_data <- read_csv(
+  here::here('analysis', 'output', 'configurations', 'persona_config01.csv')
+)
 ```
 
 ```{r organization-reactive-table}
