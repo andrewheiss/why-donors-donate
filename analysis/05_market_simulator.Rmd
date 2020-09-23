@@ -40,7 +40,7 @@ persona_data <- read_csv(
 
 ```{r organization-reactive-table}
 # Placeholder for organization reactive table
-org_table <- as.data.frame(matrix(rep(0), nrow = nrow(organization_data)))
+org_table <- as.data.frame(matrix(0, nrow = nrow(organization_data)))
 
 # Assign level labels
 org_table$levels = c(
@@ -69,7 +69,7 @@ org_table$levels = c(
 org_reactive <- reactive({
   # Organization 1
   org_table$org1_value <- 0
-  org_table$org1_value[org_table$levels %in% input$org1_id] <- 1
+  org_table$org1_value[org_table$levels %in% input$org1_org] <- 1
   org_table$org1_value[org_table$levels %in% input$org1_issue] <- 1
   org_table$org1_value[org_table$levels %in% input$org1_fin_trans] <- 1
   org_table$org1_value[org_table$levels %in% input$org1_fin_account] <- 1
@@ -78,7 +78,7 @@ org_reactive <- reactive({
     
   # Organization 2
   org_table$org2_value <- 0
-  org_table$org2_value[org_table$levels %in% input$org2_id] <- 1
+  org_table$org2_value[org_table$levels %in% input$org2_org] <- 1
   org_table$org2_value[org_table$levels %in% input$org2_issue] <- 1
   org_table$org2_value[org_table$levels %in% input$org2_fin_trans] <- 1
   org_table$org2_value[org_table$levels %in% input$org2_fin_account] <- 1
@@ -87,7 +87,7 @@ org_reactive <- reactive({
     
   # Organization 3
   org_table$org3_value <- 0
-  org_table$org3_value[org_table$levels %in% input$org3_id] <- 1
+  org_table$org3_value[org_table$levels %in% input$org3_org] <- 1
   org_table$org3_value[org_table$levels %in% input$org3_issue] <- 1
   org_table$org3_value[org_table$levels %in% input$org3_fin_trans] <- 1
   org_table$org3_value[org_table$levels %in% input$org3_fin_account] <- 1
@@ -96,7 +96,7 @@ org_reactive <- reactive({
     
   # Organization 4
   org_table$org4_value <- 0
-  org_table$org4_value[org_table$levels %in% input$org4_id] <- 1
+  org_table$org4_value[org_table$levels %in% input$org4_org] <- 1
   org_table$org4_value[org_table$levels %in% input$org4_issue] <- 1
   org_table$org4_value[org_table$levels %in% input$org4_fin_trans] <- 1
   org_table$org4_value[org_table$levels %in% input$org4_fin_account] <- 1
@@ -108,7 +108,7 @@ org_reactive <- reactive({
 
 ```{r persona-reactive-table}
 # Placeholder for persona reactive table
-per_table <- as.data.frame(matrix(rep(0), nrow = nrow(persona_data)))
+per_table <- as.data.frame(matrix(0, nrow = nrow(persona_data)))
 
 # Assign covariate labels
 per_table$levels <- c(
@@ -274,7 +274,7 @@ per_reactive <- reactive({
   per_table$per1_value[per_table$levels %in% input$per1_political_pref] <- 1
   per_table$per1_value[per_table$levels %in% input$per1_institution_trust] <- 1
   per_table$per1_value[per_table$levels %in% input$per1_others_charitable] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_worship_attendence] <- 1
+  per_table$per1_value[per_table$levels %in% input$per1_worship_attendance] <- 1
   per_table$per1_value[per_table$levels %in% input$per1_religion_importance] <- 1
   per_table$per1_value[per_table$levels %in% input$per1_religion] <- 1
   per_table$per1_value[per_table$levels %in% input$per1_charity_importance] <- 1
@@ -313,7 +313,7 @@ per_reactive <- reactive({
   per_table$per2_value[per_table$levels %in% input$per2_political_pref] <- 1
   per_table$per2_value[per_table$levels %in% input$per2_institution_trust] <- 1
   per_table$per2_value[per_table$levels %in% input$per2_others_charitable] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_worship_attendence] <- 1
+  per_table$per2_value[per_table$levels %in% input$per2_worship_attendance] <- 1
   per_table$per2_value[per_table$levels %in% input$per2_religion_importance] <- 1
   per_table$per2_value[per_table$levels %in% input$per2_religion] <- 1
   per_table$per2_value[per_table$levels %in% input$per2_charity_importance] <- 1
@@ -352,7 +352,7 @@ per_reactive <- reactive({
   per_table$per3_value[per_table$levels %in% input$per3_political_pref] <- 1
   per_table$per3_value[per_table$levels %in% input$per3_institution_trust] <- 1
   per_table$per3_value[per_table$levels %in% input$per3_others_charitable] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_worship_attendence] <- 1
+  per_table$per3_value[per_table$levels %in% input$per3_worship_attendance] <- 1
   per_table$per3_value[per_table$levels %in% input$per3_religion_importance] <- 1
   per_table$per3_value[per_table$levels %in% input$per3_religion] <- 1
   per_table$per3_value[per_table$levels %in% input$per3_charity_importance] <- 1
@@ -381,87 +381,6 @@ per_reactive <- reactive({
   per_table$per3_value[per_table$levels %in% input$per3_age] <- 1
   per_table
 })
-```
-
-```{r matrix-multiplication, eval=FALSE, include=FALSE}
-# # Overwrite gamma??
-# gamma <- data.frame(
-#   value = c(0,0,0),
-#   levels = c("Environment", "Human rights", "Refugee relief")
-# )
-# 
-# ui <- fluidPage(
-#   fluidRow(
-#     column(6,
-#       selectInput("org1_issue", 
-#                   label = "Select Issue Area:",
-#                   choices = gamma$levels,
-#                   multiple = TRUE)
-#     ),
-#     column(6,
-#       tableOutput("data")
-#     )
-#   )
-# )
-# 
-# server = function(input, output) {
-#   org_reactive <- reactive({
-#     gamma$value[gamma$levels %in% input$org1_issue] <- 1
-#     gamma
-#   })
-# 
-#   output$data <- renderTable({
-#     organizations()
-#   })
-# }
-```
-
-```{r Manual Testing Matrix Multiplication}
-
-# ### Calculating the Persona gammas ###
-# 
-# # Persona 1
-# persona1 <- persona_data[,2]
-# 
-# # matrix multiplication between persona data and gammas
-# gamma1 <- as.matrix(gammas) %*% as.matrix(persona1)
-# 
-# 
-# # Persona 2
-# persona2 <- persona_data[,3]
-# 
-# # matrix multiplication between persona data and gammas
-# gamma2 <- as.matrix(gammas) %*% as.matrix(persona2)
-# 
-# 
-# # Persona 3
-# persona3 <- persona_data[,4]
-# 
-# # matrix multiplication between persona data and gammas
-# gamma3 <- as.matrix(gammas) %*% as.matrix(persona3)
-# 
-# # Organization
-# org1 <- organization_data[,2]
-# 
-# org2 <- organization_data[,3]
-# 
-# org3 <- organization_data[,4]
-# 
-# org4 <- organization_data[,5]
-# 
-# # Expected utility matrix multiplication between computed persona gammas and org data for persona 1
-# per1_org1_exp <- exp(t(org1) %*% as.matrix(gamma1))
-# per1_org2_exp <- exp(t(org2) %*% as.matrix(gamma1))
-# per1_org3_exp <- exp(t(org3) %*% as.matrix(gamma1))
-# per1_org4_exp <- exp(t(org4) %*% as.matrix(gamma1))
-# 
-# # Market Share computation from expected utilities between organization
-# per1_org1_share <- 100 * per1_org1_exp/sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
-# per1_org2_share <- 100 * per1_org2_exp/sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
-# per1_org3_share <- 100 * per1_org3_exp/sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
-# per1_org4_share <- 100 * per1_org4_exp/sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
-
-
 ```
 
 Market share
@@ -499,7 +418,7 @@ renderPlotly({
   per2_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per2_betas))
   
   # Persona 2 market shares
-  per2_share_denom <- sum(per2_org1_exp, per2_org2_exp, per2_org3_exp, per2_org3_exp)
+  per2_share_denom <- sum(per2_org1_exp, per2_org2_exp, per2_org3_exp, per2_org4_exp)
   per2_org1_share <- 100 * (per2_org1_exp / per2_share_denom)
   per2_org2_share <- 100 * (per2_org2_exp / per2_share_denom)
   per2_org3_share <- 100 * (per2_org3_exp / per2_share_denom)
@@ -522,36 +441,26 @@ renderPlotly({
   per3_org4_share <- 100 * (per3_org4_exp / per3_share_denom)
   
   # Data for plotly
-  data <- c(
-    # Persona 1
-    per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp, 
-    per1_org1_share, per1_org2_share, per1_org3_share, per1_org4_share, 
-    # Persona 2
-    per2_org1_exp, per2_org2_exp, per2_org3_exp, per2_org3_exp, 
-    per2_org1_share, per2_org2_share, per2_org3_share, per2_org4_share,
-    # Persona 3
-    per3_org1_exp, per3_org2_exp, per3_org3_exp, per3_org4_exp, 
-    per3_org1_share, per3_org2_share, per3_org3_share, per3_org4_share
+  plot_data <- data.frame(
+    Value = c(
+      # Persona 1
+      per1_org1_share, per1_org2_share, per1_org3_share, per1_org4_share, 
+      # Persona 2
+      per2_org1_share, per2_org2_share, per2_org3_share, per2_org4_share,
+      # Persona 3
+      per3_org1_share, per3_org2_share, per3_org3_share, per3_org4_share
+    ),
+    Organization = c(input$org1_name, input$org2_name, input$org3_name, input$org4_name),
+    Persona = c(
+      rep(input$per1_name, 4), 
+      rep(input$per2_name, 4), 
+      rep(input$per3_name, 4)
+    )
   )
-  
-  # Make data into a data frame
-  plot_data <- as.data.frame(matrix(data, 24, 1))
-  
-  # Organization name inputs
-  plot_data[,2] <- c(input$org1_name, input$org2_name, input$org3_name, input$org4_name)
-  # Expected utilities and market shares
-  plot_data[,3] <- c(rep('Expected Utility', 4), rep('Market Share', 4))
-  # Persona name inputs
-  plot_data[,4] <- c(rep(input$per1_id, 8), rep(input$per2_id, 8), rep(input$per3_id, 8))
- 
-  # Rename columns
-  colnames(plot_data) <- c('Value', 'Organization', 'Type', 'Persona')
   
   ggplotly(
     plot_data %>% 
-      # Only care about the Market Share right now
-      filter(Type == "Market Share") %>% 
-      # Factor Organization and Persona with ordered=TRUE so the order doesn't change to alphabetical as names are created
+      # Factor Organization and Persona with ordered=TRUE
       mutate(
         Organization = factor(
           Organization, 
@@ -560,7 +469,7 @@ renderPlotly({
         ),
         Persona = factor(
           Persona, 
-          levels = c(input$per1_id, input$per2_id, input$per3_id), 
+          levels = c(input$per1_name, input$per2_name, input$per3_name), 
           ordered = TRUE
         )
       ) %>% 
@@ -586,7 +495,7 @@ Configurations {.tabset .tabset-fade}
 # Naming
 textInput(
   "org1_name",
-  label = "Organization Name",
+  label = "Organization Name:",
   value = "Organization 1",
   placeholder = "Enter Organization Name",
   width = "450px"
@@ -594,8 +503,8 @@ textInput(
 
 # Organization
 selectInput(
-  "org1_id",
-  label = "Select Organization:",
+  "org1_org",
+  label = "Organization:",
   choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
   selected = "Red Cross",
   width = "450px"
@@ -604,7 +513,7 @@ selectInput(
 # Issue area
 selectInput(
   "org1_issue", 
-  label = "Select Issue Area:",
+  label = "Issue Area:",
   choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
   selected = "Emergency response",
   width = "450px"
@@ -613,7 +522,7 @@ selectInput(
 # Financial transparency
 selectInput(
   "org1_fin_trans",
-  label = "Select Financial Transparency:",
+  label = "Financial Transparency:",
   choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
   selected = "Engages in financial transparency",
   width = "450px"
@@ -622,7 +531,7 @@ selectInput(
 # Financial accountability
 selectInput(
   "org1_fin_account",
-  label = "Select Financial Accountability:",
+  label = "Financial Accountability:",
   choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
   selected = "Engages in financial accountability",
   width = "450px"
@@ -631,16 +540,18 @@ selectInput(
 # Funding sources
 selectInput(
   "org1_funding",
-  label = "Select Funding Source:",
+  label = "Funding Source:",
   choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+  selected = "Many small private donations",
   width = "450px"
 )
 
 # Relationship with host government
 selectInput(
   "org1_host_gov",
-  label = "Select Relationship With Host Government",
+  label = "Relationship With Host Government",
   choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+  selected = "Friendly relationship with government",
   width = "450px"
 )
 ```
@@ -651,7 +562,7 @@ selectInput(
 # Naming
 textInput(
   "org2_name",
-  label = "Organization Name",
+  label = "Organization Name:",
   value = "Organization 2",
   placeholder = "Enter Organization Name",
   width = "450px"
@@ -659,8 +570,8 @@ textInput(
 
 # Organization
 selectInput(
-  "org2_id",
-  label = "Select Organization:",
+  "org2_org",
+  label = "Organization:",
   choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
   selected = "Red Cross",
   width = "450px"
@@ -669,7 +580,7 @@ selectInput(
 # Issue area
 selectInput(
   "org2_issue", 
-  label = "Select Issue Area:",
+  label = "Issue Area:",
   choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
   selected = "Environment",
   width = "450px"
@@ -678,7 +589,7 @@ selectInput(
 # Financial transparency
 selectInput(
   "org2_fin_trans",
-  label = "Select Financial Transparency:",
+  label = "Financial Transparency:",
   choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
   selected = "Engages in financial transparency",
   width = "450px"
@@ -687,7 +598,7 @@ selectInput(
 # Financial accountability
 selectInput(
   "org2_fin_account",
-  label = "Select Financial Accountability:",
+  label = "Financial Accountability:",
   choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
   selected = "Engages in financial accountability",
   width = "450px"
@@ -696,16 +607,18 @@ selectInput(
 # Funding sources
 selectInput(
   "org2_funding",
-  label = "Select Funding Source:",
+  label = "Funding Source:",
   choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+  selected = "Many small private donations",
   width = "450px"
 )
 
 # Relationship with host government
 selectInput(
   "org2_host_gov",
-  label = "Select Relationship With Host Government",
+  label = "Relationship With Host Government",
   choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+  selected = "Friendly relationship with government",
   width = "450px"
 )
 ```
@@ -716,7 +629,7 @@ selectInput(
 # Naming
 textInput(
   "org3_name",
-  label = "Organization Name",
+  label = "Organization Name:",
   value = "Organization 3",
   placeholder = "Enter Organization Name",
   width = "450px"
@@ -724,8 +637,8 @@ textInput(
 
 # Organization
 selectInput(
-  "org3_id",
-  label = "Select Organization:",
+  "org3_org",
+  label = "Organization:",
   choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
   selected = "Red Cross",
   width = "450px"
@@ -734,7 +647,7 @@ selectInput(
 # Issue area
 selectInput(
   "org3_issue", 
-  label = "Select Issue Area:",
+  label = "Issue Area:",
   choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
   selected = "Human rights",
   width = "450px"
@@ -743,7 +656,7 @@ selectInput(
 # Financial transparency
 selectInput(
   "org3_fin_trans",
-  label = "Select Financial Transparency:",
+  label = "Financial Transparency:",
   choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
   selected = "Engages in financial transparency",
   width = "450px"
@@ -752,7 +665,7 @@ selectInput(
 # Financial accountability
 selectInput(
   "org3_fin_account",
-  label = "Select Financial Accountability:",
+  label = "Financial Accountability:",
   choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
   selected = "Engages in financial accountability",
   width = "450px"
@@ -761,16 +674,18 @@ selectInput(
 # Funding sources
 selectInput(
   "org3_funding",
-  label = "Select Funding Source:",
+  label = "Funding Source:",
   choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+  selected = "Many small private donations",
   width = "450px"
 )
 
 # Relationship with host government
 selectInput(
   "org3_host_gov",
-  label = "Select Relationship With Host Government",
+  label = "Relationship With Host Government",
   choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+  selected = "Friendly relationship with government",
   width = "450px"
 )
 ```
@@ -781,7 +696,7 @@ selectInput(
 # Naming
 textInput(
   "org4_name",
-  label = "Organization Name",
+  label = "Organization Name:",
   value = "Organization 4",
   placeholder = "Enter Organization Name",
   width = "450px"
@@ -789,8 +704,8 @@ textInput(
 
 # Organization
 selectInput(
-  "org4_id",
-  label = "Select Organization:",
+  "org4_org",
+  label = "Organization:",
   choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
   selected = "Red Cross",
   width = "450px"
@@ -799,7 +714,7 @@ selectInput(
 # Issue area
 selectInput(
   "org4_issue", 
-  label = "Select Issue Area:",
+  label = "Issue Area:",
   choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
   selected = "Refugee relief",
   width = "450px"
@@ -808,7 +723,7 @@ selectInput(
 # Financial transparency
 selectInput(
   "org4_fin_trans",
-  label = "Select Financial Transparency:",
+  label = "Financial Transparency:",
   choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
   selected = "Engages in financial transparency",
   width = "450px"
@@ -817,7 +732,7 @@ selectInput(
 # Financial accountability
 selectInput(
   "org4_fin_account",
-  label = "Select Financial Accountability:",
+  label = "Financial Accountability:",
   choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
   selected = "Engages in financial accountability",
   width = "450px"
@@ -826,16 +741,18 @@ selectInput(
 # Funding sources
 selectInput(
   "org4_funding",
-  label = "Select Funding Source:",
+  label = "Funding Source:",
   choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+  selected = "Many small private donations",
   width = "450px"
 )
 
 # Relationship with host government
 selectInput(
   "org4_host_gov",
-  label = "Select Relationship With Host Government",
+  label = "Relationship With Host Government",
   choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+  selected = "Friendly relationship with government",
   width = "450px"
 )
 ```
@@ -845,8 +762,8 @@ selectInput(
 ```{r per1-inputs}
 # Naming
 textInput(
-  "per1_id",
-  label = "Persona Name",
+  "per1_name",
+  label = "Persona Name:",
   value = "Persona 1",
   placeholder = "Enter Persona Name",
   width = "450px"
@@ -1310,8 +1227,8 @@ selectInput(
 ```{r per2-inputs}
 # Naming
 textInput(
-  "per2_id",
-  label = "Persona Name",
+  "per2_name",
+  label = "Persona Name:",
   value = "Persona 2",
   placeholder = "Enter Persona Name",
   width = "450px"
@@ -1730,7 +1647,7 @@ selectInput(
     "Graduate or professional degree",
     "Doctorate"
   ),
-  selected = "2 year degree",
+  selected = "Some college",
   width = "450px"
 )
 
@@ -1756,7 +1673,7 @@ selectInput(
     'Other race'
   ),
   multiple = TRUE,
-  selected = "White",
+  selected = "American Indian or Alaskan Native",
   width = "450px"
 )
 
@@ -1775,8 +1692,8 @@ selectInput(
 ```{r per3-inputs}
 # Naming
 textInput(
-  "per3_id",
-  label = "Persona Name",
+  "per3_name",
+  label = "Persona Name:",
   value = "Persona 3",
   placeholder = "Enter Persona Name",
   width = "450px"
@@ -2163,7 +2080,7 @@ selectInput(
     "Prefer not to say",
     "Other gender"
   ),
-  selected = "Male",
+  selected = "Female",
   width = "450px"
 )
 
@@ -2195,7 +2112,7 @@ selectInput(
     "Graduate or professional degree",
     "Doctorate"
   ),
-  selected = "2 year degree",
+  selected = "Graduate or professional degree",
   width = "450px"
 )
 
@@ -2221,7 +2138,7 @@ selectInput(
     'Other race'
   ),
   multiple = TRUE,
-  selected = "White",
+  selected = c("Black or African American", "American Indian or Alaskan Native"),
   width = "450px"
 )
 
