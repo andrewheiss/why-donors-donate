@@ -168,10 +168,10 @@ per_table$levels <- c(
   "Buddhist",
   "Atheist",
   "Other religion",
-  # Importance of trusing charities
+  # Importance of trusting charities
   "Very unimportant",
   "Somewhat unimportant",
-  "Neutral",
+  "Neutral importance",
   "Somewhat important",
   "Very important",
   "Essential",
@@ -190,7 +190,7 @@ per_table$levels <- c(
   "$500-$999",
   "$1,000-$4,999",
   "$5,000-$9,999",
-  "$10,000 +",
+  "$10,000+",
   # Volunteered in past 12 months
   "Volunteered in past 12 months",
   # Volunteer frequency
@@ -483,6 +483,81 @@ renderPlotly({
         panel.grid.major.y = element_line(color = "#D3D3D3")
       )
     )
+})
+
+# Compute and render the market share as a table
+renderTable({
+  org_choice = org_reactive()
+  per_choice = per_reactive()
+    
+  # Persona 1 predicted betas
+  per1_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,3])
+  
+  # Persona 1 expected utilities
+  per1_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per1_betas))
+  per1_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per1_betas))
+  per1_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per1_betas))
+  per1_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per1_betas))
+  
+  # Persona 1 market shares
+  per1_share_denom <- sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
+  per1_org1_share <- 100 * (per1_org1_exp / per1_share_denom)
+  per1_org2_share <- 100 * (per1_org2_exp / per1_share_denom)
+  per1_org3_share <- 100 * (per1_org3_exp / per1_share_denom)
+  per1_org4_share <- 100 * (per1_org4_exp / per1_share_denom)
+  
+  # Persona 2 predicted betas
+  per2_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,4])
+  
+  # Persona 2 expected utilities
+  per2_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per2_betas))
+  per2_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per2_betas))
+  per2_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per2_betas))
+  per2_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per2_betas))
+  
+  # Persona 2 market shares
+  per2_share_denom <- sum(per2_org1_exp, per2_org2_exp, per2_org3_exp, per2_org4_exp)
+  per2_org1_share <- 100 * (per2_org1_exp / per2_share_denom)
+  per2_org2_share <- 100 * (per2_org2_exp / per2_share_denom)
+  per2_org3_share <- 100 * (per2_org3_exp / per2_share_denom)
+  per2_org4_share <- 100 * (per2_org4_exp / per2_share_denom)
+  
+  # Persona 3 predicted betas
+  per3_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,5])
+  
+  # Persona 3 expected utilities
+  per3_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per3_betas))
+  per3_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per3_betas))
+  per3_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per3_betas))
+  per3_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per3_betas))
+  
+  # Persona 3 market shares
+  per3_share_denom <- sum(per3_org1_exp, per3_org2_exp, per3_org3_exp, per3_org4_exp)
+  per3_org1_share <- 100 * (per3_org1_exp / per3_share_denom)
+  per3_org2_share <- 100 * (per3_org2_exp / per3_share_denom)
+  per3_org3_share <- 100 * (per3_org3_exp / per3_share_denom)
+  per3_org4_share <- 100 * (per3_org4_exp / per3_share_denom)
+  
+  # Table
+  data <- data.frame(
+    Shares = c(
+      # Persona 1
+      per1_org1_share, per1_org2_share, per1_org3_share, per1_org4_share, 
+      # Persona 2
+      per2_org1_share, per2_org2_share, per2_org3_share, per2_org4_share,
+      # Persona 3
+      per3_org1_share, per3_org2_share, per3_org3_share, per3_org4_share
+    ),
+    Organization = c(input$org1_name, input$org2_name, input$org3_name, input$org4_name),
+    Persona = c(
+      rep(input$per1_name, 4), 
+      rep(input$per2_name, 4), 
+      rep(input$per3_name, 4)
+    )
+  ) %>% 
+    pivot_wider(names_from = Persona, values_from = Shares)
+  
+  data
 })
 ```
 
@@ -862,7 +937,7 @@ selectInput(
   "per1_others_charitable",
   label = "People should be more charitable:",
   choices = c(
-    "Strongly Disagree",
+    "Strongly disagree",
     "Disagree",
     "Somewhat disagree",
     "Neutral",
@@ -924,7 +999,7 @@ selectInput(
     "Not at all important",
     "Very unimportant",
     "Somewhat unimportant",
-    "Neutral",
+    "Neutral importance",
     "Somewhat important",
     "Very important",
     "Essential"
@@ -962,7 +1037,7 @@ selectInput(
 # Donated last year
 selectInput(
   "per1_donation_amount",
-  label = "Donation Amount:",
+  label = "Donation Amount Last Year:",
   choices = c(
     '$1-$49',
     '$50-$99',
@@ -1327,7 +1402,7 @@ selectInput(
   "per2_others_charitable",
   label = "People should be more charitable:",
   choices = c(
-    "Strongly Disagree",
+    "Strongly disagree",
     "Disagree",
     "Somewhat disagree",
     "Neutral",
@@ -1389,7 +1464,7 @@ selectInput(
     "Not at all important",
     "Very unimportant",
     "Somewhat unimportant",
-    "Neutral",
+    "Neutral importance",
     "Somewhat important",
     "Very important",
     "Essential"
@@ -1427,7 +1502,7 @@ selectInput(
 # Donated last year
 selectInput(
   "per2_donation_amount",
-  label = "Donation Amount:",
+  label = "Donation Amount Last Year:",
   choices = c(
     '$1-$49',
     '$50-$99',
@@ -1792,7 +1867,7 @@ selectInput(
   "per3_others_charitable",
   label = "People should be more charitable:",
   choices = c(
-    "Strongly Disagree",
+    "Strongly disagree",
     "Disagree",
     "Somewhat disagree",
     "Neutral",
@@ -1854,7 +1929,7 @@ selectInput(
     "Not at all important",
     "Very unimportant",
     "Somewhat unimportant",
-    "Neutral",
+    "Neutral importance",
     "Somewhat important",
     "Very important",
     "Essential"
@@ -1892,7 +1967,7 @@ selectInput(
 # Donated last year
 selectInput(
   "per3_donation_amount",
-  label = "Donation Amount:",
+  label = "Donation Amount Last Year:",
   choices = c(
     '$1-$49',
     '$50-$99',
