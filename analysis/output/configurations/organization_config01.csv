@@ -1,0 +1,14 @@
+Org Configuration,Org 1,Org 2,Org 3
+Organization: Amnesty International,0,0,0
+Organization: Greenpeace,0,0,0
+Organization: Oxfam,0,0,0
+Organization: Red Cross,1,1,1
+Issue area: Environment,0,1,0
+Issue area: Human rights,0,0,1
+Issue area: Refugee relief,0,0,0
+Financial transparency: Yes,1,1,1
+Accountability: Yes,1,1,1
+Funding sources: Handful of wealthy private donors,0,0,0
+Funding sources: Government grants,0,0,0
+Relationship with host government: Criticized,0,0,0
+Relationship with host government: Under crackdown,0,0,0
