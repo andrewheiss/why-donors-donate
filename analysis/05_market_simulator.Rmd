@@ -2227,3 +2227,21 @@ selectInput(
 )
 ```
 
+### Export
+
+```{r export}
+# Render the organization configurations as a table
+renderTable({
+  org_choice = org_reactive()
+  
+  org_choice
+})
+
+# Render the persona configurations as a table
+renderTable({
+  per_choice = per_reactive()
+  
+  per_choice
+})
+```
+
