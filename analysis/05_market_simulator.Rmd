@@ -2237,11 +2237,36 @@ renderTable({
   org_choice
 })
 
+# Download Button
+downloadButton("download_org", label = "Download Organization Data")
+
+downloadHandler(
+  filename = function() {
+    paste0("org_data_",Sys.time(),".csv")
+  },
+  content = function(file) {
+    write.csv(org_reactive(), file)
+  }
+)
+
 # Render the persona configurations as a table
 renderTable({
   per_choice = per_reactive()
   
   per_choice
 })
+
+# Download Button
+downloadButton("download_per", label = "Download Persona Data")
+
+downloadHandler(
+  filename = function() {
+    paste0("persona_data_",Sys.time(),".csv")
+  },
+  content = function(file) {
+    write.csv(per_reactive(), file)
+  }
+)
+
 ```
 
