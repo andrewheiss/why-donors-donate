@@ -2282,3 +2282,22 @@ downloadHandler(
 
 ```
 
+### Imports
+
+```{r import}
+# Render the organization configurations as a table
+renderTable({
+  org_import = read.csv(input$file_org$datapath)
+  
+  org_import
+})
+
+# Render the persona configurations as a table
+renderTable({
+  per_import = read.csv(input$file_per$datapath)
+  
+  per_import
+})
+
+```
+
