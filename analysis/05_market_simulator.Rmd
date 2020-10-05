@@ -51,30 +51,29 @@ fileInput(
 ```
 
 ```{r organization-reactive-table}
-# Placeholder for organization reactive table
-org_table <- as.data.frame(matrix(0, nrow = nrow(organization_data)))
-
 # Assign level labels
-org_table$levels = c(
-  # Organization
-  "Amnesty International",
-  "Greenpeace", 
-  "Oxfam", 
-  "Red Cross",
-  # Issue area
-  "Environment", 
-  "Human rights",
-  "Refugee relief",
-  # Financial transparency
-  "Engages in financial transparency",
-  # Financial accountability
-  "Engages in financial accountability",
-  # Funding sources
-  "Handful of wealthy private donors", 
-  "Government grants",
-  # Relationship with host government
-  "Criticized by government",
-  "Under government crackdown"
+org_table <- data.frame(
+  levels = c(
+    # Organization
+    "Amnesty International",
+    "Greenpeace", 
+    "Oxfam", 
+    "Red Cross",
+    # Issue area
+    "Environment", 
+    "Human rights",
+    "Refugee relief",
+    # Financial transparency
+    "Engages in financial transparency",
+    # Financial accountability
+    "Engages in financial accountability",
+    # Funding sources
+    "Handful of wealthy private donors", 
+    "Government grants",
+    # Relationship with host government
+    "Criticized by government",
+    "Under government crackdown"
+  )
 )
 
 # Organization configuration reactive element
@@ -119,158 +118,157 @@ org_reactive <- reactive({
 ```
 
 ```{r persona-reactive-table}
-# Placeholder for persona reactive table
-per_table <- as.data.frame(matrix(0, nrow = nrow(persona_data)))
-
 # Assign covariate labels
-per_table$levels <- c(
-  # Intercept
-  "Intercept",
-  # Follow national news
-  "Once a week",
-  "At least once a day",
-  # Follow international news
-  "Sometimes",
-  "Always",
-  # Mediums to follow news
-  "TV",
-  "Print",
-  "Online (not social media)",
-  "Social media",
-  "Radio",
-  "Email newsletter",
-  "News app",
-  # Follow government and public affairs
-  "Often", 
-  # Traveled to a developing country
-  "Traveled to a developing country", 
-  # Liberal to Conservative
-  "Somewhat liberal",
-  "Slightly liberal",
-  "Moderate",
-  "Slightly conservative",
-  "Somewhat conservative",
-  "Extremely conservative",
-  # Trust in political institutions
-  "Very little trust in political institutions",
-  "Little trust in political institutions",
-  "Neutral trust in political institutions",
-  "Some trust in political institutions",
-  "A lot of trust in political institutions",
-  "Complete trust in political institutions",
-  # People should be more charitable
-  "Disagree",
-  "Somewhat disagree",
-  "Neutral",
-  "Somewhat agree",
-  "Agree",
-  "Strongly agree",
-  # Religious attendance
-  "Rarely attend",
-  "Attend at least once a month",
-  # Importance of religion
-  "Important",
-  # Religion
-  "Protestant",
-  "Christian Orthodox",
-  "Jewish",
-  "Muslim",
-  "Sikh",
-  "Hindu",
-  "Buddhist",
-  "Atheist",
-  "Other religion",
-  # Importance of trusting charities
-  "Very unimportant",
-  "Somewhat unimportant",
-  "Neutral importance",
-  "Somewhat important",
-  "Very important",
-  "Essential",
-  # Trust in charities
-  "Very little trust in charities",
-  "Little trust in charities",
-  "Neutral trust in charities",
-  "Some trust in charities",
-  "A lot of trust in charities",
-  "Complete trust in charities",
-  # Donation frequency
-  "Donate at least once a month", 
-  # Donated last year
-  "$50-$99",
-  "$100-$499",
-  "$500-$999",
-  "$1,000-$4,999",
-  "$5,000-$9,999",
-  "$10,000+",
-  # Volunteered in past 12 months
-  "Volunteered in past 12 months",
-  # Volunteer frequency
-  "Rarely volunteer",
-  "Volunteer more than once a month, less than once a year",
-  "Volunteer at least once a month",
-  # History of activism
-  "Personally involved",
-  # History of family activism
-  "Family involved",
-  # Church or religious organization
-  "Inactive church member",
-  "Active church member",
-  # Sport or recreational organization
-  "Inactive sports or rec organization member",
-  "Active sports or rec organization member", 
-  # Art, music, or educational organization
-  "Inactive art, music, or educational organization member",
-  "Active art, music, or educational organization member",
-  # Labor union
-  "Inactive union member",
-  "Active union member",
-  # Political party
-  "Inactive political party member",
-  "Active political party member",
-  # Environmental organization
-  "Inactive environmental organization member",
-  "Active environmental organization member",
-  # Professional association
-  "Inactive professional association member",
-  "Active professional association member",
-  # Humanitarian or charitable organization
-  "Inactive humanitarian or charitable organization member",
-  "Active humanitarian or charitable organization member",
-  # Consumer organization
-  "Inactive consumer organization member",
-  "Active consumer organization member",
-  # Other organization
-  "Inactive member in another organization",
-  "Active member in another organization",
-  # Gender
-  "Female",
-  "Transgender",
-  "Prefer not to say",
-  "Other gender",
-  # Marital status
-  "Widowed",
-  "Divorced",
-  "Separated",
-  "Never married",
-  # Education
-  "High school graduate", 
-  "Some college",
-  "2 year degree",
-  "4 year degree",
-  "Graduate or professional degree",
-  "Doctorate",
-  # Income
-  "More than median of $61,372", 
-  # Race
-  "White", 
-  "Black or African American", 
-  "American Indian or Alaskan Native", 
-  "Asian", 
-  "Native Hawaiian or Pacific Islander",
-  "Other race",
-  # Age
-  "More than median age of 36"
+per_table <- data.frame(
+  levels = c(
+    # Intercept
+    "Intercept",
+    # Follow national news
+    "Once a week",
+    "At least once a day",
+    # Follow international news
+    "Sometimes",
+    "Always",
+    # Mediums to follow news
+    "TV",
+    "Print",
+    "Online (not social media)",
+    "Social media",
+    "Radio",
+    "Email newsletter",
+    "News app",
+    # Follow government and public affairs
+    "Often", 
+    # Traveled to a developing country
+    "Traveled to a developing country", 
+    # Liberal to Conservative
+    "Somewhat liberal",
+    "Slightly liberal",
+    "Moderate",
+    "Slightly conservative",
+    "Somewhat conservative",
+    "Extremely conservative",
+    # Trust in political institutions
+    "Very little trust in political institutions",
+    "Little trust in political institutions",
+    "Neutral trust in political institutions",
+    "Some trust in political institutions",
+    "A lot of trust in political institutions",
+    "Complete trust in political institutions",
+    # People should be more charitable
+    "Disagree",
+    "Somewhat disagree",
+    "Neutral",
+    "Somewhat agree",
+    "Agree",
+    "Strongly agree",
+    # Religious attendance
+    "Rarely attend",
+    "Attend at least once a month",
+    # Importance of religion
+    "Important",
+    # Religion
+    "Protestant",
+    "Christian Orthodox",
+    "Jewish",
+    "Muslim",
+    "Sikh",
+    "Hindu",
+    "Buddhist",
+    "Atheist",
+    "Other religion",
+    # Importance of trusting charities
+    "Very unimportant",
+    "Somewhat unimportant",
+    "Neutral importance",
+    "Somewhat important",
+    "Very important",
+    "Essential",
+    # Trust in charities
+    "Very little trust in charities",
+    "Little trust in charities",
+    "Neutral trust in charities",
+    "Some trust in charities",
+    "A lot of trust in charities",
+    "Complete trust in charities",
+    # Donation frequency
+    "Donate at least once a month", 
+    # Donated last year
+    "$50-$99",
+    "$100-$499",
+    "$500-$999",
+    "$1,000-$4,999",
+    "$5,000-$9,999",
+    "$10,000+",
+    # Volunteered in past 12 months
+    "Volunteered in past 12 months",
+    # Volunteer frequency
+    "Rarely volunteer",
+    "Volunteer more than once a month, less than once a year",
+    "Volunteer at least once a month",
+    # History of activism
+    "Personally involved",
+    # History of family activism
+    "Family involved",
+    # Church or religious organization
+    "Inactive church member",
+    "Active church member",
+    # Sport or recreational organization
+    "Inactive sports or rec organization member",
+    "Active sports or rec organization member", 
+    # Art, music, or educational organization
+    "Inactive art, music, or educational organization member",
+    "Active art, music, or educational organization member",
+    # Labor union
+    "Inactive union member",
+    "Active union member",
+    # Political party
+    "Inactive political party member",
+    "Active political party member",
+    # Environmental organization
+    "Inactive environmental organization member",
+    "Active environmental organization member",
+    # Professional association
+    "Inactive professional association member",
+    "Active professional association member",
+    # Humanitarian or charitable organization
+    "Inactive humanitarian or charitable organization member",
+    "Active humanitarian or charitable organization member",
+    # Consumer organization
+    "Inactive consumer organization member",
+    "Active consumer organization member",
+    # Other organization
+    "Inactive member in another organization",
+    "Active member in another organization",
+    # Gender
+    "Female",
+    "Transgender",
+    "Prefer not to say",
+    "Other gender",
+    # Marital status
+    "Widowed",
+    "Divorced",
+    "Separated",
+    "Never married",
+    # Education
+    "High school graduate", 
+    "Some college",
+    "2 year degree",
+    "4 year degree",
+    "Graduate or professional degree",
+    "Doctorate",
+    # Income
+    "More than median of $61,372", 
+    # Race
+    "White", 
+    "Black or African American", 
+    "American Indian or Alaskan Native", 
+    "Asian", 
+    "Native Hawaiian or Pacific Islander",
+    "Other race",
+    # Age
+    "More than median age of 36"
+  )
 )
 
 # Persona configuration reactive element
@@ -405,13 +403,13 @@ renderPlotly({
   per_choice = per_reactive()
     
   # Persona 1 predicted betas
-  per1_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,3])
+  per1_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,2])
   
   # Persona 1 expected utilities
-  per1_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per1_betas))
-  per1_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per1_betas))
-  per1_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per1_betas))
-  per1_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per1_betas))
+  per1_org1_exp <- exp(t(org_choice[,2]) %*% as.matrix(per1_betas))
+  per1_org2_exp <- exp(t(org_choice[,3]) %*% as.matrix(per1_betas))
+  per1_org3_exp <- exp(t(org_choice[,4]) %*% as.matrix(per1_betas))
+  per1_org4_exp <- exp(t(org_choice[,5]) %*% as.matrix(per1_betas))
   
   # Persona 1 market shares
   per1_share_denom <- sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
@@ -421,13 +419,13 @@ renderPlotly({
   per1_org4_share <- 100 * (per1_org4_exp / per1_share_denom)
   
   # Persona 2 predicted betas
-  per2_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,4])
+  per2_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,3])
   
   # Persona 2 expected utilities
-  per2_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per2_betas))
-  per2_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per2_betas))
-  per2_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per2_betas))
-  per2_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per2_betas))
+  per2_org1_exp <- exp(t(org_choice[,2]) %*% as.matrix(per2_betas))
+  per2_org2_exp <- exp(t(org_choice[,3]) %*% as.matrix(per2_betas))
+  per2_org3_exp <- exp(t(org_choice[,4]) %*% as.matrix(per2_betas))
+  per2_org4_exp <- exp(t(org_choice[,5]) %*% as.matrix(per2_betas))
   
   # Persona 2 market shares
   per2_share_denom <- sum(per2_org1_exp, per2_org2_exp, per2_org3_exp, per2_org4_exp)
@@ -437,13 +435,13 @@ renderPlotly({
   per2_org4_share <- 100 * (per2_org4_exp / per2_share_denom)
   
   # Persona 3 predicted betas
-  per3_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,5])
+  per3_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,4])
   
   # Persona 3 expected utilities
-  per3_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per3_betas))
-  per3_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per3_betas))
-  per3_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per3_betas))
-  per3_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per3_betas))
+  per3_org1_exp <- exp(t(org_choice[,2]) %*% as.matrix(per3_betas))
+  per3_org2_exp <- exp(t(org_choice[,3]) %*% as.matrix(per3_betas))
+  per3_org3_exp <- exp(t(org_choice[,4]) %*% as.matrix(per3_betas))
+  per3_org4_exp <- exp(t(org_choice[,5]) %*% as.matrix(per3_betas))
   
   # Persona 3 market shares
   per3_share_denom <- sum(per3_org1_exp, per3_org2_exp, per3_org3_exp, per3_org4_exp)
@@ -503,13 +501,13 @@ renderTable({
   per_choice = per_reactive()
     
   # Persona 1 predicted betas
-  per1_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,3])
+  per1_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,2])
   
   # Persona 1 expected utilities
-  per1_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per1_betas))
-  per1_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per1_betas))
-  per1_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per1_betas))
-  per1_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per1_betas))
+  per1_org1_exp <- exp(t(org_choice[,2]) %*% as.matrix(per1_betas))
+  per1_org2_exp <- exp(t(org_choice[,3]) %*% as.matrix(per1_betas))
+  per1_org3_exp <- exp(t(org_choice[,4]) %*% as.matrix(per1_betas))
+  per1_org4_exp <- exp(t(org_choice[,5]) %*% as.matrix(per1_betas))
   
   # Persona 1 market shares
   per1_share_denom <- sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
@@ -519,13 +517,13 @@ renderTable({
   per1_org4_share <- 100 * (per1_org4_exp / per1_share_denom)
   
   # Persona 2 predicted betas
-  per2_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,4])
+  per2_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,3])
   
   # Persona 2 expected utilities
-  per2_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per2_betas))
-  per2_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per2_betas))
-  per2_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per2_betas))
-  per2_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per2_betas))
+  per2_org1_exp <- exp(t(org_choice[,2]) %*% as.matrix(per2_betas))
+  per2_org2_exp <- exp(t(org_choice[,3]) %*% as.matrix(per2_betas))
+  per2_org3_exp <- exp(t(org_choice[,4]) %*% as.matrix(per2_betas))
+  per2_org4_exp <- exp(t(org_choice[,5]) %*% as.matrix(per2_betas))
   
   # Persona 2 market shares
   per2_share_denom <- sum(per2_org1_exp, per2_org2_exp, per2_org3_exp, per2_org4_exp)
@@ -535,13 +533,13 @@ renderTable({
   per2_org4_share <- 100 * (per2_org4_exp / per2_share_denom)
   
   # Persona 3 predicted betas
-  per3_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,5])
+  per3_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,4])
   
   # Persona 3 expected utilities
-  per3_org1_exp <- exp(t(org_choice[,3]) %*% as.matrix(per3_betas))
-  per3_org2_exp <- exp(t(org_choice[,4]) %*% as.matrix(per3_betas))
-  per3_org3_exp <- exp(t(org_choice[,5]) %*% as.matrix(per3_betas))
-  per3_org4_exp <- exp(t(org_choice[,6]) %*% as.matrix(per3_betas))
+  per3_org1_exp <- exp(t(org_choice[,2]) %*% as.matrix(per3_betas))
+  per3_org2_exp <- exp(t(org_choice[,3]) %*% as.matrix(per3_betas))
+  per3_org3_exp <- exp(t(org_choice[,4]) %*% as.matrix(per3_betas))
+  per3_org4_exp <- exp(t(org_choice[,5]) %*% as.matrix(per3_betas))
   
   # Persona 3 market shares
   per3_share_denom <- sum(per3_org1_exp, per3_org2_exp, per3_org3_exp, per3_org4_exp)
@@ -593,7 +591,8 @@ selectInput(
   "org1_org",
   label = "Organization:",
   choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
-  selected = "Red Cross",
+  # selected = "Red Cross",
+  selected = as.character(organization_data[1:4,][which(organization_data[1:4,2] == 1), 1]),
   width = "450px"
 )
 
@@ -602,7 +601,11 @@ selectInput(
   "org1_issue", 
   label = "Issue Area:",
   choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
-  selected = "Emergency response",
+  # selected = "Emergency response",
+  selected = ifelse(
+    sum(organization_data[5:7,2]) == 0, "Emergency response",
+    as.character(organization_data[5:7,][which(organization_data[5:7,2] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -888,7 +891,8 @@ selectInput(
     "News app"
   ),
   multiple = TRUE,
-  selected = c("TV", "Print", "Social media"),
+  # selected = c("TV", "Print", "Social media"),
+  selected = deframe(persona_data[6:12,][which(persona_data[6:12,2] == 1), 1]),
   width = "450px"
 )
 
@@ -2257,7 +2261,7 @@ downloadHandler(
     paste0("org_data_",Sys.time(),".csv")
   },
   content = function(file) {
-    write.csv(org_reactive(), file)
+    write_csv(org_reactive(), file)
   }
 )
 
@@ -2276,7 +2280,7 @@ downloadHandler(
     paste0("persona_data_",Sys.time(),".csv")
   },
   content = function(file) {
-    write.csv(per_reactive(), file)
+    write_csv(per_reactive(), file)
   }
 )
 
@@ -2287,17 +2291,20 @@ downloadHandler(
 ```{r import}
 # Render the organization configurations as a table
 renderTable({
-  org_import = read.csv(input$file_org$datapath)
+  org_import = read_csv(input$file_org$datapath)
   
   org_import
 })
 
 # Render the persona configurations as a table
 renderTable({
-  per_import = read.csv(input$file_per$datapath)
+  per_import = read_csv(input$file_per$datapath)
   
   per_import
 })
 
+# Conditional argument to run IF new data is imported
+# organization_data <- file_org
+# persona_data <- file_per
 ```
 
