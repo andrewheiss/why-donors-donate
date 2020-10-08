@@ -51,13 +51,12 @@ fileInput(
 ```
 
 ```{r organization-reactive-table}
-<<<<<<< HEAD
+
 # Placeholder for organization reactive table
 org_table <- as.data.frame(matrix(0, nrow = nrow(organization_data)))
 # org_table <- reactive({read.csv(input$file_org$datapath)})
 
-=======
->>>>>>> b150534730137dee8fba4c79552c3ead783873d6
+
 # Assign level labels
 org_table <- data.frame(
   levels = c(
