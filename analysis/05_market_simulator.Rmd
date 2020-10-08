@@ -943,6 +943,10 @@ selectInput(
   label = "Follow national news:",
   choices = c("Rarely", "Once a week", "At least once a day"),
   # selected = "At least once a day",
+  selected = ifelse(
+    sum(persona_data[2:3,2]) == 0, "Rarely",
+    as.character(persona_data[2:3,][which(persona_data[2:3,2] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -952,6 +956,10 @@ selectInput(
   label = "Follow international news:",
   choices = c("Never", "Sometimes", "Always"),
   # selected = "Always",
+  selected = ifelse(
+    sum(persona_data[4:5,2]) == 0, "Never",
+    as.character(persona_data[4:5,][which(persona_data[4:5,2] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -980,6 +988,10 @@ selectInput(
   label = "Follow government & public affairs:",
   choices = c("Not Often", "Often"),
   # selected = "Often",
+  selected = ifelse(
+    sum(persona_data[13,2]) == 0, "Not Often",
+    as.character(persona_data[13,][which(persona_data[13,2] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -989,6 +1001,10 @@ selectInput(
   label = "Travel to developing country:",
   choices = c("Hasn't traveled to a developing country", "Traveled to a developing country"),
   # selected = "Traveled to a developing country",
+  selected = ifelse(
+    sum(persona_data[14,2]) == 0, "Hasn't traveled to a developing country",
+    as.character(persona_data[14,][which(persona_data[14,2] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1006,6 +1022,10 @@ selectInput(
     "Extremely conservative"
   ),
   # selected = "Somewhat liberal",
+  selected = ifelse(
+    sum(persona_data[15:20,2]) == 0, "Extremely liberal",
+    as.character(persona_data[15:20,][which(persona_data[15:20,2] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1023,6 +1043,10 @@ selectInput(
     "Complete trust in political institutions"
   ),
   # selected = "Complete trust in political institutions",
+  selected = ifelse(
+    sum(persona_data[21:26,2]) == 0, "No trust at all in political institutions",
+    as.character(persona_data[21:26,][which(persona_data[21:26,2] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1040,6 +1064,10 @@ selectInput(
     "Strongly agree"
   ),
   # selected = "Strongly agree",
+  selected = ifelse(
+    sum(persona_data[27:32,2]) == 0, "Strongly disagree",
+    as.character(persona_data[27:32,][which(persona_data[27:32,2] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1053,6 +1081,10 @@ selectInput(
     "Attend at least once a month"
   ),
   # selected = "Attend at least once a month",
+  selected = ifelse(
+    sum(persona_data[33:34,2]) == 0, "Not sure",
+    as.character(persona_data[33:34,][which(persona_data[33:34,2] == 1), 1])
+  ),
   width = "450px"
 )
 
