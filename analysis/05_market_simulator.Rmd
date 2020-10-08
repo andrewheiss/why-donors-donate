@@ -942,7 +942,7 @@ selectInput(
   "per1_national_news",
   label = "Follow national news:",
   choices = c("Rarely", "Once a week", "At least once a day"),
-  selected = "At least once a day",
+  # selected = "At least once a day",
   width = "450px"
 )
 
@@ -951,7 +951,7 @@ selectInput(
   "per1_international_news",
   label = "Follow international news:",
   choices = c("Never", "Sometimes", "Always"),
-  selected = "Always",
+  # selected = "Always",
   width = "450px"
 )
 
@@ -979,7 +979,7 @@ selectInput(
   "per1_follow_gov",
   label = "Follow government & public affairs:",
   choices = c("Not Often", "Often"),
-  selected = "Often",
+  # selected = "Often",
   width = "450px"
 )
 
@@ -988,7 +988,7 @@ selectInput(
   "per1_travel_developing",
   label = "Travel to developing country:",
   choices = c("Hasn't traveled to a developing country", "Traveled to a developing country"),
-  selected = "Traveled to a developing country",
+  # selected = "Traveled to a developing country",
   width = "450px"
 )
 
@@ -1005,7 +1005,7 @@ selectInput(
     "Somewhat conservative",
     "Extremely conservative"
   ),
-  selected = "Somewhat liberal",
+  # selected = "Somewhat liberal",
   width = "450px"
 )
 
@@ -1022,7 +1022,7 @@ selectInput(
     "A lot of trust in political institutions",
     "Complete trust in political institutions"
   ),
-  selected = "Complete trust in political institutions",
+  # selected = "Complete trust in political institutions",
   width = "450px"
 )
 
@@ -1039,7 +1039,7 @@ selectInput(
     "Agree",
     "Strongly agree"
   ),
-  selected = "Strongly agree",
+  # selected = "Strongly agree",
   width = "450px"
 )
 
@@ -1052,7 +1052,7 @@ selectInput(
     "Rarely attend",
     "Attend at least once a month"
   ),
-  selected = "Attend at least once a month",
+  # selected = "Attend at least once a month",
   width = "450px"
 )
 
@@ -1061,7 +1061,7 @@ selectInput(
   "per1_religion_importance",
   label = "Importance of religion:",
   choices = c("Not important", "Important"),
-  selected = "Important",
+  # selected = "Important",
   width = "450px"
 )
 
@@ -1081,7 +1081,7 @@ selectInput(
     'Atheist',
     'Other religion'
   ),
-  selected = 'Protestant',
+  # selected = 'Protestant',
   width = "450px"
 )
 
@@ -1098,7 +1098,7 @@ selectInput(
     "Very important",
     "Essential"
   ),
-  selected = "Somewhat unimportant",
+  # selected = "Somewhat unimportant",
   width = "450px"
 )
 
@@ -1115,7 +1115,7 @@ selectInput(
     "A lot of trust in charities",
     "Complete trust in charities"
   ),
-  selected = "Complete trust in charities",
+  # selected = "Complete trust in charities",
   width = "450px"
 )
 
@@ -1124,7 +1124,7 @@ selectInput(
   "per1_donation_frequency",
   label = "Donation Frequency:",
   choices = c('Donate more than once a month, less than once a year', 'Donate at least once a month'),
-  selected = "Donate at least once a month",
+  # selected = "Donate at least once a month",
   width = "450px"
 )
 
@@ -1141,7 +1141,7 @@ selectInput(
     '$5,000-$9,999',
     '$10,000+'
   ),
-  selected = "$100-$499",
+  # selected = "$100-$499",
   width = "450px"
 )
 
@@ -1150,7 +1150,7 @@ selectInput(
   "per1_volunteer_12",
   label = "Volunteered in last 12 Months:",
   choices = c("Haven't volunteered in past 12 months", "Volunteered in past 12 months"),
-  selected = "Volunteered in past 12 months",
+  # selected = "Volunteered in past 12 months",
   width = "450px"
 )
 
@@ -1164,7 +1164,7 @@ selectInput(
     "Volunteer more than once a month, less than once a year",
     "Volunteer at least once a month"
   ),
-  selected = "Volunteer at least once a month",
+  # selected = "Volunteer at least once a month",
   width = "450px"
 )
 
@@ -1173,7 +1173,7 @@ selectInput(
   "per1_personal_activism",
   label = "Personal Activism:",
   choices = c('Not personally involved', 'Personally involved'),
-  selected = "Personally involved",
+  # selected = "Personally involved",
   width = "450px"
 )
 
@@ -1182,7 +1182,7 @@ selectInput(
   "per1_family_activism",
   label = "Family Activism:",
   choices = c('Family not involved', 'Family involved'),
-  selected = "Family involved",
+  # selected = "Family involved",
   width = "450px"
 )
 
@@ -1191,7 +1191,7 @@ selectInput(
   "per1_religious_member",
   label = "Church Membership:",
   choices = c("Don't belong to church",'Inactive church member', 'Active church member'),
-  selected = "Don't belong to church",
+  # selected = "Don't belong to church",
   width = "450px"
 )
 
@@ -1204,7 +1204,7 @@ selectInput(
     'Inactive sports or rec organization member',
     'Active sports or rec organization member'
   ),
-  selected = "Don't belong to sports or rec organization",
+  # selected = "Don't belong to sports or rec organization",
   width = "450px"
 )
 
@@ -1217,7 +1217,7 @@ selectInput(
     'Inactive art, music, or educational organization member',
     'Active art, music, or educational organization member'
   ),
-  selected = "Don't belong to educational organization",
+  # selected = "Don't belong to educational organization",
   width = "450px"
 )
 
@@ -1226,7 +1226,7 @@ selectInput(
   "per1_labor_member",
   label = "Labor Union Membership:",
   choices = c("Don't belong to union", 'Inactive union member', 'Active union member'),
-  selected = "Don't belong to union",
+  # selected = "Don't belong to union",
   width = "450px"
 )
 
@@ -1239,7 +1239,7 @@ selectInput(
     'Inactive political party member',
     'Active political party member'
   ),
-  selected = "Active political party member",
+  # selected = "Active political party member",
   width = "450px"
 )
 
@@ -1252,7 +1252,7 @@ selectInput(
     'Inactive environmental organization member',
     'Active environmental organization member'
   ),
-  selected = "Don't belong to environmental organization",
+  # selected = "Don't belong to environmental organization",
   width = "450px"
 )
 
@@ -1265,7 +1265,7 @@ selectInput(
     'Inactive professional association member',
     'Active professional association member'
   ),
-  selected = "Don't belong to professional association",
+  # selected = "Don't belong to professional association",
   width = "450px"
 )
 
@@ -1278,7 +1278,7 @@ selectInput(
     'Inactive humanitarian or charitable organization member',
     'Active humanitarian or charitable organization member'
   ),
-  selected = "Active humanitarian or charitable organization member",
+  # selected = "Active humanitarian or charitable organization member",
   width = "450px"
 )
 
@@ -1291,7 +1291,7 @@ selectInput(
     'Inactive consumer organization member',
     'Active consumer organization member'
   ),
-  selected = "Don't belong to consumer organization",
+  # selected = "Don't belong to consumer organization",
   width = "450px"
 )
 
@@ -1304,7 +1304,7 @@ selectInput(
     'Inactive member in another organization',
     'Active member in another organization'
   ),
-  selected = "Don't belong to another organization",
+  # selected = "Don't belong to another organization",
   width = "450px"
 )
 
@@ -1319,7 +1319,7 @@ selectInput(
     "Prefer not to say",
     "Other gender"
   ),
-  selected = "Male",
+  # selected = "Male",
   width = "450px"
 )
 
@@ -1334,7 +1334,7 @@ selectInput(
     "Separated",
     "Never married"
   ),
-  selected = "Married",
+  # selected = "Married",
   width = "450px"
 )
 
@@ -1351,7 +1351,7 @@ selectInput(
     "Graduate or professional degree",
     "Doctorate"
   ),
-  selected = "2 year degree",
+  # selected = "2 year degree",
   width = "450px"
 )
 
@@ -1360,7 +1360,7 @@ selectInput(
   "per1_income",
   label = "Income:",
   choices = c('Less than median of $61,372', 'More than median of $61,372'),
-  selected = "More than median of $61,372",
+  # selected = "More than median of $61,372",
   width = "450px"
 )
 
@@ -1377,7 +1377,8 @@ selectInput(
     'Other race'
   ),
   multiple = TRUE,
-  selected = "White",
+  # selected = "White",
+  selected = deframe(persona_data[105:110,][which(persona_data[105:110,2] == 1), 1]),
   width = "450px"
 )
 
@@ -1386,7 +1387,7 @@ selectInput(
   "per1_age",
   label = "Age:",
   choices = c('Less than median age of 36', "More than median age of 36"),
-  selected = "Less than median age of 36",
+  # selected = "Less than median age of 36",
   width = "450px"
 )
 ```
