@@ -37,17 +37,6 @@ persona_data <- read_csv(
   here::here('analysis', 'output', 'configurations', 'persona_config01.csv')
 )
 
-# Organization file input
-fileInput(
-  "file_org",
-  "Import Organization Data"
-)
-
-# Persona file input
-fileInput(
-  "file_per",
-  "Import Persona Data"
-)
 ```
 
 ```{r organization-reactive-table}
@@ -2299,6 +2288,18 @@ downloadHandler(
 ### Imports
 
 ```{r import}
+# Organization file input
+fileInput(
+  "file_org",
+  "Import Organization Data"
+)
+
+# Persona file input
+fileInput(
+  "file_per",
+  "Import Persona Data"
+)
+
 # Render the organization configurations as a table
 renderTable({
   org_import = read_csv(input$file_org$datapath)
