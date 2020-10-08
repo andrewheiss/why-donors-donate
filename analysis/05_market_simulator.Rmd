@@ -613,7 +613,11 @@ selectInput(
   "org1_fin_trans",
   label = "Financial Transparency:",
   choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
-  selected = "Engages in financial transparency",
+  # selected = "Engages in financial transparency",
+  selected = ifelse(
+    sum(organization_data[8,2]) == 0, "Doesn’t engage in financial transparency",
+    as.character(organization_data[8,][which(organization_data[8,2] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -622,7 +626,11 @@ selectInput(
   "org1_fin_account",
   label = "Financial Accountability:",
   choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
-  selected = "Engages in financial accountability",
+  # selected = "Engages in financial accountability",
+  selected = ifelse(
+    sum(organization_data[9,2]) == 0, "Doesn’t engage in financial accountability",
+    as.character(organization_data[9,][which(organization_data[9,2] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -631,7 +639,11 @@ selectInput(
   "org1_funding",
   label = "Funding Source:",
   choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
-  selected = "Many small private donations",
+  # selected = "Many small private donations",
+  selected = ifelse(
+    sum(organization_data[10:11,2]) == 0, "Many small private donations",
+    as.character(organization_data[10:11,][which(organization_data[10:11,2] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -640,7 +652,11 @@ selectInput(
   "org1_host_gov",
   label = "Relationship With Host Government",
   choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
-  selected = "Friendly relationship with government",
+  # selected = "Friendly relationship with government",
+  selected = ifelse(
+    sum(organization_data[12:13,2]) == 0, "Friendly relationship with government",
+    as.character(organization_data[12:13,][which(organization_data[12:13,2] == 1), 1])
+  ),
   width = "450px"
 )
 ```
@@ -662,7 +678,8 @@ selectInput(
   "org2_org",
   label = "Organization:",
   choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
-  selected = "Red Cross",
+  # selected = "Red Cross",
+  selected = as.character(organization_data[1:4,][which(organization_data[1:4,3] == 1), 1]),
   width = "450px"
 )
 
@@ -671,7 +688,11 @@ selectInput(
   "org2_issue", 
   label = "Issue Area:",
   choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
-  selected = "Environment",
+  # selected = "Environment",
+  selected = ifelse(
+    sum(organization_data[5:7,3]) == 0, "Emergency response",
+    as.character(organization_data[5:7,][which(organization_data[5:7,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -680,7 +701,11 @@ selectInput(
   "org2_fin_trans",
   label = "Financial Transparency:",
   choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
-  selected = "Engages in financial transparency",
+  # selected = "Engages in financial transparency",
+  selected = ifelse(
+    sum(organization_data[8,3]) == 0, "Doesn’t engage in financial transparency",
+    as.character(organization_data[8,][which(organization_data[8,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -689,7 +714,11 @@ selectInput(
   "org2_fin_account",
   label = "Financial Accountability:",
   choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
-  selected = "Engages in financial accountability",
+  # selected = "Engages in financial accountability",
+  selected = ifelse(
+    sum(organization_data[9,3]) == 0, "Doesn’t engage in financial accountability",
+    as.character(organization_data[9,][which(organization_data[9,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -698,7 +727,11 @@ selectInput(
   "org2_funding",
   label = "Funding Source:",
   choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
-  selected = "Many small private donations",
+  # selected = "Many small private donations",
+  selected = ifelse(
+    sum(organization_data[10:11,3]) == 0, "Many small private donations",
+    as.character(organization_data[10:11,][which(organization_data[10:11,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -707,7 +740,11 @@ selectInput(
   "org2_host_gov",
   label = "Relationship With Host Government",
   choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
-  selected = "Friendly relationship with government",
+  # selected = "Friendly relationship with government",
+  selected = ifelse(
+    sum(organization_data[12:13,3]) == 0, "Friendly relationship with government",
+    as.character(organization_data[12:13,][which(organization_data[12:13,3] == 1), 1])
+  ),
   width = "450px"
 )
 ```
@@ -729,7 +766,8 @@ selectInput(
   "org3_org",
   label = "Organization:",
   choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
-  selected = "Red Cross",
+  # selected = "Red Cross",
+  selected = as.character(organization_data[1:4,][which(organization_data[1:4,4] == 1), 1]),
   width = "450px"
 )
 
@@ -738,7 +776,11 @@ selectInput(
   "org3_issue", 
   label = "Issue Area:",
   choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
-  selected = "Human rights",
+  # selected = "Human rights",
+  selected = ifelse(
+    sum(organization_data[5:7,4]) == 0, "Emergency response",
+    as.character(organization_data[5:7,][which(organization_data[5:7,4] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -747,7 +789,11 @@ selectInput(
   "org3_fin_trans",
   label = "Financial Transparency:",
   choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
-  selected = "Engages in financial transparency",
+  # selected = "Engages in financial transparency",
+  selected = ifelse(
+    sum(organization_data[8,4]) == 0, "Doesn’t engage in financial transparency",
+    as.character(organization_data[8,][which(organization_data[8,4] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -756,7 +802,11 @@ selectInput(
   "org3_fin_account",
   label = "Financial Accountability:",
   choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
-  selected = "Engages in financial accountability",
+  # selected = "Engages in financial accountability",
+  selected = ifelse(
+    sum(organization_data[9,4]) == 0, "Doesn’t engage in financial accountability",
+    as.character(organization_data[9,][which(organization_data[9,4] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -765,7 +815,11 @@ selectInput(
   "org3_funding",
   label = "Funding Source:",
   choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
-  selected = "Many small private donations",
+  # selected = "Many small private donations",
+  selected = ifelse(
+    sum(organization_data[10:11,4]) == 0, "Many small private donations",
+    as.character(organization_data[10:11,][which(organization_data[10:11,4] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -774,7 +828,11 @@ selectInput(
   "org3_host_gov",
   label = "Relationship With Host Government",
   choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
-  selected = "Friendly relationship with government",
+  # selected = "Friendly relationship with government",
+  selected = ifelse(
+    sum(organization_data[12:13,4]) == 0, "Friendly relationship with government",
+    as.character(organization_data[12:13,][which(organization_data[12:13,4] == 1), 1])
+  ),
   width = "450px"
 )
 ```
@@ -796,7 +854,8 @@ selectInput(
   "org4_org",
   label = "Organization:",
   choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
-  selected = "Red Cross",
+  # selected = "Red Cross",
+  selected = as.character(organization_data[1:4,][which(organization_data[1:4,5] == 1), 1]),
   width = "450px"
 )
 
@@ -805,7 +864,11 @@ selectInput(
   "org4_issue", 
   label = "Issue Area:",
   choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
-  selected = "Refugee relief",
+  # selected = "Refugee relief",
+  selected = ifelse(
+    sum(organization_data[5:7,5]) == 0, "Emergency response",
+    as.character(organization_data[5:7,][which(organization_data[5:7,5] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -814,7 +877,11 @@ selectInput(
   "org4_fin_trans",
   label = "Financial Transparency:",
   choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
-  selected = "Engages in financial transparency",
+  # selected = "Engages in financial transparency",
+  selected = ifelse(
+    sum(organization_data[8,5]) == 0, "Doesn’t engage in financial transparency",
+    as.character(organization_data[8,][which(organization_data[8,5] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -823,7 +890,11 @@ selectInput(
   "org4_fin_account",
   label = "Financial Accountability:",
   choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
-  selected = "Engages in financial accountability",
+  # selected = "Engages in financial accountability",
+  selected = ifelse(
+    sum(organization_data[9,5]) == 0, "Doesn’t engage in financial accountability",
+    as.character(organization_data[9,][which(organization_data[9,5] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -832,7 +903,11 @@ selectInput(
   "org4_funding",
   label = "Funding Source:",
   choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
-  selected = "Many small private donations",
+  # selected = "Many small private donations",
+  selected = ifelse(
+    sum(organization_data[10:11,5]) == 0, "Many small private donations",
+    as.character(organization_data[10:11,][which(organization_data[10:11,5] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -841,7 +916,11 @@ selectInput(
   "org4_host_gov",
   label = "Relationship With Host Government",
   choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
-  selected = "Friendly relationship with government",
+  # selected = "Friendly relationship with government",
+  selected = ifelse(
+    sum(organization_data[12:13,5]) == 0, "Friendly relationship with government",
+    as.character(organization_data[12:13,][which(organization_data[12:13,5] == 1), 1])
+  ),
   width = "450px"
 )
 ```
