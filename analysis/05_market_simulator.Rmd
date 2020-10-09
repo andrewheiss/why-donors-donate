@@ -29,8 +29,11 @@ gammas <- read_rds(
 
 # Initial organization configuration
 organization_data <- read_csv(
-  here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
+  here::here('analysis', 'output', 'configurations', 'org_data_test1.csv')
 )
+
+org_update <- reactiveValues(data = NULL)
+org_update$data <- organization_data
 
 # Initial persona configuration
 persona_data <- read_csv(
@@ -40,11 +43,6 @@ persona_data <- read_csv(
 ```
 
 ```{r organization-reactive-table}
-
-# Placeholder for organization reactive table
-org_table <- as.data.frame(matrix(0, nrow = nrow(organization_data)))
-# org_table <- reactive({read.csv(input$file_org$datapath)})
-
 
 # Assign level labels
 org_table <- data.frame(
@@ -70,10 +68,6 @@ org_table <- data.frame(
     "Under government crackdown"
   )
 )
-
-# I think what we need to do to import data to fill this reactive element we need it look something like this
-
-# org_table$org1_value[where (input$file_org == 1) and the corresponding level matches %in% org_table$levels] <- 1
 
 # Organization configuration reactive element
 org_reactive <- reactive({
@@ -114,6 +108,8 @@ org_reactive <- reactive({
   org_table$org4_value[org_table$levels %in% input$org4_host_gov] <- 1
   org_table
 })
+
+
 ```
 
 ```{r persona-reactive-table}
@@ -390,6 +386,10 @@ per_reactive <- reactive({
   per_table$per3_value[per_table$levels %in% input$per3_age] <- 1
   per_table
 })
+
+per_update <- reactiveValues(data = NULL)
+per_update$data <- per_table
+
 ```
 
 Market share
@@ -584,16 +584,19 @@ textInput(
   placeholder = "Enter Organization Name",
   width = "450px"
 )
-
 # Organization
-selectInput(
-  "org1_org",
-  label = "Organization:",
-  choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
-  # selected = "Red Cross",
-  selected = as.character(organization_data[1:4,][which(organization_data[1:4,2] == 1), 1]),
-  width = "450px"
-)
+renderUI({
+  selectInput(
+    "org1_org",
+    label = "Organization:",
+    choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
+    # selected = "Red Cross",
+    selected = as.character(org_update$data[1:4,][which(org_update$data[1:4,2] == 1), 1]),
+    width = "450px"
+  )
+})
+
+
 
 # Issue area
 selectInput(
@@ -2158,7 +2161,7 @@ selectInput(
   label = "Follow international news:",
   choices = c("Never", "Sometimes", "Always"),
   # selected = "Always",
-  elected = ifelse(
+  selected = ifelse(
     sum(persona_data[4:5,4]) == 0, "Never",
     as.character(persona_data[4:5,][which(persona_data[4:5,4] == 1), 1])
   ),
@@ -2775,14 +2778,44 @@ downloadHandler(
 # Organization file input
 fileInput(
   "file_org",
-  "Import Organization Data"
+  "Import Organization Data",
+  accept = c("text/csv",
+             "text/comma-separated-values,text/plain",
+             ".csv")
 )
+
+actionButton(
+  inputId = "org_apply",
+  label = "Apply New Data",
+  icon = icon("play")
+)
+
+
+observeEvent(eventExpr = input$org_apply, 
+  handlerExpr = {
+      req(input$file_org)
+      file <- read_csv(input$file_org$datapath)
+      org_update$data <- file
+  }, ignoreNULL = FALSE)
+
 
 # Persona file input
 fileInput(
   "file_per",
-  "Import Persona Data"
+  "Import Persona Data",
+  accept = c("text/csv",
+             "text/comma-separated-values,text/plain",
+             ".csv")
 )
+
+
+
+# observeEvent(eventExpr = input$apply, 
+#   handlerExpr = {
+#       req(input$file_per)
+#       file <- read_csv(input$file_per$datapath)
+#       per_update$data <- file
+#   }, ignoreNULL = FALSE)
 
 # Render the organization configurations as a table
 renderTable({
