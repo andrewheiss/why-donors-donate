@@ -1545,7 +1545,11 @@ selectInput(
   "per2_national_news",
   label = "Follow national news:",
   choices = c("Rarely", "Once a week", "At least once a day"),
-  selected = "At least once a day",
+  # selected = "At least once a day",
+  selected = ifelse(
+    sum(persona_data[2:3,3]) == 0, "Rarely",
+    as.character(persona_data[2:3,][which(persona_data[2:3,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1554,7 +1558,11 @@ selectInput(
   "per2_international_news",
   label = "Follow international news:",
   choices = c("Never", "Sometimes", "Always"),
-  selected = "Always",
+  # selected = "Always",
+  selected = ifelse(
+    sum(persona_data[4:5,3]) == 0, "Never",
+    as.character(persona_data[4:5,][which(persona_data[4:5,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1572,7 +1580,8 @@ selectInput(
     "News app"
   ),
   multiple = TRUE,
-  selected = c("TV", "Print", "Social media"),
+  # selected = c("TV", "Print", "Social media"),
+  selected = deframe(persona_data[6:12,][which(persona_data[6:12,3] == 1), 1]),
   width = "450px"
 )
 
@@ -1581,7 +1590,11 @@ selectInput(
   "per2_follow_gov",
   label = "Follow government & public affairs:",
   choices = c("Not Often", "Often"),
-  selected = "Often",
+  # selected = "Often",
+  selected = ifelse(
+    sum(persona_data[13,3]) == 0, "Not Often",
+    as.character(persona_data[13,][which(persona_data[13,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1590,7 +1603,11 @@ selectInput(
   "per2_travel_developing",
   label = "Travel to developing country:",
   choices = c("Hasn't traveled to a developing country", "Traveled to a developing country"),
-  selected = "Traveled to a developing country",
+  # selected = "Traveled to a developing country",
+  selected = ifelse(
+    sum(persona_data[14,3]) == 0, "Hasn't traveled to a developing country",
+    as.character(persona_data[14,][which(persona_data[14,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1607,7 +1624,11 @@ selectInput(
     "Somewhat conservative",
     "Extremely conservative"
   ),
-  selected = "Somewhat liberal",
+  # selected = "Somewhat liberal",
+  selected = ifelse(
+    sum(persona_data[15:20,3]) == 0, "Extremely liberal",
+    as.character(persona_data[15:20,][which(persona_data[15:20,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1624,7 +1645,11 @@ selectInput(
     "A lot of trust in political institutions",
     "Complete trust in political institutions"
   ),
-  selected = "Complete trust in political institutions",
+  # selected = "Complete trust in political institutions",
+  selected = ifelse(
+    sum(persona_data[21:26,3]) == 0, "No trust at all in political institutions",
+    as.character(persona_data[21:26,][which(persona_data[21:26,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1641,7 +1666,11 @@ selectInput(
     "Agree",
     "Strongly agree"
   ),
-  selected = "Strongly agree",
+  # selected = "Strongly agree",
+  selected = ifelse(
+    sum(persona_data[27:32,3]) == 0, "Strongly disagree",
+    as.character(persona_data[27:32,][which(persona_data[27:32,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1654,7 +1683,11 @@ selectInput(
     "Rarely attend",
     "Attend at least once a month"
   ),
-  selected = "Attend at least once a month",
+  # selected = "Attend at least once a month",
+  selected = ifelse(
+    sum(persona_data[33:34,3]) == 0, "Not sure",
+    as.character(persona_data[33:34,][which(persona_data[33:34,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1663,7 +1696,11 @@ selectInput(
   "per2_religion_importance",
   label = "Importance of religion:",
   choices = c("Not important", "Important"),
-  selected = "Important",
+  # selected = "Important",
+  selected = ifelse(
+    sum(persona_data[35,3]) == 0, "Not important",
+    as.character(persona_data[35,][which(persona_data[35,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1683,7 +1720,11 @@ selectInput(
     'Atheist',
     'Other religion'
   ),
-  selected = 'Protestant',
+  # selected = 'Protestant',
+  selected = ifelse(
+    sum(persona_data[36:44,3]) == 0, "Catholic",
+    as.character(persona_data[36:44,][which(persona_data[36:44,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1700,7 +1741,11 @@ selectInput(
     "Very important",
     "Essential"
   ),
-  selected = "Somewhat unimportant",
+  # selected = "Somewhat unimportant",
+  selected = ifelse(
+    sum(persona_data[45:50,3]) == 0, "Not at all important",
+    as.character(persona_data[45:50,][which(persona_data[45:50,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1717,7 +1762,11 @@ selectInput(
     "A lot of trust in charities",
     "Complete trust in charities"
   ),
-  selected = "Complete trust in charities",
+  # selected = "Complete trust in charities",
+  selected = ifelse(
+    sum(persona_data[51:56,3]) == 0, "No trust at all in charities",
+    as.character(persona_data[51:56,][which(persona_data[51:56,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1726,7 +1775,11 @@ selectInput(
   "per2_donation_frequency",
   label = "Donation Frequency:",
   choices = c('Donate more than once a month, less than once a year', 'Donate at least once a month'),
-  selected = "Donate at least once a month",
+  # selected = "Donate at least once a month",
+  selected = ifelse(
+    sum(persona_data[57,3]) == 0, "Donate more than once a month, less than once a year",
+    as.character(persona_data[57,][which(persona_data[57,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1743,7 +1796,11 @@ selectInput(
     '$5,000-$9,999',
     '$10,000+'
   ),
-  selected = "$100-$499",
+  # selected = "$100-$499",
+  selected = ifelse(
+    sum(persona_data[58:63,3]) == 0, "$1-$49",
+    as.character(persona_data[58:63,][which(persona_data[58:63,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1752,7 +1809,11 @@ selectInput(
   "per2_volunteer_12",
   label = "Volunteered in last 12 Months:",
   choices = c("Haven't volunteered in past 12 months", "Volunteered in past 12 months"),
-  selected = "Volunteered in past 12 months",
+  # selected = "Volunteered in past 12 months",
+  selected = ifelse(
+    sum(persona_data[64,3]) == 0, "Haven't volunteered in past 12 months",
+    as.character(persona_data[64,][which(persona_data[64,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1766,7 +1827,11 @@ selectInput(
     "Volunteer more than once a month, less than once a year",
     "Volunteer at least once a month"
   ),
-  selected = "Volunteer at least once a month",
+  # selected = "Volunteer at least once a month",
+  selected = ifelse(
+    sum(persona_data[65:67,3]) == 0, "Haven't volunteered in past 12 months",
+    as.character(persona_data[65:67,][which(persona_data[65:67,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1775,7 +1840,11 @@ selectInput(
   "per2_personal_activism",
   label = "Personal Activism:",
   choices = c('Not personally involved', 'Personally involved'),
-  selected = "Personally involved",
+  # selected = "Personally involved",
+  selected = ifelse(
+    sum(persona_data[68,3]) == 0, "Not personally involved",
+    as.character(persona_data[68,][which(persona_data[68,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1784,7 +1853,11 @@ selectInput(
   "per2_family_activism",
   label = "Family Activism:",
   choices = c('Family not involved', 'Family involved'),
-  selected = "Family involved",
+  # selected = "Family involved",
+  selected = ifelse(
+    sum(persona_data[69,3]) == 0, "Family not involved",
+    as.character(persona_data[69,][which(persona_data[69,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1793,7 +1866,11 @@ selectInput(
   "per2_religious_member",
   label = "Church Membership:",
   choices = c("Don't belong to church",'Inactive church member', 'Active church member'),
-  selected = "Don't belong to church",
+  # selected = "Don't belong to church",
+  selected = ifelse(
+    sum(persona_data[70:71,3]) == 0, "Don't belong to church",
+    as.character(persona_data[70:71,][which(persona_data[70:71,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1806,7 +1883,11 @@ selectInput(
     'Inactive sports or rec organization member',
     'Active sports or rec organization member'
   ),
-  selected = "Don't belong to sports or rec organization",
+  # selected = "Don't belong to sports or rec organization",
+  selected = ifelse(
+    sum(persona_data[72:73,3]) == 0, "Don't belong to sports or rec organization",
+    as.character(persona_data[72:73,][which(persona_data[72:73,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1819,7 +1900,11 @@ selectInput(
     'Inactive art, music, or educational organization member',
     'Active art, music, or educational organization member'
   ),
-  selected = "Don't belong to educational organization",
+  # selected = "Don't belong to educational organization",
+  selected = ifelse(
+    sum(persona_data[74:75,3]) == 0, "Don't belong to educational organization",
+    as.character(persona_data[74:75,][which(persona_data[74:75,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1828,7 +1913,11 @@ selectInput(
   "per2_labor_member",
   label = "Labor Union Membership:",
   choices = c("Don't belong to union", 'Inactive union member', 'Active union member'),
-  selected = "Don't belong to union",
+  # selected = "Don't belong to union",
+  selected = ifelse(
+    sum(persona_data[76:77,3]) == 0, "Don't belong to union",
+    as.character(persona_data[76:77,][which(persona_data[76:77,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1841,7 +1930,11 @@ selectInput(
     'Inactive political party member',
     'Active political party member'
   ),
-  selected = "Active political party member",
+  # selected = "Active political party member",
+  selected = ifelse(
+    sum(persona_data[78:79,3]) == 0, "Don't belong to political party",
+    as.character(persona_data[78:79,][which(persona_data[78:79,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1854,7 +1947,11 @@ selectInput(
     'Inactive environmental organization member',
     'Active environmental organization member'
   ),
-  selected = "Don't belong to environmental organization",
+  # selected = "Don't belong to environmental organization",
+  selected = ifelse(
+    sum(persona_data[80:81,3]) == 0, "Don't belong to environmental organization",
+    as.character(persona_data[80:81,][which(persona_data[80:81,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1867,7 +1964,11 @@ selectInput(
     'Inactive professional association member',
     'Active professional association member'
   ),
-  selected = "Don't belong to professional association",
+  # selected = "Don't belong to professional association",
+  selected = ifelse(
+    sum(persona_data[82:83,3]) == 0, "Don't belong to professional association",
+    as.character(persona_data[82:83,][which(persona_data[82:83,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1880,7 +1981,11 @@ selectInput(
     'Inactive humanitarian or charitable organization member',
     'Active humanitarian or charitable organization member'
   ),
-  selected = "Active humanitarian or charitable organization member",
+  # selected = "Active humanitarian or charitable organization member",
+  selected = ifelse(
+    sum(persona_data[84:85,3]) == 0, "Don't belong to humanitarian or charitable organization",
+    as.character(persona_data[84:85,][which(persona_data[84:85,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1893,7 +1998,11 @@ selectInput(
     'Inactive consumer organization member',
     'Active consumer organization member'
   ),
-  selected = "Don't belong to consumer organization",
+  # selected = "Don't belong to consumer organization",
+  selected = ifelse(
+    sum(persona_data[86:87,3]) == 0, "Don't belong to consumer organization",
+    as.character(persona_data[86:87,][which(persona_data[86:87,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1906,7 +2015,11 @@ selectInput(
     'Inactive member in another organization',
     'Active member in another organization'
   ),
-  selected = "Don't belong to another organization",
+  # selected = "Don't belong to another organization",
+  selected = ifelse(
+    sum(persona_data[88:89,3]) == 0, "Don't belong to another organization",
+    as.character(persona_data[88:89,][which(persona_data[88:89,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1921,7 +2034,11 @@ selectInput(
     "Prefer not to say",
     "Other gender"
   ),
-  selected = "Male",
+  # selected = "Male",
+  selected = ifelse(
+    sum(persona_data[90:93,3]) == 0, "Male",
+    as.character(persona_data[90:93,][which(persona_data[90:93,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1936,7 +2053,11 @@ selectInput(
     "Separated",
     "Never married"
   ),
-  selected = "Married",
+  # selected = "Married",
+  selected = ifelse(
+    sum(persona_data[94:97,3]) == 0, "Married",
+    as.character(persona_data[94:97,][which(persona_data[94:97,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1953,7 +2074,11 @@ selectInput(
     "Graduate or professional degree",
     "Doctorate"
   ),
-  selected = "Some college",
+  # selected = "Some college",
+  selected = ifelse(
+    sum(persona_data[98:103,3]) == 0, "Less than high school",
+    as.character(persona_data[98:103,][which(persona_data[98:103,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1962,7 +2087,11 @@ selectInput(
   "per2_income",
   label = "Income:",
   choices = c('Less than median of $61,372', 'More than median of $61,372'),
-  selected = "More than median of $61,372",
+  # selected = "More than median of $61,372",
+  selected = ifelse(
+    sum(persona_data[104,3]) == 0, "Less than median of $61,372",
+    as.character(persona_data[104,][which(persona_data[104,3] == 1), 1])
+  ),
   width = "450px"
 )
 
@@ -1979,7 +2108,8 @@ selectInput(
     'Other race'
   ),
   multiple = TRUE,
-  selected = "American Indian or Alaskan Native",
+  # selected = "American Indian or Alaskan Native",
+  selected = deframe(persona_data[105:110,][which(persona_data[105:110,3] == 1), 1]),
   width = "450px"
 )
 
@@ -1988,7 +2118,11 @@ selectInput(
   "per2_age",
   label = "Age:",
   choices = c('Less than median age of 36', "More than median age of 36"),
-  selected = "Less than median age of 36",
+  # selected = "Less than median age of 36",
+  selected = ifelse(
+    sum(persona_data[111,3]) == 0, "Less than median age of 36",
+    as.character(persona_data[111,][which(persona_data[111,3] == 1), 1])
+  ),
   width = "450px"
 )
 ```
@@ -2010,7 +2144,7 @@ selectInput(
   "per3_national_news",
   label = "Follow national news:",
   choices = c("Rarely", "Once a week", "At least once a day"),
-  selected = "At least once a day",
+  # selected = "At least once a day",
   width = "450px"
 )
 
@@ -2019,7 +2153,7 @@ selectInput(
   "per3_international_news",
   label = "Follow international news:",
   choices = c("Never", "Sometimes", "Always"),
-  selected = "Always",
+  # selected = "Always",
   width = "450px"
 )
 
@@ -2037,7 +2171,7 @@ selectInput(
     "News app"
   ),
   multiple = TRUE,
-  selected = c("TV", "Print", "Social media"),
+  # selected = c("TV", "Print", "Social media"),
   width = "450px"
 )
 
@@ -2046,7 +2180,7 @@ selectInput(
   "per3_follow_gov",
   label = "Follow government & public affairs:",
   choices = c("Not Often", "Often"),
-  selected = "Often",
+  # selected = "Often",
   width = "450px"
 )
 
@@ -2055,7 +2189,7 @@ selectInput(
   "per3_travel_developing",
   label = "Travel to developing country:",
   choices = c("Hasn't traveled to a developing country", "Traveled to a developing country"),
-  selected = "Traveled to a developing country",
+  # selected = "Traveled to a developing country",
   width = "450px"
 )
 
@@ -2072,7 +2206,7 @@ selectInput(
     "Somewhat conservative",
     "Extremely conservative"
   ),
-  selected = "Somewhat liberal",
+  # selected = "Somewhat liberal",
   width = "450px"
 )
 
@@ -2089,7 +2223,7 @@ selectInput(
     "A lot of trust in political institutions",
     "Complete trust in political institutions"
   ),
-  selected = "Complete trust in political institutions",
+  # selected = "Complete trust in political institutions",
   width = "450px"
 )
 
@@ -2106,7 +2240,7 @@ selectInput(
     "Agree",
     "Strongly agree"
   ),
-  selected = "Strongly agree",
+  # selected = "Strongly agree",
   width = "450px"
 )
 
@@ -2119,7 +2253,7 @@ selectInput(
     "Rarely attend",
     "Attend at least once a month"
   ),
-  selected = "Attend at least once a month",
+  # selected = "Attend at least once a month",
   width = "450px"
 )
 
@@ -2128,7 +2262,7 @@ selectInput(
   "per3_religion_importance",
   label = "Importance of religion:",
   choices = c("Not important", "Important"),
-  selected = "Important",
+  # selected = "Important",
   width = "450px"
 )
 
@@ -2148,7 +2282,7 @@ selectInput(
     'Atheist',
     'Other religion'
   ),
-  selected = 'Protestant',
+  # selected = 'Protestant',
   width = "450px"
 )
 
@@ -2165,7 +2299,7 @@ selectInput(
     "Very important",
     "Essential"
   ),
-  selected = "Somewhat unimportant",
+  # selected = "Somewhat unimportant",
   width = "450px"
 )
 
@@ -2182,7 +2316,7 @@ selectInput(
     "A lot of trust in charities",
     "Complete trust in charities"
   ),
-  selected = "Complete trust in charities",
+  # selected = "Complete trust in charities",
   width = "450px"
 )
 
@@ -2191,7 +2325,7 @@ selectInput(
   "per3_donation_frequency",
   label = "Donation Frequency:",
   choices = c('Donate more than once a month, less than once a year', 'Donate at least once a month'),
-  selected = "Donate at least once a month",
+  # selected = "Donate at least once a month",
   width = "450px"
 )
 
@@ -2208,7 +2342,7 @@ selectInput(
     '$5,000-$9,999',
     '$10,000+'
   ),
-  selected = "$100-$499",
+  # selected = "$100-$499",
   width = "450px"
 )
 
@@ -2217,7 +2351,7 @@ selectInput(
   "per3_volunteer_12",
   label = "Volunteered in last 12 Months:",
   choices = c("Haven't volunteered in past 12 months", "Volunteered in past 12 months"),
-  selected = "Volunteered in past 12 months",
+  # selected = "Volunteered in past 12 months",
   width = "450px"
 )
 
@@ -2231,7 +2365,7 @@ selectInput(
     "Volunteer more than once a month, less than once a year",
     "Volunteer at least once a month"
   ),
-  selected = "Volunteer at least once a month",
+  # selected = "Volunteer at least once a month",
   width = "450px"
 )
 
@@ -2240,7 +2374,7 @@ selectInput(
   "per3_personal_activism",
   label = "Personal Activism:",
   choices = c('Not personally involved', 'Personally involved'),
-  selected = "Personally involved",
+  # selected = "Personally involved",
   width = "450px"
 )
 
@@ -2249,7 +2383,7 @@ selectInput(
   "per3_family_activism",
   label = "Family Activism:",
   choices = c('Family not involved', 'Family involved'),
-  selected = "Family involved",
+  # selected = "Family involved",
   width = "450px"
 )
 
@@ -2258,7 +2392,7 @@ selectInput(
   "per3_religious_member",
   label = "Church Membership:",
   choices = c("Don't belong to church",'Inactive church member', 'Active church member'),
-  selected = "Don't belong to church",
+  # selected = "Don't belong to church",
   width = "450px"
 )
 
@@ -2271,7 +2405,7 @@ selectInput(
     'Inactive sports or rec organization member',
     'Active sports or rec organization member'
   ),
-  selected = "Don't belong to sports or rec organization",
+  # selected = "Don't belong to sports or rec organization",
   width = "450px"
 )
 
@@ -2284,7 +2418,7 @@ selectInput(
     'Inactive art, music, or educational organization member',
     'Active art, music, or educational organization member'
   ),
-  selected = "Don't belong to educational organization",
+  # selected = "Don't belong to educational organization",
   width = "450px"
 )
 
@@ -2293,7 +2427,7 @@ selectInput(
   "per3_labor_member",
   label = "Labor Union Membership:",
   choices = c("Don't belong to union", 'Inactive union member', 'Active union member'),
-  selected = "Don't belong to union",
+  # selected = "Don't belong to union",
   width = "450px"
 )
 
@@ -2306,7 +2440,7 @@ selectInput(
     'Inactive political party member',
     'Active political party member'
   ),
-  selected = "Active political party member",
+  # selected = "Active political party member",
   width = "450px"
 )
 
@@ -2319,7 +2453,7 @@ selectInput(
     'Inactive environmental organization member',
     'Active environmental organization member'
   ),
-  selected = "Don't belong to environmental organization",
+  # selected = "Don't belong to environmental organization",
   width = "450px"
 )
 
@@ -2332,7 +2466,7 @@ selectInput(
     'Inactive professional association member',
     'Active professional association member'
   ),
-  selected = "Don't belong to professional association",
+  # selected = "Don't belong to professional association",
   width = "450px"
 )
 
@@ -2345,7 +2479,7 @@ selectInput(
     'Inactive humanitarian or charitable organization member',
     'Active humanitarian or charitable organization member'
   ),
-  selected = "Active humanitarian or charitable organization member",
+  # selected = "Active humanitarian or charitable organization member",
   width = "450px"
 )
 
@@ -2358,7 +2492,7 @@ selectInput(
     'Inactive consumer organization member',
     'Active consumer organization member'
   ),
-  selected = "Don't belong to consumer organization",
+  # selected = "Don't belong to consumer organization",
   width = "450px"
 )
 
@@ -2371,7 +2505,7 @@ selectInput(
     'Inactive member in another organization',
     'Active member in another organization'
   ),
-  selected = "Don't belong to another organization",
+  # selected = "Don't belong to another organization",
   width = "450px"
 )
 
@@ -2386,7 +2520,7 @@ selectInput(
     "Prefer not to say",
     "Other gender"
   ),
-  selected = "Female",
+  # selected = "Female",
   width = "450px"
 )
 
@@ -2401,7 +2535,7 @@ selectInput(
     "Separated",
     "Never married"
   ),
-  selected = "Married",
+  # selected = "Married",
   width = "450px"
 )
 
@@ -2418,7 +2552,7 @@ selectInput(
     "Graduate or professional degree",
     "Doctorate"
   ),
-  selected = "Graduate or professional degree",
+  # selected = "Graduate or professional degree",
   width = "450px"
 )
 
@@ -2427,7 +2561,7 @@ selectInput(
   "per3_income",
   label = "Income:",
   choices = c('Less than median of $61,372', 'More than median of $61,372'),
-  selected = "More than median of $61,372",
+  # selected = "More than median of $61,372",
   width = "450px"
 )
 
@@ -2444,7 +2578,7 @@ selectInput(
     'Other race'
   ),
   multiple = TRUE,
-  selected = c("Black or African American", "American Indian or Alaskan Native"),
+  # selected = c("Black or African American", "American Indian or Alaskan Native"),
   width = "450px"
 )
 
@@ -2453,7 +2587,7 @@ selectInput(
   "per3_age",
   label = "Age:",
   choices = c('Less than median age of 36', "More than median age of 36"),
-  selected = "Less than median age of 36",
+  # selected = "Less than median age of 36",
   width = "450px"
 )
 ```
