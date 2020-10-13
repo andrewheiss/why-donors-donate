@@ -28,9 +28,11 @@ gammas <- read_rds(
   t()
 
 # Initial organization configuration
-organization_data <- read_csv(
-  here::here('analysis', 'output', 'configurations', 'org_data_test1.csv')
-)
+organization_data <- reactive({ 
+  read_csv(
+    here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
+  )
+})
 
 org_update <- reactiveValues(data = NULL)
 org_update$data <- organization_data
