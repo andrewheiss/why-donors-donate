@@ -36,17 +36,17 @@ organization_values <- reactiveValues()
 
 organization_data <- reactive({
   if (is.null(input$org_update$datapath)) {
-    organization_data <- read.csv(here::here('analysis', 'output', 'configurations', 'organization_config01.csv'))
-    organization_values$file_name = "organization_config01.csv"
-    organization_values$file_type = "csv"
-    organization_values$file_size = file.size(here::here('analysis', 'output', 'configurations', 'organization_config01.csv'))
-    organization_values$file_path = here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
+    organization_data <- read_csv(here::here('analysis', 'output', 'configurations', 'organization_config01.csv'))
+    # organization_values$file_name = "organization_config01.csv"
+    # organization_values$file_type = "csv"
+    # organization_values$file_size = file.size(here::here('analysis', 'output', 'configurations', 'organization_config01.csv'))
+    # organization_values$file_path = here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
   } else {
-    organization_data <- read.csv(input$org_update$datapath)
-    organization_values$file_name = input$org_update$name
-    organization_values$file_size = input$org_update$size
-    organization_values$file_type = input$org_update$type
-    organization_values$file_path = input$org_update$datapath
+    organization_data <- read_csv(input$org_update$datapath)
+    # organization_values$file_name = input$org_update$name
+    # organization_values$file_size = input$org_update$size
+    # organization_values$file_type = input$org_update$type
+    # organization_values$file_path = input$org_update$datapath
   }
 })
 
@@ -604,14 +604,16 @@ textInput(
 )
 # Organization
 renderUI({
-  organization_data = organization_data()
+  # organization_data = organization_data()
+  org_data = organization_data()
   
   selectInput(
     "org1_org",
     label = "Organization:",
     choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
     # selected = "Red Cross",
-    selected = as.character(organization_data[1:4,][which(organization_data[1:4,2] == 1), 1]),
+    # selected = as.character(organization_data[1:4,][which(organization_data[1:4,2] == 1), 1]),
+    selected = as.character(org_data[1:4,][which(org_data[1:4,2] == 1), 1]),
     width = "450px"
   )
 })
@@ -619,6 +621,9 @@ renderUI({
 
 
 renderUI({
+  
+  # organization_data = organization_data()
+  org_data = organization_data()
   
 
 # Issue area
@@ -628,11 +633,19 @@ selectInput(
   choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
   # selected = "Emergency response",
   selected = ifelse(
-    sum(organization_data$data[5:7,2]) == 0, "Emergency response",
-    as.character(organization_data$data[5:7,][which(organization_data$data[5:7,2] == 1), 1])
+    # sum(organization_data$data[5:7,2]) == 0, "Emergency response",
+    # as.character(organization_data$data[5:7,][which(organization_data$data[5:7,2] == 1), 1])
+    sum(org_data[5:7,2]) == 0, "Emergency response",
+    as.character(org_data[5:7,][which(org_data[5:7,2] == 1), 1])
   ),
   width = "450px"
 )
+})
+
+renderUI({
+  
+  # organization_data = organization_data()
+  org_data = organization_data()
 
 # Financial transparency
 selectInput(
@@ -641,8 +654,10 @@ selectInput(
   choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
   # selected = "Engages in financial transparency",
   selected = ifelse(
-    sum(organization_data$data[8,2]) == 0, "Doesn’t engage in financial transparency",
-    as.character(organization_data$data[8,][which(organization_data$data[8,2] == 1), 1])
+    # sum(organization_data$data[8,2]) == 0, "Doesn’t engage in financial transparency",
+    # as.character(organization_data$data[8,][which(organization_data$data[8,2] == 1), 1])
+    sum(org_data[8,2]) == 0, "Doesn’t engage in financial transparency",
+    as.character(org_data[8,][which(org_data[8,2] == 1), 1])
   ),
   width = "450px"
 )
@@ -654,8 +669,10 @@ selectInput(
   choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
   # selected = "Engages in financial accountability",
   selected = ifelse(
-    sum(organization_data$data[9,2]) == 0, "Doesn’t engage in financial accountability",
-    as.character(organization_data$data[9,][which(organization_data$data[9,2] == 1), 1])
+    # sum(organization_data$data[9,2]) == 0, "Doesn’t engage in financial accountability",
+    # as.character(organization_data$data[9,][which(organization_data$data[9,2] == 1), 1])
+    sum(org_data[9,2]) == 0, "Doesn’t engage in financial accountability",
+    as.character(org_data[9,][which(org_data[9,2] == 1), 1])
   ),
   width = "450px"
 )
@@ -667,8 +684,10 @@ selectInput(
   choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
   # selected = "Many small private donations",
   selected = ifelse(
-    sum(organization_data$data[10:11,2]) == 0, "Many small private donations",
-    as.character(organization_data$data[10:11,][which(organization_data$data[10:11,2] == 1), 1])
+    # sum(organization_data$data[10:11,2]) == 0, "Many small private donations",
+    # as.character(organization_data$data[10:11,][which(organization_data$data[10:11,2] == 1), 1])
+    sum(org_data[10:11,2]) == 0, "Many small private donations",
+    as.character(org_data[10:11,][which(org_data[10:11,2] == 1), 1])
   ),
   width = "450px"
 )
@@ -680,8 +699,10 @@ selectInput(
   choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
   # selected = "Friendly relationship with government",
   selected = ifelse(
-    sum(organization_data$data[12:13,2]) == 0, "Friendly relationship with government",
-    as.character(organization_data$data[12:13,][which(organization_data$data[12:13,2] == 1), 1])
+    # sum(organization_data$data[12:13,2]) == 0, "Friendly relationship with government",
+    # as.character(organization_data$data[12:13,][which(organization_data$data[12:13,2] == 1), 1])
+    sum(org_data[12:13,2]) == 0, "Friendly relationship with government",
+    as.character(org_data[12:13,][which(org_data[12:13,2] == 1), 1])
   ),
   width = "450px"
 )
