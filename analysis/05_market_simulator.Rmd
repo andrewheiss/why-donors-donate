@@ -36,7 +36,7 @@ organization_values <- reactiveValues()
 
 organization_data <- reactive({
   if (is.null(input$org_update$datapath)) {
-    organization_reactive <- read.csv(here::here('analysis', 'output', 'configurations', 'organization_config01.csv'))
+    organization_data <- read.csv(here::here('analysis', 'output', 'configurations', 'organization_config01.csv'))
     organization_values$file_name = "organization_config01.csv"
     organization_values$file_type = "csv"
     organization_values$file_size = file.size(here::here('analysis', 'output', 'configurations', 'organization_config01.csv'))
@@ -604,17 +604,19 @@ textInput(
 )
 # Organization
 renderUI({
+  organization_data = organization_data()
+  
   selectInput(
     "org1_org",
     label = "Organization:",
     choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
     # selected = "Red Cross",
-    selected = as.character(organization_data()[1:4,][which(organization_data()[1:4,2] == 1), 1]),
+    selected = as.character(organization_data[1:4,][which(organization_data[1:4,2] == 1), 1]),
     width = "450px"
   )
-
-
 })
+
+
 
 renderUI({
   
