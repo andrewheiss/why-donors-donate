@@ -973,82 +973,115 @@ textInput(
   width = "450px"
 )
 
-renderUI({
+
 
 # Organization
-selectInput(
-  "org4_org",
-  label = "Organization:",
-  choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
-  # selected = "Red Cross",
-  selected = as.character(org_data[1:4,][which(org_data[1:4,5] == 1), 1]),
-  width = "450px"
-)
+renderUI({
+  org_data = organization_data()
+    
+  selectInput(
+    "org4_org",
+    label = "Organization:",
+    choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
+    # selected = "Red Cross",
+    selected = as.character(org_data[1:4,][which(org_data[1:4,5] == 1), 1]),
+    width = "450px"
+  )
+
+})
+
 
 # Issue area
-selectInput(
-  "org4_issue", 
-  label = "Issue Area:",
-  choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
-  # selected = "Refugee relief",
-  selected = ifelse(
-    sum(org_data[5:7,5]) == 0, "Emergency response",
-    as.character(org_data[5:7,][which(org_data[5:7,5] == 1), 1])
-  ),
-  width = "450px"
-)
+renderUI({
+  org_data = organization_data()
+    
+  selectInput(
+    "org4_issue", 
+    label = "Issue Area:",
+    choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
+    # selected = "Refugee relief",
+    selected = ifelse(
+      sum(org_data[5:7,5]) == 0, "Emergency response",
+      as.character(org_data[5:7,][which(org_data[5:7,5] == 1), 1])
+    ),
+    width = "450px"
+  )
+  
+})
 
 # Financial transparency
-selectInput(
-  "org4_fin_trans",
-  label = "Financial Transparency:",
-  choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
-  # selected = "Engages in financial transparency",
-  selected = ifelse(
-    sum(org_data[8,5]) == 0, "Doesn’t engage in financial transparency",
-    as.character(org_data[8,][which(org_data[8,5] == 1), 1])
-  ),
-  width = "450px"
-)
+renderUI({
+  org_data = organization_data()
+    
+  selectInput(
+    "org4_fin_trans",
+    label = "Financial Transparency:",
+    choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
+    # selected = "Engages in financial transparency",
+    selected = ifelse(
+      sum(org_data[8,5]) == 0, "Doesn’t engage in financial transparency",
+      as.character(org_data[8,][which(org_data[8,5] == 1), 1])
+    ),
+    width = "450px"
+  )
+
+})
+
 
 # Financial accountability
-selectInput(
-  "org4_fin_account",
-  label = "Financial Accountability:",
-  choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
-  # selected = "Engages in financial accountability",
-  selected = ifelse(
-    sum(org_data[9,5]) == 0, "Doesn’t engage in financial accountability",
-    as.character(org_data[9,][which(org_data[9,5] == 1), 1])
-  ),
-  width = "450px"
-)
+renderUI({
+  org_data = organization_data()
+    
+  selectInput(
+    "org4_fin_account",
+    label = "Financial Accountability:",
+    choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
+    # selected = "Engages in financial accountability",
+    selected = ifelse(
+      sum(org_data[9,5]) == 0, "Doesn’t engage in financial accountability",
+      as.character(org_data[9,][which(org_data[9,5] == 1), 1])
+    ),
+    width = "450px"
+  )
+
+})
+
 
 # Funding sources
-selectInput(
-  "org4_funding",
-  label = "Funding Source:",
-  choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
-  # selected = "Many small private donations",
-  selected = ifelse(
-    sum(org_data[10:11,5]) == 0, "Many small private donations",
-    as.character(org_data[10:11,][which(org_data[10:11,5] == 1), 1])
-  ),
-  width = "450px"
-)
+renderUI({
+  org_data = organization_data()
+    
+  selectInput(
+    "org4_funding",
+    label = "Funding Source:",
+    choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+    # selected = "Many small private donations",
+    selected = ifelse(
+      sum(org_data[10:11,5]) == 0, "Many small private donations",
+      as.character(org_data[10:11,][which(org_data[10:11,5] == 1), 1])
+    ),
+    width = "450px"
+  )
+
+})
+
 
 # Relationship with host government
-selectInput(
-  "org4_host_gov",
-  label = "Relationship With Host Government",
-  choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
-  # selected = "Friendly relationship with government",
-  selected = ifelse(
-    sum(org_data[12:13,5]) == 0, "Friendly relationship with government",
-    as.character(org_data[12:13,][which(org_data[12:13,5] == 1), 1])
-  ),
-  width = "450px"
-)
+renderUI({
+  org_data = organization_data()
+  
+  selectInput(
+    "org4_host_gov",
+    label = "Relationship With Host Government",
+    choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+    # selected = "Friendly relationship with government",
+    selected = ifelse(
+      sum(org_data[12:13,5]) == 0, "Friendly relationship with government",
+      as.character(org_data[12:13,][which(org_data[12:13,5] == 1), 1])
+    ),
+    width = "450px"
+  )
+  
 })
 ```
 
