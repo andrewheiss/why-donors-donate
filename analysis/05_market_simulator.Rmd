@@ -27,57 +27,30 @@ gammas <- read_rds(
   select(-i) %>% 
   t()
 
-# Initial organization configuration
-# organization_data <- read_csv(
-#   here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
-# )
-
-organization_values <- reactiveValues()
-
+# Organization configuration
 organization_data <- reactive({
   if (is.null(input$org_update$datapath)) {
-    organization_data <- read_csv(here::here('analysis', 'output', 'configurations', 'organization_config01.csv'))
-    # organization_values$file_name = "organization_config01.csv"
-    # organization_values$file_type = "csv"
-    # organization_values$file_size = file.size(here::here('analysis', 'output', 'configurations', 'organization_config01.csv'))
-    # organization_values$file_path = here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
+    organization_data <- read_csv(
+      here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
+    )
   } else {
     organization_data <- read_csv(input$org_update$datapath)
-    # organization_values$file_name = input$org_update$name
-    # organization_values$file_size = input$org_update$size
-    # organization_values$file_type = input$org_update$type
-    # organization_values$file_path = input$org_update$datapath
   }
 })
 
-
-# Initial persona configuration
-# persona_data <- read_csv(
-#   here::here('analysis', 'output', 'configurations', 'persona_config01.csv')
-# )
-
-persona_values <- reactiveValues()
-
+# Persona configuration
 persona_data <- reactive({
   if (is.null(input$per_update$datapath)) {
-    persona_data <- read_csv(here::here('analysis', 'output', 'configurations', 'persona_config01.csv'))
-    # persona_values$file_name = "persona_config01.csv"
-    # persona_values$file_type = "csv"
-    # persona_values$file_size = file.size(here::here('analysis', 'output', 'configurations', 'persona_config01.csv'))
-    # persona_values$file_path = here::here('analysis', 'output', 'configurations', 'persona_config01.csv')
+    persona_data <- read_csv(
+      here::here('analysis', 'output', 'configurations', 'persona_config01.csv')
+    )
   } else {
     persona_data <- read_csv(input$per_update$datapath)
-    # persona_values$file_name = input$per_update$name
-    # persona_values$file_size = input$per_update$size
-    # persona_values$file_type = input$per_update$type
-    # persona_values$file_path = input$per_update$datapath
   }
 })
-
 ```
 
 ```{r organization-reactive-table}
-
 # Assign level labels
 org_table <- data.frame(
   levels = c(
@@ -142,8 +115,6 @@ org_reactive <- reactive({
   org_table$org4_value[org_table$levels %in% input$org4_host_gov] <- 1
   org_table
 })
-
-
 ```
 
 ```{r persona-reactive-table}
@@ -420,10 +391,6 @@ per_reactive <- reactive({
   per_table$per3_value[per_table$levels %in% input$per3_age] <- 1
   per_table
 })
-
-# per_update <- reactiveValues(data = NULL)
-# per_update$data <- per_table
-
 ```
 
 Market share
@@ -618,123 +585,113 @@ textInput(
   placeholder = "Enter Organization Name",
   width = "450px"
 )
+
 # Organization
 renderUI({
   org_data = organization_data()
-  
   selectInput(
     "org1_org",
     label = "Organization:",
     choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
     # selected = "Red Cross",
-    # selected = as.character(organization_data[1:4,][which(organization_data[1:4,2] == 1), 1]),
     selected = as.character(org_data[1:4,][which(org_data[1:4,2] == 1), 1]),
     width = "450px"
   )
-  
 })
-
 
 # Issue area
 renderUI({
   org_data = organization_data()
-
   selectInput(
     "org1_issue", 
     label = "Issue Area:",
     choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
     # selected = "Emergency response",
     selected = ifelse(
-      # sum(organization_data$data[5:7,2]) == 0, "Emergency response",
-      # as.character(organization_data$data[5:7,][which(organization_data$data[5:7,2] == 1), 1])
       sum(org_data[5:7,2]) == 0, "Emergency response",
       as.character(org_data[5:7,][which(org_data[5:7,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
 
 
 # Financial transparency
 renderUI({
   org_data = organization_data()
-
   selectInput(
     "org1_fin_trans",
     label = "Financial Transparency:",
-    choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
+    choices = c(
+      "Doesn’t engage in financial transparency", 
+      "Engages in financial transparency"
+    ),
     # selected = "Engages in financial transparency",
     selected = ifelse(
-      # sum(organization_data$data[8,2]) == 0, "Doesn’t engage in financial transparency",
-      # as.character(organization_data$data[8,][which(organization_data$data[8,2] == 1), 1])
       sum(org_data[8,2]) == 0, "Doesn’t engage in financial transparency",
       as.character(org_data[8,][which(org_data[8,2] == 1), 1])
     ),
     width = "450px"
   )
-
 })
 
 # Financial accountability
 renderUI({
   org_data = organization_data()
-
   selectInput(
     "org1_fin_account",
     label = "Financial Accountability:",
-    choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
+    choices = c(
+      "Doesn’t engage in financial accountability", 
+      "Engages in financial accountability"
+    ),
     # selected = "Engages in financial accountability",
     selected = ifelse(
-      # sum(organization_data$data[9,2]) == 0, "Doesn’t engage in financial accountability",
-      # as.character(organization_data$data[9,][which(organization_data$data[9,2] == 1), 1])
       sum(org_data[9,2]) == 0, "Doesn’t engage in financial accountability",
       as.character(org_data[9,][which(org_data[9,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Funding sources
 renderUI({
   org_data = organization_data()
-  
   selectInput(
     "org1_funding",
     label = "Funding Source:",
-    choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+    choices = c(
+      "Many small private donations", 
+      "Handful of wealthy private donors", 
+      "Government grants"
+    ),
     # selected = "Many small private donations",
     selected = ifelse(
-      # sum(organization_data$data[10:11,2]) == 0, "Many small private donations",
-      # as.character(organization_data$data[10:11,][which(organization_data$data[10:11,2] == 1), 1])
       sum(org_data[10:11,2]) == 0, "Many small private donations",
       as.character(org_data[10:11,][which(org_data[10:11,2] == 1), 1])
     ),
     width = "450px"
   )
-
 })
 
 # Relationship with host government
 renderUI({
   org_data = organization_data()
-  
   selectInput(
     "org1_host_gov",
     label = "Relationship With Host Government",
-    choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+    choices = c(
+      "Friendly relationship with government", 
+      "Criticized by government",  
+      "Under government crackdown"
+    ),
     # selected = "Friendly relationship with government",
     selected = ifelse(
-      # sum(organization_data$data[12:13,2]) == 0, "Friendly relationship with government",
-      # as.character(organization_data$data[12:13,][which(organization_data$data[12:13,2] == 1), 1])
       sum(org_data[12:13,2]) == 0, "Friendly relationship with government",
       as.character(org_data[12:13,][which(org_data[12:13,2] == 1), 1])
     ),
     width = "450px"
   )
-
 })
 ```
 
@@ -753,7 +710,6 @@ textInput(
 # Organization
 renderUI({
   org_data = organization_data()
-  
   selectInput(
     "org2_org",
     label = "Organization:",
@@ -762,13 +718,11 @@ renderUI({
     selected = as.character(org_data[1:4,][which(org_data[1:4,3] == 1), 1]),
     width = "450px"
   )
-
 })
 
 # Issue area
 renderUI({
   org_data = organization_data()
-  
   selectInput(
     "org2_issue", 
     label = "Issue Area:",
@@ -780,17 +734,18 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
 
 # Financial transparency
 renderUI({
   org_data = organization_data()
-  
   selectInput(
     "org2_fin_trans",
     label = "Financial Transparency:",
-    choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
+    choices = c(
+      "Doesn’t engage in financial transparency", 
+      "Engages in financial transparency"
+    ),
     # selected = "Engages in financial transparency",
     selected = ifelse(
       sum(org_data[8,3]) == 0, "Doesn’t engage in financial transparency",
@@ -798,17 +753,18 @@ renderUI({
     ),
     width = "450px"
   )
-
 })
 
 # Financial accountability
 renderUI({
   org_data = organization_data()
-  
   selectInput(
     "org2_fin_account",
     label = "Financial Accountability:",
-    choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
+    choices = c(
+      "Doesn’t engage in financial accountability", 
+      "Engages in financial accountability"
+    ),
     # selected = "Engages in financial accountability",
     selected = ifelse(
       sum(org_data[9,3]) == 0, "Doesn’t engage in financial accountability",
@@ -816,18 +772,19 @@ renderUI({
     ),
     width = "450px"
   )
-
 })
-
 
 # Funding sources
 renderUI({
   org_data = organization_data()
-  
   selectInput(
     "org2_funding",
     label = "Funding Source:",
-    choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+    choices = c(
+      "Many small private donations", 
+      "Handful of wealthy private donors", 
+      "Government grants"
+    ),
     # selected = "Many small private donations",
     selected = ifelse(
       sum(org_data[10:11,3]) == 0, "Many small private donations",
@@ -835,17 +792,19 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
 
 # Relationship with host government
 renderUI({
   org_data = organization_data()
-    
   selectInput(
     "org2_host_gov",
     label = "Relationship With Host Government",
-    choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+    choices = c(
+      "Friendly relationship with government", 
+      "Criticized by government",  
+      "Under government crackdown"
+    ),
     # selected = "Friendly relationship with government",
     selected = ifelse(
       sum(org_data[12:13,3]) == 0, "Friendly relationship with government",
@@ -853,9 +812,7 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 ```
 
 ### Organization 3
@@ -870,11 +827,9 @@ textInput(
   width = "450px"
 )
 
-
 # Organization
 renderUI({
   org_data = organization_data()
-  
   selectInput(
     "org3_org",
     label = "Organization:",
@@ -883,13 +838,11 @@ renderUI({
     selected = as.character(org_data[1:4,][which(org_data[1:4,4] == 1), 1]),
     width = "450px"
   )
-  
 })
 
 # Issue area
 renderUI({
   org_data = organization_data()
-  
   selectInput(
     "org3_issue", 
     label = "Issue Area:",
@@ -901,17 +854,18 @@ renderUI({
     ),
     width = "450px"
   )
-
 })
 
 # Financial transparency
 renderUI({
   org_data = organization_data()
-    
   selectInput(
     "org3_fin_trans",
     label = "Financial Transparency:",
-    choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
+    choices = c(
+      "Doesn’t engage in financial transparency", 
+      "Engages in financial transparency"
+    ),
     # selected = "Engages in financial transparency",
     selected = ifelse(
       sum(org_data[8,4]) == 0, "Doesn’t engage in financial transparency",
@@ -919,18 +873,18 @@ renderUI({
     ),
     width = "450px"
   )
-
 })
-
 
 # Financial accountability
 renderUI({
   org_data = organization_data()
-    
   selectInput(
     "org3_fin_account",
     label = "Financial Accountability:",
-    choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
+    choices = c(
+      "Doesn’t engage in financial accountability", 
+      "Engages in financial accountability"
+    ),
     # selected = "Engages in financial accountability",
     selected = ifelse(
       sum(org_data[9,4]) == 0, "Doesn’t engage in financial accountability",
@@ -938,17 +892,19 @@ renderUI({
     ),
     width = "450px"
   )
-
 })
 
 # Funding sources
 renderUI({
   org_data = organization_data()
-  
   selectInput(
     "org3_funding",
     label = "Funding Source:",
-    choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+    choices = c(
+      "Many small private donations", 
+      "Handful of wealthy private donors", 
+      "Government grants"
+    ),
     # selected = "Many small private donations",
     selected = ifelse(
       sum(org_data[10:11,4]) == 0, "Many small private donations",
@@ -956,17 +912,19 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
 
 # Relationship with host government
 renderUI({
   org_data = organization_data()
-    
   selectInput(
     "org3_host_gov",
     label = "Relationship With Host Government",
-    choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+    choices = c(
+      "Friendly relationship with government", 
+      "Criticized by government",  
+      "Under government crackdown"
+    ),
     # selected = "Friendly relationship with government",
     selected = ifelse(
       sum(org_data[12:13,4]) == 0, "Friendly relationship with government",
@@ -989,12 +947,9 @@ textInput(
   width = "450px"
 )
 
-
-
 # Organization
 renderUI({
   org_data = organization_data()
-    
   selectInput(
     "org4_org",
     label = "Organization:",
@@ -1003,14 +958,11 @@ renderUI({
     selected = as.character(org_data[1:4,][which(org_data[1:4,5] == 1), 1]),
     width = "450px"
   )
-
 })
-
 
 # Issue area
 renderUI({
   org_data = organization_data()
-    
   selectInput(
     "org4_issue", 
     label = "Issue Area:",
@@ -1022,17 +974,18 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
 
 # Financial transparency
 renderUI({
   org_data = organization_data()
-    
   selectInput(
     "org4_fin_trans",
     label = "Financial Transparency:",
-    choices = c("Doesn’t engage in financial transparency", "Engages in financial transparency"),
+    choices = c(
+      "Doesn’t engage in financial transparency", 
+      "Engages in financial transparency"
+    ),
     # selected = "Engages in financial transparency",
     selected = ifelse(
       sum(org_data[8,5]) == 0, "Doesn’t engage in financial transparency",
@@ -1040,18 +993,18 @@ renderUI({
     ),
     width = "450px"
   )
-
 })
-
 
 # Financial accountability
 renderUI({
   org_data = organization_data()
-    
   selectInput(
     "org4_fin_account",
     label = "Financial Accountability:",
-    choices = c("Doesn’t engage in financial accountability", "Engages in financial accountability"),
+    choices = c(
+      "Doesn’t engage in financial accountability", 
+      "Engages in financial accountability"
+    ),
     # selected = "Engages in financial accountability",
     selected = ifelse(
       sum(org_data[9,5]) == 0, "Doesn’t engage in financial accountability",
@@ -1059,18 +1012,19 @@ renderUI({
     ),
     width = "450px"
   )
-
 })
-
 
 # Funding sources
 renderUI({
   org_data = organization_data()
-    
   selectInput(
     "org4_funding",
     label = "Funding Source:",
-    choices = c("Many small private donations", "Handful of wealthy private donors", "Government grants"),
+    choices = c(
+      "Many small private donations", 
+      "Handful of wealthy private donors", 
+      "Government grants"
+    ),
     # selected = "Many small private donations",
     selected = ifelse(
       sum(org_data[10:11,5]) == 0, "Many small private donations",
@@ -1078,18 +1032,19 @@ renderUI({
     ),
     width = "450px"
   )
-
 })
-
 
 # Relationship with host government
 renderUI({
   org_data = organization_data()
-  
   selectInput(
     "org4_host_gov",
     label = "Relationship With Host Government",
-    choices = c("Friendly relationship with government", "Criticized by government",  "Under government crackdown"),
+    choices = c(
+      "Friendly relationship with government", 
+      "Criticized by government",  
+      "Under government crackdown"
+    ),
     # selected = "Friendly relationship with government",
     selected = ifelse(
       sum(org_data[12:13,5]) == 0, "Friendly relationship with government",
@@ -1097,7 +1052,6 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
 ```
 
@@ -1116,52 +1070,38 @@ textInput(
 # Follow national news
 renderUI({
   per_data = persona_data()
-    
   selectInput(
     "per1_national_news",
     label = "Follow national news:",
     choices = c("Rarely", "Once a week", "At least once a day"),
     # selected = "At least once a day",
-    # selected = ifelse(
-    #   sum(persona_data[2:3,2]) == 0, "Rarely",
-    #   as.character(persona_data[2:3,][which(persona_data[2:3,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[2:3,2]) == 0, "Rarely",
       as.character(per_data[2:3,][which(per_data[2:3,2] == 1), 1])
     ),
     width = "450px"
   )
-
 })
 
 # Follow international news
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_international_news",
     label = "Follow international news:",
     choices = c("Never", "Sometimes", "Always"),
     # selected = "Always",
-    # selected = ifelse(
-    #   sum(persona_data[4:5,2]) == 0, "Never",
-    #   as.character(persona_data[4:5,][which(persona_data[4:5,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[4:5,2]) == 0, "Never",
       as.character(per_data[4:5,][which(per_data[4:5,2] == 1), 1])
     ),
     width = "450px"
   )
-
 })
-
 
 # Mediums to follow news
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_news_medium",
     label = "Medium to follow news:",
@@ -1176,64 +1116,46 @@ renderUI({
     ),
     multiple = TRUE,
     # selected = c("TV", "Print", "Social media"),
-    # selected = deframe(persona_data[6:12,][which(persona_data[6:12,2] == 1), 1]),
     selected = deframe(per_data[6:12,][which(per_data[6:12,2] == 1), 1]),
     width = "450px"
   )
-  
 })
-
 
 # Follow government and public affairs
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_follow_gov",
     label = "Follow government & public affairs:",
     choices = c("Not Often", "Often"),
     # selected = "Often",
-    # selected = ifelse(
-    #   sum(persona_data[13,2]) == 0, "Not Often",
-    #   as.character(persona_data[13,][which(persona_data[13,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[13,2]) == 0, "Not Often",
       as.character(per_data[13,][which(per_data[13,2] == 1), 1])
     ),
     width = "450px"
   )
-
 })
-
 
 # Traveled to a developing country
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_travel_developing",
     label = "Travel to developing country:",
     choices = c("Hasn't traveled to a developing country", "Traveled to a developing country"),
     # selected = "Traveled to a developing country",
-    # selected = ifelse(
-    #   sum(persona_data[14,2]) == 0, "Hasn't traveled to a developing country",
-    #   as.character(persona_data[14,][which(persona_data[14,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[14,2]) == 0, "Hasn't traveled to a developing country",
       as.character(per_data[14,][which(per_data[14,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Liberal to Conservative
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_political_pref",
     label = "Political views from liberal to conservative:",
@@ -1247,24 +1169,17 @@ renderUI({
       "Extremely conservative"
     ),
     # selected = "Somewhat liberal",
-    # selected = ifelse(
-    #   sum(persona_data[15:20,2]) == 0, "Extremely liberal",
-    #   as.character(persona_data[15:20,][which(persona_data[15:20,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[15:20,2]) == 0, "Extremely liberal",
       as.character(per_data[15:20,][which(per_data[15:20,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Trust in political institutions
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_institution_trust",
     label = "Political institution trust from none to complete:",
@@ -1278,24 +1193,17 @@ renderUI({
       "Complete trust in political institutions"
     ),
     # selected = "Complete trust in political institutions",
-    # selected = ifelse(
-    #   sum(persona_data[21:26,2]) == 0, "No trust at all in political institutions",
-    #   as.character(persona_data[21:26,][which(persona_data[21:26,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[21:26,2]) == 0, "No trust at all in political institutions",
       as.character(per_data[21:26,][which(per_data[21:26,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # People should be more charitable
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_others_charitable",
     label = "People should be more charitable:",
@@ -1309,24 +1217,17 @@ renderUI({
       "Strongly agree"
     ),
     # selected = "Strongly agree",
-    # selected = ifelse(
-    #   sum(persona_data[27:32,2]) == 0, "Strongly disagree",
-    #   as.character(persona_data[27:32,][which(persona_data[27:32,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[27:32,2]) == 0, "Strongly disagree",
       as.character(per_data[27:32,][which(per_data[27:32,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Religious attendance
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_worship_attendance",
     label = "Worship service attendance:",
@@ -1336,47 +1237,33 @@ renderUI({
       "Attend at least once a month"
     ),
     # selected = "Attend at least once a month",
-    # selected = ifelse(
-    #   sum(persona_data[33:34,2]) == 0, "Not sure",
-    #   as.character(persona_data[33:34,][which(persona_data[33:34,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[33:34,2]) == 0, "Not sure",
       as.character(per_data[33:34,][which(per_data[33:34,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Importance of religion
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_religion_importance",
     label = "Importance of religion:",
     choices = c("Not important", "Important"),
     # selected = "Important",
-    # selected = ifelse(
-    #   sum(persona_data[35,2]) == 0, "Not important",
-    #   as.character(persona_data[35,][which(persona_data[35,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[35,2]) == 0, "Not important",
       as.character(per_data[35,][which(per_data[35,2] == 1), 1])
     ),
     width = "450px"
   )
-
 })
-
 
 # Religion
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_religion",
     label = "Religion:",
@@ -1393,24 +1280,17 @@ renderUI({
       'Other religion'
     ),
     # selected = 'Protestant',
-    # selected = ifelse(
-    #   sum(persona_data[36:44,2]) == 0, "Catholic",
-    #   as.character(persona_data[36:44,][which(persona_data[36:44,2] == 1), 1])
-    # ),
      selected = ifelse(
       sum(per_data[36:44,2]) == 0, "Catholic",
       as.character(per_data[36:44,][which(per_data[36:44,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Importance of trusting charities
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_charity_importance",
     label = "Charity Importance:",
@@ -1424,24 +1304,17 @@ renderUI({
       "Essential"
     ),
     # selected = "Somewhat unimportant",
-    # selected = ifelse(
-    #   sum(persona_data[45:50,2]) == 0, "Not at all important",
-    #   as.character(persona_data[45:50,][which(persona_data[45:50,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[45:50,2]) == 0, "Not at all important",
       as.character(per_data[45:50,][which(per_data[45:50,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Trust in charities
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_trust_in_charity",
     label = "Charity Trust:",
@@ -1455,47 +1328,33 @@ renderUI({
       "Complete trust in charities"
     ),
     # selected = "Complete trust in charities",
-    # selected = ifelse(
-    #   sum(persona_data[51:56,2]) == 0, "No trust at all in charities",
-    #   as.character(persona_data[51:56,][which(persona_data[51:56,2] == 1), 1])
-    # ),
      selected = ifelse(
       sum(per_data[51:56,2]) == 0, "No trust at all in charities",
       as.character(per_data[51:56,][which(per_data[51:56,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Donation frequency
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_donation_frequency",
     label = "Donation Frequency:",
     choices = c('Donate more than once a month, less than once a year', 'Donate at least once a month'),
     # selected = "Donate at least once a month",
-    # selected = ifelse(
-    #   sum(persona_data[57,2]) == 0, "Donate more than once a month, less than once a year",
-    #   as.character(persona_data[57,][which(persona_data[57,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[57,2]) == 0, "Donate more than once a month, less than once a year",
       as.character(per_data[57,][which(per_data[57,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Donated last year
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_donation_amount",
     label = "Donation Amount Last Year:",
@@ -1509,47 +1368,33 @@ renderUI({
       '$10,000+'
     ),
     # selected = "$100-$499",
-    # selected = ifelse(
-    #   sum(persona_data[58:63,2]) == 0, "$1-$49",
-    #   as.character(persona_data[58:63,][which(persona_data[58:63,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[58:63,2]) == 0, "$1-$49",
       as.character(per_data[58:63,][which(per_data[58:63,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Volunteered in past 12 months
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_volunteer_12",
     label = "Volunteered in last 12 Months:",
     choices = c("Haven't volunteered in past 12 months", "Volunteered in past 12 months"),
     # selected = "Volunteered in past 12 months",
-    # selected = ifelse(
-    #   sum(persona_data[64,2]) == 0, "Haven't volunteered in past 12 months",
-    #   as.character(persona_data[64,][which(persona_data[64,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[64,2]) == 0, "Haven't volunteered in past 12 months",
       as.character(per_data[64,][which(per_data[64,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Volunteer frequency
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_volunteer_frequency",
     label = "Volunteer Frequency:",
@@ -1560,93 +1405,65 @@ renderUI({
       "Volunteer at least once a month"
     ),
     # selected = "Volunteer at least once a month",
-    # selected = ifelse(
-    #   sum(persona_data[65:67,2]) == 0, "Haven't volunteered in past 12 months",
-    #   as.character(persona_data[65:67,][which(persona_data[65:67,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[65:67,2]) == 0, "Haven't volunteered in past 12 months",
       as.character(per_data[65:67,][which(per_data[65:67,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # History of activism
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_personal_activism",
     label = "Personal Activism:",
     choices = c('Not personally involved', 'Personally involved'),
     # selected = "Personally involved",
-    # selected = ifelse(
-    #   sum(persona_data[68,2]) == 0, "Not personally involved",
-    #   as.character(persona_data[68,][which(persona_data[68,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[68,2]) == 0, "Not personally involved",
       as.character(per_data[68,][which(per_data[68,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # History of family activism
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_family_activism",
     label = "Family Activism:",
     choices = c('Family not involved', 'Family involved'),
     # selected = "Family involved",
-    # selected = ifelse(
-    #   sum(persona_data[69,2]) == 0, "Family not involved",
-    #   as.character(persona_data[69,][which(persona_data[69,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[69,2]) == 0, "Family not involved",
       as.character(per_data[69,][which(per_data[69,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Church or religious organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_religious_member",
     label = "Church Membership:",
     choices = c("Don't belong to church",'Inactive church member', 'Active church member'),
     # selected = "Don't belong to church",
-    # selected = ifelse(
-    #   sum(persona_data[70:71,2]) == 0, "Don't belong to church",
-    #   as.character(persona_data[70:71,][which(persona_data[70:71,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[70:71,2]) == 0, "Don't belong to church",
       as.character(per_data[70:71,][which(per_data[70:71,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Sport or recreational organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_sport_member",
     label = "Sport or Recreational Membership:",
@@ -1656,24 +1473,17 @@ renderUI({
       'Active sports or rec organization member'
     ),
     # selected = "Don't belong to sports or rec organization",
-    # selected = ifelse(
-    #   sum(persona_data[72:73,2]) == 0, "Don't belong to sports or rec organization",
-    #   as.character(persona_data[72:73,][which(persona_data[72:73,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[72:73,2]) == 0, "Don't belong to sports or rec organization",
       as.character(per_data[72:73,][which(per_data[72:73,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Art, music, or educational organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_art_member",
     label = "Art, Music, or Educational Membership:",
@@ -1683,24 +1493,17 @@ renderUI({
       'Active art, music, or educational organization member'
     ),
     # selected = "Don't belong to educational organization",
-    # selected = ifelse(
-    #   sum(persona_data[74:75,2]) == 0, "Don't belong to educational organization",
-    #   as.character(persona_data[74:75,][which(persona_data[74:75,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[74:75,2]) == 0, "Don't belong to educational organization",
       as.character(per_data[74:75,][which(per_data[74:75,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Labor union
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_labor_member",
     label = "Labor Union Membership:",
@@ -1710,24 +1513,17 @@ renderUI({
       'Active union member'
     ),
     # selected = "Don't belong to union",
-    # selected = ifelse(
-    #   sum(persona_data[76:77,2]) == 0, "Don't belong to union",
-    #   as.character(persona_data[76:77,][which(persona_data[76:77,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[76:77,2]) == 0, "Don't belong to union",
       as.character(per_data[76:77,][which(per_data[76:77,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Political party
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_political_member",
     label = "Political Party Membership:",
@@ -1737,24 +1533,17 @@ renderUI({
       'Active political party member'
     ),
     # selected = "Active political party member",
-    # selected = ifelse(
-    #   sum(persona_data[78:79,2]) == 0, "Don't belong to political party",
-    #   as.character(persona_data[78:79,][which(persona_data[78:79,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[78:79,2]) == 0, "Don't belong to political party",
       as.character(per_data[78:79,][which(per_data[78:79,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Environmental organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_environmental_member",
     label = "Environmental Organization Membership:",
@@ -1764,24 +1553,17 @@ renderUI({
       'Active environmental organization member'
     ),
     # selected = "Don't belong to environmental organization",
-    # selected = ifelse(
-    #   sum(persona_data[80:81,2]) == 0, "Don't belong to environmental organization",
-    #   as.character(persona_data[80:81,][which(persona_data[80:81,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[80:81,2]) == 0, "Don't belong to environmental organization",
       as.character(per_data[80:81,][which(per_data[80:81,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Professional association
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_professional_member",
     label = "Professional Association Membership:",
@@ -1791,24 +1573,17 @@ renderUI({
       'Active professional association member'
     ),
     # selected = "Don't belong to professional association",
-    # selected = ifelse(
-    #   sum(persona_data[82:83,2]) == 0, "Don't belong to professional association",
-    #   as.character(persona_data[82:83,][which(persona_data[82:83,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[82:83,2]) == 0, "Don't belong to professional association",
       as.character(per_data[82:83,][which(per_data[82:83,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Humanitarian or charitable organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_humanitarian_member",
     label = "Humanitarian or Charitable Organization Membership:",
@@ -1818,24 +1593,17 @@ renderUI({
       'Active humanitarian or charitable organization member'
     ),
     # selected = "Active humanitarian or charitable organization member",
-    # selected = ifelse(
-    #   sum(persona_data[84:85,2]) == 0, "Don't belong to humanitarian or charitable organization",
-    #   as.character(persona_data[84:85,][which(persona_data[84:85,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[84:85,2]) == 0, "Don't belong to humanitarian or charitable organization",
       as.character(per_data[84:85,][which(per_data[84:85,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Consumer organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_consumer_member",
     label = "Consumer Organization Membership:",
@@ -1845,24 +1613,17 @@ renderUI({
       'Active consumer organization member'
     ),
     # selected = "Don't belong to consumer organization",
-    # selected = ifelse(
-    #   sum(persona_data[86:87,2]) == 0, "Don't belong to consumer organization",
-    #   as.character(persona_data[86:87,][which(persona_data[86:87,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[86:87,2]) == 0, "Don't belong to consumer organization",
       as.character(per_data[86:87,][which(per_data[86:87,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Other organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_other_member",
     label = "Other Organization Membership:",
@@ -1872,24 +1633,17 @@ renderUI({
       'Active member in another organization'
     ),
     # selected = "Don't belong to another organization",
-    # selected = ifelse(
-    #   sum(persona_data[88:89,2]) == 0, "Don't belong to another organization",
-    #   as.character(persona_data[88:89,][which(persona_data[88:89,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[88:89,2]) == 0, "Don't belong to another organization",
       as.character(per_data[88:89,][which(per_data[88:89,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Gender
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_gender",
     label = "Gender:",
@@ -1901,24 +1655,17 @@ renderUI({
       "Other gender"
     ),
     # selected = "Male",
-    # selected = ifelse(
-    #   sum(persona_data[90:93,2]) == 0, "Male",
-    #   as.character(persona_data[90:93,][which(persona_data[90:93,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[90:93,2]) == 0, "Male",
       as.character(per_data[90:93,][which(per_data[90:93,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Marital status
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_marital_status",
     label = "Marital Status:",
@@ -1930,24 +1677,17 @@ renderUI({
       "Never married"
     ),
     # selected = "Married",
-    # selected = ifelse(
-    #   sum(persona_data[94:97,2]) == 0, "Married",
-    #   as.character(persona_data[94:97,][which(persona_data[94:97,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[94:97,2]) == 0, "Married",
       as.character(per_data[94:97,][which(per_data[94:97,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Education
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_education",
     label = "Education:",
@@ -1961,47 +1701,33 @@ renderUI({
       "Doctorate"
     ),
     # selected = "2 year degree",
-    # selected = ifelse(
-    #   sum(persona_data[98:103,2]) == 0, "Less than high school",
-    #   as.character(persona_data[98:103,][which(persona_data[98:103,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[98:103,2]) == 0, "Less than high school",
       as.character(per_data[98:103,][which(per_data[98:103,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Income
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_income",
     label = "Income:",
     choices = c('Less than median of $61,372', 'More than median of $61,372'),
     # selected = "More than median of $61,372",
-    # selected = ifelse(
-    #   sum(persona_data[104,2]) == 0, "Less than median of $61,372",
-    #   as.character(persona_data[104,][which(persona_data[104,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[104,2]) == 0, "Less than median of $61,372",
       as.character(per_data[104,][which(per_data[104,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
-
 
 # Race
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_race",
     label = "Race:",
@@ -2015,34 +1741,25 @@ renderUI({
     ),
     multiple = TRUE,
     # selected = "White",
-    # selected = deframe(persona_data[105:110,][which(persona_data[105:110,2] == 1), 1]),
     selected = deframe(per_data[105:110,][which(per_data[105:110,2] == 1), 1]),
     width = "450px"
   )
-  
 })
-
 
 # Age
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per1_age",
     label = "Age:",
     choices = c('Less than median age of 36', "More than median age of 36"),
     # selected = "Less than median age of 36",
-    # selected = ifelse(
-    #   sum(persona_data[111,2]) == 0, "Less than median age of 36",
-    #   as.character(persona_data[111,][which(persona_data[111,2] == 1), 1])
-    # ),
     selected = ifelse(
       sum(per_data[111,2]) == 0, "Less than median age of 36",
       as.character(per_data[111,][which(per_data[111,2] == 1), 1])
     ),
     width = "450px"
   )
-  
 })
 ```
 
@@ -2061,7 +1778,6 @@ textInput(
 # Follow national news
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_national_news",
     label = "Follow national news:",
@@ -2073,14 +1789,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Follow international news
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_international_news",
     label = "Follow international news:",
@@ -2092,14 +1805,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Mediums to follow news
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_news_medium",
     label = "Medium to follow news:",
@@ -2117,14 +1827,11 @@ renderUI({
     selected = deframe(per_data[6:12,][which(per_data[6:12,3] == 1), 1]),
     width = "450px"
   )
-  
 })
-
 
 # Follow government and public affairs
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_follow_gov",
     label = "Follow government & public affairs:",
@@ -2136,14 +1843,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Traveled to a developing country
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_travel_developing",
     label = "Travel to developing country:",
@@ -2155,14 +1859,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Liberal to Conservative
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_political_pref",
     label = "Political views from liberal to conservative:",
@@ -2182,14 +1883,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Trust in political institutions
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_institution_trust",
     label = "Political institution trust from none to complete:",
@@ -2209,14 +1907,11 @@ renderUI({
     ),
     width = "450px"
   )
-
 })
-
 
 # People should be more charitable
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_others_charitable",
     label = "People should be more charitable:",
@@ -2236,14 +1931,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Religious attendance
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_worship_attendance",
     label = "Worship service attendance:",
@@ -2259,14 +1951,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Importance of religion
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_religion_importance",
     label = "Importance of religion:",
@@ -2278,14 +1967,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Religion
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_religion",
     label = "Religion:",
@@ -2308,14 +1994,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Importance of trusting charities
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_charity_importance",
     label = "Charity Importance:",
@@ -2335,14 +2018,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Trust in charities
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_trust_in_charity",
     label = "Charity Trust:",
@@ -2362,14 +2042,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Donation frequency
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_donation_frequency",
     label = "Donation Frequency:",
@@ -2381,14 +2058,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Donated last year
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_donation_amount",
     label = "Donation Amount Last Year:",
@@ -2408,14 +2082,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Volunteered in past 12 months
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_volunteer_12",
     label = "Volunteered in last 12 Months:",
@@ -2427,14 +2098,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Volunteer frequency
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_volunteer_frequency",
     label = "Volunteer Frequency:",
@@ -2451,14 +2119,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # History of activism
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_personal_activism",
     label = "Personal Activism:",
@@ -2470,14 +2135,11 @@ renderUI({
     ),
     width = "450px"
   )
-
 })
-
 
 # History of family activism
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_family_activism",
     label = "Family Activism:",
@@ -2489,14 +2151,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Church or religious organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_religious_member",
     label = "Church Membership:",
@@ -2508,14 +2167,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Sport or recreational organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_sport_member",
     label = "Sport or Recreational Membership:",
@@ -2531,14 +2187,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Art, music, or educational organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_art_member",
     label = "Art, Music, or Educational Membership:",
@@ -2554,14 +2207,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Labor union
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_labor_member",
     label = "Labor Union Membership:",
@@ -2573,14 +2223,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Political party
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_political_member",
     label = "Political Party Membership:",
@@ -2596,14 +2243,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Environmental organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_environmental_member",
     label = "Environmental Organization Membership:",
@@ -2619,14 +2263,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Professional association
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_professional_member",
     label = "Professional Association Membership:",
@@ -2642,14 +2283,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Humanitarian or charitable organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_humanitarian_member",
     label = "Humanitarian or Charitable Organization Membership:",
@@ -2665,14 +2303,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Consumer organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_consumer_member",
     label = "Consumer Organization Membership:",
@@ -2688,14 +2323,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Other organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_other_member",
     label = "Other Organization Membership:",
@@ -2711,14 +2343,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Gender
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_gender",
     label = "Gender:",
@@ -2736,14 +2365,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Marital status
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_marital_status",
     label = "Marital Status:",
@@ -2761,14 +2387,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Education
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_education",
     label = "Education:",
@@ -2788,14 +2411,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Income
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_income",
     label = "Income:",
@@ -2807,14 +2427,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Race
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_race",
     label = "Race:",
@@ -2831,14 +2448,11 @@ renderUI({
     selected = deframe(per_data[105:110,][which(per_data[105:110,3] == 1), 1]),
     width = "450px"
   )
-  
 })
-
 
 # Age
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per2_age",
     label = "Age:",
@@ -2850,7 +2464,6 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
 ```
 
@@ -2869,7 +2482,6 @@ textInput(
 # Follow national news
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_national_news",
     label = "Follow national news:",
@@ -2881,14 +2493,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Follow international news
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_international_news",
     label = "Follow international news:",
@@ -2900,14 +2509,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Mediums to follow news
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_news_medium",
     label = "Medium to follow news:",
@@ -2925,14 +2531,11 @@ renderUI({
     selected = deframe(per_data[6:12,][which(per_data[6:12,4] == 1), 1]),
     width = "450px"
   )
-
 })
-
 
 # Follow government and public affairs
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_follow_gov",
     label = "Follow government & public affairs:",
@@ -2944,14 +2547,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Traveled to a developing country
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_travel_developing",
     label = "Travel to developing country:",
@@ -2963,14 +2563,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Liberal to Conservative
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_political_pref",
     label = "Political views from liberal to conservative:",
@@ -2990,14 +2587,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Trust in political institutions
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_institution_trust",
     label = "Political institution trust from none to complete:",
@@ -3017,14 +2611,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # People should be more charitable
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_others_charitable",
     label = "People should be more charitable:",
@@ -3044,14 +2635,11 @@ renderUI({
     ),
     width = "450px"
   )
-
 })
-
 
 # Religious attendance
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_worship_attendance",
     label = "Worship service attendance:",
@@ -3067,14 +2655,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Importance of religion
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_religion_importance",
     label = "Importance of religion:",
@@ -3086,14 +2671,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Religion
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_religion",
     label = "Religion:",
@@ -3116,14 +2698,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Importance of trusting charities
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_charity_importance",
     label = "Charity Importance:",
@@ -3143,14 +2722,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Trust in charities
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_trust_in_charity",
     label = "Charity Trust:",
@@ -3170,14 +2746,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Donation frequency
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_donation_frequency",
     label = "Donation Frequency:",
@@ -3189,14 +2762,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Donated last year
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_donation_amount",
     label = "Donation Amount Last Year:",
@@ -3216,14 +2786,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Volunteered in past 12 months
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_volunteer_12",
     label = "Volunteered in last 12 Months:",
@@ -3235,14 +2802,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Volunteer frequency
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_volunteer_frequency",
     label = "Volunteer Frequency:",
@@ -3259,14 +2823,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # History of activism
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_personal_activism",
     label = "Personal Activism:",
@@ -3278,14 +2839,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # History of family activism
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_family_activism",
     label = "Family Activism:",
@@ -3297,14 +2855,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Church or religious organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_religious_member",
     label = "Church Membership:",
@@ -3316,14 +2871,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Sport or recreational organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_sport_member",
     label = "Sport or Recreational Membership:",
@@ -3339,14 +2891,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Art, music, or educational organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_art_member",
     label = "Art, Music, or Educational Membership:",
@@ -3362,14 +2911,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Labor union
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_labor_member",
     label = "Labor Union Membership:",
@@ -3381,14 +2927,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Political party
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_political_member",
     label = "Political Party Membership:",
@@ -3404,14 +2947,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Environmental organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_environmental_member",
     label = "Environmental Organization Membership:",
@@ -3427,14 +2967,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Professional association
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_professional_member",
     label = "Professional Association Membership:",
@@ -3450,14 +2987,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Humanitarian or charitable organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_humanitarian_member",
     label = "Humanitarian or Charitable Organization Membership:",
@@ -3473,14 +3007,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Consumer organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_consumer_member",
     label = "Consumer Organization Membership:",
@@ -3496,14 +3027,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Other organization
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_other_member",
     label = "Other Organization Membership:",
@@ -3519,14 +3047,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Gender
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_gender",
     label = "Gender:",
@@ -3544,14 +3069,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Marital status
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_marital_status",
     label = "Marital Status:",
@@ -3569,14 +3091,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Education
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_education",
     label = "Education:",
@@ -3596,14 +3115,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Income
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_income",
     label = "Income:",
@@ -3615,14 +3131,11 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
-
 
 # Race
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_race",
     label = "Race:",
@@ -3639,14 +3152,11 @@ renderUI({
     selected = deframe(per_data[105:110,][which(per_data[105:110,4] == 1), 1]),
     width = "450px"
   )
-  
 })
-
 
 # Age
 renderUI({
   per_data = persona_data()
-      
   selectInput(
     "per3_age",
     label = "Age:",
@@ -3658,7 +3168,6 @@ renderUI({
     ),
     width = "450px"
   )
-  
 })
 ```
 
@@ -3668,7 +3177,6 @@ renderUI({
 # Render the organization configurations as a table
 renderTable({
   org_choice = org_reactive()
-  
   org_choice
 })
 
@@ -3687,7 +3195,6 @@ downloadHandler(
 # Render the persona configurations as a table
 renderTable({
   per_choice = per_reactive()
-  
   per_choice
 })
 
@@ -3702,7 +3209,6 @@ downloadHandler(
     write_csv(per_reactive(), file)
   }
 )
-
 ```
 
 ### Imports
@@ -3744,6 +3250,5 @@ renderTable({
   
   per_import
 })
-
 ```
 
