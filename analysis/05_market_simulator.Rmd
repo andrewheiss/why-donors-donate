@@ -34,6 +34,7 @@ organization_data <- reactive({
       here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
     )
   } else {
+    req(input$org_update)
     organization_data <- read_csv(input$org_update$datapath)
   }
 })
@@ -45,6 +46,7 @@ persona_data <- reactive({
       here::here('analysis', 'output', 'configurations', 'persona_config01.csv')
     )
   } else {
+    req(input$per_update)
     persona_data <- read_csv(input$per_update$datapath)
   }
 })
@@ -3243,15 +3245,17 @@ fileInput(
 
 # Render the organization configurations as a table
 renderTable({
-  org_import = read_csv(input$org_update$datapath)
+  req(input$org_update)
   
+  org_import = read_csv(input$org_update$datapath)
   org_import
 })
 
 # Render the persona configurations as a table
 renderTable({
-  per_import = read_csv(input$per_update$datapath)
+  req(input$per_update)
   
+  per_import = read_csv(input$per_update$datapath)
   per_import
 })
 ```
