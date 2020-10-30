@@ -3218,9 +3218,11 @@ downloadHandler(
 fileInput(
   "org_update",
   "Import Organization Data",
-  accept = c("text/csv",
-             "text/comma-separated-values,text/plain",
-             ".csv")
+  accept = c(
+    "text/csv",
+    "text/comma-separated-values,text/plain",
+    ".csv"
+  )
 )
 
 # actionButton(
@@ -3232,9 +3234,11 @@ fileInput(
 fileInput(
   "per_update",
   "Import Persona Data",
-  accept = c("text/csv",
-             "text/comma-separated-values,text/plain",
-             ".csv")
+  accept = c(
+    "text/csv",
+    "text/comma-separated-values,text/plain",
+    ".csv"
+  )
 )
 
 # Render the organization configurations as a table
