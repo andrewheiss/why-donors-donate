@@ -27,17 +27,38 @@ gammas <- read_rds(
   select(-i) %>% 
   t()
 
+org_default <- read_csv(
+    here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
+  )
+
+
 # Organization configuration
 organization_data <- reactive({
   if (is.null(input$org_update$datapath)) {
-    organization_data <- read_csv(
-      here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
-    )
+    organization_data <- org_default
   } else {
+    eventReactive()
     req(input$org_update)
     organization_data <- read_csv(input$org_update$datapath)
   }
 })
+
+# organization_data <- reactive({
+#   if (is.null(input$org_update$datapath)) {
+#     organization_data <- org_default
+#   } else {
+#     req(input$org_update)
+#     eventReactive(input$org_button, {
+#       organization_data <- read_csv(input$org_update$datapath)
+#     })
+#   }
+# })
+
+# observeEvent(input$org_button, {
+#   req(input$org_update)
+#   organization_data$data <- read_csv(input$org_update$datapath)
+# })
+
 
 # Persona configuration
 persona_data <- reactive({
@@ -392,6 +413,68 @@ per_reactive <- reactive({
   per_table$per3_value[per_table$levels %in% input$per3_race] <- 1
   per_table$per3_value[per_table$levels %in% input$per3_age] <- 1
   per_table
+})
+```
+
+Imports
+--------------------------------------
+
+```{r import}
+# Organization file input
+fileInput(
+  "org_update",
+  "Import Organization Data",
+  accept = c(
+    "text/csv",
+    "text/comma-separated-values,text/plain",
+    ".csv"
+  )
+)
+
+actionButton(
+  "org_button",
+  label = "Update Organization Data"
+)
+
+
+
+# organization_data <- reactive({
+#   eventReactive(input$org_button, {
+#       req(input$org_update)
+#       organization_data <- read_csv(input$org_update$datapath)
+#   })
+# })
+
+# observeEvent(input$org_button, {
+#     session$sendCustomMessage(type = 'testmessage',
+#       message = 'Thank you for clicking')
+#   })
+
+# Persona file input
+fileInput(
+  "per_update",
+  "Import Persona Data",
+  accept = c(
+    "text/csv",
+    "text/comma-separated-values,text/plain",
+    ".csv"
+  )
+)
+
+# Render the organization configurations as a table
+# renderTable({
+#   req(input$org_update)
+#   
+#   org_import = read_csv(input$org_update$datapath)
+#   org_import
+# })
+
+# Render the persona configurations as a table
+renderTable({
+  req(input$per_update)
+  
+  per_import = read_csv(input$per_update$datapath)
+  per_import
 })
 ```
 
@@ -3213,54 +3296,5 @@ downloadHandler(
 )
 ```
 
-### Imports
 
-```{r import}
-# Organization file input
-fileInput(
-  "org_update",
-  "Import Organization Data",
-  accept = c(
-    "text/csv",
-    "text/comma-separated-values,text/plain",
-    ".csv"
-  )
-)
-
-# actionButton(
-#   "org_button",
-#   label = "Update Organization Data"
-# )
-
-# observeEvent(input$org_button, {
-#     updatefileInput(session, "n", max = input$max)
-#   })
-
-# Persona file input
-fileInput(
-  "per_update",
-  "Import Persona Data",
-  accept = c(
-    "text/csv",
-    "text/comma-separated-values,text/plain",
-    ".csv"
-  )
-)
-
-# Render the organization configurations as a table
-renderTable({
-  req(input$org_update)
-  
-  org_import = read_csv(input$org_update$datapath)
-  org_import
-})
-
-# Render the persona configurations as a table
-renderTable({
-  req(input$per_update)
-  
-  per_import = read_csv(input$per_update$datapath)
-  per_import
-})
-```
 
