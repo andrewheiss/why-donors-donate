@@ -27,24 +27,25 @@ gammas <- read_rds(
   select(-i) %>% 
   t()
 
+
 org_default <- read_csv(
     here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
   )
 
 
 # Organization configuration
-organization_data <- reactive({
-  if (is.null(input$org_update$datapath)) {
-    organization_data <- org_default
-  } else {
-    eventReactive()
-    req(input$org_update)
-    organization_data <- read_csv(input$org_update$datapath)
-  }
-})
-
 # organization_data <- reactive({
 #   if (is.null(input$org_update$datapath)) {
+#     organization_data <- org_default
+#   } else {
+#     req(input$org_update)
+#     organization_data <- read_csv(input$org_update$datapath)
+#   }
+# })
+
+# organization_data <- reactive({
+#   org_file_input <- input$org_update
+#   if (is.null(org_file_input)) {
 #     organization_data <- org_default
 #   } else {
 #     req(input$org_update)
@@ -53,8 +54,12 @@ organization_data <- reactive({
 #     })
 #   }
 # })
-
-# observeEvent(input$org_button, {
+# 
+# organization_data <- reactive({
+#   organizaiton_data <- org_default
+# })
+# 
+# eventReactive(input$org_button, {
 #   req(input$org_update)
 #   organization_data$data <- read_csv(input$org_update$datapath)
 # })
@@ -420,21 +425,104 @@ Imports
 --------------------------------------
 
 ```{r import}
-# Organization file input
-fileInput(
-  "org_update",
-  "Import Organization Data",
-  accept = c(
-    "text/csv",
-    "text/comma-separated-values,text/plain",
-    ".csv"
+# let the user choose the type of input file
+radioButtons(
+  inputId = "what_config",
+  label = "Choose Configuration",
+  choices = c("Default", "User input"),
+  selected = "Default",
+  inline = FALSE
   )
-)
 
-actionButton(
-  "org_button",
-  label = "Update Organization Data"
-)
+# render file input widgets conditioned on user choice
+
+# Organization file input
+conditionalPanel(condition = 'input.what_config == "User input"',
+                 fileInput(
+                   "org_update",
+                   "Import Organization Data",
+                   accept = c(
+                     "text/csv",
+                     "text/comma-separated-values,text/plain",
+                     ".csv"
+                   )
+                  ),
+                 actionButton(
+                   "org_button",
+                   label = "Update Organization Data"
+                  )
+                 )
+
+# Persona file input
+conditionalPanel(condition = 'input.what_config == "User input"',               
+                fileInput(
+                  "per_update",
+                  "Import Persona Data",
+                  accept = c(
+                    "text/csv",
+                    "text/comma-separated-values,text/plain",
+                    ".csv"
+                  )
+                ),
+                actionButton(
+                  "per_button",
+                  label = "Update Persona Data"
+                )
+              )
+
+ # observeEvent(input$org_button, {
+ #   req(input$org_update)
+ #    organization_data <- read_csv(input$org_update$datapath)
+ #  })
+
+# deal with the file selected by the user
+organization_data <- reactive({
+  if (input$what_config == "Default") {
+    x <- org_default
+  } else {
+    if (input$what_config == "User input") {
+      req(input$org_button)
+      req(input$org_update)
+      x <- read_csv(input$org_update$datapath)
+    }
+  }
+})
+
+# organization_data <- reactiveValues(data = NULL)
+
+# deal with the file selected by the user
+# organization_data <- reactive({
+#   if (input$what_config == "Default") {
+#     x <- org_default
+#   }
+# })
+# 
+# observeEvent(input$org_button, {
+#   req(input$org_update)
+#   organization_data$data <- read_csv(input$org_update$datapath)
+# })
+
+# deal with the file selected by the user
+# organization_data <- reactive({
+#   if (input$what_source == "Default") {
+#     x <- org_default
+#   }
+# })
+
+# fileInput(
+#   "org_update",
+#   "Import Organization Data",
+#   accept = c(
+#     "text/csv",
+#     "text/comma-separated-values,text/plain",
+#     ".csv"
+#   )
+# )
+
+# actionButton(
+#   "org_button",
+#   label = "Update Organization Data"
+# )
 
 
 
@@ -451,15 +539,15 @@ actionButton(
 #   })
 
 # Persona file input
-fileInput(
-  "per_update",
-  "Import Persona Data",
-  accept = c(
-    "text/csv",
-    "text/comma-separated-values,text/plain",
-    ".csv"
-  )
-)
+# fileInput(
+#   "per_update",
+#   "Import Persona Data",
+#   accept = c(
+#     "text/csv",
+#     "text/comma-separated-values,text/plain",
+#     ".csv"
+#   )
+# )
 
 # Render the organization configurations as a table
 # renderTable({
@@ -470,12 +558,12 @@ fileInput(
 # })
 
 # Render the persona configurations as a table
-renderTable({
-  req(input$per_update)
-  
-  per_import = read_csv(input$per_update$datapath)
-  per_import
-})
+# renderTable({
+#   req(input$per_update)
+#   
+#   per_import = read_csv(input$per_update$datapath)
+#   per_import
+# })
 ```
 
 Market share
