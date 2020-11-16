@@ -409,7 +409,7 @@ per_reactive <- reactive({
 ```
 
 Market share
---------------------------------------
+-------------------------------------------------
 
 ```{r compute-and-plot}
 # Compute and render the market share plot
@@ -587,7 +587,7 @@ renderTable({
 ```
 
 Imports
---------------------------------------
+-------------------------------------------------
 
 ```{r import}
 # let the user choose the type of input file
@@ -666,7 +666,7 @@ persona_data <- reactive({
 ```
 
 Configurations
---------------------------------------------------
+-------------------------------------------------
 
 ### Organization 1
 
