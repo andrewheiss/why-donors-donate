@@ -586,84 +586,6 @@ renderTable({
 })
 ```
 
-Imports
--------------------------------------------------
-
-```{r import}
-# let the user choose the type of input file
-radioButtons(
-  inputId = "what_config",
-  label = "Choose Configuration",
-  choices = c("Default", "User input"),
-  selected = "Default",
-  inline = FALSE
-  )
-
-# render file input widgets conditioned on user choice
-
-# Organization file input
-conditionalPanel(condition = 'input.what_config == "User input"',
-                 fileInput(
-                   "org_update",
-                   "Import Organization Data",
-                   accept = c(
-                     "text/csv",
-                     "text/comma-separated-values,text/plain",
-                     ".csv"
-                   )
-                  ),
-                 actionButton(
-                   "org_button",
-                   label = "Update Organization Data"
-                  )
-                 )
-
-# Persona file input
-conditionalPanel(condition = 'input.what_config == "User input"',               
-                fileInput(
-                  "per_update",
-                  "Import Persona Data",
-                  accept = c(
-                    "text/csv",
-                    "text/comma-separated-values,text/plain",
-                    ".csv"
-                  )
-                ),
-                actionButton(
-                  "per_button",
-                  label = "Update Persona Data"
-                )
-              )
-
-# deal with the file selected by the user
-
-# Organization Configuration
-organization_data <- reactive({
-  if (input$what_config == "Default") {
-    x <- org_default
-  } else {
-    if (input$what_config == "User input") {
-      req(input$org_button)
-      req(input$org_update)
-      x <- read_csv(input$org_update$datapath)
-    }
-  }
-})
-
-# Persona Configuration
-persona_data <- reactive({
-  if (input$what_config == "Default") {
-    x <- per_default
-  } else {
-    if (input$what_config == "User input") {
-      req(input$per_button)
-      req(input$per_update)
-      x <- read_csv(input$per_update$datapath)
-    }
-  }
-})
-
-```
 
 Configurations
 -------------------------------------------------
@@ -3263,6 +3185,113 @@ renderUI({
     width = "450px"
   )
 })
+```
+
+Import
+-------------------------------------------------
+
+```{r import}
+# # let the user choose the type of input file
+# radioButtons(
+#   inputId = "what_config",
+#   label = "Choose Configuration",
+#   choices = c("Default", "Organization", "Persona"),
+#   selected = "Default",
+#   inline = FALSE
+#   )
+
+# render file input widgets conditioned on user choice
+
+# Organization file input
+# conditionalPanel(condition = 'input.what_config == "User input"',
+#                  fileInput(
+#                    "org_update",
+#                    "Import Organization Data",
+#                    accept = c(
+#                      "text/csv",
+#                      "text/comma-separated-values,text/plain",
+#                      ".csv"
+#                    )
+#                   ),
+#                  actionButton(
+#                    "org_button",
+#                    label = "Update Organization Data"
+#                   )
+#                  )
+
+fileInput(
+ "org_update",
+ "Import Organization Data",
+ accept = c(
+   "text/csv",
+   "text/comma-separated-values,text/plain",
+   ".csv"
+ )
+)
+
+actionButton(
+ "org_button",
+ label = "Update Organization Data"
+)
+
+
+# Persona file input
+# conditionalPanel(condition = 'input.what_config == "User input"',               
+#                 fileInput(
+#                   "per_update",
+#                   "Import Persona Data",
+#                   accept = c(
+#                     "text/csv",
+#                     "text/comma-separated-values,text/plain",
+#                     ".csv"
+#                   )
+#                 ),
+#                 actionButton(
+#                   "per_button",
+#                   label = "Update Persona Data"
+#                 )
+#               )
+
+
+fileInput(
+  "per_update",
+  "Import Persona Data",
+  accept = c(
+    "text/csv",
+    "text/comma-separated-values,text/plain",
+    ".csv"
+  )
+)
+actionButton(
+  "per_button",
+  label = "Update Persona Data"
+)
+
+
+# deal with the file selected by the user
+
+# Organization Configuration
+organization_data <- reactive({
+  if (is.null(input$org_update$datapath)) {
+    x <- org_default
+  } else {
+    req(input$org_button)
+    req(input$org_update)
+    x <- read_csv(input$org_update$datapath)
+  }
+})
+
+# Persona Configuration
+persona_data <- reactive({
+  if (is.null(input$per_update$datapath)) {
+    x <- per_default
+  } else {
+    req(input$per_button)
+    req(input$per_update)
+    x <- read_csv(input$per_update$datapath)
+  }
+})
+
 ```
 
 Export
