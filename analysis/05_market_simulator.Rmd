@@ -16,10 +16,9 @@ library(shiny)
 ```
 
 ```{r load-data, message=FALSE}
-
 # Gammas of the "everything" model
 gammas <- read_rds(
-  here::here('analysis', 'output', 'posterior_draws', 'public_political_social_charity_demo.rds')
+    here::here('analysis', 'output', 'posterior_draws', 'public_political_social_charity_demo.rds')
   ) %>% 
   group_by(i, j) %>% 
   summarize(gamma_mean = mean(Gamma)) %>% 
@@ -28,41 +27,13 @@ gammas <- read_rds(
   select(-i) %>% 
   t()
 
-
-# Default Configurations
-
-# Organization
+# Default configurations
 org_default <- read_csv(
-    here::here('analysis', 'output', 'configurations', 'organization_config01.csv')
+    here::here('analysis', 'output', 'configurations', 'org_data_default.csv')
   )
-
-# Persona
 per_default <- read_csv(
-    here::here('analysis', 'output', 'configurations', 'persona_config01.csv')
+    here::here('analysis', 'output', 'configurations', 'per_data_default.csv')
   )
-
-# Organization configuration
-# organization_data <- reactive({
-#   if (is.null(input$org_update$datapath)) {
-#     organization_data <- org_default
-#   } else {
-#     req(input$org_update)
-#     organization_data <- read_csv(input$org_update$datapath)
-#   }
-# })
-
-# Persona configuration
-# persona_data <- reactive({
-#   if (is.null(input$per_update$datapath)) {
-#     persona_data <- read_csv(
-#       here::here('analysis', 'output', 'configurations', 'persona_config01.csv')
-#     )
-#   } else {
-#     req(input$per_update)
-#     persona_data <- read_csv(input$per_update$datapath)
-#   }
-# })
-
 ```
 
 ```{r organization-reactive-table}
@@ -630,7 +601,6 @@ renderUI({
     width = "450px"
   )
 })
-
 
 # Financial transparency
 renderUI({
@@ -3191,34 +3161,7 @@ Import
 -------------------------------------------------
 
 ```{r import}
-# # let the user choose the type of input file
-# radioButtons(
-#   inputId = "what_config",
-#   label = "Choose Configuration",
-#   choices = c("Default", "Organization", "Persona"),
-#   selected = "Default",
-#   inline = FALSE
-#   )
-
-# render file input widgets conditioned on user choice
-
-# Organization file input
-# conditionalPanel(condition = 'input.what_config == "User input"',
-#                  fileInput(
-#                    "org_update",
-#                    "Import Organization Data",
-#                    accept = c(
-#                      "text/csv",
-#                      "text/comma-separated-values,text/plain",
-#                      ".csv"
-#                    )
-#                   ),
-#                  actionButton(
-#                    "org_button",
-#                    label = "Update Organization Data"
-#                   )
-#                  )
-
+# Organization configuration import
 fileInput(
  "org_update",
  "Import Organization Data",
@@ -3228,31 +3171,12 @@ fileInput(
    ".csv"
  )
 )
-
 actionButton(
  "org_button",
  label = "Update Organization Data"
 )
 
-
-# Persona file input
-# conditionalPanel(condition = 'input.what_config == "User input"',               
-#                 fileInput(
-#                   "per_update",
-#                   "Import Persona Data",
-#                   accept = c(
-#                     "text/csv",
-#                     "text/comma-separated-values,text/plain",
-#                     ".csv"
-#                   )
-#                 ),
-#                 actionButton(
-#                   "per_button",
-#                   label = "Update Persona Data"
-#                 )
-#               )
-
-
+# Persona configuration import
 fileInput(
   "per_update",
   "Import Persona Data",
@@ -3268,9 +3192,7 @@ actionButton(
 )
 
 
-# deal with the file selected by the user
-
-# Organization Configuration
+# Use the default configurations if no inputs are provided
 organization_data <- reactive({
   if (is.null(input$org_update$datapath)) {
     x <- org_default
@@ -3281,7 +3203,6 @@ organization_data <- reactive({
   }
 })
 
-# Persona Configuration
 persona_data <- reactive({
   if (is.null(input$per_update$datapath)) {
     x <- per_default
@@ -3291,20 +3212,19 @@ persona_data <- reactive({
     x <- read_csv(input$per_update$datapath)
   }
 })
-
 ```
 
 Export
 --------------------------------------------------
 
 ```{r export}
-# Render the organization configurations as a table
+# Render the organization configuration as a table
 renderTable({
   org_choice = org_reactive()
   org_choice
 })
 
-# Download Button
+# Download organization configuration
 downloadButton("download_org", label = "Download Organization Data")
 
 downloadHandler(
@@ -3316,13 +3236,13 @@ downloadHandler(
   }
 )
 
-# Render the persona configurations as a table
+# Render the persona configuration as a table
 renderTable({
   per_choice = per_reactive()
   per_choice
 })
 
-# Download Button
+# Download persona configuration
 downloadButton("download_per", label = "Download Persona Data")
 
 downloadHandler(
@@ -3334,6 +3254,3 @@ downloadHandler(
   }
 )
 ```
-
-
-
