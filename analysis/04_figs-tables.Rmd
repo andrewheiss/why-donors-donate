@@ -11,15 +11,14 @@ editor_options:
   chunk_output_type: console
 ---
 
+# Load packages, data, and draws
+
 ```{r setup, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(magrittr)
 library(donorheuristics)
-# library(rstan)
-# library(bayesplot)
 library(tidybayes)
 library(broom)
-# library(bayesm)
 # library(ggridges)
 library(ggraph)
 library(ggdag)
@@ -37,8 +36,139 @@ set.seed(1234)
 # Load data
 results <- read_rds(here("data", "derived_data", "final_data.rds"))
 
+# Load draws
+intercept <- 0                            # Intercept-only
+public_affairs <- 1                       # Public affairs
+political_ideology <- 0                   # Political ideology
+social_views <- 0                         # Social views
+charity_voluntarism <- 0                  # Charity and voluntarism
+demographics <- 0                         # Demographics
+public_political <- 0                     # Public affairs + Political ideology
+public_political_social <- 0              # + Social views
+public_political_social_charity <- 0      # + Charity and voluntarism
+public_political_social_charity_demo <- 0 # + Demographics
 
-# Name labels
+if (intercept == 1) {
+  draws <- read_rds(
+    here::here("analysis", "output", "posterior_draws", "intercept.rds")
+  ) %>% 
+    mutate(model = "Intercept only")
+}
+if (public_affairs == 1) {
+  draws <- read_rds(
+    here::here("analysis", "output", "posterior_draws", "public_affairs.rds")
+  ) %>% 
+    mutate(model = "Public affairs")
+  covariates <- results %>%
+    select(
+      Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7 # Public affairs
+    )
+}
+if (political_ideology == 1) {
+  draws <- read_rds(
+    here::here("analysis", "output", "posterior_draws", "political_ideology.rds")
+  ) %>% 
+    mutate(model = "Political ideology")
+  covariates <- results %>%
+    select(
+      Q5.2 # Political ideology
+    )
+}
+if (social_views == 1) {
+  draws <- read_rds(
+    here::here("analysis", "output", "posterior_draws", "social_views.rds")
+  ) %>% 
+    mutate(model = "Social views")
+  covariates <- results %>%
+    select(
+      Q5.6, Q5.11, Q5.8, Q5.9, Q5.10 # Social views
+    )
+}
+if (charity_voluntarism == 1) {
+  draws <- read_rds(
+    here::here("analysis", "output", "posterior_draws", "charity_voluntarism.rds")
+  ) %>% 
+    mutate(model = "Charity and voluntarism")
+  covariates <- results %>%
+    select(
+      Q2.7, Q2.8, Q2.5, Q2.6, Q2.9, Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10 # Charity and voluntarism
+    )
+}
+if (demographics == 1) {
+  draws <- read_rds(
+    here::here("analysis", "output", "posterior_draws", "demographics.rds")
+  ) %>% 
+    mutate(model = "Demographics")
+  covariates <- results %>%
+    select(
+      Q5.12, Q5.13, Q5.14, Q5.15, Q5.16_1:Q5.16_6, Q5.17 # Demographics
+    )
+}
+if (public_political == 1) {
+  draws <- read_rds(
+    here::here("analysis", "output", "posterior_draws", "public_political.rds")
+  ) %>% 
+    mutate(model = "Public affairs and political ideology")
+  covariates <- results %>%
+    select(
+      Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7, # Public affairs
+      Q5.2                                   # Political ideology
+    )
+}
+if (public_political_social == 1) {
+  draws <- read_rds(
+    here::here("analysis", "output", "posterior_draws", "public_political_social.rds")
+  ) %>% 
+    mutate(model = "Public affairs, political ideology, and social views")
+  covariates <- results %>%
+    select(
+      Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7, # Public affairs
+      Q5.2,                                  # Political ideology
+      Q5.6, Q5.11, Q5.8, Q5.9, Q5.10         # Social views
+    )
+}
+if (public_political_social_charity == 1) {
+  draws <- read_rds(
+    here::here("analysis", "output", "posterior_draws", "public_political_social_charity.rds")
+  ) %>% 
+    mutate(
+      model = "Public affairs, political ideology, social views, charity and voluntarism"
+    )
+  covariates <- results %>%
+    select(
+      Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7,                           # Public affairs
+      Q5.2,                                                            # Political ideology
+      Q5.6, Q5.11, Q5.8, Q5.9, Q5.10,                                  # Social views
+      Q2.7, Q2.8, Q2.5, Q2.6, Q2.9, Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10  # Charity and voluntarism
+    )
+}
+if (public_political_social_charity_demo == 1) {
+  draws <- read_rds(
+    here::here(
+      "analysis", 
+      "output", 
+      "posterior_draws", 
+      "public_political_social_charity_demo.rds"
+    )
+  ) %>% 
+    mutate(
+      model = "Public affairs, 
+      political ideology, 
+      social views, 
+      charity and voluntarism, 
+      and demographics"
+    )
+  covariates <- results %>%
+    select(
+      Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7,                           # Public affairs
+      Q5.2,                                                            # Political ideology
+      Q5.6, Q5.11, Q5.8, Q5.9, Q5.10,                                  # Social views
+      Q2.7, Q2.8, Q2.5, Q2.6, Q2.9, Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10, # Charity and voluntarism
+      Q5.12, Q5.13, Q5.14, Q5.15, Q5.16_1:Q5.16_6, Q5.17               # Demographics
+    )
+}
+
+# Name levels labels
 level_labels <- c(
   str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
   str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief")),
@@ -48,15 +178,40 @@ level_labels <- c(
 )
 
 level_lookup <- tibble(levels = level_labels) %>% 
-  separate(levels, c("category", "attribute"), sep = ": ") %>% 
-  mutate(attributes_long = paste0(category, ": ", attribute),
+  separate(levels, c("attribute", "level"), sep = ": ") %>% 
+  mutate(levels_long = paste0(attribute, ": ", level),
          i = 1:n()) %>% 
-  mutate_at(vars(category, attribute, attributes_long), list(fct_inorder))
+  mutate_at(vars(attribute, level, levels_long), list(fct_inorder))
 
-draws <- read_rds(here("analysis", "output", "posterior_draws", 
-                       "intercept_noncentered.rds")) %>% 
-  mutate(model = "Intercept only") %>% 
-  left_join(level_lookup, by = "i")
+# Extract covariate labels
+covariate_lookup <- covariates %>% 
+  pivot_longer(cols = starts_with("Q"), names_to = "question", values_to = "labels") %>% 
+  bind_cols(
+    covariates %>% 
+      mutate_all(as.integer) %>% 
+      rename_all(paste0, "_temp") %>% 
+      pivot_longer(cols = starts_with("Q"), names_to = "question_temp", values_to = "level")
+  ) %>% 
+  distinct() %>% 
+  filter(level != 1) %>% 
+  separate(labels, c("covariate", "label"), sep = ": ") %>% 
+  mutate(covariates_long = paste0(covariate, ": ", label), j = 2:(n() + 1)) %>% 
+  select(covariate, label, covariates_long, j) %>% 
+  bind_rows(
+    tibble(
+      covariate = "Intercept",
+      label = "Intercept",
+      covariates_long = "Intercept",
+      j = 1
+    )
+  ) %>% 
+  arrange(j) %>% 
+  mutate_at(vars(covariate, label, covariates_long), list(fct_inorder))
+
+# Join level and covariate labels to draws
+draws %>% 
+  left_join(level_lookup, by = "i") %>% 
+  left_join(covariate_lookup, by = "j")
 ```
 
 ```{r}
@@ -80,6 +235,187 @@ diff_cols <- function(col1, col2) {
               phrase = phrase))
 }
 ```
+
+## Plot marginals
+
+```{r plot-marginals}
+# Plot marginals
+if (intercept == 1) {
+  draws %>%
+    mutate(
+      levels = factor(i, labels = level_labels)
+    ) %>%
+    ggplot(aes(x = Gamma, y = levels)) +
+    stat_halfeye(.width = .95) +
+    geom_vline(xintercept = 0, color = "grey") +
+    labs(y = "Attribute Levels")
+}
+if (intercept != 1) {
+  draws %>%
+    filter(j != 1) %>%
+    mutate(
+      levels = factor(i, labels = level_labels),
+      covariates = factor(j, labels = covariate_labels)
+    ) %>%
+    ggplot(aes(x = Gamma, y = covariates)) +
+    stat_halfeye(.width = .95) +
+    geom_vline(xintercept = 0, color = "white") +
+    labs(y = "Covariates") +
+    facet_wrap(~ levels, ncol = 5)
+}
+
+# Save plot
+if (intercept == 1) file_name <- paste("marginal-posteriors_intercept.png")
+if (public_affairs == 1) file_name <- paste("marginal-posteriors_public-affairs.png")
+if (political_ideology == 1) file_name <- paste("marginal-posteriors_political-ideology.png")
+if (social_views == 1) file_name <- paste("marginal-posteriors_social-views.png")
+if (charity_voluntarism == 1) file_name <- paste("marginal-posteriors_charity-voluntarism.png")
+if (demographics == 1) file_name <- paste("marginal-posteriors_demographics.png")
+if (public_political == 1) file_name <- paste("marginal-posteriors_public-political.png")
+if (public_political_social == 1) file_name <- paste("marginal-posteriors_public-political-social.png")
+if (public_political_social_charity == 1) file_name <- paste("marginal-posteriors_public-political-social-charity.png")
+if (public_political_social_charity_demo == 1) file_name <- paste("marginal-posteriors_public-political-social-charity-demos.png")
+if (intercept == 1) width_length <- c(10, 10)
+if (intercept != 1) width_length <- c(20, 20)
+if (public_political_social_charity == 1) width_length <- c(20, 30)
+if (public_political_social_charity_demo == 1) width_length <- c(20, 30)
+ggsave(
+  file_name,
+  path = here::here("analysis", "output", "figures"),
+  width = width_length[1],
+  height = width_length[2],
+  units = "in"
+)
+```
+
+## Plot heatmaps
+
+Instead of plotting marginals, we can use a heatmap to identify where there are significant differences in the non-intercept models, which can then be narrowed down using the marginal plots.
+
+```{r plot-heatmaps}
+if (public_affairs == 1) plot_title <- paste("Public Affairs")
+if (political_ideology == 1) plot_title <- paste("Political Ideology")
+if (social_views == 1) plot_title <- paste("Social Views")
+if (charity_voluntarism == 1) plot_title <- paste("Covariates related to charity and voluntarism")
+if (demographics == 1) plot_title <- paste("Demographics")
+if (public_political == 1) plot_title <- paste("Public Affairs and Political Ideology")
+if (public_political_social == 1) plot_title <- paste("Public Affairs, Political Ideology, and Social Views")
+if (public_political_social_charity == 1) plot_title <- paste("Public Affairs, Political Ideology, Social Views, and Charity and Voluntarism")
+if (public_political_social_charity_demo == 1) plot_title <- paste("Public Affairs, Political Ideology, Social Views, Charity and Voluntarism, and Demographics")
+
+if (charity_voluntarism == 1) {
+  j_labels <- tribble(
+    ~j, ~j_label,
+    2, "Importance of trusting charities", 
+    3, "Trust charities", 
+    4, "Frequency of donation", 
+    5, "Amount of donation", 
+    6, "Volunteered", 
+    7, "Volunteer frequency", 
+    8, "Personal involvement in activism", 
+    9, "Family involvement in activism", 
+    10, "Membership in church", 
+    11, "Membership in sports", 
+    12, "Membership in art, music, or educational organization", 
+    13, "Membership in labor union", 
+    14, "Membership in political party", 
+    15, "Membership in envrionmental organization", 
+    16, "Membership in professional association", 
+    17, "Membership in humanitarian organization", 
+    18, "Membership in consumer organization", 
+    19, "Membership in other organization"
+  ) %>% 
+    mutate(j_label = fct_inorder(j_label))
+}
+
+if (intercept != 1) {
+  # Posterior means.
+  posterior_means <- draws %>% 
+    filter(j != 1) %>% 
+    left_join(j_labels, by = "j") %>% 
+    left_join(level_lookup, by = "i") %>% 
+    mutate(
+      levels = factor(i, labels = level_labels), 
+      covariates = factor(j, labels = 1:length(covariate_labels))
+    ) %>% 
+    group_by(category, attribute, j_label) %>% 
+    summarize(
+      mean = mean(Gamma),
+      ci_lower = quantile(Gamma, .025),
+      ci_upper = quantile(Gamma, .975),
+      gt_zero = if_else(ci_lower > 0 & ci_upper > 0, 1, 0),
+      lt_zero = if_else(ci_lower < 0 & ci_upper < 0, -1, 0)
+    )
+  
+  # Heatmap of Gamma matrix.
+  plot_heatmap <- posterior_means %>% 
+    mutate(
+      gt_lt_zero = gt_zero + lt_zero,
+      Coefficients = factor(
+        gt_lt_zero, 
+        levels = -1:1,
+        labels = c("Negative", "Not Significant", "Positive"))
+    ) %>% 
+    ggplot(aes(x = j_label, y = attribute, fill = Coefficients)) +
+    geom_tile(color = "white", size = 0.25) +
+    # scale_fill_brewer(palette = "Blues") +
+    scale_fill_manual(values = c(clrs$orange, "grey80", clrs$olive)) +
+    scale_x_discrete(expand = c(0.001, 0.001)) +
+    scale_y_discrete(expand = c(0.001, 0.001)) +
+    # guides(fill = guide_legend(override.aes = list(key.height = 0.5, key.width = 0.5))) +
+    guides(fill = guide_legend(keywidth = 0.5, keyheight = 0.5)) +
+    theme_ngo(base_size = 14) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+          legend.position = "bottom",
+          strip.placement = "outside") +
+    labs(
+      title = plot_title,
+      x = "Covariates",
+      y = "Attribute Levels"
+    ) + 
+    # facet_wrap(~ category, ncol = 1, scales = "free_y")
+    facet_grid(vars(category), scales = "free_y", space = "free_y")
+}
+
+plot_heatmap
+ggsave(plot_heatmap, filename = here("analysis", "output", "figures", "q2-heatmap.pdf"),
+       width = 26/3, height = 6.5, units = "in", device = cairo_pdf)
+ggsave(plot_heatmap, filename = here("analysis", "output", "figures", "q2-heatmap.png"),
+       width = 26/3, height = 6.5, units = "in", type = "cairo", dpi = 300)
+
+# Save plot
+if (public_affairs == 1) file_name <- paste("public-affairs_coefficient-matrix.png")
+if (political_ideology == 1) file_name <- paste("political-ideology_coefficient-matrix.png")
+if (social_views == 1) file_name <- paste("social-views_coefficient-matrix.png")
+if (charity_voluntarism == 1) file_name <- paste("charity-voluntarism_coefficient-matrix.png")
+if (demographics == 1) file_name <- paste("demographics_coefficient-matrix.png")
+if (public_political == 1) file_name <- paste("public-political_coefficient-matrix.png")
+if (public_political_social == 1) file_name <- paste("public-political-social_coefficient-matrix.png")
+if (public_political_social_charity == 1) file_name <- paste("public-political-social-charity_coefficient-matrix.png")
+if (public_political_social_charity_demo == 1) file_name <- paste("public-political-social-charity-demos_coefficient-matrix.png")
+ggsave(
+  file_name,
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
+```
+
+## Plot contrasts
+
+A better approach to address the hypotheses (taken from the former 03b and 03c).
+
+- We theorize that structural characteristics like an NGO’s host-country political and legal environment can serve as heuristics and shortcuts for donors.
+- Donors who see that an NGO faces general legal trouble abroad will use that knowledge to decide whether or not to donate.
+- We also theorize that non-structural organizational characteristics like managerial practices, funding sources, and issue area also serve as heuristics and influence donation patterns.
+- In this study, we simultaneously account for the interaction between legal crackdown, issue area, funding source, and managerial practices as well as donor characteristics. We hypothesize that each of these structural and organizational characteristics will have a significant effect on donor behavior, but we’re unsure of the direction of that effect.
+
+> In this study, we simultaneously account for the interaction between legal crackdown, issue area, funding source, and managerial practices as well as donor characteristics. We hypothesize that each of these structural and organizational characteristics will have a significant effect on donor behavior, but we're unsure of the direction of that effect.
+
+
+
+
 
 
 # Causal pathway
@@ -206,6 +542,15 @@ participant_summary %>%
 ```
 
 # Results
+
+## Model fit table
+
+```{r model-fit}
+# Load model fit table
+read_rds(model_fit, here::here("analysis", "output", "model_fit.rds"))
+```
+
+The intercept-only model works best in terms of PSIS-LOO, followed by models with political ideology, public affairs and demographics covariates. While PSIS-LOO doesn't properly account for the specific benefits of a hierarchical model, it suggests that political ideology above all other covariate sets specified, has the most explanatory power.
 
 ## Baseline probabilities
 
@@ -419,3 +764,17 @@ mean(asdf$Theta)
 tidybayes::hdi(asdf$Theta, .width = 0.95)
 ```
 
+
+# Original computing environment
+
+<button data-toggle="collapse" data-target="#sessioninfo" class="btn btn-primary btn-md btn-info">Here's what we used the last time we built this page</button>
+
+<div id="sessioninfo" class="collapse">
+
+```{r show-session-info, echo=TRUE, width=100}
+writeLines(readLines(file.path(Sys.getenv("HOME"), ".R/Makevars")))
+
+devtools::session_info()
+```
+
+</div> 
