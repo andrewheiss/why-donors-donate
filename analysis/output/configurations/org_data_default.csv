@@ -1,0 +1,14 @@
+levels,org1_value,org2_value,org3_value,org4_value
+Amnesty International,0,0,0,0
+Greenpeace,0,0,0,0
+Oxfam,0,0,0,0
+Red Cross,1,1,1,1
+Environment,0,1,0,0
+Human rights,0,0,1,0
+Refugee relief,0,0,0,1
+Engages in financial transparency,1,1,1,1
+Engages in financial accountability,1,1,1,1
+Handful of wealthy private donors,0,0,0,0
+Government grants,0,0,0,0
+Criticized by government,0,0,0,0
+Under government crackdown,0,0,0,0
