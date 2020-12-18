@@ -31,14 +31,14 @@ gammas <- read_rds(
 prod_default <- read_csv(
     here::here('analysis', 'output', 'configurations', 'org_data_default.csv')
   )
-per_default <- read_csv(
+seg_default <- read_csv(
     here::here('analysis', 'output', 'configurations', 'per_data_default.csv')
   )
 ```
 
 ```{r prod-reactive-table}
 # Assign level labels
-org_table <- data.frame(
+prod_table <- data.frame(
   levels = c(
     # Organization
     "Amnesty International",
@@ -65,47 +65,47 @@ org_table <- data.frame(
 # prod configuration reactive element
 prod_reactive <- reactive({
   # prod 1
-  org_table$org1_value <- 0
-  org_table$org1_value[org_table$levels %in% input$org1_org] <- 1
-  org_table$org1_value[org_table$levels %in% input$org1_issue] <- 1
-  org_table$org1_value[org_table$levels %in% input$org1_fin_trans] <- 1
-  org_table$org1_value[org_table$levels %in% input$org1_fin_account] <- 1
-  org_table$org1_value[org_table$levels %in% input$org1_funding] <- 1
-  org_table$org1_value[org_table$levels %in% input$org1_host_gov] <- 1
+  prod_table$prod1_value <- 0
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_prod] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_issue] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_fin_trans] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_fin_account] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_funding] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_host_gov] <- 1
     
   # prod 2
-  org_table$org2_value <- 0
-  org_table$org2_value[org_table$levels %in% input$org2_org] <- 1
-  org_table$org2_value[org_table$levels %in% input$org2_issue] <- 1
-  org_table$org2_value[org_table$levels %in% input$org2_fin_trans] <- 1
-  org_table$org2_value[org_table$levels %in% input$org2_fin_account] <- 1
-  org_table$org2_value[org_table$levels %in% input$org2_funding] <- 1
-  org_table$org2_value[org_table$levels %in% input$org2_host_gov] <- 1
+  prod_table$prod2_value <- 0
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_prod] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_issue] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_fin_trans] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_fin_account] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_funding] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_host_gov] <- 1
     
   # prod 3
-  org_table$org3_value <- 0
-  org_table$org3_value[org_table$levels %in% input$org3_org] <- 1
-  org_table$org3_value[org_table$levels %in% input$org3_issue] <- 1
-  org_table$org3_value[org_table$levels %in% input$org3_fin_trans] <- 1
-  org_table$org3_value[org_table$levels %in% input$org3_fin_account] <- 1
-  org_table$org3_value[org_table$levels %in% input$org3_funding] <- 1
-  org_table$org3_value[org_table$levels %in% input$org3_host_gov] <- 1
+  prod_table$prod3_value <- 0
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_prod] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_issue] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_fin_trans] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_fin_account] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_funding] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_host_gov] <- 1
     
   # prod 4
-  org_table$org4_value <- 0
-  org_table$org4_value[org_table$levels %in% input$org4_org] <- 1
-  org_table$org4_value[org_table$levels %in% input$org4_issue] <- 1
-  org_table$org4_value[org_table$levels %in% input$org4_fin_trans] <- 1
-  org_table$org4_value[org_table$levels %in% input$org4_fin_account] <- 1
-  org_table$org4_value[org_table$levels %in% input$org4_funding] <- 1
-  org_table$org4_value[org_table$levels %in% input$org4_host_gov] <- 1
-  org_table
+  prod_table$prod4_value <- 0
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_prod] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_issue] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_fin_trans] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_fin_account] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_funding] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_host_gov] <- 1
+  prod_table
 })
 ```
 
 ```{r persona-reactive-table}
 # Assign covariate labels
-per_table <- data.frame(
+seg_table <- data.frame(
   levels = c(
     # Intercept
     "Intercept",
@@ -149,42 +149,42 @@ per_table <- data.frame(
 )
 
 ## Test to subset the data
-per_join <- per_default %>% inner_join(per_table, by = "levels")
+seg_join <- seg_default %>% inner_join(seg_table, by = "levels")
 
 # Persona configuration reactive element
-per_reactive <- reactive({
+seg_reactive <- reactive({
   # Persona 1
-  per_table$per1_value <- 0
-  per_table$per1_value[per_table$levels == 'Intercept'] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_news_medium] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_gender] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_marital_status] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_education] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_income] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_race] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_age] <- 1
+  seg_table$per1_value <- 0
+  seg_table$per1_value[seg_table$levels == 'Intercept'] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_news_medium] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_gender] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_marital_status] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_education] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_income] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_race] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_age] <- 1
     
   # Persona 2
-  per_table$per2_value <- 0
-  per_table$per2_value[per_table$levels == 'Intercept'] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_gender] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_marital_status] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_education] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_income] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_race] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_age] <- 1
+  seg_table$per2_value <- 0
+  seg_table$per2_value[seg_table$levels == 'Intercept'] <- 1
+  seg_table$per2_value[seg_table$levels %in% input$per2_gender] <- 1
+  seg_table$per2_value[seg_table$levels %in% input$per2_marital_status] <- 1
+  seg_table$per2_value[seg_table$levels %in% input$per2_education] <- 1
+  seg_table$per2_value[seg_table$levels %in% input$per2_income] <- 1
+  seg_table$per2_value[seg_table$levels %in% input$per2_race] <- 1
+  seg_table$per2_value[seg_table$levels %in% input$per2_age] <- 1
     
   # Persona 3
-  per_table$per3_value <- 0
-  per_table$per3_value[per_table$levels == 'Intercept'] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_news_medium] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_gender] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_marital_status] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_education] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_income] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_race] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_age] <- 1
-  per_table
+  seg_table$per3_value <- 0
+  seg_table$per3_value[seg_table$levels == 'Intercept'] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_news_medium] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_gender] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_marital_status] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_education] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_income] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_race] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_age] <- 1
+  seg_table
 })
 ```
 
@@ -194,68 +194,68 @@ Market share
 ```{r compute-and-plot}
 # Compute and render the market share plot
 renderPlotly({
-  org_choice = org_reactive()
-  per_choice = per_reactive()
+  prod_choice = prod_reactive()
+  seg_choice = seg_reactive()
     
-  # Persona 1 predicted betas
-  per1_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,2])
+  # Segment 1 predicted betas
+  seg1_betas <- as.matrix(gammas) %*% as.matrix(seg_choice[,2])
   
-  # Persona 1 expected utilities
-  per1_org1_exp <- exp(t(org_choice[,2]) %*% as.matrix(per1_betas))
-  per1_org2_exp <- exp(t(org_choice[,3]) %*% as.matrix(per1_betas))
-  per1_org3_exp <- exp(t(org_choice[,4]) %*% as.matrix(per1_betas))
-  per1_org4_exp <- exp(t(org_choice[,5]) %*% as.matrix(per1_betas))
+  # Segment 1 expected utilities
+  seg1_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(seg1_betas))
+  seg1_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(seg1_betas))
+  seg1_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(seg1_betas))
+  seg1_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(seg1_betas))
   
-  # Persona 1 market shares
-  per1_share_denom <- sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
-  per1_org1_share <- 100 * (per1_org1_exp / per1_share_denom)
-  per1_org2_share <- 100 * (per1_org2_exp / per1_share_denom)
-  per1_org3_share <- 100 * (per1_org3_exp / per1_share_denom)
-  per1_org4_share <- 100 * (per1_org4_exp / per1_share_denom)
+  # Segment 1 market shares
+  per1_share_denom <- sum(per1_prod1_exp, per1_prod2_exp, per1_prod3_exp, per1_prod4_exp)
+  per1_prod1_share <- 100 * (per1_prod1_exp / per1_share_denom)
+  per1_prod2_share <- 100 * (per1_prod2_exp / per1_share_denom)
+  per1_prod3_share <- 100 * (per1_prod3_exp / per1_share_denom)
+  per1_prod4_share <- 100 * (per1_prod4_exp / per1_share_denom)
   
-  # Persona 2 predicted betas
+  # Segment 2 predicted betas
   per2_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,3])
   
-  # Persona 2 expected utilities
-  per2_org1_exp <- exp(t(org_choice[,2]) %*% as.matrix(per2_betas))
-  per2_org2_exp <- exp(t(org_choice[,3]) %*% as.matrix(per2_betas))
-  per2_org3_exp <- exp(t(org_choice[,4]) %*% as.matrix(per2_betas))
-  per2_org4_exp <- exp(t(org_choice[,5]) %*% as.matrix(per2_betas))
+  # Segment 2 expected utilities
+  per2_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(per2_betas))
+  per2_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(per2_betas))
+  per2_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(per2_betas))
+  per2_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(per2_betas))
   
-  # Persona 2 market shares
-  per2_share_denom <- sum(per2_org1_exp, per2_org2_exp, per2_org3_exp, per2_org4_exp)
-  per2_org1_share <- 100 * (per2_org1_exp / per2_share_denom)
-  per2_org2_share <- 100 * (per2_org2_exp / per2_share_denom)
-  per2_org3_share <- 100 * (per2_org3_exp / per2_share_denom)
-  per2_org4_share <- 100 * (per2_org4_exp / per2_share_denom)
+  # Segment 2 market shares
+  per2_share_denom <- sum(per2_prod1_exp, per2_prod2_exp, per2_prod3_exp, per2_prod4_exp)
+  per2_prod1_share <- 100 * (per2_prod1_exp / per2_share_denom)
+  per2_prod2_share <- 100 * (per2_prod2_exp / per2_share_denom)
+  per2_prod3_share <- 100 * (per2_prod3_exp / per2_share_denom)
+  per2_prod4_share <- 100 * (per2_prod4_exp / per2_share_denom)
   
-  # Persona 3 predicted betas
+  # Segment 3 predicted betas
   per3_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,4])
   
-  # Persona 3 expected utilities
-  per3_org1_exp <- exp(t(org_choice[,2]) %*% as.matrix(per3_betas))
-  per3_org2_exp <- exp(t(org_choice[,3]) %*% as.matrix(per3_betas))
-  per3_org3_exp <- exp(t(org_choice[,4]) %*% as.matrix(per3_betas))
-  per3_org4_exp <- exp(t(org_choice[,5]) %*% as.matrix(per3_betas))
+  # Segment 3 expected utilities
+  per3_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(per3_betas))
+  per3_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(per3_betas))
+  per3_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(per3_betas))
+  per3_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(per3_betas))
   
-  # Persona 3 market shares
-  per3_share_denom <- sum(per3_org1_exp, per3_org2_exp, per3_org3_exp, per3_org4_exp)
-  per3_org1_share <- 100 * (per3_org1_exp / per3_share_denom)
-  per3_org2_share <- 100 * (per3_org2_exp / per3_share_denom)
-  per3_org3_share <- 100 * (per3_org3_exp / per3_share_denom)
-  per3_org4_share <- 100 * (per3_org4_exp / per3_share_denom)
+  # Segment 3 market shares
+  per3_share_denom <- sum(per3_prod1_exp, per3_prod2_exp, per3_prod3_exp, per3_prod4_exp)
+  per3_prod1_share <- 100 * (per3_prod1_exp / per3_share_denom)
+  per3_prod2_share <- 100 * (per3_prod2_exp / per3_share_denom)
+  per3_prod3_share <- 100 * (per3_prod3_exp / per3_share_denom)
+  per3_prod4_share <- 100 * (per3_prod4_exp / per3_share_denom)
   
   # Data for plotly
   plot_data <- data.frame(
     Value = c(
-      # Persona 1
-      per1_org1_share, per1_org2_share, per1_org3_share, per1_org4_share, 
-      # Persona 2
-      per2_org1_share, per2_org2_share, per2_org3_share, per2_org4_share,
-      # Persona 3
-      per3_org1_share, per3_org2_share, per3_org3_share, per3_org4_share
+      # Segment 1
+      per1_prod1_share, per1_prod2_share, per1_prod3_share, per1_prod4_share, 
+      # Segment 2
+      per2_prod1_share, per2_prod2_share, per2_prod3_share, per2_prod4_share,
+      # Segment 3
+      per3_prod1_share, per3_prod2_share, per3_prod3_share, per3_prod4_share
     ),
-    Product = c(input$org1_name, input$org2_name, input$org3_name, input$org4_name),
+    Product = c(input$prod1_name, input$prod2_name, input$prod3_name, input$prod4_name),
     Persona = c(
       rep(input$per1_name, 4), 
       rep(input$per2_name, 4), 
@@ -265,11 +265,11 @@ renderPlotly({
   
   ggplotly(
     plot_data %>% 
-      # Factor Product and Persona with ordered=TRUE
+      # Factor Product and Segment with ordered=TRUE
       mutate(
         Product = factor(
           Product, 
-          levels = c(input$org1_name, input$org2_name, input$org3_name, input$org4_name), 
+          levels = c(input$prod1_name, input$prod2_name, input$prod3_name, input$prod4_name), 
           ordered = TRUE
         ),
         Persona = factor(
@@ -292,68 +292,68 @@ renderPlotly({
 
 # Compute and render the market share as a table
 renderTable({
-  org_choice = org_reactive()
+  prod_choice = prod_reactive()
   per_choice = per_reactive()
     
-  # Persona 1 predicted betas
+  # Segment 1 predicted betas
   per1_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,2])
   
-  # Persona 1 expected utilities
-  per1_org1_exp <- exp(t(org_choice[,2]) %*% as.matrix(per1_betas))
-  per1_org2_exp <- exp(t(org_choice[,3]) %*% as.matrix(per1_betas))
-  per1_org3_exp <- exp(t(org_choice[,4]) %*% as.matrix(per1_betas))
-  per1_org4_exp <- exp(t(org_choice[,5]) %*% as.matrix(per1_betas))
+  # Segment 1 expected utilities
+  per1_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(per1_betas))
+  per1_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(per1_betas))
+  per1_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(per1_betas))
+  per1_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(per1_betas))
   
-  # Persona 1 market shares
-  per1_share_denom <- sum(per1_org1_exp, per1_org2_exp, per1_org3_exp, per1_org4_exp)
-  per1_org1_share <- 100 * (per1_org1_exp / per1_share_denom)
-  per1_org2_share <- 100 * (per1_org2_exp / per1_share_denom)
-  per1_org3_share <- 100 * (per1_org3_exp / per1_share_denom)
-  per1_org4_share <- 100 * (per1_org4_exp / per1_share_denom)
+  # Segment 1 market shares
+  per1_share_denom <- sum(per1_prod1_exp, per1_prod2_exp, per1_prod3_exp, per1_prod4_exp)
+  per1_prod1_share <- 100 * (per1_prod1_exp / per1_share_denom)
+  per1_prod2_share <- 100 * (per1_prod2_exp / per1_share_denom)
+  per1_prod3_share <- 100 * (per1_prod3_exp / per1_share_denom)
+  per1_prod4_share <- 100 * (per1_prod4_exp / per1_share_denom)
   
-  # Persona 2 predicted betas
+  # Segment 2 predicted betas
   per2_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,3])
   
-  # Persona 2 expected utilities
-  per2_org1_exp <- exp(t(org_choice[,2]) %*% as.matrix(per2_betas))
-  per2_org2_exp <- exp(t(org_choice[,3]) %*% as.matrix(per2_betas))
-  per2_org3_exp <- exp(t(org_choice[,4]) %*% as.matrix(per2_betas))
-  per2_org4_exp <- exp(t(org_choice[,5]) %*% as.matrix(per2_betas))
+  # Segment 2 expected utilities
+  per2_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(per2_betas))
+  per2_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(per2_betas))
+  per2_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(per2_betas))
+  per2_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(per2_betas))
   
-  # Persona 2 market shares
-  per2_share_denom <- sum(per2_org1_exp, per2_org2_exp, per2_org3_exp, per2_org4_exp)
-  per2_org1_share <- 100 * (per2_org1_exp / per2_share_denom)
-  per2_org2_share <- 100 * (per2_org2_exp / per2_share_denom)
-  per2_org3_share <- 100 * (per2_org3_exp / per2_share_denom)
-  per2_org4_share <- 100 * (per2_org4_exp / per2_share_denom)
+  #  Segment 2 market shares
+  per2_share_denom <- sum(per2_prod1_exp, per2_prod2_exp, per2_prod3_exp, per2_prod4_exp)
+  per2_prod1_share <- 100 * (per2_prod1_exp / per2_share_denom)
+  per2_prod2_share <- 100 * (per2_prod2_exp / per2_share_denom)
+  per2_prod3_share <- 100 * (per2_prod3_exp / per2_share_denom)
+  per2_prod4_share <- 100 * (per2_prod4_exp / per2_share_denom)
   
-  # Persona 3 predicted betas
+  # Segment 3 predicted betas
   per3_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,4])
   
-  # Persona 3 expected utilities
-  per3_org1_exp <- exp(t(org_choice[,2]) %*% as.matrix(per3_betas))
-  per3_org2_exp <- exp(t(org_choice[,3]) %*% as.matrix(per3_betas))
-  per3_org3_exp <- exp(t(org_choice[,4]) %*% as.matrix(per3_betas))
-  per3_org4_exp <- exp(t(org_choice[,5]) %*% as.matrix(per3_betas))
+  # Segment 3 expected utilities
+  per3_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(per3_betas))
+  per3_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(per3_betas))
+  per3_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(per3_betas))
+  per3_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(per3_betas))
   
-  # Persona 3 market shares
-  per3_share_denom <- sum(per3_org1_exp, per3_org2_exp, per3_org3_exp, per3_org4_exp)
-  per3_org1_share <- 100 * (per3_org1_exp / per3_share_denom)
-  per3_org2_share <- 100 * (per3_org2_exp / per3_share_denom)
-  per3_org3_share <- 100 * (per3_org3_exp / per3_share_denom)
-  per3_org4_share <- 100 * (per3_org4_exp / per3_share_denom)
+  # Segment 3 market shares
+  per3_share_denom <- sum(per3_prod1_exp, per3_prod2_exp, per3_prod3_exp, per3_prod4_exp)
+  per3_prod1_share <- 100 * (per3_prod1_exp / per3_share_denom)
+  per3_prod2_share <- 100 * (per3_prod2_exp / per3_share_denom)
+  per3_prod3_share <- 100 * (per3_prod3_exp / per3_share_denom)
+  per3_prod4_share <- 100 * (per3_prod4_exp / per3_share_denom)
   
   # Table
   data <- data.frame(
     Shares = c(
-      # Persona 1
-      per1_org1_share, per1_org2_share, per1_org3_share, per1_org4_share, 
-      # Persona 2
-      per2_org1_share, per2_org2_share, per2_org3_share, per2_org4_share,
-      # Persona 3
-      per3_org1_share, per3_org2_share, per3_org3_share, per3_org4_share
+      # Segment 1
+      per1_prod1_share, per1_prod2_share, per1_prod3_share, per1_prod4_share, 
+      # Segment 2
+      per2_prod1_share, per2_prod2_share, per2_prod3_share, per2_prod4_share,
+      # Segment 3
+      per3_prod1_share, per3_prod2_share, per3_prod3_share, per3_prod4_share
     ),
-    Product = c(input$org1_name, input$org2_name, input$org3_name, input$org4_name),
+    Product = c(input$prod1_name, input$prod2_name, input$prod3_name, input$prod4_name),
     Persona = c(
       rep(input$per1_name, 4), 
       rep(input$per2_name, 4), 
@@ -372,10 +372,10 @@ Configurations
 
 ### Product 1
 
-```{r org1-inputs}
+```{r prod1-inputs}
 # Naming
 textInput(
-  "org1_name",
+  "prod1_name",
   label = "Product Name:",
   value = "Product 1",
   placeholder = "Enter Product Name",
@@ -384,28 +384,28 @@ textInput(
 
 # Product
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org1_org",
+    "prod1_prod",
     label = "Product:",
     choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
     # selected = "Red Cross",
-    selected = as.character(org_data[1:4,][which(org_data[1:4,2] == 1), 1]),
+    selected = as.character(prod_data[1:4,][which(prod_data[1:4,2] == 1), 1]),
     width = "450px"
   )
 })
 
 # Issue area
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org1_issue", 
+    "prod1_issue", 
     label = "Issue Area:",
     choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
     # selected = "Emergency response",
     selected = ifelse(
-      sum(org_data[5:7,2]) == 0, "Emergency response",
-      as.character(org_data[5:7,][which(org_data[5:7,2] == 1), 1])
+      sum(prod_data[5:7,2]) == 0, "Emergency response",
+      as.character(prod_data[5:7,][which(prod_data[5:7,2] == 1), 1])
     ),
     width = "450px"
   )
@@ -413,9 +413,9 @@ renderUI({
 
 # Financial transparency
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org1_fin_trans",
+    "prod1_fin_trans",
     label = "Financial Transparency:",
     choices = c(
       "Doesn’t engage in financial transparency", 
@@ -423,8 +423,8 @@ renderUI({
     ),
     # selected = "Engages in financial transparency",
     selected = ifelse(
-      sum(org_data[8,2]) == 0, "Doesn’t engage in financial transparency",
-      as.character(org_data[8,][which(org_data[8,2] == 1), 1])
+      sum(prod_data[8,2]) == 0, "Doesn’t engage in financial transparency",
+      as.character(prod_data[8,][which(prod_data[8,2] == 1), 1])
     ),
     width = "450px"
   )
@@ -432,9 +432,9 @@ renderUI({
 
 # Financial accountability
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org1_fin_account",
+    "prod1_fin_account",
     label = "Financial Accountability:",
     choices = c(
       "Doesn’t engage in financial accountability", 
@@ -442,8 +442,8 @@ renderUI({
     ),
     # selected = "Engages in financial accountability",
     selected = ifelse(
-      sum(org_data[9,2]) == 0, "Doesn’t engage in financial accountability",
-      as.character(org_data[9,][which(org_data[9,2] == 1), 1])
+      sum(prod_data[9,2]) == 0, "Doesn’t engage in financial accountability",
+      as.character(prod_data[9,][which(prod_data[9,2] == 1), 1])
     ),
     width = "450px"
   )
@@ -451,9 +451,9 @@ renderUI({
 
 # Funding sources
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org1_funding",
+    "prod1_funding",
     label = "Funding Source:",
     choices = c(
       "Many small private donations", 
@@ -462,8 +462,8 @@ renderUI({
     ),
     # selected = "Many small private donations",
     selected = ifelse(
-      sum(org_data[10:11,2]) == 0, "Many small private donations",
-      as.character(org_data[10:11,][which(org_data[10:11,2] == 1), 1])
+      sum(prod_data[10:11,2]) == 0, "Many small private donations",
+      as.character(prod_data[10:11,][which(prod_data[10:11,2] == 1), 1])
     ),
     width = "450px"
   )
@@ -471,9 +471,9 @@ renderUI({
 
 # Relationship with host government
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org1_host_gov",
+    "prod1_host_gov",
     label = "Relationship With Host Government",
     choices = c(
       "Friendly relationship with government", 
@@ -482,8 +482,8 @@ renderUI({
     ),
     # selected = "Friendly relationship with government",
     selected = ifelse(
-      sum(org_data[12:13,2]) == 0, "Friendly relationship with government",
-      as.character(org_data[12:13,][which(org_data[12:13,2] == 1), 1])
+      sum(prod_data[12:13,2]) == 0, "Friendly relationship with government",
+      as.character(prod_data[12:13,][which(prod_data[12:13,2] == 1), 1])
     ),
     width = "450px"
   )
@@ -492,10 +492,10 @@ renderUI({
 
 ### Product 2
 
-```{r org2-inputs}
+```{r prod2-inputs}
 # Naming
 textInput(
-  "org2_name",
+  "prod2_name",
   label = "Product Name:",
   value = "Product 2",
   placeholder = "Enter Product Name",
@@ -504,28 +504,28 @@ textInput(
 
 # Product
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org2_org",
+    "prod2_prod",
     label = "Product:",
     choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
     # selected = "Red Cross",
-    selected = as.character(org_data[1:4,][which(org_data[1:4,3] == 1), 1]),
+    selected = as.character(prod_data[1:4,][which(prod_data[1:4,3] == 1), 1]),
     width = "450px"
   )
 })
 
 # Issue area
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org2_issue", 
+    "prod2_issue", 
     label = "Issue Area:",
     choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
     # selected = "Environment",
     selected = ifelse(
-      sum(org_data[5:7,3]) == 0, "Emergency response",
-      as.character(org_data[5:7,][which(org_data[5:7,3] == 1), 1])
+      sum(prod_data[5:7,3]) == 0, "Emergency response",
+      as.character(prod_data[5:7,][which(prod_data[5:7,3] == 1), 1])
     ),
     width = "450px"
   )
@@ -533,9 +533,9 @@ renderUI({
 
 # Financial transparency
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org2_fin_trans",
+    "prod2_fin_trans",
     label = "Financial Transparency:",
     choices = c(
       "Doesn’t engage in financial transparency", 
@@ -543,8 +543,8 @@ renderUI({
     ),
     # selected = "Engages in financial transparency",
     selected = ifelse(
-      sum(org_data[8,3]) == 0, "Doesn’t engage in financial transparency",
-      as.character(org_data[8,][which(org_data[8,3] == 1), 1])
+      sum(prod_data[8,3]) == 0, "Doesn’t engage in financial transparency",
+      as.character(prod_data[8,][which(prod_data[8,3] == 1), 1])
     ),
     width = "450px"
   )
@@ -552,9 +552,9 @@ renderUI({
 
 # Financial accountability
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org2_fin_account",
+    "prod2_fin_account",
     label = "Financial Accountability:",
     choices = c(
       "Doesn’t engage in financial accountability", 
@@ -562,8 +562,8 @@ renderUI({
     ),
     # selected = "Engages in financial accountability",
     selected = ifelse(
-      sum(org_data[9,3]) == 0, "Doesn’t engage in financial accountability",
-      as.character(org_data[9,][which(org_data[9,3] == 1), 1])
+      sum(prod_data[9,3]) == 0, "Doesn’t engage in financial accountability",
+      as.character(prod_data[9,][which(prod_data[9,3] == 1), 1])
     ),
     width = "450px"
   )
@@ -571,9 +571,9 @@ renderUI({
 
 # Funding sources
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org2_funding",
+    "prod2_funding",
     label = "Funding Source:",
     choices = c(
       "Many small private donations", 
@@ -582,8 +582,8 @@ renderUI({
     ),
     # selected = "Many small private donations",
     selected = ifelse(
-      sum(org_data[10:11,3]) == 0, "Many small private donations",
-      as.character(org_data[10:11,][which(org_data[10:11,3] == 1), 1])
+      sum(prod_data[10:11,3]) == 0, "Many small private donations",
+      as.character(prod_data[10:11,][which(prod_data[10:11,3] == 1), 1])
     ),
     width = "450px"
   )
@@ -591,9 +591,9 @@ renderUI({
 
 # Relationship with host government
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org2_host_gov",
+    "prod2_host_gov",
     label = "Relationship With Host Government",
     choices = c(
       "Friendly relationship with government", 
@@ -602,8 +602,8 @@ renderUI({
     ),
     # selected = "Friendly relationship with government",
     selected = ifelse(
-      sum(org_data[12:13,3]) == 0, "Friendly relationship with government",
-      as.character(org_data[12:13,][which(org_data[12:13,3] == 1), 1])
+      sum(prod_data[12:13,3]) == 0, "Friendly relationship with government",
+      as.character(prod_data[12:13,][which(prod_data[12:13,3] == 1), 1])
     ),
     width = "450px"
   )
@@ -612,10 +612,10 @@ renderUI({
 
 ### Product 3
 
-```{r org3-inputs}
+```{r prod3-inputs}
 # Naming
 textInput(
-  "org3_name",
+  "prod3_name",
   label = "Product Name:",
   value = "Product 3",
   placeholder = "Enter Product Name",
@@ -624,28 +624,28 @@ textInput(
 
 # Product
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org3_org",
+    "prod3_prod",
     label = "Product:",
     choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
     # selected = "Red Cross",
-    selected = as.character(org_data[1:4,][which(org_data[1:4,4] == 1), 1]),
+    selected = as.character(prod_data[1:4,][which(prod_data[1:4,4] == 1), 1]),
     width = "450px"
   )
 })
 
 # Issue area
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org3_issue", 
+    "prod3_issue", 
     label = "Issue Area:",
     choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
     # selected = "Human rights",
     selected = ifelse(
-      sum(org_data[5:7,4]) == 0, "Emergency response",
-      as.character(org_data[5:7,][which(org_data[5:7,4] == 1), 1])
+      sum(prod_data[5:7,4]) == 0, "Emergency response",
+      as.character(prod_data[5:7,][which(prod_data[5:7,4] == 1), 1])
     ),
     width = "450px"
   )
@@ -653,9 +653,9 @@ renderUI({
 
 # Financial transparency
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org3_fin_trans",
+    "prod3_fin_trans",
     label = "Financial Transparency:",
     choices = c(
       "Doesn’t engage in financial transparency", 
@@ -663,8 +663,8 @@ renderUI({
     ),
     # selected = "Engages in financial transparency",
     selected = ifelse(
-      sum(org_data[8,4]) == 0, "Doesn’t engage in financial transparency",
-      as.character(org_data[8,][which(org_data[8,4] == 1), 1])
+      sum(prod_data[8,4]) == 0, "Doesn’t engage in financial transparency",
+      as.character(prod_data[8,][which(prod_data[8,4] == 1), 1])
     ),
     width = "450px"
   )
@@ -672,9 +672,9 @@ renderUI({
 
 # Financial accountability
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org3_fin_account",
+    "prod3_fin_account",
     label = "Financial Accountability:",
     choices = c(
       "Doesn’t engage in financial accountability", 
@@ -682,8 +682,8 @@ renderUI({
     ),
     # selected = "Engages in financial accountability",
     selected = ifelse(
-      sum(org_data[9,4]) == 0, "Doesn’t engage in financial accountability",
-      as.character(org_data[9,][which(org_data[9,4] == 1), 1])
+      sum(prod_data[9,4]) == 0, "Doesn’t engage in financial accountability",
+      as.character(prod_data[9,][which(prod_data[9,4] == 1), 1])
     ),
     width = "450px"
   )
@@ -691,9 +691,9 @@ renderUI({
 
 # Funding sources
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org3_funding",
+    "prod3_funding",
     label = "Funding Source:",
     choices = c(
       "Many small private donations", 
@@ -702,8 +702,8 @@ renderUI({
     ),
     # selected = "Many small private donations",
     selected = ifelse(
-      sum(org_data[10:11,4]) == 0, "Many small private donations",
-      as.character(org_data[10:11,][which(org_data[10:11,4] == 1), 1])
+      sum(prod_data[10:11,4]) == 0, "Many small private donations",
+      as.character(prod_data[10:11,][which(prod_data[10:11,4] == 1), 1])
     ),
     width = "450px"
   )
@@ -711,9 +711,9 @@ renderUI({
 
 # Relationship with host government
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org3_host_gov",
+    "prod3_host_gov",
     label = "Relationship With Host Government",
     choices = c(
       "Friendly relationship with government", 
@@ -722,8 +722,8 @@ renderUI({
     ),
     # selected = "Friendly relationship with government",
     selected = ifelse(
-      sum(org_data[12:13,4]) == 0, "Friendly relationship with government",
-      as.character(org_data[12:13,][which(org_data[12:13,4] == 1), 1])
+      sum(prod_data[12:13,4]) == 0, "Friendly relationship with government",
+      as.character(prod_data[12:13,][which(prod_data[12:13,4] == 1), 1])
     ),
     width = "450px"
   )
@@ -732,10 +732,10 @@ renderUI({
 
 ### Product 4
 
-```{r org4-inputs}
+```{r prod4-inputs}
 # Naming
 textInput(
-  "org4_name",
+  "prod4_name",
   label = "Product Name:",
   value = "Product 4",
   placeholder = "Enter Product Name",
@@ -744,28 +744,28 @@ textInput(
 
 # Product
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org4_org",
+    "prod4_prod",
     label = "Product:",
     choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
     # selected = "Red Cross",
-    selected = as.character(org_data[1:4,][which(org_data[1:4,5] == 1), 1]),
+    selected = as.character(prod_data[1:4,][which(prod_data[1:4,5] == 1), 1]),
     width = "450px"
   )
 })
 
 # Issue area
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org4_issue", 
+    "prod4_issue", 
     label = "Issue Area:",
     choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
     # selected = "Refugee relief",
     selected = ifelse(
-      sum(org_data[5:7,5]) == 0, "Emergency response",
-      as.character(org_data[5:7,][which(org_data[5:7,5] == 1), 1])
+      sum(prod_data[5:7,5]) == 0, "Emergency response",
+      as.character(prod_data[5:7,][which(prod_data[5:7,5] == 1), 1])
     ),
     width = "450px"
   )
@@ -773,9 +773,9 @@ renderUI({
 
 # Financial transparency
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org4_fin_trans",
+    "prod4_fin_trans",
     label = "Financial Transparency:",
     choices = c(
       "Doesn’t engage in financial transparency", 
@@ -783,8 +783,8 @@ renderUI({
     ),
     # selected = "Engages in financial transparency",
     selected = ifelse(
-      sum(org_data[8,5]) == 0, "Doesn’t engage in financial transparency",
-      as.character(org_data[8,][which(org_data[8,5] == 1), 1])
+      sum(prod_data[8,5]) == 0, "Doesn’t engage in financial transparency",
+      as.character(prod_data[8,][which(prod_data[8,5] == 1), 1])
     ),
     width = "450px"
   )
@@ -792,9 +792,9 @@ renderUI({
 
 # Financial accountability
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org4_fin_account",
+    "prod4_fin_account",
     label = "Financial Accountability:",
     choices = c(
       "Doesn’t engage in financial accountability", 
@@ -802,8 +802,8 @@ renderUI({
     ),
     # selected = "Engages in financial accountability",
     selected = ifelse(
-      sum(org_data[9,5]) == 0, "Doesn’t engage in financial accountability",
-      as.character(org_data[9,][which(org_data[9,5] == 1), 1])
+      sum(prod_data[9,5]) == 0, "Doesn’t engage in financial accountability",
+      as.character(prod_data[9,][which(prod_data[9,5] == 1), 1])
     ),
     width = "450px"
   )
@@ -811,9 +811,9 @@ renderUI({
 
 # Funding sources
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org4_funding",
+    "prod4_funding",
     label = "Funding Source:",
     choices = c(
       "Many small private donations", 
@@ -822,8 +822,8 @@ renderUI({
     ),
     # selected = "Many small private donations",
     selected = ifelse(
-      sum(org_data[10:11,5]) == 0, "Many small private donations",
-      as.character(org_data[10:11,][which(org_data[10:11,5] == 1), 1])
+      sum(prod_data[10:11,5]) == 0, "Many small private donations",
+      as.character(prod_data[10:11,][which(prod_data[10:11,5] == 1), 1])
     ),
     width = "450px"
   )
@@ -831,9 +831,9 @@ renderUI({
 
 # Relationship with host government
 renderUI({
-  org_data = product_data()
+  prod_data = product_data()
   selectInput(
-    "org4_host_gov",
+    "prod4_host_gov",
     label = "Relationship With Host Government",
     choices = c(
       "Friendly relationship with government", 
@@ -842,8 +842,8 @@ renderUI({
     ),
     # selected = "Friendly relationship with government",
     selected = ifelse(
-      sum(org_data[12:13,5]) == 0, "Friendly relationship with government",
-      as.character(org_data[12:13,][which(org_data[12:13,5] == 1), 1])
+      sum(prod_data[12:13,5]) == 0, "Friendly relationship with government",
+      as.character(prod_data[12:13,][which(prod_data[12:13,5] == 1), 1])
     ),
     width = "450px"
   )
@@ -1321,10 +1321,10 @@ Import
 -------------------------------------------------
 
 ```{r import}
-# Organization configuration import
+# prodanization configuration import
 fileInput(
- "org_update",
- "Import Organization Data",
+ "prod_update",
+ "Import prodanization Data",
  accept = c(
    "text/csv",
    "text/comma-separated-values,text/plain",
@@ -1332,8 +1332,8 @@ fileInput(
  )
 )
 actionButton(
- "org_button",
- label = "Update Organization Data"
+ "prod_button",
+ label = "Update prodanization Data"
 )
 
 # Persona configuration import
@@ -1353,13 +1353,13 @@ actionButton(
 
 
 # Use the default configurations if no inputs are provided
-organization_data <- reactive({
-  if (is.null(input$org_update$datapath)) {
-    x <- org_default
+productanization_data <- reactive({
+  if (is.null(input$prod_update$datapath)) {
+    x <- prod_default
   } else {
-    req(input$org_button)
-    req(input$org_update)
-    x <- read_csv(input$org_update$datapath)
+    req(input$prod_button)
+    req(input$prod_update)
+    x <- read_csv(input$prod_update$datapath)
   }
 })
 
@@ -1378,21 +1378,21 @@ Export
 --------------------------------------------------
 
 ```{r export}
-# Render the organization configuration as a table
+# Render the prodanization configuration as a table
 renderTable({
-  org_choice = org_reactive()
-  org_choice
+  prod_choice = prod_reactive()
+  prod_choice
 })
 
-# Download organization configuration
-downloadButton("download_org", label = "Download Organization Data")
+# Download prodanization configuration
+downloadButton("download_prod", label = "Download prodanization Data")
 
 downloadHandler(
   filename = function() {
-    paste0("org_data_",Sys.time(),".csv")
+    paste0("prod_data_",Sys.time(),".csv")
   },
   content = function(file) {
-    write_csv(org_reactive(), file)
+    write_csv(prod_reactive(), file)
   }
 )
 
