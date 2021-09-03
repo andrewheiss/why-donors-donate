@@ -1,5 +1,5 @@
 ---
-title: "Results"
+title: "Analysis and results"
 author: "Andrew Heiss, Marc Dotson, and Suparna Chaudhry"
 date: "Last run: `r format(Sys.time(), '%F')`"
 output: 
@@ -19,7 +19,7 @@ library(donorheuristics)
 library(rstan)
 library(bayesplot)
 library(tidybayes)
-library(bayesm)
+library(loo)
 library(ggridges)
 library(ggraph)
 library(ggdag)
@@ -30,25 +30,309 @@ source(here("analysis", "options.R"))
 
 # Make all the randomness reproducible
 set.seed(1234)
+
+# Set Stan options
+options(mc.cores = parallel::detectCores())
+rstan_options(auto_write = TRUE)
 ```
 
 
-# Load data and model output
+# Model calibration
 
-```{r load-data-output, warning=FALSE, message=FALSE}
-intercept <- 0                           # Intercept-only
-public_affairs <- 0                       # Public affairs
+After selecting the model we'd like to run, model calibration proceeds as follows. Note that model calibration is run in a separate R script given how long it takes to run each model.
+
+```{r model-calibration, eval=FALSE}
+intercept <- 0                            # Intercept-only
+public_affairs <- 1                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
-charity_voluntarism <- 1                  # Charity and voluntarism
+charity_voluntarism <- 0                  # Charity and voluntarism
 demographics <- 0                         # Demographics
 public_political <- 0                     # Public affairs + Political ideology
 public_political_social <- 0              # + Social views
 public_political_social_charity <- 0      # + Charity and voluntarism
 public_political_social_charity_demo <- 0 # + Demographics
 
-# Load and extract data and model output (see model-calibration.R)
-if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept_noncentered.rds"))
+# Load data and design
+final_data <- read_rds(here::here("data", "derived_data", "final_data.rds"))
+X <- read_rds(here::here("data", "derived_data", "final_design.rds"))
+
+# Restructure choice data Y
+Y <- final_data %>%
+  select(contains("Q4")) %>%
+  as.matrix()
+
+# Restructure covariate matrix Z
+if (intercept == 1) {
+  Z <- matrix(data = 1, nrow = dim(X)[1], ncol = 1)
+}
+if (public_affairs == 1) {
+  Z <- final_data %>%
+    select(
+      Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7 # Public affairs
+    )
+}
+if (political_ideology == 1) {
+  Z <- final_data %>%
+    select(
+      Q5.2 # Political ideology
+    )
+}
+if (social_views == 1) {
+  Z <- final_data %>%
+    select(
+      Q5.6, Q5.11, Q5.8, Q5.9, Q5.10 # Social views
+    )
+}
+if (charity_voluntarism == 1) {
+  Z <- final_data %>%
+    select(
+      Q2.7, Q2.8, Q2.5, Q2.6, Q2.9, Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10 # Charity and voluntarism
+    )
+}
+if (demographics == 1) {
+  Z <- final_data %>%
+    select(
+      Q5.12, Q5.13, Q5.14, Q5.15, Q5.16_1:Q5.16_6, Q5.17 # Demographics
+    )
+}
+if (public_political == 1) {
+  Z <- final_data %>%
+    select(
+      Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7, # Public affairs
+      Q5.2                                   # Political ideology
+    )
+}
+if (public_political_social == 1) {
+  Z <- final_data %>%
+    select(
+      Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7, # Public affairs
+      Q5.2,                                  # Political ideology
+      Q5.6, Q5.11, Q5.8, Q5.9, Q5.10         # Social views
+    )
+}
+if (public_political_social_charity == 1) {
+  Z <- final_data %>%
+    select(
+      Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7,                           # Public affairs
+      Q5.2,                                                            # Political ideology
+      Q5.6, Q5.11, Q5.8, Q5.9, Q5.10,                                  # Social views
+      Q2.7, Q2.8, Q2.5, Q2.6, Q2.9, Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10  # Charity and voluntarism
+    )
+}
+if (public_political_social_charity_demo == 1) {
+  Z <- final_data %>%
+    select(
+      Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7,                           # Public affairs
+      Q5.2,                                                            # Political ideology
+      Q5.6, Q5.11, Q5.8, Q5.9, Q5.10,                                  # Social views
+      Q2.7, Q2.8, Q2.5, Q2.6, Q2.9, Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10, # Charity and voluntarism
+      Q5.12, Q5.13, Q5.14, Q5.15, Q5.16_1:Q5.16_6, Q5.17               # Demographics
+    )
+}
+
+# Replace factor labels with levels
+Z <- Z %>%
+  mutate_if(is.factor, as.integer) %>%
+  mutate_if(is.integer, as.factor)
+
+# Pad the variables names with _
+colnames(Z) <- str_c(colnames(Z), "_")
+
+# Use the output of lm to get a dummy-coded version of the covariate matrix Z
+Z$y <- matrix(rnorm(nrow(Z)), ncol = 1)
+out <- lm(y ~ ., Z, x = TRUE)
+
+# Save out Z as a matrix, including an intercept
+Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
+  bind_cols(as_tibble(out$x[,-1])) %>%
+  as.matrix()
+
+# Specify the data for calibration in a list
+data <- list(
+  R = dim(X)[1],      # Number of respondents
+  S = dim(X)[2],      # Number of choice tasks
+  A = dim(X)[3],      # Number of choice alternatives
+  I = dim(X)[4],      # Number of (estimable) attribute levels
+  J = ncol(Z),        # Number of respondent-level covariates
+
+  Gamma_mean = 0,      # Mean of population-level means
+  Gamma_scale = 1,     # Scale of population-level means
+  Omega_shape = 5,     # Shape of population-level scale
+  tau_mean = 0,        # Mean of population-level scale
+  tau_scale = 10,      # Scale of population-level scale
+
+  Y = Y,               # Matrix of observed choices
+  X = X,               # Array of experimental designs per choice task
+  Z = Z                # Matrix of respondent-level covariates
+)
+
+# Run the model and save data and model output
+fit <- stan(
+  file = here::here("src", "stan_files", "hmnl_noncentered.stan"),
+  data = data,
+  iter = 10000,
+  thin = 5,
+  seed = 42
+)
+run <- list(data = data, fit = fit)
+if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "intercept.rds"))
+if (public_affairs == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_affairs.rds"))
+if (political_ideology == 1) write_rds(run, here::here("analysis", "output", "model_runs", "political_ideology.rds"))
+if (social_views == 1) write_rds(run, here::here("analysis", "output", "model_runs", "social_views.rds"))
+if (charity_voluntarism == 1) write_rds(run, here::here("analysis", "output", "model_runs", "charity_voluntarism.rds"))
+if (demographics == 1) write_rds(run, here::here("analysis", "output", "model_runs", "demographics.rds"))
+if (public_political == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political.rds"))
+if (public_political_social == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political_social.rds"))
+if (public_political_social_charity == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political_social_charity.rds"))
+if (public_political_social_charity_demo == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
+```
+
+The model is calibrated using a non-centered parameterization of a hierarchical multinomial logit model. Each model passed diagnostics checks, including the absence of divergent transitions, as part of model calibration.
+
+```{stan hmnl-noncentered, output.var="hmnl_noncentered", eval=FALSE}
+// Index values, hyperprior values, observations, and covariates.
+data {
+  int<lower = 1> R;                  // Number of respondents.
+  int<lower = 1> S;                  // Number of choice tasks.
+  int<lower = 2> A;                  // Number of choice alternatives.
+  int<lower = 1> I;                  // Number of observation-level covariates.
+  int<lower = 1> J;                  // Number of population-level covariates.
+
+  real Gamma_mean;                   // Mean of population-level means.
+  real<lower=0> Gamma_scale;         // Scale of population-level means.
+  real<lower=0> Omega_shape;         // Shape of population-level scale.
+  real tau_mean;                     // Mean of population-level scale.
+  real<lower=0> tau_scale;           // Scale of population-level scale.
+
+  int<lower = 1, upper = A> Y[R, S]; // Matrix of observations.
+  matrix[A, I] X[R, S];              // Array of observation-level covariates.
+  matrix[R, J] Z;                    // Matrix of population-level covariates.
+}
+
+// Parameters and hyperparameters.
+parameters {
+  matrix[J, I] Gamma;                // Matrix of population-level hyperparameters.
+  corr_matrix[I] Omega;              // Population model correlation matrix hyperparameters.
+  vector<lower = 0>[I] tau;          // Population model vector of scale hyperparameters.
+  matrix[R, I] Delta;                // Matrix of non-centered observation-level parameters.
+}
+
+// Deterministic transformation.
+transformed parameters {
+  // Matrix of centered observation-level parameters.
+  matrix[R, I] Beta;
+
+  // Non-centered parameterization.
+  for (r in 1:R) {
+    Beta[r,] = Z[r,] * Gamma + Delta[r,] * quad_form_diag(Omega, tau);
+  }
+}
+
+// Hierarchical multinomial logit model.
+model {
+  // Hyperpriors.
+  to_vector(Gamma) ~ normal(Gamma_mean, Gamma_scale);
+  Omega ~ lkj_corr(Omega_shape);
+  tau ~ normal(tau_mean, tau_scale);
+
+  // Non-centered population model and likelihood.
+  for (r in 1:R) {
+    Delta[r,] ~ normal(0, 1);
+    for (s in 1:S) {
+      Y[r, s] ~ categorical_logit(X[r, s] * Beta[r,]');
+    }
+  }
+}
+
+// Generated quantities conditioned on parameter draws.
+generated quantities {
+  // Compute log likelihood for model fit.
+  matrix[R, S] log_lik;
+  for (r in 1:R) {
+    for (s in 1:S) {
+      log_lik[r, s] = categorical_logit_lpmf(Y[r, s] | X[r, s] * Beta[r,]');
+    }
+  }
+}
+```
+
+
+# Compute model fit and extract draws
+
+The following analysis follows specifying the model we'd like to evaluate. Note that the output of the model calibration is too large to push to GitHub, but we can push the draws once we extract them.
+
+## Load model output
+
+```{r load-data-output, warning=FALSE, message=FALSE, eval=FALSE}
+# Load all model output
+intercept_run <- read_rds(here::here("analysis", "output", "model_runs", "intercept.rds"))
+public_affairs_run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
+political_ideology_run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
+social_views_run <- read_rds(here::here("analysis", "output", "model_runs", "social_views.rds"))
+charity_voluntarism_run <- read_rds(here::here("analysis", "output", "model_runs", "charity_voluntarism.rds"))
+demographics_run <- read_rds(here::here("analysis", "output", "model_runs", "demographics.rds"))
+public_political_run <- read_rds(here::here("analysis", "output", "model_runs", "public_political.rds"))
+public_political_social_run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social.rds"))
+public_political_social_charity_run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity.rds"))
+public_political_social_charity_demo_run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
+```
+
+## Compute and save model fit
+
+```{r compute-fit, eval=FALSE}
+# Compute fit using PSIS-LOO
+intercept_loo <- loo(intercept_run$fit, save_psis = TRUE)
+public_affairs_loo <- loo(public_affairs_run$fit, save_psis = TRUE)
+political_ideology_loo <- loo(political_ideology_run$fit, save_psis = TRUE)
+social_views_loo <- loo(social_views_run$fit, save_psis = TRUE)
+charity_voluntarism_loo <- loo(charity_voluntarism_run$fit, save_psis = TRUE)
+demographics_loo <- loo(demographics_run$fit, save_psis = TRUE)
+public_political_loo <- loo(public_political_run$fit, save_psis = TRUE)
+public_political_social_loo <- loo(public_political_social_run$fit, save_psis = TRUE)
+public_political_social_charity_loo <- loo(public_political_social_charity_run$fit, save_psis = TRUE)
+public_political_social_charity_demo_loo <- loo(public_political_social_charity_demo_run$fit, save_psis = TRUE)
+
+# Compare model fit
+loo_compare(intercept_loo, public_affairs_loo, political_ideology_loo, social_views_loo, charity_voluntarism_loo, demographics_loo, public_political_loo, public_political_social_loo, public_political_social_charity_loo, public_political_social_charity_demo_loo)
+```
+
+```{r save-fit, eval=FALSE}
+# Create data frame
+model_fit <- tibble(model = rep(NA, 10), elpd_loo = rep(NA, 10))
+
+# Extract PSIS-LOO fit
+model_fit$model[1] <- "intercept"; model_fit$loo[1] <- intercept_loo$elpd_loo
+model_fit$model[2] <- "public_affairs"; model_fit$loo[2] <- public_affairs_loo$elpd_loo
+model_fit$model[3] <- "political_ideology"; model_fit$loo[3] <- political_ideology_loo$elpd_loo
+model_fit$model[4] <- "social_views"; model_fit$loo[4] <- social_views_loo$elpd_loo
+model_fit$model[5] <- "charity_voluntarism"; model_fit$loo[5] <- charity_voluntarism_loo$elpd_loo
+model_fit$model[6] <- "demographics"; model_fit$loo[6] <- demographics_loo$elpd_loo
+model_fit$model[7] <- "public_political"; model_fit$loo[7] <- public_political_loo$elpd_loo
+model_fit$model[8] <- "public_political_social"; model_fit$loo[8] <- public_political_social_loo$elpd_loo
+model_fit$model[9] <- "public_political_social_charity"; model_fit$loo[9] <- public_political_social_charity_loo$elpd_loo
+model_fit$model[10] <- "public_political_social_charity_demo"; model_fit$loo[10] <- public_political_social_charity_demo_loo$elpd_loo
+
+# Save model output
+write_rds(model_fit, here::here("analysis", "output", "tables", "model_fit.rds"))
+```
+
+## Load model fit objects and extract and save draws
+
+```{r extract-draws, eval=FALSE}
+intercept <- 0                            # Intercept-only
+public_affairs <- 1                       # Public affairs
+political_ideology <- 0                   # Political ideology
+social_views <- 0                         # Social views
+charity_voluntarism <- 0                  # Charity and voluntarism
+demographics <- 0                         # Demographics
+public_political <- 0                     # Public affairs + Political ideology
+public_political_social <- 0              # + Social views
+public_political_social_charity <- 0      # + Charity and voluntarism
+public_political_social_charity_demo <- 0 # + Demographics
+
+# Load and extract data and model output
+if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept.rds"))
 if (public_affairs == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
 if (political_ideology == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
 if (social_views == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "social_views.rds"))
@@ -60,104 +344,19 @@ if (public_political_social_charity == 1) run <- read_rds(here::here("analysis",
 if (public_political_social_charity_demo == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
 data <- run$data
 fit <- run$fit
-```
 
-
-# Model checking
-
-```{r model-checking}
-source(here::here("R", "stan_utility.R"))
-
-# Thetas
-draws_theta <- fit %>% 
-  extract(
-    pars = str_c("Theta[", 1:13, ",1]"),
-    inc_warmup = TRUE,
-    permuted = FALSE
-  )
-
-draws_theta %>% 
-  mcmc_hist_by_chain()
-
-draws_theta %>% 
-  mcmc_trace(
-    n_warmup = 2000,
-    facet_args = list(
-      nrow = 4, 
-      labeller = label_parsed
-    )
-  )
-
-# Extract the L_Omega parameters only and look at trace plots, etc.
-
-# L_Omega
-draws_L_Omega <- fit %>% 
-  extract(
-    regex_pars = c("L_Omega"),
-    inc_warmup = TRUE,
-    permuted = FALSE
-  )
-
-draws_theta %>% 
-  mcmc_hist_by_chain()
-
-draws_theta %>% 
-  mcmc_trace(
-    n_warmup = 2000,
-    facet_args = list(
-      nrow = 4, 
-      labeller = label_parsed
-    )
-  )
-
-
-# # Check diagnostics
-# check_all_diagnostics(fit)
-
-# Check for divergences
-check_div(fit)
-
-# # Check the effective sample size (NOT WORKING?)
-# check_n_eff(fit)
-# 
-# # Check the Rhat statistic (NOT WORKING?)
-# check_rhat(fit)
-
-# Check trace plots (SUBSET?)
-color_scheme_set("mix-blue-red")
-fit %>%
-  extract(
-    inc_warmup = TRUE,
-    permuted = FALSE
-  ) %>%
-  mcmc_trace(
-    pars = str_c("Theta[", 1:13, ",1]"),
-    n_warmup = 2000,
-    facet_args = list(
-      nrow = 2, 
-      labeller = label_parsed
-    )
-  )
-
-# ggsave(
-#   "intercept_trace_noncentered.png",
-#   path = here::here("analysis", "output", "figures"),
-#   width = 12, height = 6, units = "in"
-# )
-```
-
-
-# Extract draws
-
-```{r extract-draws}
 # Extract posterior draws
 draws <- fit %>% 
-  spread_draws(Theta[i, j]) %>% 
+  spread_draws(Gamma[i, j]) %>% 
   ungroup() %>% 
-  filter(.iteration > 500)
+  filter(.iteration > 500) %>% 
+  rename(
+    i = j,
+    j = i
+  )
 
 # Save draws
-if (intercept == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
+if (intercept == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept.rds"))
 if (public_affairs == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_affairs.rds"))
 if (political_ideology == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "political_ideology.rds"))
 if (social_views == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "social_views.rds"))
@@ -169,377 +368,6 @@ if (public_political_social_charity == 1) write_rds(draws, here::here("analysis"
 if (public_political_social_charity_demo == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_political_social_charity_demo.rds"))
 ```
 
-
-# Plot marginals
-
-```{r plot-marginals}
-intercept <- 0                            # Intercept-only
-public_affairs <- 0                       # Public affairs
-political_ideology <- 0                   # Political ideology
-social_views <- 0                         # Social views
-charity_voluntarism <- 1                  # Charity and voluntarism
-demographics <- 0                         # Demographics
-public_political <- 0                     # Public affairs + Political ideology
-public_political_social <- 0              # + Social views
-public_political_social_charity <- 0      # + Charity and voluntarism
-public_political_social_charity_demo <- 0 # + Demographics
-
-# Load draws
-if (intercept == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "intercept_noncentered.rds"))
-if (public_affairs == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_affairs.rds"))
-if (political_ideology == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "political_ideology.rds"))
-if (social_views == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "social_views.rds"))
-if (charity_voluntarism == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "charity_voluntarism.rds"))
-if (demographics == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "demographics.rds"))
-if (public_political == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_political.rds"))
-if (public_political_social == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_political_social.rds"))
-if (public_political_social_charity == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_political_social_charity.rds"))
-if (public_political_social_charity_demo == 1) draws <- read_rds(here::here("analysis", "output", "posterior_draws", "public_political_social_charity_demo.rds"))
-
-# Name labels
-level_labels <- c(
-  str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
-  str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief")),
-  "Financial transparency: Yes",
-  "Accountability: Yes",
-  str_c("Funding sources: ", c("Handful of wealthy private donors", "Government grants")),
-  str_c("Relationship with host government: ", c("Criticized", "Under crackdown"))
-)
-
-# Name covariates
-if (public_affairs == 1) {
-  covariate_labels <- c(
-    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
-    str_c(
-      "Medium to follow news: ", 
-      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
-    ),
-    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: No"
-  )
-}
-if (political_ideology == 1) {
-  covariate_labels <- c(
-    "Liberal to Conservative"
-  )
-}
-if (social_views == 1) {
-  covariate_labels <- c(
-    "Trust in political institutions: None to Complete", "People should be more charitable: Agree to Disagree",
-    "Religious and worship service attendance: Multiple times a week to Never", "Importance of religion: Extremely to Not at all",
-    str_c(
-      "Religion: ", 
-      c("Protestant", "Christian Orthodox", "Jewish", "Muslim", "Sikh", "Hindu", "Buddhist", "Atheist", "Other")
-    )
-  )
-}
-if (charity_voluntarism == 1) {
-  covariate_labels <- c(
-    "Importance of trusing charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
-    "Donated last year: $1-$49 to $10,000 or more", "Volunteered in past 12 months: No", "Volunteer frequency: Weekly to Every few years",
-    "History of activism: Extreme to Never", "History of family activism: Extreme to Never", 
-    str_c(
-      c(
-        "Church or religious organization: ", "Sport or recreational organization: ", "Art, music, or educational organization: ",
-        "Labor union: ", "Political party: ", "Environmental organization: ", "Professional association: ", 
-        "Humanitarian or charitable organization: ", "Consumer organization: ", "Other organization: "
-      ), 
-      "Member to Not"
-    )
-  )
-}
-if (demographics == 1) {
-  covariate_labels <- c(
-    str_c(
-      "Gender: ", 
-      c("Female", "Transgender", "Prefer not to say", "Other")
-    ), 
-    str_c(
-      "Marital status: ", 
-      c("Widowed", "Divorced", "Separated", "Never married")
-    ), 
-    "Education: Less than high school to Doctorate",
-    "Income: Less than $10,000 to $300,000 or more",
-    str_c(
-      "Race/ethnicity: ", 
-      c("White", "Black or African American", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Pacific Islander", "Other")
-    ),
-    "Age: Under 18 to 85 or older"
-  )
-}
-if (public_political == 1) {
-  covariate_labels <- c(
-    # Public affairs
-    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
-    str_c(
-      "Medium to follow news: ", 
-      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
-    ),
-    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: No",
-    # Political ideology
-    "Liberal to Conservative"
-  )
-}
-if (public_political_social == 1) {
-  covariate_labels <- c(
-    # Public affairs
-    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
-    str_c(
-      "Medium to follow news: ", 
-      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
-    ),
-    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: No",
-    # Political ideology
-    "Liberal to Conservative",
-    # Social views
-    "Trust in political institutions: None to Complete", "People should be more charitable: Agree to Disagree",
-    "Religious and worship service attendance: Multiple times a week to Never", "Importance of religion: Extremely to Not at all",
-    str_c(
-      "Religion: ", 
-      c("Protestant", "Christian Orthodox", "Jewish", "Muslim", "Sikh", "Hindu", "Buddhist", "Atheist", "Other")
-    )
-  )
-}
-if (public_political_social_charity == 1) {
-  covariate_labels <- c(
-    # Public affairs
-    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
-    str_c(
-      "Medium to follow news: ", 
-      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
-    ),
-    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: No",
-    # Political ideology
-    "Liberal to Conservative",
-    # Social views
-    "Trust in political institutions: None to Complete", "People should be more charitable: Agree to Disagree",
-    "Religious and worship service attendance: Multiple times a week to Never", "Importance of religion: Extremely to Not at all",
-    str_c(
-      "Religion: ", 
-      c("Protestant", "Christian Orthodox", "Jewish", "Muslim", "Sikh", "Hindu", "Buddhist", "Atheist", "Other")
-    ),
-    # Charity and voluntarism
-    "Importance of trusing charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
-    "Donated last year: $1-$49 to $10,000 or more", "Volunteered in past 12 months: No", "Volunteer frequency: Weekly to Every few years",
-    "History of activism: Extreme to Never", "History of family activism: Extreme to Never", 
-    str_c(
-      c(
-        "Church or religious organization: ", "Sport or recreational organization: ", "Art, music, or educational organization: ",
-        "Labor union: ", "Political party: ", "Environmental organization: ", "Professional association: ", 
-        "Humanitarian or charitable organization: ", "Consumer organization: ", "Other organization: "
-      ), 
-      "Member to Not"
-    )
-  )
-}
-if (public_political_social_charity_demo == 1) {
-  covariate_labels <- c(
-    # Public affairs
-    "Follow national news: Multiple times a day to Never", "Follow international news: Always to Never", 
-    str_c(
-      "Medium to follow news: ", 
-      c("TV", "Print", "Online (excluding social media)", "Social media", "Radio", "Email newsletters", "News app")
-    ),
-    "Follow government and public affairs: Most of the time to Hardly at all", "Traveled to a developing country: No",
-    # Political ideology
-    "Liberal to Conservative",
-    # Social views
-    "Trust in political institutions: None to Complete", "People should be more charitable: Agree to Disagree",
-    "Religious and worship service attendance: Multiple times a week to Never", "Importance of religion: Extremely to Not at all",
-    str_c(
-      "Religion: ", 
-      c("Protestant", "Christian Orthodox", "Jewish", "Muslim", "Sikh", "Hindu", "Buddhist", "Atheist", "Other")
-    ),
-    # Charity and voluntarism
-    "Importance of trusing charities: Not at all to Essential", "Trust in charities: None to Complete", "Donation frequency: Weekly to Never",
-    "Donated last year: $1-$49 to $10,000 or more", "Volunteered in past 12 months: No", "Volunteer frequency: Weekly to Every few years",
-    "History of activism: Extreme to Never", "History of family activism: Extreme to Never", 
-    str_c(
-      c(
-        "Church or religious organization: ", "Sport or recreational organization: ", "Art, music, or educational organization: ",
-        "Labor union: ", "Political party: ", "Environmental organization: ", "Professional association: ", 
-        "Humanitarian or charitable organization: ", "Consumer organization: ", "Other organization: "
-      ), 
-      "Member to Not"
-    ),
-    # Demographics
-    str_c(
-      "Gender: ", 
-      c("Female", "Transgender", "Prefer not to say", "Other")
-    ), 
-    str_c(
-      "Marital status: ", 
-      c("Widowed", "Divorced", "Separated", "Never married")
-    ), 
-    "Education: Less than high school to Doctorate",
-    "Income: Less than $10,000 to $300,000 or more",
-    str_c(
-      "Race/ethnicity: ", 
-      c("White", "Black or African American", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Pacific Islander", "Other")
-    ),
-    "Age: Under 18 to 85 or older"
-  )
-}
-
-# Plot marginals
-# if (intercept == 1) {
-#   draws %>% 
-#     mutate(
-#       levels = factor(i, labels = level_labels)
-#     ) %>%
-#     ggplot(aes(x = Theta, y = levels)) + 
-#     geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
-#     # geom_halfeyeh(.width = .95) +
-#     geom_vline(xintercept = 0, color = "grey") +
-#     labs(y = "Attribute Levels")
-# }
-
-# if (intercept != 1) {
-#   draws %>% 
-#     filter(j != 1) %>% 
-#     mutate(
-#       levels = factor(i, labels = level_labels), 
-#       covariates = factor(j, labels = covariate_labels)  
-#     ) %>%
-#     ggplot(aes(x = Theta, y = covariates)) +
-#        geom_density_ridges(scale = 5, height = 3, rel_min_height = 0.01) +
-#        # geom_halfeyeh(.width = .95) +
-#        geom_vline(xintercept = 0, color = "white") +
-#        labs(y = "Covariates") +
-#        facet_wrap(~ levels, ncol = 5)
-# }
-
-# # Save plot
-# if (intercept == 1) file_name <- paste("intercept_marginal-posteriors.png")
-# if (public_affairs == 1) file_name <- paste("public-affairs_marginal-posteriors.png")
-# if (political_ideology == 1) file_name <- paste("political-ideology_marginal-posteriors.png")
-# if (social_views == 1) file_name <- paste("social-views_marginal-posteriors.png")
-# if (charity_voluntarism == 1) file_name <- paste("charity-voluntarism_marginal-posteriors.png")
-# if (demographics == 1) file_name <- paste("demographics_marginal-posteriors.png")
-# if (public_political == 1) file_name <- paste("public-political_marginal-posteriors.png")
-# if (public_political_social == 1) file_name <- paste("public-political-social_marginal-posteriors.png")
-# if (public_political_social_charity == 1) file_name <- paste("public-political-social-charity_marginal-posteriors.png")
-# if (public_political_social_charity_demo == 1) file_name <- paste("public-political-social-charity-demos_marginal-posteriors.png")
-# ggsave(
-#   file_name,
-#   path = here::here("analysis", "output", "figures"),
-#   width = ifelse(intercept == 1, 12, 20), 
-#   height = ifelse(sum(intercept, public_affairs, political_ideology, social_views, charity_voluntarism, demographics) == 1, 12, 20), 
-#   units = "in"
-# )
-```
-
-As an experiment, it might be helpful to use a heatmap to identify where there are significant differences in the non-intercept models, which can then be narrowed down using the marginal plots.
-
-```{r heatmaps}
-if (public_affairs == 1) plot_title <- paste("Public Affairs")
-if (political_ideology == 1) plot_title <- paste("Political Ideology")
-if (social_views == 1) plot_title <- paste("Social Views")
-if (charity_voluntarism == 1) plot_title <- paste("Covariates related to charity and voluntarism")
-if (demographics == 1) plot_title <- paste("Demographics")
-if (public_political == 1) plot_title <- paste("Public Affairs and Political Ideology")
-if (public_political_social == 1) plot_title <- paste("Public Affairs, Political Ideology, and Social Views")
-if (public_political_social_charity == 1) plot_title <- paste("Public Affairs, Political Ideology, Social Views, and Charity and Voluntarism")
-if (public_political_social_charity_demo == 1) plot_title <- paste("Public Affairs, Political Ideology, Social Views, Charity and Voluntarism, and Demographics")
-
-if (charity_voluntarism == 1) {
-  j_labels <- tribble(
-    ~j, ~j_label,
-    2, "Importance of trusting charities", 
-    3, "Trust charities", 
-    4, "Frequency of donation", 
-    5, "Amount of donation", 
-    6, "Volunteered", 
-    7, "Volunteer frequency", 
-    8, "Personal involvement in activism", 
-    9, "Family involvement in activism", 
-    10, "Membership in church", 
-    11, "Membership in sports", 
-    12, "Membership in art, music, or educational organization", 
-    13, "Membership in labor union", 
-    14, "Membership in political party", 
-    15, "Membership in envrionmental organization", 
-    16, "Membership in professional association", 
-    17, "Membership in humanitarian organization", 
-    18, "Membership in consumer organization", 
-    19, "Membership in other organization"
-  ) %>% 
-    mutate(j_label = fct_inorder(j_label))
-}
-
-if (intercept != 1) {
-  # Posterior means.
-  posterior_means <- draws %>% 
-    filter(j != 1) %>% 
-    left_join(j_labels, by = "j") %>% 
-    left_join(level_lookup, by = "i") %>% 
-    mutate(
-      levels = factor(i, labels = level_labels), 
-      # covariates = factor(j, labels = covariate_labels)
-      covariates = factor(j, labels = 1:length(covariate_labels))
-    ) %>% 
-    group_by(category, attribute, j_label) %>% 
-    summarize(
-      mean = mean(Theta),
-      ci_lower = quantile(Theta, .025),
-      ci_upper = quantile(Theta, .975),
-      gt_zero = if_else(ci_lower > 0 & ci_upper > 0, 1, 0),
-      lt_zero = if_else(ci_lower < 0 & ci_upper < 0, -1, 0)
-    )
-  
-  # Heatmap of Theta matrix.
-  plot_heatmap <- posterior_means %>% 
-    mutate(
-      gt_lt_zero = gt_zero + lt_zero,
-      Coefficients = factor(
-        gt_lt_zero, 
-        levels = -1:1,
-        labels = c("Negative", "Not Significant", "Positive"))
-    ) %>% 
-    ggplot(aes(x = j_label, y = attribute, fill = Coefficients)) +
-    geom_tile(color = "white", size = 0.25) +
-    # scale_fill_brewer(palette = "Blues") +
-    scale_fill_manual(values = c(clrs$orange, "grey80", clrs$olive)) +
-    scale_x_discrete(expand = c(0.001, 0.001)) +
-    scale_y_discrete(expand = c(0.001, 0.001)) +
-    # guides(fill = guide_legend(override.aes = list(key.height = 0.5, key.width = 0.5))) +
-    guides(fill = guide_legend(keywidth = 0.5, keyheight = 0.5)) +
-    theme_ngo(base_size = 14) +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1), 
-          legend.position = "bottom",
-          strip.placement = "outside") +
-    labs(
-      title = plot_title,
-      x = "Covariates",
-      y = "Attribute Levels"
-    ) + 
-    # facet_wrap(~ category, ncol = 1, scales = "free_y")
-    facet_grid(vars(category), scales = "free_y", space = "free_y")
-}
-
-plot_heatmap
-ggsave(plot_heatmap, filename = here("analysis", "output", "figures", "q2-heatmap.pdf"),
-       width = 26/3, height = 6.5, units = "in", device = cairo_pdf)
-ggsave(plot_heatmap, filename = here("analysis", "output", "figures", "q2-heatmap.png"),
-       width = 26/3, height = 6.5, units = "in", type = "cairo", dpi = 300)
-
-# Save plot
-if (public_affairs == 1) file_name <- paste("public-affairs_coefficient-matrix.png")
-if (political_ideology == 1) file_name <- paste("political-ideology_coefficient-matrix.png")
-if (social_views == 1) file_name <- paste("social-views_coefficient-matrix.png")
-if (charity_voluntarism == 1) file_name <- paste("charity-voluntarism_coefficient-matrix.png")
-if (demographics == 1) file_name <- paste("demographics_coefficient-matrix.png")
-if (public_political == 1) file_name <- paste("public-political_coefficient-matrix.png")
-if (public_political_social == 1) file_name <- paste("public-political-social_coefficient-matrix.png")
-if (public_political_social_charity == 1) file_name <- paste("public-political-social-charity_coefficient-matrix.png")
-if (public_political_social_charity_demo == 1) file_name <- paste("public-political-social-charity-demos_coefficient-matrix.png")
-ggsave(
-  file_name,
-  path = here::here("analysis", "output", "figures"),
-  width = 12,
-  height = 6,
-  units = "in"
-)
-```
 
 # Original computing environment
 
