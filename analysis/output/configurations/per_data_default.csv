@@ -1,0 +1,112 @@
+levels,per1_value,per2_value,per3_value
+Intercept,1,1,1
+Once a week,0,0,0
+At least once a day,1,1,1
+Sometimes,0,0,0
+Always,1,1,1
+TV,1,1,1
+Print,1,1,1
+Online (not social media),0,0,0
+Social media,1,1,1
+Radio,0,0,0
+Email newsletter,0,0,0
+News app,0,0,0
+Often,1,1,1
+Traveled to a developing country,1,1,1
+Somewhat liberal,1,1,1
+Slightly liberal,0,0,0
+Moderate,0,0,0
+Slightly conservative,0,0,0
+Somewhat conservative,0,0,0
+Extremely conservative,0,0,0
+Very little trust in political institutions,0,0,0
+Little trust in political institutions,0,0,0
+Neutral trust in political institutions,0,0,0
+Some trust in political institutions,0,0,0
+A lot of trust in political institutions,0,0,0
+Complete trust in political institutions,1,1,1
+Disagree,0,0,0
+Somewhat disagree,0,0,0
+Neutral,0,0,0
+Somewhat agree,0,0,0
+Agree,0,0,0
+Strongly agree,1,1,1
+Rarely attend,0,0,0
+Attend at least once a month,1,1,1
+Important,1,1,1
+Protestant,1,1,1
+Christian Orthodox,0,0,0
+Jewish,0,0,0
+Muslim,0,0,0
+Sikh,0,0,0
+Hindu,0,0,0
+Buddhist,0,0,0
+Atheist,0,0,0
+Other religion,0,0,0
+Very unimportant,0,0,0
+Somewhat unimportant,1,1,1
+Neutral importance,0,0,0
+Somewhat important,0,0,0
+Very important,0,0,0
+Essential,0,0,0
+Very little trust in charities,0,0,0
+Little trust in charities,0,0,0
+Neutral trust in charities,0,0,0
+Some trust in charities,0,0,0
+A lot of trust in charities,0,0,0
+Complete trust in charities,1,1,1
+Donate at least once a month,1,1,1
+$50-$99,0,0,0
+$100-$499,1,1,1
+$500-$999,0,0,0
+"$1,000-$4,999",0,0,0
+"$5,000-$9,999",0,0,0
+"$10,000+",0,0,0
+Volunteered in past 12 months,1,1,1
+Rarely volunteer,0,0,0
+"Volunteer more than once a month, less than once a year",0,0,0
+Volunteer at least once a month,1,1,1
+Personally involved,1,1,1
+Family involved,1,1,1
+Inactive church member,0,0,0
+Active church member,0,0,0
+Inactive sports or rec organization member,0,0,0
+Active sports or rec organization member,0,0,0
+"Inactive art, music, or educational organization member",0,0,0
+"Active art, music, or educational organization member",0,0,0
+Inactive union member,0,0,0
+Active union member,0,0,0
+Inactive political party member,0,0,0
+Active political party member,1,1,1
+Inactive environmental organization member,0,0,0
+Active environmental organization member,0,0,0
+Inactive professional association member,0,0,0
+Active professional association member,0,0,0
+Inactive humanitarian or charitable organization member,0,0,0
+Active humanitarian or charitable organization member,1,1,1
+Inactive consumer organization member,0,0,0
+Active consumer organization member,0,0,0
+Inactive member in another organization,0,0,0
+Active member in another organization,0,0,0
+Female,0,0,1
+Transgender,0,0,0
+Prefer not to say,0,0,0
+Other gender,0,0,0
+Widowed,0,0,0
+Divorced,0,0,0
+Separated,0,0,0
+Never married,0,0,0
+High school graduate,0,0,0
+Some college,0,1,0
+2 year degree,1,0,0
+4 year degree,0,0,0
+Graduate or professional degree,0,0,1
+Doctorate,0,0,0
+"More than median of $61,372",1,1,1
+White,1,0,0
+Black or African American,0,0,1
+American Indian or Alaskan Native,0,1,1
+Asian,0,0,0
+Native Hawaiian or Pacific Islander,0,0,0
+Other race,0,0,0
+More than median age of 36,0,0,0

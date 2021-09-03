@@ -1,0 +1,1416 @@
+---
+title: "Example of Market Simulator Dasbhaord"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+runtime: shiny
+---
+
+```{r load-packages, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(flexdashboard)
+library(plotly)
+library(shiny)
+```
+
+```{r load-data, message=FALSE}
+# Gammas of the "everything" model
+gammas <- read_rds(
+    here::here('analysis', 'output', 'posterior_draws', 'public_political_social_charity_demo.rds')
+  ) %>% 
+  group_by(i, j) %>% 
+  summarize(gamma_mean = mean(Gamma)) %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = j, values_from = gamma_mean) %>% 
+  select(-i) %>% 
+  t()
+
+# Default configurations
+prod_default <- read_csv(
+    here::here('analysis', 'output', 'configurations', 'org_data_default.csv')
+  )
+seg_default <- read_csv(
+    here::here('analysis', 'output', 'configurations', 'per_data_default.csv')
+  )
+```
+
+```{r prod-reactive-table}
+# Assign level labels
+prod_table <- data.frame(
+  levels = c(
+    # Organization
+    "Amnesty International",
+    "Greenpeace", 
+    "Oxfam", 
+    "Red Cross",
+    # Issue area
+    "Environment", 
+    "Human rights",
+    "Refugee relief",
+    # Financial transparency
+    "Engages in financial transparency",
+    # Financial accountability
+    "Engages in financial accountability",
+    # Funding sources
+    "Handful of wealthy private donors", 
+    "Government grants",
+    # Relationship with host government
+    "Criticized by government",
+    "Under government crackdown"
+  )
+)
+
+# prod configuration reactive element
+prod_reactive <- reactive({
+  # prod 1
+  prod_table$prod1_value <- 0
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_prod] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_issue] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_fin_trans] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_fin_account] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_funding] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_host_gov] <- 1
+    
+  # prod 2
+  prod_table$prod2_value <- 0
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_prod] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_issue] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_fin_trans] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_fin_account] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_funding] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_host_gov] <- 1
+    
+  # prod 3
+  prod_table$prod3_value <- 0
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_prod] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_issue] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_fin_trans] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_fin_account] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_funding] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_host_gov] <- 1
+    
+  # prod 4
+  prod_table$prod4_value <- 0
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_prod] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_issue] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_fin_trans] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_fin_account] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_funding] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_host_gov] <- 1
+  prod_table
+})
+```
+
+```{r persona-reactive-table}
+# Assign covariate labels
+seg_table <- data.frame(
+  levels = c(
+    # Intercept
+    "Intercept",
+    # Mediums to follow news
+    "TV",
+    "Print",
+    "Online (not social media)",
+    "Social media",
+    "Radio",
+    "Email newsletter",
+    "News app",
+    # Gender
+    "Female",
+    "Transgender",
+    "Prefer not to say",
+    "Other gender",
+    # Marital status
+    "Widowed",
+    "Divorced",
+    "Separated",
+    "Never married",
+    # Education
+    "High school graduate", 
+    "Some college",
+    "2 year degree",
+    "4 year degree",
+    "Graduate or professional degree",
+    "Doctorate",
+    # Income
+    "More than median of $61,372", 
+    # Race
+    "White", 
+    "Black or African American", 
+    "American Indian or Alaskan Native", 
+    "Asian", 
+    "Native Hawaiian or Pacific Islander",
+    "Other race",
+    # Age
+    "More than median age of 36"
+  )
+)
+
+## Test to subset the data
+seg_join <- seg_default %>% inner_join(seg_table, by = "levels")
+
+# Persona configuration reactive element
+seg_reactive <- reactive({
+  # Persona 1
+  seg_table$per1_value <- 0
+  seg_table$per1_value[seg_table$levels == 'Intercept'] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_news_medium] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_gender] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_marital_status] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_education] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_income] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_race] <- 1
+  seg_table$per1_value[seg_table$levels %in% input$per1_age] <- 1
+    
+  # Persona 2
+  seg_table$per2_value <- 0
+  seg_table$per2_value[seg_table$levels == 'Intercept'] <- 1
+  seg_table$per2_value[seg_table$levels %in% input$per2_gender] <- 1
+  seg_table$per2_value[seg_table$levels %in% input$per2_marital_status] <- 1
+  seg_table$per2_value[seg_table$levels %in% input$per2_education] <- 1
+  seg_table$per2_value[seg_table$levels %in% input$per2_income] <- 1
+  seg_table$per2_value[seg_table$levels %in% input$per2_race] <- 1
+  seg_table$per2_value[seg_table$levels %in% input$per2_age] <- 1
+    
+  # Persona 3
+  seg_table$per3_value <- 0
+  seg_table$per3_value[seg_table$levels == 'Intercept'] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_news_medium] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_gender] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_marital_status] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_education] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_income] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_race] <- 1
+  seg_table$per3_value[seg_table$levels %in% input$per3_age] <- 1
+  seg_table
+})
+```
+
+Market share
+-------------------------------------------------
+
+```{r compute-and-plot}
+# Compute and render the market share plot
+renderPlotly({
+  prod_choice = prod_reactive()
+  seg_choice = seg_reactive()
+    
+  # Segment 1 predicted betas
+  seg1_betas <- as.matrix(gammas) %*% as.matrix(seg_choice[,2])
+  
+  # Segment 1 expected utilities
+  seg1_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(seg1_betas))
+  seg1_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(seg1_betas))
+  seg1_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(seg1_betas))
+  seg1_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(seg1_betas))
+  
+  # Segment 1 market shares
+  seg1_share_denom <- sum(seg1_prod1_exp, seg1_prod2_exp, seg1_prod3_exp, seg1_prod4_exp)
+  seg1_prod1_share <- 100 * (seg1_prod1_exp / seg1_share_denom)
+  seg1_prod2_share <- 100 * (seg1_prod2_exp / seg1_share_denom)
+  seg1_prod3_share <- 100 * (seg1_prod3_exp / seg1_share_denom)
+  seg1_prod4_share <- 100 * (seg1_prod4_exp / seg1_share_denom)
+  
+  # Segment 2 predicted betas
+  seg2_betas <- as.matrix(gammas) %*% as.matrix(seg_choice[,3])
+  
+  # Segment 2 expected utilities
+  seg2_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(seg2_betas))
+  seg2_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(seg2_betas))
+  seg2_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(seg2_betas))
+  seg2_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(seg2_betas))
+  
+  # Segment 2 market shares
+  seg2_share_denom <- sum(seg2_prod1_exp, seg2_prod2_exp, seg2_prod3_exp, seg2_prod4_exp)
+  seg2_prod1_share <- 100 * (seg2_prod1_exp / seg2_share_denom)
+  seg2_prod2_share <- 100 * (seg2_prod2_exp / seg2_share_denom)
+  seg2_prod3_share <- 100 * (seg2_prod3_exp / seg2_share_denom)
+  seg2_prod4_share <- 100 * (seg2_prod4_exp / seg2_share_denom)
+  
+  # Segment 3 predicted betas
+  seg3_betas <- as.matrix(gammas) %*% as.matrix(seg_choice[,4])
+  
+  # Segment 3 expected utilities
+  seg3_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(seg3_betas))
+  seg3_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(seg3_betas))
+  seg3_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(seg3_betas))
+  seg3_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(seg3_betas))
+  
+  # Segment 3 market shares
+  seg3_share_denom <- sum(seg3_prod1_exp, seg3_prod2_exp, seg3_prod3_exp, seg3_prod4_exp)
+  seg3_prod1_share <- 100 * (seg3_prod1_exp / seg3_share_denom)
+  seg3_prod2_share <- 100 * (seg3_prod2_exp / seg3_share_denom)
+  seg3_prod3_share <- 100 * (seg3_prod3_exp / seg3_share_denom)
+  seg3_prod4_share <- 100 * (seg3_prod4_exp / seg3_share_denom)
+  
+  # Data for plotly
+  plot_data <- data.frame(
+    Value = c(
+      # Segment 1
+      seg1_prod1_share, seg1_prod2_share, seg1_prod3_share, seg1_prod4_share, 
+      # Segment 2
+      seg2_prod1_share, seg2_prod2_share, seg2_prod3_share, seg2_prod4_share,
+      # Segment 3
+      seg3_prod1_share, seg3_prod2_share, seg3_prod3_share, seg3_prod4_share
+    ),
+    Product = c(input$prod1_name, input$prod2_name, input$prod3_name, input$prod4_name),
+    Segment = c(
+      rep(input$per1_name, 4), 
+      rep(input$per2_name, 4), 
+      rep(input$per3_name, 4)
+    )
+  )
+  
+  ggplotly(
+    plot_data %>% 
+      # Factor Product and Segment with ordered=TRUE
+      mutate(
+        Product = factor(
+          Product, 
+          levels = c(input$prod1_name, input$prod2_name, input$prod3_name, input$prod4_name), 
+          ordered = TRUE
+        ),
+        Segment = factor(
+          Segment, 
+          levels = c(input$per1_name, input$per2_name, input$per3_name), 
+          ordered = TRUE
+        )
+      ) %>% 
+      ggplot(aes(y = Value, x = Product, fill = Segment)) +
+      geom_bar(position = "dodge", stat = "identity") +
+      labs(x="", y = "Market Share") + 
+      scale_fill_manual(values = c("#FFC30B", "#28a153", "#c23838")) +
+      theme(
+        legend.position = "right",
+        panel.background = element_blank(),
+        panel.grid.major.y = element_line(color = "#D3D3D3")
+      )
+    )
+})
+
+# Compute and render the market share as a table
+renderTable({
+   prod_choice = prod_reactive()
+   seg_choice = seg_reactive()
+    
+  # Segment 1 predicted betas
+  seg1_betas <- as.matrix(gammas) %*% as.matrix(seg_choice[,2])
+  
+  # Segment 1 expected utilities
+  seg1_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(seg1_betas))
+  seg1_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(seg1_betas))
+  seg1_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(seg1_betas))
+  seg1_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(seg1_betas))
+  
+  # Segment 1 market shares
+  seg1_share_denom <- sum(seg1_prod1_exp, seg1_prod2_exp, seg1_prod3_exp, seg1_prod4_exp)
+  seg1_prod1_share <- 100 * (seg1_prod1_exp / seg1_share_denom)
+  seg1_prod2_share <- 100 * (seg1_prod2_exp / seg1_share_denom)
+  seg1_prod3_share <- 100 * (seg1_prod3_exp / seg1_share_denom)
+  seg1_prod4_share <- 100 * (seg1_prod4_exp / seg1_share_denom)
+  
+  # Segment 2 predicted betas
+  seg2_betas <- as.matrix(gammas) %*% as.matrix(seg_choice[,3])
+  
+  # Segment 2 expected utilities
+  seg2_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(seg2_betas))
+  seg2_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(seg2_betas))
+  seg2_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(seg2_betas))
+  seg2_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(seg2_betas))
+  
+  # Segment 2 market shares
+  seg2_share_denom <- sum(seg2_prod1_exp, seg2_prod2_exp, seg2_prod3_exp, seg2_prod4_exp)
+  seg2_prod1_share <- 100 * (seg2_prod1_exp / seg2_share_denom)
+  seg2_prod2_share <- 100 * (seg2_prod2_exp / seg2_share_denom)
+  seg2_prod3_share <- 100 * (seg2_prod3_exp / seg2_share_denom)
+  seg2_prod4_share <- 100 * (seg2_prod4_exp / seg2_share_denom)
+  
+  # Segment 3 predicted betas
+  seg3_betas <- as.matrix(gammas) %*% as.matrix(seg_choice[,4])
+  
+  # Segment 3 expected utilities
+  seg3_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(seg3_betas))
+  seg3_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(seg3_betas))
+  seg3_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(seg3_betas))
+  seg3_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(seg3_betas))
+  
+  # Segment 3 market shares
+  seg3_share_denom <- sum(seg3_prod1_exp, seg3_prod2_exp, seg3_prod3_exp, seg3_prod4_exp)
+  seg3_prod1_share <- 100 * (seg3_prod1_exp / seg3_share_denom)
+  seg3_prod2_share <- 100 * (seg3_prod2_exp / seg3_share_denom)
+  seg3_prod3_share <- 100 * (seg3_prod3_exp / seg3_share_denom)
+  seg3_prod4_share <- 100 * (seg3_prod4_exp / seg3_share_denom)
+  
+  # Table
+  data <- data.frame(
+    Shares = c(
+      # Segment 1
+      seg1_prod1_share, seg1_prod2_share, seg1_prod3_share, seg1_prod4_share, 
+      # Segment 2
+      seg2_prod1_share, seg2_prod2_share, seg2_prod3_share, seg2_prod4_share,
+      # Segment 3
+      seg3_prod1_share, seg3_prod2_share, seg3_prod3_share, seg3_prod4_share
+    ),
+    Product = c(input$prod1_name, input$prod2_name, input$prod3_name, input$prod4_name),
+    Segment = c(
+      rep(input$per1_name, 4), 
+      rep(input$per2_name, 4), 
+      rep(input$per3_name, 4)
+    )
+  ) %>% 
+    pivot_wider(names_from = Segment, values_from = Shares)
+  
+  data
+})
+```
+
+
+Configurations
+-------------------------------------------------
+
+### Product 1
+
+```{r prod1-inputs}
+# Naming
+textInput(
+  "prod1_name",
+  label = "Product Name:",
+  value = "Product 1",
+  placeholder = "Enter Product Name",
+  width = "450px"
+)
+
+# Product
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod1_prod",
+    label = "Product:",
+    choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
+    # selected = "Red Cross",
+    selected = as.character(prod_data[1:4,][which(prod_data[1:4,2] == 1), 1]),
+    width = "450px"
+  )
+})
+
+# Issue area
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod1_issue", 
+    label = "Issue Area:",
+    choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
+    # selected = "Emergency response",
+    selected = ifelse(
+      sum(prod_data[5:7,2]) == 0, "Emergency response",
+      as.character(prod_data[5:7,][which(prod_data[5:7,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Financial transparency
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod1_fin_trans",
+    label = "Financial Transparency:",
+    choices = c(
+      "Doesn’t engage in financial transparency", 
+      "Engages in financial transparency"
+    ),
+    # selected = "Engages in financial transparency",
+    selected = ifelse(
+      sum(prod_data[8,2]) == 0, "Doesn’t engage in financial transparency",
+      as.character(prod_data[8,][which(prod_data[8,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Financial accountability
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod1_fin_account",
+    label = "Financial Accountability:",
+    choices = c(
+      "Doesn’t engage in financial accountability", 
+      "Engages in financial accountability"
+    ),
+    # selected = "Engages in financial accountability",
+    selected = ifelse(
+      sum(prod_data[9,2]) == 0, "Doesn’t engage in financial accountability",
+      as.character(prod_data[9,][which(prod_data[9,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Funding sources
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod1_funding",
+    label = "Funding Source:",
+    choices = c(
+      "Many small private donations", 
+      "Handful of wealthy private donors", 
+      "Government grants"
+    ),
+    # selected = "Many small private donations",
+    selected = ifelse(
+      sum(prod_data[10:11,2]) == 0, "Many small private donations",
+      as.character(prod_data[10:11,][which(prod_data[10:11,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Relationship with host government
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod1_host_gov",
+    label = "Relationship With Host Government",
+    choices = c(
+      "Friendly relationship with government", 
+      "Criticized by government",  
+      "Under government crackdown"
+    ),
+    # selected = "Friendly relationship with government",
+    selected = ifelse(
+      sum(prod_data[12:13,2]) == 0, "Friendly relationship with government",
+      as.character(prod_data[12:13,][which(prod_data[12:13,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+```
+
+### Product 2
+
+```{r prod2-inputs}
+# Naming
+textInput(
+  "prod2_name",
+  label = "Product Name:",
+  value = "Product 2",
+  placeholder = "Enter Product Name",
+  width = "450px"
+)
+
+# Product
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod2_prod",
+    label = "Product:",
+    choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
+    # selected = "Red Cross",
+    selected = as.character(prod_data[1:4,][which(prod_data[1:4,3] == 1), 1]),
+    width = "450px"
+  )
+})
+
+# Issue area
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod2_issue", 
+    label = "Issue Area:",
+    choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
+    # selected = "Environment",
+    selected = ifelse(
+      sum(prod_data[5:7,3]) == 0, "Emergency response",
+      as.character(prod_data[5:7,][which(prod_data[5:7,3] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Financial transparency
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod2_fin_trans",
+    label = "Financial Transparency:",
+    choices = c(
+      "Doesn’t engage in financial transparency", 
+      "Engages in financial transparency"
+    ),
+    # selected = "Engages in financial transparency",
+    selected = ifelse(
+      sum(prod_data[8,3]) == 0, "Doesn’t engage in financial transparency",
+      as.character(prod_data[8,][which(prod_data[8,3] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Financial accountability
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod2_fin_account",
+    label = "Financial Accountability:",
+    choices = c(
+      "Doesn’t engage in financial accountability", 
+      "Engages in financial accountability"
+    ),
+    # selected = "Engages in financial accountability",
+    selected = ifelse(
+      sum(prod_data[9,3]) == 0, "Doesn’t engage in financial accountability",
+      as.character(prod_data[9,][which(prod_data[9,3] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Funding sources
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod2_funding",
+    label = "Funding Source:",
+    choices = c(
+      "Many small private donations", 
+      "Handful of wealthy private donors", 
+      "Government grants"
+    ),
+    # selected = "Many small private donations",
+    selected = ifelse(
+      sum(prod_data[10:11,3]) == 0, "Many small private donations",
+      as.character(prod_data[10:11,][which(prod_data[10:11,3] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Relationship with host government
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod2_host_gov",
+    label = "Relationship With Host Government",
+    choices = c(
+      "Friendly relationship with government", 
+      "Criticized by government",  
+      "Under government crackdown"
+    ),
+    # selected = "Friendly relationship with government",
+    selected = ifelse(
+      sum(prod_data[12:13,3]) == 0, "Friendly relationship with government",
+      as.character(prod_data[12:13,][which(prod_data[12:13,3] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+```
+
+### Product 3
+
+```{r prod3-inputs}
+# Naming
+textInput(
+  "prod3_name",
+  label = "Product Name:",
+  value = "Product 3",
+  placeholder = "Enter Product Name",
+  width = "450px"
+)
+
+# Product
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod3_prod",
+    label = "Product:",
+    choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
+    # selected = "Red Cross",
+    selected = as.character(prod_data[1:4,][which(prod_data[1:4,4] == 1), 1]),
+    width = "450px"
+  )
+})
+
+# Issue area
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod3_issue", 
+    label = "Issue Area:",
+    choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
+    # selected = "Human rights",
+    selected = ifelse(
+      sum(prod_data[5:7,4]) == 0, "Emergency response",
+      as.character(prod_data[5:7,][which(prod_data[5:7,4] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Financial transparency
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod3_fin_trans",
+    label = "Financial Transparency:",
+    choices = c(
+      "Doesn’t engage in financial transparency", 
+      "Engages in financial transparency"
+    ),
+    # selected = "Engages in financial transparency",
+    selected = ifelse(
+      sum(prod_data[8,4]) == 0, "Doesn’t engage in financial transparency",
+      as.character(prod_data[8,][which(prod_data[8,4] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Financial accountability
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod3_fin_account",
+    label = "Financial Accountability:",
+    choices = c(
+      "Doesn’t engage in financial accountability", 
+      "Engages in financial accountability"
+    ),
+    # selected = "Engages in financial accountability",
+    selected = ifelse(
+      sum(prod_data[9,4]) == 0, "Doesn’t engage in financial accountability",
+      as.character(prod_data[9,][which(prod_data[9,4] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Funding sources
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod3_funding",
+    label = "Funding Source:",
+    choices = c(
+      "Many small private donations", 
+      "Handful of wealthy private donors", 
+      "Government grants"
+    ),
+    # selected = "Many small private donations",
+    selected = ifelse(
+      sum(prod_data[10:11,4]) == 0, "Many small private donations",
+      as.character(prod_data[10:11,][which(prod_data[10:11,4] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Relationship with host government
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod3_host_gov",
+    label = "Relationship With Host Government",
+    choices = c(
+      "Friendly relationship with government", 
+      "Criticized by government",  
+      "Under government crackdown"
+    ),
+    # selected = "Friendly relationship with government",
+    selected = ifelse(
+      sum(prod_data[12:13,4]) == 0, "Friendly relationship with government",
+      as.character(prod_data[12:13,][which(prod_data[12:13,4] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+```
+
+### Product 4
+
+```{r prod4-inputs}
+# Naming
+textInput(
+  "prod4_name",
+  label = "Product Name:",
+  value = "Product 4",
+  placeholder = "Enter Product Name",
+  width = "450px"
+)
+
+# Product
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod4_prod",
+    label = "Product:",
+    choice = c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"),
+    # selected = "Red Cross",
+    selected = as.character(prod_data[1:4,][which(prod_data[1:4,5] == 1), 1]),
+    width = "450px"
+  )
+})
+
+# Issue area
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod4_issue", 
+    label = "Issue Area:",
+    choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
+    # selected = "Refugee relief",
+    selected = ifelse(
+      sum(prod_data[5:7,5]) == 0, "Emergency response",
+      as.character(prod_data[5:7,][which(prod_data[5:7,5] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Financial transparency
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod4_fin_trans",
+    label = "Financial Transparency:",
+    choices = c(
+      "Doesn’t engage in financial transparency", 
+      "Engages in financial transparency"
+    ),
+    # selected = "Engages in financial transparency",
+    selected = ifelse(
+      sum(prod_data[8,5]) == 0, "Doesn’t engage in financial transparency",
+      as.character(prod_data[8,][which(prod_data[8,5] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Financial accountability
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod4_fin_account",
+    label = "Financial Accountability:",
+    choices = c(
+      "Doesn’t engage in financial accountability", 
+      "Engages in financial accountability"
+    ),
+    # selected = "Engages in financial accountability",
+    selected = ifelse(
+      sum(prod_data[9,5]) == 0, "Doesn’t engage in financial accountability",
+      as.character(prod_data[9,][which(prod_data[9,5] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Funding sources
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod4_funding",
+    label = "Funding Source:",
+    choices = c(
+      "Many small private donations", 
+      "Handful of wealthy private donors", 
+      "Government grants"
+    ),
+    # selected = "Many small private donations",
+    selected = ifelse(
+      sum(prod_data[10:11,5]) == 0, "Many small private donations",
+      as.character(prod_data[10:11,][which(prod_data[10:11,5] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Relationship with host government
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod4_host_gov",
+    label = "Relationship With Host Government",
+    choices = c(
+      "Friendly relationship with government", 
+      "Criticized by government",  
+      "Under government crackdown"
+    ),
+    # selected = "Friendly relationship with government",
+    selected = ifelse(
+      sum(prod_data[12:13,5]) == 0, "Friendly relationship with government",
+      as.character(prod_data[12:13,][which(prod_data[12:13,5] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+```
+
+### Persona 1
+
+```{r per1-inputs}
+# Naming
+textInput(
+  "per1_name",
+  label = "Persona Name:",
+  value = "Persona 1",
+  placeholder = "Enter Persona Name",
+  width = "450px"
+)
+
+# Mediums to follow news
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per1_news_medium",
+    label = "Medium to follow news:",
+    choices = c(
+      "TV",
+      "Print",
+      "Online (not social media)",
+      "Social media",
+      "Radio",
+      "Email newsletter",
+      "News app"
+    ),
+    multiple = TRUE,
+    # selected = c("TV", "Print", "Social media"),
+    selected = deframe(per_data[6:12,][which(per_data[6:12,2] == 1), 1]),
+    width = "450px"
+  )
+})
+
+# Gender
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per1_gender",
+    label = "Gender:",
+    choices = c(
+      "Male",
+      "Female",
+      "Transgender",
+      "Prefer not to say",
+      "Other gender"
+    ),
+    # selected = "Male",
+    selected = ifelse(
+      sum(per_data[90:93,2]) == 0, "Male",
+      as.character(per_data[90:93,][which(per_data[90:93,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Marital status
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per1_marital_status",
+    label = "Marital Status:",
+    choices = c(
+      "Married",
+      "Widowed",
+      "Divorced",
+      "Separated",
+      "Never married"
+    ),
+    # selected = "Married",
+    selected = ifelse(
+      sum(per_data[94:97,2]) == 0, "Married",
+      as.character(per_data[94:97,][which(per_data[94:97,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Education
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per1_education",
+    label = "Education:",
+    choices = c(
+      "Less than high school",
+      "High school graduate",
+      "Some college",
+      "2 year degree",
+      "4 year degree",
+      "Graduate or professional degree",
+      "Doctorate"
+    ),
+    # selected = "2 year degree",
+    selected = ifelse(
+      sum(per_data[98:103,2]) == 0, "Less than high school",
+      as.character(per_data[98:103,][which(per_data[98:103,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Income
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per1_income",
+    label = "Income:",
+    choices = c('Less than median of $61,372', 'More than median of $61,372'),
+    # selected = "More than median of $61,372",
+    selected = ifelse(
+      sum(per_data[104,2]) == 0, "Less than median of $61,372",
+      as.character(per_data[104,][which(per_data[104,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Race
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per1_race",
+    label = "Race:",
+    choices = c(
+      'White',
+      'Black or African American',
+      'American Indian or Alaskan Native',
+      'Asian',
+      'Native Hawaiian or Pacific Islander',
+      'Other race'
+    ),
+    multiple = TRUE,
+    # selected = "White",
+    selected = deframe(per_data[105:110,][which(per_data[105:110,2] == 1), 1]),
+    width = "450px"
+  )
+})
+
+# Age
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per1_age",
+    label = "Age:",
+    choices = c('Less than median age of 36', "More than median age of 36"),
+    # selected = "Less than median age of 36",
+    selected = ifelse(
+      sum(per_data[111,2]) == 0, "Less than median age of 36",
+      as.character(per_data[111,][which(per_data[111,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+```
+
+### Persona 2
+
+```{r per2-inputs}
+# Naming
+textInput(
+  "per2_name",
+  label = "Persona Name:",
+  value = "Persona 2",
+  placeholder = "Enter Persona Name",
+  width = "450px"
+)
+
+# Mediums to follow news
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per2_news_medium",
+    label = "Medium to follow news:",
+    choices = c(
+      "TV",
+      "Print",
+      "Online (not social media)",
+      "Social media",
+      "Radio",
+      "Email newsletter",
+      "News app"
+    ),
+    multiple = TRUE,
+    # selected = c("TV", "Print", "Social media"),
+    selected = deframe(per_data[6:12,][which(per_data[6:12,3] == 1), 1]),
+    width = "450px"
+  )
+})
+
+# Gender
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per2_gender",
+    label = "Gender:",
+    choices = c(
+      "Male",
+      "Female",
+      "Transgender",
+      "Prefer not to say",
+      "Other gender"
+    ),
+    # selected = "Male",
+    selected = ifelse(
+      sum(per_data[90:93,3]) == 0, "Male",
+      as.character(per_data[90:93,][which(per_data[90:93,3] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Marital status
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per2_marital_status",
+    label = "Marital Status:",
+    choices = c(
+      "Married",
+      "Widowed",
+      "Divorced",
+      "Separated",
+      "Never married"
+    ),
+    # selected = "Married",
+    selected = ifelse(
+      sum(per_data[94:97,3]) == 0, "Married",
+      as.character(per_data[94:97,][which(per_data[94:97,3] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Education
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per2_education",
+    label = "Education:",
+    choices = c(
+      "Less than high school",
+      "High school graduate",
+      "Some college",
+      "2 year degree",
+      "4 year degree",
+      "Graduate or professional degree",
+      "Doctorate"
+    ),
+    # selected = "Some college",
+    selected = ifelse(
+      sum(per_data[98:103,3]) == 0, "Less than high school",
+      as.character(per_data[98:103,][which(per_data[98:103,3] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Income
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per2_income",
+    label = "Income:",
+    choices = c('Less than median of $61,372', 'More than median of $61,372'),
+    # selected = "More than median of $61,372",
+    selected = ifelse(
+      sum(per_data[104,3]) == 0, "Less than median of $61,372",
+      as.character(per_data[104,][which(per_data[104,3] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Race
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per2_race",
+    label = "Race:",
+    choices = c(
+      'White',
+      'Black or African American',
+      'American Indian or Alaskan Native',
+      'Asian',
+      'Native Hawaiian or Pacific Islander',
+      'Other race'
+    ),
+    multiple = TRUE,
+    # selected = "American Indian or Alaskan Native",
+    selected = deframe(per_data[105:110,][which(per_data[105:110,3] == 1), 1]),
+    width = "450px"
+  )
+})
+
+# Age
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per2_age",
+    label = "Age:",
+    choices = c('Less than median age of 36', "More than median age of 36"),
+    # selected = "Less than median age of 36",
+    selected = ifelse(
+      sum(per_data[111,3]) == 0, "Less than median age of 36",
+      as.character(per_data[111,][which(per_data[111,3] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+```
+
+### Persona 3
+
+```{r per3-inputs}
+# Naming
+textInput(
+  "per3_name",
+  label = "Persona Name:",
+  value = "Persona 3",
+  placeholder = "Enter Persona Name",
+  width = "450px"
+)
+# Mediums to follow news
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per3_news_medium",
+    label = "Medium to follow news:",
+    choices = c(
+      "TV",
+      "Print",
+      "Online (not social media)",
+      "Social media",
+      "Radio",
+      "Email newsletter",
+      "News app"
+    ),
+    multiple = TRUE,
+    # selected = c("TV", "Print", "Social media"),
+    selected = deframe(per_data[6:12,][which(per_data[6:12,4] == 1), 1]),
+    width = "450px"
+  )
+})
+
+# Gender
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per3_gender",
+    label = "Gender:",
+    choices = c(
+      "Male",
+      "Female",
+      "Transgender",
+      "Prefer not to say",
+      "Other gender"
+    ),
+    # selected = "Female",
+    selected = ifelse(
+      sum(per_data[90:93,4]) == 0, "Male",
+      as.character(per_data[90:93,][which(per_data[90:93,4] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Marital status
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per3_marital_status",
+    label = "Marital Status:",
+    choices = c(
+      "Married",
+      "Widowed",
+      "Divorced",
+      "Separated",
+      "Never married"
+    ),
+    # selected = "Married",
+    selected = ifelse(
+      sum(per_data[94:97,4]) == 0, "Married",
+      as.character(per_data[94:97,][which(per_data[94:97,4] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Education
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per3_education",
+    label = "Education:",
+    choices = c(
+      "Less than high school",
+      "High school graduate",
+      "Some college",
+      "2 year degree",
+      "4 year degree",
+      "Graduate or professional degree",
+      "Doctorate"
+    ),
+    # selected = "Graduate or professional degree",
+    selected = ifelse(
+      sum(per_data[98:103,4]) == 0, "Less than high school",
+      as.character(per_data[98:103,][which(per_data[98:103,4] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Income
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per3_income",
+    label = "Income:",
+    choices = c('Less than median of $61,372', 'More than median of $61,372'),
+    # selected = "More than median of $61,372",
+    selected = ifelse(
+      sum(per_data[104,4]) == 0, "Less than median of $61,372",
+      as.character(per_data[104,][which(per_data[104,4] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Race
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per3_race",
+    label = "Race:",
+    choices = c(
+      'White',
+      'Black or African American',
+      'American Indian or Alaskan Native',
+      'Asian',
+      'Native Hawaiian or Pacific Islander',
+      'Other race'
+    ),
+    multiple = TRUE,
+    # selected = c("Black or African American", "American Indian or Alaskan Native"),
+    selected = deframe(per_data[105:110,][which(per_data[105:110,4] == 1), 1]),
+    width = "450px"
+  )
+})
+
+# Age
+renderUI({
+  per_data = persona_data()
+  selectInput(
+    "per3_age",
+    label = "Age:",
+    choices = c('Less than median age of 36', "More than median age of 36"),
+    # selected = "Less than median age of 36",
+    selected = ifelse(
+      sum(per_data[111,4]) == 0, "Less than median age of 36",
+      as.character(per_data[111,][which(per_data[111,4] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+```
+
+Import
+-------------------------------------------------
+
+```{r import}
+# prodanization configuration import
+fileInput(
+ "prod_update",
+ "Import prodanization Data",
+ accept = c(
+   "text/csv",
+   "text/comma-separated-values,text/plain",
+   ".csv"
+ )
+)
+actionButton(
+ "prod_button",
+ label = "Update prodanization Data"
+)
+
+# Persona configuration import
+fileInput(
+  "per_update",
+  "Import Persona Data",
+  accept = c(
+    "text/csv",
+    "text/comma-separated-values,text/plain",
+    ".csv"
+  )
+)
+actionButton(
+  "per_button",
+  label = "Update Persona Data"
+)
+
+
+# Use the default configurations if no inputs are provided
+productanization_data <- reactive({
+  if (is.null(input$prod_update$datapath)) {
+    x <- prod_default
+  } else {
+    req(input$prod_button)
+    req(input$prod_update)
+    x <- read_csv(input$prod_update$datapath)
+  }
+})
+
+persona_data <- reactive({
+  if (is.null(input$per_update$datapath)) {
+    x <- per_default
+  } else {
+    req(input$per_button)
+    req(input$per_update)
+    x <- read_csv(input$per_update$datapath)
+  }
+})
+```
+
+Export
+--------------------------------------------------
+
+```{r export}
+# Render the prodanization configuration as a table
+renderTable({
+  prod_choice = prod_reactive()
+  prod_choice
+})
+
+# Download prodanization configuration
+downloadButton("download_prod", label = "Download prodanization Data")
+
+downloadHandler(
+  filename = function() {
+    paste0("prod_data_",Sys.time(),".csv")
+  },
+  content = function(file) {
+    write_csv(prod_reactive(), file)
+  }
+)
+
+# Render the persona configuration as a table
+renderTable({
+  per_choice = per_reactive()
+  per_choice
+})
+
+# Download persona configuration
+downloadButton("download_per", label = "Download Persona Data")
+
+downloadHandler(
+  filename = function() {
+    paste0("per_data_",Sys.time(),".csv")
+  },
+  content = function(file) {
+    write_csv(per_reactive(), file)
+  }
+)
+```
