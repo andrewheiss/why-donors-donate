@@ -15,7 +15,6 @@ The experimental design was created as part of the conjoint study in Qualtrics. 
 
 ```{r load-data, warning=FALSE, message=FALSE}
 library(tidyverse)
-library(donorheuristics)
 library(here)
 
 # Load design

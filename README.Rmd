@@ -50,11 +50,6 @@ You can either [download the compendium as a ZIP file](/archive/master.zip) or u
 
 In order to reproduce this project, you'll need to install the compendium as an R package. After downloading the compendium, do the following:
 
-1. Open the compendium as a project in RStudio (double click on `donorheuristics.proj`).
-2. Build the compendium package by clicking on the "Install and Restart" button in RStudio's "Build" panel.
-
-You should now be able to run `library(donorheuristics)` and reproduce all the findings in the paper (as well as the paper itself).
-
 To reproduce the analysis, run `make build` from RStudio's "Terminal" panel. Open `analysis/_site/` to see the results. Run `make serve` to serve the site at <http://localhost:7000>.
 
 To reproduce the paper, run `make html` or `make tex` or `make docx` or `make paper` (for all three output formats) from the terminal. Open `manuscript/` (or `manuscript/tex_out/` for PDFs) to see the results.
@@ -69,7 +64,7 @@ There are several subdirectories with specific purposes:
 
 - `/data`: Data goes here. ***Temporarily* not tracked with git.**
 - `/analysis`: All analysis related files go here as standalone R Markdown files dedicated to specific tasks (like `01_clean-data.Rmd` and `02_analysis.Rmd`, etc.). The most current version of this analysis notebook is accessible online at <https://stats.andrewheiss.com/why-donors-donate/>.
-- `/R`: Various project-specific R scripts and functions go here. These are built as part of the package and are accessible after loading `library(donorheuristics)`.
+- `/R`: Various project-specific R scripts and functions go here.
 - `/manuscript`: The actual writing goes here. A separate Makefile here generates the output as HTML, PDF (through XeTeX), and Word. For now, that Makefile depends on a bunch of helper scripts that only live on Andrew Heiss's computer, so he's the only one that can build the actual paper. Eventually he'll move those scripts (into the `/manuscript/pandoc` folder) here so anyone can build it.
 
 **Not tracked with git**
@@ -96,8 +91,10 @@ We follow a few style and workflow guidelines:
 
     ```r
     library(tidyverse)
-    library(donorheuristics)
     library(here)
+    
+    # Load custom plot functions
+    source(here("R", "graphics.R"))
     
     # Load general global options
     source(here("analysis", "options.R"))

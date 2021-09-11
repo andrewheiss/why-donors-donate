@@ -17,7 +17,6 @@ We downloaded the `conjointqsf_final.csv` file directly from Qualtrics and ran t
 
 ```r
 library(tidyverse)
-library(donorheuristics)
 library(here)
 
 col_names <- names(read_csv(here::here("data", "private_data", "conjointqsf_final.csv")))
@@ -36,7 +35,6 @@ data %>%
 
 ```{r load-raw-data, warning=FALSE, message=FALSE}
 library(tidyverse)
-library(donorheuristics)
 library(here)
 
 data <- read_csv(
