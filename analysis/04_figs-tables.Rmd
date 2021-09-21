@@ -37,8 +37,8 @@ set.seed(1234)
 results <- read_rds(here("data", "derived_data", "final_data.rds"))
 
 # Load draws
-intercept <- 0                            # Intercept-only
-public_affairs <- 1                       # Public affairs
+intercept <- 1                            # Intercept-only
+public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
 charity_voluntarism <- 0                  # Charity and voluntarism
@@ -530,51 +530,71 @@ ggsave(
 ```
 
 ## Plot contrasts
-```{r}
 
-# Organization Intercept Contrasts
+Another approach to address the hypotheses is to plot contrasts.
 
-draws_A <- subset(intercept, i==1, select = Gamma)
-draws_G <- subset(intercept, i==2, select = Gamma)
-draws_O <- subset(intercept, i==3, select = Gamma)
-draws_R <- subset(intercept, i==4, select = Gamma)
-draws_con <- tibble(
-  "A-G" = draws_A-draws_G,
-  "A-O" = draws_A-draws_O,
-  "A-R" = draws_A-draws_R,
-  "G-O" = draws_G-draws_O,
-  "G-R" = draws_G-draws_R,
-  "O-R" = draws_O-draws_R
+### Hypothesis 1, Branding
+
+```{r branding-contrasts}
+# Pull the posterior draws for the organizations and compute contrasts
+contrasts <- tibble(
+  amnesty = draws %>% filter(level == "Amnesty International") %>% select(Gamma) %>% pull(),
+  greenpeace = draws %>% filter(level == "Greenpeace") %>% select(Gamma) %>% pull(),
+  oxfam = draws %>% filter(level == "Oxfam") %>% select(Gamma) %>% pull(),
+  red_cross = draws %>% filter(level == "Red Cross") %>% select(Gamma) %>% pull()
+) %>% 
+  mutate(
+    oxfam_amnesty = oxfam - amnesty,
+    oxfam_greenpeace = oxfam - greenpeace,
+    red_cross_amnesty = red_cross - amnesty,
+    red_cross_greenpeace = red_cross - greenpeace,
+  )
+
+# Plot the contrasts
+contrasts %>%
+  pivot_longer(oxfam_amnesty:red_cross_greenpeace, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+ggsave(
+  "contrasts_hypothesis01.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
 )
-
-c1 <- bind_rows(draws_con$`A-G`, draws_con$`A-O`)
-c1 <- bind_rows(c1, draws_con$`A-R`)
-c1 <- bind_rows(c1, draws_con$`G-O`)
-c1 <- bind_rows(c1, draws_con$`G-R`)
-c1 <- bind_rows(c1, draws_con$`O-R`)
-
-c1$code[1:2000] <- 1
-c1$code[2001:4000] <- 2
-c1$code[4001:6000] <- 3
-c1$code[6001:8000] <- 4
-c1$code[8001:10000] <- 5
-c1$code[10001:12000] <- 6
-
-lcon <- c("A-G", "A-O", "A-R", "G-O", "G-R", "O-R")
-ggplot(c1, aes(x=Gamma)) +
-    stat_halfeye(.width = .95) +
-    geom_vline(xintercept = 0, color = "grey") +
-    labs(y = "Attribute Levels") + facet_wrap(~code)
 ```
 
-A better approach to address the hypotheses (taken from the former 03b and 03c).
+> Donors will be more likely to donate to Oxfam and Red Cross compared to Amnesty International and Greenpeace [Mechanism: awareness of need and contentiousness of issue area]
 
-- We theorize that structural characteristics like an NGO’s host-country political and legal environment can serve as heuristics and shortcuts for donors.
-- Donors who see that an NGO faces general legal trouble abroad will use that knowledge to decide whether or not to donate.
-- We also theorize that non-structural organizational characteristics like managerial practices, funding sources, and issue area also serve as heuristics and influence donation patterns.
-- In this study, we simultaneously account for the interaction between legal crackdown, issue area, funding source, and managerial practices as well as donor characteristics. We hypothesize that each of these structural and organizational characteristics will have a significant effect on donor behavior, but we’re unsure of the direction of that effect.
+Donors are indeed more likely to donate to Red Cross compared to Amnesty International and Greenpeace. However, compared to Amnesty International and Greenpeace, donors are less likely to donate to Oxfam. In fact, there is a negligible difference between donors likelihood to donate to Oxfam and Amnesty International.
 
-> In this study, we simultaneously account for the interaction between legal crackdown, issue area, funding source, and managerial practices as well as donor characteristics. We hypothesize that each of these structural and organizational characteristics will have a significant effect on donor behavior, but we're unsure of the direction of that effect.
+### Hypothesis 2, Government Crackdown
+
+```{r crackdown-contrasts}
+
+```
+
+### Hypothesis 3, Issue Area
+
+```{r issue-contrasts}
+
+```
+
+### Hypothesis 4, Funding Sources
+
+```{r funding-contrasts}
+
+```
+
+### Hypothesis 5, Organizational Practices
+
+```{r practices-contrasts}
+
+```
 
 ## Model fit table
 
