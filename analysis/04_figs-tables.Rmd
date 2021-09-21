@@ -530,6 +530,42 @@ ggsave(
 ```
 
 ## Plot contrasts
+```{r}
+
+# Organization Intercept Contrasts
+
+draws_A <- subset(intercept, i==1, select = Gamma)
+draws_G <- subset(intercept, i==2, select = Gamma)
+draws_O <- subset(intercept, i==3, select = Gamma)
+draws_R <- subset(intercept, i==4, select = Gamma)
+draws_con <- tibble(
+  "A-G" = draws_A-draws_G,
+  "A-O" = draws_A-draws_O,
+  "A-R" = draws_A-draws_R,
+  "G-O" = draws_G-draws_O,
+  "G-R" = draws_G-draws_R,
+  "O-R" = draws_O-draws_R
+)
+
+c1 <- bind_rows(draws_con$`A-G`, draws_con$`A-O`)
+c1 <- bind_rows(c1, draws_con$`A-R`)
+c1 <- bind_rows(c1, draws_con$`G-O`)
+c1 <- bind_rows(c1, draws_con$`G-R`)
+c1 <- bind_rows(c1, draws_con$`O-R`)
+
+c1$code[1:2000] <- 1
+c1$code[2001:4000] <- 2
+c1$code[4001:6000] <- 3
+c1$code[6001:8000] <- 4
+c1$code[8001:10000] <- 5
+c1$code[10001:12000] <- 6
+
+lcon <- c("A-G", "A-O", "A-R", "G-O", "G-R", "O-R")
+ggplot(c1, aes(x=Gamma)) +
+    stat_halfeye(.width = .95) +
+    geom_vline(xintercept = 0, color = "grey") +
+    labs(y = "Attribute Levels") + facet_wrap(~code)
+```
 
 A better approach to address the hypotheses (taken from the former 03b and 03c).
 
