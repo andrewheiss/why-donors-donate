@@ -63,8 +63,28 @@ stored them at this project’s [OSF page](https://osf.io/r59xz/) in
 `targets::tar_make(starts_with("file_"))` (or just `targets::tar_make()`
 in general) will trigger a function (`get_from_osf()`) that will
 automatically download all the `.rds` files and place them in
-`data/raw_data/posterior_draws`, which is not tracked by git (and which
-should be set to not sync in Dropbox).
+`data/raw_data/posterior_draws`, which is not tracked by git.
+
+If you’re part of the research team and using Dropbox, make sure you
+make it so that Dropbox ignores the `posterior_draws` folder. There are
+[complete instructions for doing that
+here](https://help.dropbox.com/files-folders/restore-delete/ignored-files).
+In short, run one of these commands in your terminal:
+
+``` sh
+# On macOS
+cd path/to/this/project
+xattr -w com.dropbox.ignored 1 data/raw_data/posterior_draws
+
+# On Windows (with PowerShell)
+cd path/to/this/project
+Set-Content -Path 'data/raw_data/posterior_draws' -Stream com.dropbox.ignored -Value 1
+```
+
+The icon next to the `posterior_draws` folder should then change to a
+gray minus sign, which means that the folder is being ignored.
+
+------------------------------------------------------------------------
 
 *This stuff is out of date*:
 
