@@ -31,5 +31,10 @@ here_rel <- function(...) {fs::path_rel(here::here(...))}
 # Actual pipeline ---------------------------------------------------------
 
 list(
-  osf_file_targets
+  # Download posterior draws data from OSF
+  osf_file_targets,
+
+  # Knit the README
+  tar_render(readme, here_rel("README.Rmd"),
+             output_options = list(html_preview = FALSE))
 )

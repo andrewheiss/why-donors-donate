@@ -3,11 +3,11 @@
 
 # Why Donors Donate: Disentangling Organizational and Structural Heuristics for International Philanthropy
 
-[Suparna Chaudhry](http://www.suparnachaudhry.com/) • Christopher
-Newport University  
+[Suparna Chaudhry](http://www.suparnachaudhry.com/) • Lewis & Clark
+College  
 [Marc Dotson](https://marriottschool.byu.edu/directory/details?id=50683)
 • Brigham Young University  
-[Andrew Heiss](https://www.andrewheiss.com) • Brigham Young University
+[Andrew Heiss](https://www.andrewheiss.com) • Georgia State University
 
 ------------------------------------------------------------------------
 
@@ -28,9 +28,9 @@ crackdowns on NGOs serve as a heuristic of organizational deservingness.
 This repository contains the data and code for our paper. Our pre-print
 is online here:
 
-> Suparna Chaudhry, Marc Dotson, and Andrew Heiss. (2019). *Why Donors
+> Suparna Chaudhry, Marc Dotson, and Andrew Heiss. (2021). *Why Donors
 > Donate: Disentangling Organizational and Structural Heuristics for
-> International Philanthropy*. Accessed September 10, 2021. Online at
+> International Philanthropy*. Accessed September 22, 2021. Online at
 > `FUTURE_URL`
 
 Our analysis notebook is accessible at
@@ -43,9 +43,30 @@ Please cite this compendium as:
 > Suparna Chaudhry, Marc Dotson, and Andrew Heiss. (2021). *Compendium
 > of R code and data for Why Donors Donate: Disentangling Organizational
 > and Structural Heuristics for International Philanthropy*. Accessed
-> September 10, 2021. Online at `FUTURE_URL`
+> September 22, 2021. Online at `FUTURE_URL`
 
 ## How to download and install
+
+**NB: These instructions are all out of date and will be updated to
+match how the project is actually run, eventually. We’re converting this
+project from a `make`-based build system to a
+[{targets}](https://books.ropensci.org/targets/)-based build system,
+which is easier to manage and requires fewer external dependencies.**
+
+*This stuff is accurate*:
+
+Because the posterior draws from the models are large and take forever
+to make, we’ve saved the results as `.rds` files. However, because those
+files are fairly big and we don’t want to track them with git, we’ve
+stored them at this project’s [OSF page](https://osf.io/r59xz/) in
+[OSF’s internal storage system](https://osf.io/r59xz/files/). Running
+`targets::tar_make(starts_with("file_"))` (or just `targets::tar_make()`
+in general) will trigger a function (`get_from_osf()`) that will
+automatically download all the `.rds` files and place them in
+`data/raw_data/posterior_draws`, which is not tracked by git (and which
+should be set to not sync in Dropbox).
+
+*This stuff is out of date*:
 
 You can either [download the compendium as a ZIP
 file](/archive/master.zip) or use GitHub to clone or fork the compendium
