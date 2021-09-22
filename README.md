@@ -73,11 +73,11 @@ In short, run one of these commands in your terminal:
 
 ``` sh
 # On macOS
-cd path/to/this/project
+cd path/to/this/project  # Not needed if you use the terminal panel in RStudio after opening the project
 xattr -w com.dropbox.ignored 1 data/raw_data/posterior_draws
 
 # On Windows (with PowerShell)
-cd path/to/this/project
+cd path/to/this/project  # Not needed if you use the terminal panel in RStudio after opening the project
 Set-Content -Path 'data/raw_data/posterior_draws' -Stream com.dropbox.ignored -Value 1
 ```
 
