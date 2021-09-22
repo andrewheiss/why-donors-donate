@@ -65,19 +65,23 @@ in general) will trigger a function (`get_from_osf()`) that will
 automatically download all the `.rds` files and place them in
 `data/raw_data/posterior_draws`, which is not tracked by git.
 
+### Ignoring things in Dropbox
+
 If you’re part of the research team and using Dropbox, make sure you
-make it so that Dropbox ignores the `posterior_draws` folder. There are
-[complete instructions for doing that
+make it so that Dropbox ignores the `posterior_draws` folder and the
+`_targets` folder. There are [complete instructions for doing that
 here](https://help.dropbox.com/files-folders/restore-delete/ignored-files).
 In short, run one of these commands in your terminal:
 
 ``` sh
 # On macOS
 cd path/to/this/project  # Not needed if you use the terminal panel in RStudio after opening the project
+xattr -w com.dropbox.ignored 1 _targets
 xattr -w com.dropbox.ignored 1 data/raw_data/posterior_draws
 
 # On Windows (with PowerShell)
 cd path/to/this/project  # Not needed if you use the terminal panel in RStudio after opening the project
+Set-Content -Path '_targets' -Stream com.dropbox.ignored -Value 1
 Set-Content -Path 'data/raw_data/posterior_draws' -Stream com.dropbox.ignored -Value 1
 ```
 
