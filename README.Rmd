@@ -69,7 +69,7 @@ Set-Content -Path '_targets' -Stream com.dropbox.ignored -Value 1
 Set-Content -Path 'data/raw_data/posterior_draws' -Stream com.dropbox.ignored -Value 1
 ```
 
-The icon next to the `posterior_draws` folder should then change to a gray minus sign, which means that the folder is being ignored.
+The icon next to those folders should then change to a gray minus sign, which means that the folder is being ignored.
 
 ---
 
