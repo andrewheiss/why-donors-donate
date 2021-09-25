@@ -578,23 +578,38 @@ Donors are indeed more likely to donate to Red Cross compared to Amnesty Interna
 
 ```
 
+> Donors will show increased willingness to donate to NGOs that are facing government crackdown or criticism [Mechanism: Governments wouldn't be cracking down on them if they didn't perceive a threat from them which means organizations implementing their missions effectively. This perception of efficacy leads to increased donations.]
+
+Contrary to our hypothesis, donors showed decreased willingness to donate to NGOs that are facing government crackdown or criticism. This decreased likelihood to donate is also greater for NGOs under crackdown compared to those under criticism.
+
 ### Hypothesis 3, Issue Area
 
 ```{r issue-contrasts}
 
 ```
+> Donors will show increased willingness to donate to NGOs working in less contentious issue areas (emergency response and refugee relief) over more contentious issue areas (environment and human rights)
+
+Donors appear to be sensitive to NGO issue area when they are considering to donate. Emergency response was the most favored issue area by donors, and experienced the highest likelihood of receiving donations. While this partially matches the claim of the hypothesis, donors showed the least likelihood to donate to refugee relief NGOs, which was contrary to our expectations. It is worth noting that there is some overlap between the intervals of the issue areas, which would suggest that their effect isn't as significant as other factors.
 
 ### Hypothesis 4, Funding Sources
 
 ```{r funding-contrasts}
 
 ```
+> Donors will show increased willingness to donate to NGOs that are funded primarily by numerous small private donors compared to NGOs that are funded by a handful of wealthy private donors and government grants [Mechanism: Perception of efficacy - your contribution matters as a small donor. Government funding may also imply lack of independence of government which can reduce the efficiency of an organization.]
+
+As stated in the hypothesis, donors show increased willingness to donate to NGOs funded by numerous small private donors, as opposed to those funded by a handful of wealthy private donors or government grants.
 
 ### Hypothesis 5, Organizational Practices
 
 ```{r practices-contrasts}
 
 ```
+> Donors will show increased willingness to donate to NGOs that are financially transparent [Mechanism: Perception of efficacy]
+
+> Donors should be no more or less likely to donate to NGOs that are accountable and hold regular third party audits [Mechanism: Donors don't necessarily seek assurance through third-party programs/audits and charity watchdogs, but rather through word of mouth, personal scrutiny and local networks]
+
+When comparing organizational practices, donors show an increased likelihood to donate to NGOs that are financially transparent as well as NGOs that are accountable and hold regular third party audits. Although financial transparency was hypothesized to increase donor's willingness to donate, we believed accountability practices would have an insignificant effect on influencing donor's willingness to donate; our analysis indicates that this is not the case.
 
 ## Model fit table
 
