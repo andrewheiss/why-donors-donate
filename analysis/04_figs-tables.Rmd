@@ -575,34 +575,139 @@ Donors are indeed more likely to donate to Red Cross compared to Amnesty Interna
 ### Hypothesis 2, Government Crackdown
 
 ```{r crackdown-contrasts}
+# Pull the posterior draws for government crackdown
 
+# Reference Level = Friendly relationship with government
+contrasts <- tibble(
+  under_crackdown = draws %>% filter(level == "Under crackdown") %>% select(Gamma) %>% pull(),
+  criticized = draws %>% filter(level == "Criticized") %>% select(Gamma) %>% pull()
+  )
+
+# Plot the contrasts
+contrasts %>%
+  pivot_longer(under_crackdown:criticized, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+ggsave(
+  "contrasts_hypothesis02.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
 ```
 
 > Donors will show increased willingness to donate to NGOs that are facing government crackdown or criticism [Mechanism: Governments wouldn't be cracking down on them if they didn't perceive a threat from them which means organizations implementing their missions effectively. This perception of efficacy leads to increased donations.]
 
 Contrary to our hypothesis, donors showed decreased willingness to donate to NGOs that are facing government crackdown or criticism. This decreased likelihood to donate is also greater for NGOs under crackdown compared to those under criticism.
 
-### Hypothesis 3, Issue Area
+> Donors will show increased willingness to donate to Oxfam and Red Cross when they are facing government crackdown or criticism compared to when Amnesty or Greenpeace is facing crackdown.
+
+[Answer]
 
 ```{r issue-contrasts}
+# Pull the posterior draws for issue area
 
+# Reference Level = Emergency Response
+contrasts <- tibble(
+  environment = draws %>% filter(level == "Environment") %>% select(Gamma) %>% pull(),
+  human_rights = draws %>% filter(level == "Human rights") %>% select(Gamma) %>% pull(),
+  refugee_relief = draws %>% filter(level == "Refugee relief") %>% select(Gamma) %>% pull()
+  )
+
+# Plot the contrasts
+contrasts %>%
+  pivot_longer(environment:refugee_relief, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+ggsave(
+  "contrasts_hypothesis03.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
 ```
 > Donors will show increased willingness to donate to NGOs working in less contentious issue areas (emergency response and refugee relief) over more contentious issue areas (environment and human rights)
 
 Donors appear to be sensitive to NGO issue area when they are considering to donate. Emergency response was the most favored issue area by donors, and experienced the highest likelihood of receiving donations. While this partially matches the claim of the hypothesis, donors showed the least likelihood to donate to refugee relief NGOs, which was contrary to our expectations. It is worth noting that there is some overlap between the intervals of the issue areas, which would suggest that their effect isn't as significant as other factors.
 
+> Donors will show increased willingness to donate to NGOs facing government crackdown/criticism working in less contentious issue areas (emergency response and refugee relief) over more contentious issue areas (environment and human rights) [Mechanisms: Perceptions of deservingness of NGOs dealing with emergency response and refugee relief. Donors are also more likely to donate to programs that are compatible with government preferences and have easily measurable outputs, which environment and human rights programs often lack. NGOs working on more contentious issue areas may be expelled or shut down, which would be a waste of donor resources, make it less likely that they donate to these groups.]
+
+[Answer]
+
 ### Hypothesis 4, Funding Sources
 
 ```{r funding-contrasts}
+# Pull the posterior draws for funding sources
+
+# Reference Level = Funded primarily by many small private donations
+contrasts <- tibble(
+  few_wealthy_private_donors = draws %>% filter(level == "Handful of wealthy private donors") %>% select(Gamma) %>% pull(),
+  government_grants = draws %>% filter(level == "Government grants") %>% select(Gamma) %>% pull()
+  )
+
+# Plot the contrasts
+contrasts %>%
+  pivot_longer(few_wealthy_private_donors:government_grants, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+ggsave(
+  "contrasts_hypothesis04.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
 
 ```
 > Donors will show increased willingness to donate to NGOs that are funded primarily by numerous small private donors compared to NGOs that are funded by a handful of wealthy private donors and government grants [Mechanism: Perception of efficacy - your contribution matters as a small donor. Government funding may also imply lack of independence of government which can reduce the efficiency of an organization.]
 
 As stated in the hypothesis, donors show increased willingness to donate to NGOs funded by numerous small private donors, as opposed to those funded by a handful of wealthy private donors or government grants.
 
+> Donors will show increased willingness to donate to NGOs that are facing government crackdown and are funded primarily by numerous small private donors
+
+[Answer]
+
 ### Hypothesis 5, Organizational Practices
 
 ```{r practices-contrasts}
+
+# Pull the posterior draws for organizational practices
+
+contrasts <- tibble(
+  financial_transparency = draws %>% filter(level == "Handful of wealthy private donors") %>% select(Gamma) %>% pull(),
+  accountibility = draws %>% filter(level == "Government grants") %>% select(Gamma) %>% pull()
+  )
+
+# Plot the contrasts
+contrasts %>%
+  pivot_longer(few_wealthy_private_donors:government_grants, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+ggsave(
+  "contrasts_hypothesis04.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
 
 ```
 > Donors will show increased willingness to donate to NGOs that are financially transparent [Mechanism: Perception of efficacy]
@@ -610,6 +715,23 @@ As stated in the hypothesis, donors show increased willingness to donate to NGOs
 > Donors should be no more or less likely to donate to NGOs that are accountable and hold regular third party audits [Mechanism: Donors don't necessarily seek assurance through third-party programs/audits and charity watchdogs, but rather through word of mouth, personal scrutiny and local networks]
 
 When comparing organizational practices, donors show an increased likelihood to donate to NGOs that are financially transparent as well as NGOs that are accountable and hold regular third party audits. Although financial transparency was hypothesized to increase donor's willingness to donate, we believed accountability practices would have an insignificant effect on influencing donor's willingness to donate; our analysis indicates that this is not the case.
+
+> Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent and are funded primarily by numerous small private donors
+
+[Answer]
+
+> Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent and work in less contentious areas (emergency response and refugee relief) 
+
+
+[Answer]
+
+> Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent and work in less contentious areas (emergency response and refugee relief) and are funded by numerous small donors
+
+[Answer]
+
+> Donors should be no more or less likely to donate to NGOs that are accountable and hold regular third party audits [Mechanism: Donors don't necessarily seek assurance through third-party programs/audits and charity watchdogs, but rather through word of mouth, personal scrutiny and local networks]
+
+[Answer]
 
 ## Model fit table
 
