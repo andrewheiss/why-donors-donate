@@ -854,16 +854,16 @@ data <- data %>%
 ## Design matrix
 
 ```{r transform-design}
-# Load design
+# Load the dummy design.
 design <- read_csv(here::here("data", "derived_data", "dummy_design.csv")) %>%
-  select(-X1) %>%
+  select(-`...1`) %>%
   rename(
     version = question_set,
     task = question,
     alt = choice
   )
 
-# Create the array for design X.
+# Create the arrays for a design with a brand intercept.
 X <- array(
   data = NA,
   dim = c(
@@ -890,11 +890,60 @@ for (n in 1:dim(X)[1]) {
         filter(task == s, alt == p) %>%
         select(org2:org4) %>%
         as_vector()
-      # Fill in org1 to complte org intercept.
+      # Fill in org1 to complete org intercept.
       X_s[p, "org1"] <- ifelse(sum(X_p) == 1, 0, 1)
     }
     # Save modified design, including outside option.
     X[n, s,,] <- rbind(X_s, rep(0, ncol(X_s))) %>% as.matrix()
+  }
+}
+
+# Load the index design.
+index_design <- read_csv(here::here("data", "derived_data", "index_design.csv")) %>%
+  select(-`...1`) %>%
+  rename(
+    version = question_set,
+    task = question,
+    alt = choice
+  )
+
+# Create the arrays for the fully dummy and index designs.
+X_dummy <- array(
+  data = NA,
+  dim = c(
+    nrow(data),             # Number of respondents.
+    max(design$task),       # Number of choice tasks per respondent.
+    (max(design$alt) + 1),  # Number of product alternatives per choice task.
+    (ncol(design) - 3)      # Number of (estimable) attribute levels.
+  )
+)
+
+X_index <- array(
+  data = NA,
+  dim = c(
+    nrow(data),                  # Number of respondents.
+    max(index_design$task),      # Number of choice tasks per respondent.
+    (max(index_design$alt) + 1), # Number of product alternatives per choice task.
+    ncol(index_design) - 3       # Number of (estimable) attribute levels.
+  )
+)
+
+# Add the outside option coded as all zeros for the dummy and index designs.
+for (n in 1:dim(X_dummy)[1]) {
+  # Filter for respondent n.
+  X_dummy_n <- design %>% filter(version == data$version[n])
+  X_index_n <- index_design %>% filter(version == data$version[n])
+  for (s in 1:dim(X_dummy)[2]) {
+    # Filter for task s.
+    X_dummy_s <- X_dummy_n %>% 
+      filter(task == s) %>% 
+      select(org2:gov_rel3)
+    X_index_s <- X_index_n %>% 
+      filter(task == s) %>% 
+      select(org1:gov_rel3)
+    # Save modified design, including outside option.
+    X_dummy[n, s,,] <- rbind(X_dummy_s, rep(0, ncol(X_dummy_s))) %>% as.matrix()
+    X_index[n, s,,] <- rbind(X_index_s, rep(0, ncol(X_index_s))) %>% as.matrix()
   }
 }
 ```
@@ -905,6 +954,8 @@ for (n in 1:dim(X)[1]) {
 ```{r save-clean-data}
 write_rds(data, here("data", "derived_data", "final_data.rds"))
 write_rds(X, here("data", "derived_data", "final_design.rds"))
+write_rds(X_dummy, here("data", "derived_data", "final_design_dummy.rds"))
+write_rds(X_index, here("data", "derived_data", "final_design_index.rds"))
 ```
 
 <!-- select(-c("732d72a6-25a3-4194-8416-461acae30837.1.1_CBCONJOINT":"revision_CBCONJOINT")) -->
