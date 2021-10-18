@@ -16,6 +16,7 @@ The experimental design was created as part of the conjoint study in Qualtrics. 
 ```{r load-data, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(donorheuristics)
+library(fastDummies)
 library(here)
 
 # Load design
@@ -35,7 +36,7 @@ as_tibble(design) %>%
 
 Now we prepare the experimental design for use in estimating the model by dropping the first level of each attribute, which are all discrete, as the reference level.
 
-```{r check-design, warning=FALSE, message=FALSE}
+```{r dummy-design, warning=FALSE, message=FALSE}
 # Convert the attributes in design into factors
 dummy_design <- as.data.frame(design)
 for(i in 4:ncol(dummy_design)) {
@@ -45,14 +46,154 @@ for(i in 4:ncol(dummy_design)) {
 # Rename the variables.
 colnames(dummy_design)[4:9] <- c("org", "issue", "transp", "account", "fund", "gov_rel")
 
-# Use the output of lm to get a dummy-coded version of the design
-dummy_design$y <- matrix(rnorm(nrow(dummy_design)), ncol=1)
-out <- lm(y ~ ., dummy_design, x = TRUE)
-dummy_design <- out$x[,-1]
-rownames(dummy_design) <- NULL
+# Use dummy_cols() to get a index-coded version of all the attribute levels.
+dummy_design <- dummy_cols(
+  dummy_design,
+  select_columns = c("org", "issue", "transp", "account", "fund", "gov_rel"),
+  remove_first_dummy = TRUE,
+  remove_selected_columns = TRUE
+)
+
+# Rename the index variables.
+colnames(dummy_design)[4:15] <- c(
+  str_c("org", 2:4), str_c("issue", 2:4), str_c("transp", 2),
+  str_c("account", 2), str_c("fund", 2:3), str_c("gov_rel", 2:3)
+)
 
 # Save dummy-coded design output
 write.csv(dummy_design, here("data", "derived_data", "dummy_design.csv"))
+```
+
+
+# Interactions
+
+We have a number of hypotheses referencing specific interactions. To answer these hypotheses, we need to specific each of the needed interactions.
+
+```{r interactions, warning=FALSE, message=FALSE}
+# Convert the attributes in design into factors
+interactions <- as.data.frame(design)
+for(i in 4:ncol(interactions)) {
+  interactions[,i] <- as.factor(interactions[,i])
+}
+
+# Rename the variables.
+colnames(interactions)[4:9] <- c("org", "issue", "transp", "account", "fund", "gov_rel")
+
+# Use dummy_cols() to get a dummy-coded version of all the attribute levels.
+interactions <- dummy_cols(
+  interactions, 
+  select_columns = c("org", "issue", "transp", "account", "fund", "gov_rel"),
+  remove_first_dummy = FALSE,
+  remove_selected_columns = TRUE
+)
+
+# Rename the dummy-coded variables.
+colnames(interactions)[4:21] <- c(
+  str_c("org", 1:4), str_c("issue", 1:4), str_c("transp", 1:2), 
+  str_c("account", 1:2), str_c("fund", 1:3), str_c("gov_rel", 1:3)
+)
+
+# Build out all the necessary interactions.
+interactions <- interactions %>% 
+  as_tibble() %>% 
+  mutate(
+    # Hypothesis 2b.
+    amnesty_criticized = org1 * gov_rel2,
+    amnesty_crackdown = org1 * gov_rel3,
+    greenpeace_criticized = org2 * gov_rel2,
+    greenpeace_crackdown = org2 * gov_rel3,
+    oxfam_criticized = org3 * gov_rel2,
+    oxfam_crackdown = org3 * gov_rel3,
+    redcross_criticized = org4 * gov_rel2,
+    redcross_crackdown = org4 * gov_rel3,
+    # Hypothesis 3b.
+    emergency_criticized = issue1 * gov_rel2,
+    emergency_crackdown = issue1 * gov_rel3,
+    environment_criticized = issue2 * gov_rel2,
+    environment_crackdown = issue2 * gov_rel3,
+    humanrights_criticized = issue3 * gov_rel2,
+    humanrights_crackdown = issue3 * gov_rel3,
+    refugees_criticized = issue4 * gov_rel2,
+    refugees_crackdown = issue4 * gov_rel3,
+    # Hypothesis 4b.
+    smalldonors_criticized = fund1 * gov_rel2,
+    smalldonors_crackdown = fund1 * gov_rel3,
+    wealthydonors_criticized = fund2 * gov_rel2,
+    wealthydonors_crackdown = fund2 * gov_rel3,
+    govgrants_criticized = fund3 * gov_rel2,
+    govgrants_crackdown = fund3 * gov_rel3,
+    # Hypothesis 4c.
+    emergency_smalldonors_crackdown = issue1 * fund1 * gov_rel3,
+    emergency_wealthydonors_crackdown = issue1 * fund2 * gov_rel3,
+    emergency_govgrants_crackdown = issue1 * fund3 * gov_rel3,
+    environment_smalldonors_crackdown = issue2 * fund1 * gov_rel3,
+    environment_wealthydonors_crackdown = issue2 * fund2 * gov_rel3,
+    environment_govgrants_crackdown = issue2 * fund3 * gov_rel3,
+    humanrights_smalldonors_crackdown = issue3 * fund1 * gov_rel3,
+    humanrights_wealthydonors_crackdown = issue3 * fund2 * gov_rel3,
+    humanrights_govgrants_crackdown = issue3 * fund3 * gov_rel3,
+    refugees_smalldonors_crackdown = issue4 * fund1 * gov_rel3,
+    refugees_wealthydonors_crackdown = issue4 * fund2 * gov_rel3,
+    refugees_govgrants_crackdown = issue4 * fund3 * gov_rel3,
+    # Hypothesis 5b.
+    transp_criticized = transp1 * gov_rel2,
+    transp_crackdown = transp1 * gov_rel3,
+    nottransp = ifelse(transp1 == 0, 1, 0),
+    nottransp_criticized = nottransp * gov_rel2,
+    nottransp_crackdown = nottransp * gov_rel3,
+    # Hypothesis 5c.
+    transp_smalldonors_criticized = transp1 * fund1 * gov_rel2,
+    transp_smalldonors_crackdown = transp1 * fund1 * gov_rel3,
+    transp_wealthydonors_criticized = transp1 * fund2 * gov_rel2,
+    transp_wealthydonors_crackdown = transp1 * fund2 * gov_rel3,
+    transp_govgrants_criticized = transp1 * fund3 * gov_rel2,
+    transp_govgrants_crackdown = transp1 * fund3 * gov_rel3,
+    nottransp_smalldonors_criticized = nottransp * fund1 * gov_rel2,
+    nottransp_smalldonors_crackdown = nottransp * fund1 * gov_rel3,
+    nottransp_wealthydonors_criticized = nottransp * fund2 * gov_rel2,
+    nottransp_wealthydonors_crackdown = nottransp * fund2 * gov_rel3,
+    nottransp_govgrants_criticized = nottransp * fund3 * gov_rel2,
+    nottransp_govgrants_crackdown = nottransp * fund3 * gov_rel3,
+    # Hypothesis 5d.
+    transp_emergency_criticized = transp1 * issue1 * gov_rel2,
+    transp_emergency_crackdown = transp1 * issue1 * gov_rel3,
+    transp_environment_criticized = transp1 * issue2 * gov_rel2,
+    transp_environment_crackdown = transp1 * issue2 * gov_rel3,
+    transp_humanrights_criticized = transp1 * issue3 * gov_rel2,
+    transp_humanrights_crackdown = transp1 * issue3 * gov_rel3,
+    transp_refugees_criticized = transp1 * issue4 * gov_rel2,
+    transp_refugees_crackdown = transp1 * issue4 * gov_rel3,
+    nottransp_emergency_criticized = nottransp * issue1 * gov_rel2,
+    nottransp_emergency_crackdown = nottransp * issue1 * gov_rel3,
+    nottransp_environment_criticized = nottransp * issue2 * gov_rel2,
+    nottransp_environment_crackdown = nottransp * issue2 * gov_rel3,
+    nottransp_humanrights_criticized = nottransp * issue3 * gov_rel2,
+    nottransp_humanrights_crackdown = nottransp * issue3 * gov_rel3,
+    nottransp_refugees_criticized = nottransp * issue4 * gov_rel2,
+    nottransp_refugees_crackdown = nottransp * issue4 * gov_rel3,
+    # Hypothesis 5e.
+    transp_smalldonors_emergency_criticized = transp1 * fund1 * issue1 * gov_rel2,
+    transp_smalldonors_emergency_crackdown = transp1 * fund1 * issue1 * gov_rel3,
+    transp_smalldonors_environment_criticized = transp1 * fund1 * issue2 * gov_rel2,
+    transp_smalldonors_environment_crackdown = transp1 * fund1 * issue2 * gov_rel3,
+    transp_smalldonors_humanrights_criticized = transp1 * fund1 * issue3 * gov_rel2,
+    transp_smalldonors_humanrights_crackdown = transp1 * fund1 * issue3 * gov_rel3,
+    transp_smalldonors_refugees_criticized = transp1 * fund1 * issue4 * gov_rel2,
+    transp_smalldonors_refugees_crackdown = transp1 * fund1 * issue4 * gov_rel3,
+    nottransp_smalldonors_emergency_criticized = nottransp * fund1 * issue1 * gov_rel2,
+    nottransp_smalldonors_emergency_crackdown = nottransp * fund1 * issue1 * gov_rel3,
+    nottransp_smalldonors_environment_criticized = nottransp * fund1 * issue2 * gov_rel2,
+    nottransp_smalldonors_environment_crackdown = nottransp * fund1 * issue2 * gov_rel3,
+    nottransp_smalldonors_humanrights_criticized = nottransp * fund1 * issue3 * gov_rel2,
+    nottransp_smalldonors_humanrights_crackdown = nottransp * fund1 * issue3 * gov_rel3,
+    nottransp_smalldonors_refugees_criticized = nottransp * fund1 * issue4 * gov_rel2,
+    nottransp_smalldonors_refugees_crackdown = nottransp * fund1 * issue4 * gov_rel3
+  ) %>% 
+  # Drop the design and the nottransp helper variable.
+  select(-c(org1:gov_rel3, nottransp))
+
+# Save interact-coded design output
+write.csv(interactions, here("data", "derived_data", "interactions.csv"))
 ```
 
 
