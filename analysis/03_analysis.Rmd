@@ -42,8 +42,9 @@ rstan_options(auto_write = TRUE)
 After selecting the model we'd like to run, model calibration proceeds as follows. Note that model calibration is run in a separate R script given how long it takes to run each model.
 
 ```{r model-calibration, eval=FALSE}
-intercept <- 0                            # Intercept-only
-public_affairs <- 1                       # Public affairs
+intercept <- 1                            # Intercept-only
+interactions <- 1                         # Include interactions with the intercept-only model?
+public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
 charity_voluntarism <- 0                  # Charity and voluntarism
@@ -56,6 +57,7 @@ public_political_social_charity_demo <- 0 # + Demographics
 # Load data and design
 final_data <- read_rds(here::here("data", "derived_data", "final_data.rds"))
 X <- read_rds(here::here("data", "derived_data", "final_design.rds"))
+if (interactions == 1) X <- read_rds(here::here("data", "derived_data", "final_interactions.rds"))
 
 # Restructure choice data Y
 Y <- final_data %>%
@@ -131,22 +133,24 @@ if (public_political_social_charity_demo == 1) {
     )
 }
 
-# Replace factor labels with levels
-Z <- Z %>%
-  mutate_if(is.factor, as.integer) %>%
-  mutate_if(is.integer, as.factor)
-
-# Pad the variables names with _
-colnames(Z) <- str_c(colnames(Z), "_")
-
-# Use the output of lm to get a dummy-coded version of the covariate matrix Z
-Z$y <- matrix(rnorm(nrow(Z)), ncol = 1)
-out <- lm(y ~ ., Z, x = TRUE)
-
-# Save out Z as a matrix, including an intercept
-Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
-  bind_cols(as_tibble(out$x[,-1])) %>%
-  as.matrix()
+if (intercept == 0) {
+  # Replace factor labels with levels
+  Z <- Z %>%
+    mutate_if(is.factor, as.integer) %>%
+    mutate_if(is.integer, as.factor)
+  
+  # Pad the variables names with _
+  colnames(Z) <- str_c(colnames(Z), "_")
+  
+  # Use the output of lm to get a dummy-coded version of the covariate matrix Z
+  Z$y <- matrix(rnorm(nrow(Z)), ncol = 1)
+  out <- lm(y ~ ., Z, x = TRUE)
+  
+  # Save out Z as a matrix, including an intercept
+  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
+    bind_cols(as_tibble(out$x[,-1])) %>%
+    as.matrix()
+}
 
 # Specify the data for calibration in a list
 data <- list(
@@ -176,7 +180,8 @@ fit <- stan(
   seed = 42
 )
 run <- list(data = data, fit = fit)
-if (intercept == 1) write_rds(run, here::here("analysis", "output", "model_runs", "intercept.rds"))
+if (intercept == 1 & interactions == 0) write_rds(run, here::here("analysis", "output", "model_runs", "intercept.rds"))
+if (intercept == 1 & interactions == 1) write_rds(run, here::here("analysis", "output", "model_runs", "interactions.rds"))
 if (public_affairs == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_affairs.rds"))
 if (political_ideology == 1) write_rds(run, here::here("analysis", "output", "model_runs", "political_ideology.rds"))
 if (social_views == 1) write_rds(run, here::here("analysis", "output", "model_runs", "social_views.rds"))
