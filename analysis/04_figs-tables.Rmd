@@ -535,6 +535,8 @@ Another approach to address the hypotheses is to plot contrasts.
 
 ### Hypothesis 1, Branding
 
+> Donors will be more likely to donate to Oxfam and Red Cross compared to Amnesty International and Greenpeace [Mechanism: awareness of need and contentiousness of issue area]
+
 ```{r branding-contrasts}
 # Pull the posterior draws for the organizations and compute contrasts
 contrasts <- tibble(
@@ -568,13 +570,19 @@ ggsave(
 )
 ```
 
-> Donors will be more likely to donate to Oxfam and Red Cross compared to Amnesty International and Greenpeace [Mechanism: awareness of need and contentiousness of issue area]
 
 Donors are indeed more likely to donate to Red Cross compared to Amnesty International and Greenpeace. However, compared to Amnesty International and Greenpeace, donors are less likely to donate to Oxfam. In fact, there is a negligible difference between donors likelihood to donate to Oxfam and Amnesty International.
 
+
 ### Hypothesis 2, Government Crackdown
 
-```{r crackdown-contrasts}
+
+# Hypothesis 2a, Relationship with Host Government
+
+> Donors will show increased willingness to donate to NGOs that are facing government crackdown or criticism [Mechanism: Governments wouldn't be cracking down on them if they didn't perceive a threat from them which means organizations implementing their missions effectively. This perception of efficacy leads to increased donations.]
+
+
+```{r crackdown-contrasts-a}
 # Pull the posterior draws for government crackdown
 
 # Reference Level = Friendly relationship with government
@@ -593,7 +601,7 @@ contrasts %>%
 
 # Save plot
 ggsave(
-  "contrasts_hypothesis02.png",
+  "contrasts_hypothesis02a.png",
   path = here::here("analysis", "output", "figures"),
   width = 12,
   height = 6,
@@ -601,28 +609,54 @@ ggsave(
 )
 ```
 
-> Donors will show increased willingness to donate to NGOs that are facing government crackdown or criticism [Mechanism: Governments wouldn't be cracking down on them if they didn't perceive a threat from them which means organizations implementing their missions effectively. This perception of efficacy leads to increased donations.]
 
 Contrary to our hypothesis, donors showed decreased willingness to donate to NGOs that are facing government crackdown or criticism. This decreased likelihood to donate is also greater for NGOs under crackdown compared to those under criticism.
 
+
+# Hypothesis 2b, Organization and Relationship with Host Government
+
 > Donors will show increased willingness to donate to Oxfam and Red Cross when they are facing government crackdown or criticism compared to when Amnesty or Greenpeace is facing crackdown.
 
-Market share when criticized:
-A = 0.130767214
-G = 0.212870677
-O = 0.218368082
-R = 0.437994028
+```{r crackdown-contrasts-b}
 
-Market share under crackdown:
-A = 0.130767214
-G = 0.212870677
-O = 0.218368082
-R = 0.437994028
+# Pull the posterior draws for organization*government crackdown interaction
+
+# Reference Level = Friendly relationship with government
+#  contrasts <- tibble(
+#    under_crackdown = draws %>% filter(level == "Under crackdown") %>% select(Gamma) %>% pull(),
+#    criticized = draws %>% filter(level == "Criticized") %>% select(Gamma) %>% pull()
+#    )
+
+# Plot the contrasts
+# contrasts %>%
+#  pivot_longer(under_crackdown:criticized, names_to = "level", values_to = "Gamma") %>% 
+#  ggplot(aes(x = Gamma, y = level)) +
+#  stat_halfeye(.width = .95) +
+#  geom_vline(xintercept = 0, color = "grey") +
+#  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+# ggsave(
+#  "contrasts_hypothesis02b.png",
+#  path = here::here("analysis", "output", "figures"),
+#  width = 12,
+#  height = 6,
+#  units = "in"
+# )
+```
+
+[Answer]
 
 
-Tentative yes, O and R claim greater market share compared to A and G
+### Hypothesis 3, Issue Area
 
-```{r issue-contrasts}
+
+# Hypothesis 3a, Issue Area
+
+> Donors will show increased willingness to donate to NGOs working in less contentious issue areas (emergency response and refugee relief) over more contentious issue areas (environment and human rights)
+
+
+```{r issue-contrasts-a}
 # Pull the posterior draws for issue area
 
 # Reference Level = Emergency Response
@@ -642,32 +676,62 @@ contrasts %>%
 
 # Save plot
 ggsave(
-  "contrasts_hypothesis03.png",
+  "contrasts_hypothesis03a.png",
   path = here::here("analysis", "output", "figures"),
   width = 12,
   height = 6,
   units = "in"
 )
 ```
-> Donors will show increased willingness to donate to NGOs working in less contentious issue areas (emergency response and refugee relief) over more contentious issue areas (environment and human rights)
 
 Donors appear to be sensitive to NGO issue area when they are considering to donate. Emergency response was the most favored issue area by donors, and experienced the highest likelihood of receiving donations. While this partially matches the claim of the hypothesis, donors showed the least likelihood to donate to refugee relief NGOs, which was contrary to our expectations. It is worth noting that there is some overlap between the intervals of the issue areas, which would suggest that their effect isn't as significant as other factors.
 
+
+# Hypothesis 3b, Relationship with Host Government and Issue Area
+
 > Donors will show increased willingness to donate to NGOs facing government crackdown/criticism working in less contentious issue areas (emergency response and refugee relief) over more contentious issue areas (environment and human rights) [Mechanisms: Perceptions of deservingness of NGOs dealing with emergency response and refugee relief. Donors are also more likely to donate to programs that are compatible with government preferences and have easily measurable outputs, which environment and human rights programs often lack. NGOs working on more contentious issue areas may be expelled or shut down, which would be a waste of donor resources, make it less likely that they donate to these groups.]
 
-Market shares:
+```{r issue-contrasts-b}
 
-ER = 0.318332453
-EV = 0.203877752
-HR = 0.159886134
-RR = 0.31790366
+# Pull the posterior draws for government crackdown*issue area interaction
 
-ER>RR>EV>HR, evidence that hypothesis is correct
+# Reference Level = Friendly relationship with government
+# Reference Level = Emergency Response
+# contrasts <- tibble(
+#  environment = draws %>% filter(level == "Environment") %>% select(Gamma) %>% pull(),
+#  human_rights = draws %>% filter(level == "Human rights") %>% select(Gamma) %>% pull(),
+#  refugee_relief = draws %>% filter(level == "Refugee relief") %>% select(Gamma) %>% pull()
+#  )
+
+# Plot the contrasts
+#contrasts %>%
+# pivot_longer(environment:refugee_relief, names_to = "level", values_to = "Gamma") %>% 
+#  ggplot(aes(x = Gamma, y = level)) +
+#  stat_halfeye(.width = .95) +
+#  geom_vline(xintercept = 0, color = "grey") +
+#  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+#ggsave(
+# "contrasts_hypothesis03b.png",
+#  path = here::here("analysis", "output", "figures"),
+#  width = 12,
+#  height = 6,
+#  units = "in"
+#)
+```
+
+[Answer]
 
 
 ### Hypothesis 4, Funding Sources
 
-```{r funding-contrasts}
+
+# Hypothesis 4a, Funding Sources
+
+> Donors will show increased willingness to donate to NGOs that are funded primarily by numerous small private donors compared to NGOs that are funded by a handful of wealthy private donors and government grants [Mechanism: Perception of efficacy - your contribution matters as a small donor. Government funding may also imply lack of independence of government which can reduce the efficiency of an organization.]
+
+```{r funding-contrasts-a}
 # Pull the posterior draws for funding sources
 
 # Reference Level = Funded primarily by many small private donations
@@ -686,7 +750,7 @@ contrasts %>%
 
 # Save plot
 ggsave(
-  "contrasts_hypothesis04.png",
+  "contrasts_hypothesis04a.png",
   path = here::here("analysis", "output", "figures"),
   width = 12,
   height = 6,
@@ -694,24 +758,91 @@ ggsave(
 )
 
 ```
-> Donors will show increased willingness to donate to NGOs that are funded primarily by numerous small private donors compared to NGOs that are funded by a handful of wealthy private donors and government grants [Mechanism: Perception of efficacy - your contribution matters as a small donor. Government funding may also imply lack of independence of government which can reduce the efficiency of an organization.]
 
 As stated in the hypothesis, donors show increased willingness to donate to NGOs funded by numerous small private donors, as opposed to those funded by a handful of wealthy private donors or government grants.
 
+
+# Hypothesis 4b, Relationship with Host Government and Funding Sources
+
 > Donors will show increased willingness to donate to NGOs that are facing government crackdown and are funded primarily by numerous small private donors
 
-Market shares:
+```{r funding-contrasts-b}
+# Pull the posterior draws for government crackdown*funding sources interaction
 
-numerous donors/not under crackdown = 0.247967551
-numerous donors/under crackdown = 0.271016037
-few donors/under crackdown = 0.26213647
-government grants/under crackdown = 0.218879942
+# Reference Level = Friendly relationship with government
+# Reference Level = Funded primarily by many small private donations
+#contrasts <- tibble(
+#  few_wealthy_private_donors = draws %>% filter(level == "Handful of wealthy private donors") %>% select(Gamma) %>% pull(),
+#  government_grants = draws %>% filter(level == "Government grants") %>% select(Gamma) %>% pull()
+#  )
 
-Though numerous donors/under crackdown has the largest market share, the difference between them is almost insignificant. Personally, this evidence doesn't seem convincing.
+# Plot the contrasts
+#contrasts %>%
+#  pivot_longer(few_wealthy_private_donors:government_grants, names_to = "level", values_to = "Gamma") %>% 
+#  ggplot(aes(x = Gamma, y = level)) +
+#  stat_halfeye(.width = .95) +
+#  geom_vline(xintercept = 0, color = "grey") +
+#  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+#ggsave(
+#  "contrasts_hypothesis04b.png",
+#  path = here::here("analysis", "output", "figures"),
+#  width = 12,
+#  height = 6,
+#  units = "in"
+#)
+
+```
+
+[Answer]
+
+
+# Hypothesis 4c, Relationship with Host Government, Funding Sources, and Issue Area
+
+> Donors will show increased willingness to donate to NGOs that are facing government crackdown and are funded primarily by numerous small private donors and work in less contentious areas (emergency response and refugee relief) 
+
+```{r funding-contrasts-c}
+# Pull the posterior draws for funding sources*government crackdown*issue area interaction
+
+# Reference Level = Funded primarily by many small private donations
+# Reference Level = Friendly relationship with government
+#contrasts <- tibble(
+#  few_wealthy_private_donors = draws %>% filter(level == "Handful of wealthy private donors") %>% select(Gamma) %>% pull(),
+#  government_grants = draws %>% filter(level == "Government grants") %>% select(Gamma) %>% pull()
+#  )
+
+# Plot the contrasts
+#contrasts %>%
+#  pivot_longer(few_wealthy_private_donors:government_grants, names_to = "level", values_to = "Gamma") %>% 
+#  ggplot(aes(x = Gamma, y = level)) +
+#  stat_halfeye(.width = .95) +
+#  geom_vline(xintercept = 0, color = "grey") +
+#  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+#ggsave(
+#  "contrasts_hypothesis04c.png",
+#  path = here::here("analysis", "output", "figures"),
+#  width = 12,
+#  height = 6,
+#  units = "in"
+#)
+
+```
+
+[Answer]
+
 
 ### Hypothesis 5, Organizational Practices
 
-```{r practices-contrasts}
+
+# Hypothesis 5a, Organizational Practices
+
+> Donors will show increased willingness to donate to NGOs that are financially transparent [Mechanism: Perception of efficacy]
+
+
+```{r practices-contrasts-a}
 
 # Pull the posterior draws for organizational practices
 
@@ -722,7 +853,7 @@ contrasts <- tibble(
 
 # Plot the contrasts
 contrasts %>%
-  pivot_longer(financial_transparency:accountability, names_to = "level", values_to = "Gamma") %>% 
+  pivot_longer(financial_transparency, names_to = "level", values_to = "Gamma") %>% 
   ggplot(aes(x = Gamma, y = level)) +
   stat_halfeye(.width = .95) +
   geom_vline(xintercept = 0, color = "grey") +
@@ -730,7 +861,7 @@ contrasts %>%
 
 # Save plot
 ggsave(
-  "contrasts_hypothesis05.png",
+  "contrasts_hypothesis05a.png",
   path = here::here("analysis", "output", "figures"),
   width = 12,
   height = 6,
@@ -738,54 +869,158 @@ ggsave(
 )
 
 ```
-> Donors will show increased willingness to donate to NGOs that are financially transparent [Mechanism: Perception of efficacy]
+
+Donors show an increased likelihood to donate to NGOs that are financially transparent, as hypothesized.
+
+
+# Hypothesis 5b, Organizational Practices
 
 > Donors should be no more or less likely to donate to NGOs that are accountable and hold regular third party audits [Mechanism: Donors don't necessarily seek assurance through third-party programs/audits and charity watchdogs, but rather through word of mouth, personal scrutiny and local networks]
 
-When comparing organizational practices, donors show an increased likelihood to donate to NGOs that are financially transparent as well as NGOs that are accountable and hold regular third party audits. Although financial transparency was hypothesized to increase donor's willingness to donate, we believed accountability practices would have an insignificant effect on influencing donor's willingness to donate; our analysis indicates that this is not the case.
+```{r practices-contrasts-b}
+# Pull the posterior draws for organizational practices
+
+contrasts <- tibble(
+  financial_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
+  accountability = draws %>% filter(level == "Accountability") %>% select(Gamma) %>% pull()
+  )
+
+# Plot the contrasts
+contrasts %>%
+  pivot_longer(accountability, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+ggsave(
+  "contrasts_hypothesis05b.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
+
+```
+
+Donors show a similar increase in willingness to donate to accountable NGOs in comparison to NGOs that are financially transparent. However, this is contrary to what was hypothesized--we predicted that donor's willingness to donate wouldn't be affected by accountability practices.
+
+
+# Hypothesis 5c, Relationship with Host Government, Organizational Practices, and Funding Sources
 
 > Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent and are funded primarily by numerous small private donors
 
-Expected utility (Transparency/Few donors/Under crackdown):
+```{r practices-contrasts-c}
+# Pull the posterior draws for government crackdown*organizational practices*funding sources interaction
 
-(1/0/1)	= 3.346877215
-(1/1/1)* =	3.237220167
-(1/1/0)	= 2.961911648
-(0/1/1)	= 2.174492071
-(0/0/1)	= 2.248150447
-(0/0/0)	= 2.056957096
-(1/0/0)	= 3.062242941
+# Reference Level = Friendly relationship with government
+# Reference Level = Funded primarily by many small private donations
 
-Market shares: 
-(1/0/1)	= 0.175340698
-(1/1/1)* =	0.169595837
-(1/1/0)	= 0.155172605
-(0/1/1)	= 0.113920211
-(0/0/1)	= 0.117779124
-(0/0/0)	= 0.10776263
-(1/0/0)	= 0.160428895
+#contrasts <- tibble(
+#  financial_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
+#  accountability = draws %>% filter(level == "Accountability") %>% select(Gamma) %>% pull()
+#  )
 
-Not sure if this is the best way to do triple interaction, but I gave it a shot. I included expected utility as well as market share, as market share may understate the difference in willingness to donate (market share is split between 7 orgs instead of 4). 
+# Plot the contrasts
+#contrasts %>%
+#  pivot_longer(accountability, names_to = "level", values_to = "Gamma") %>% 
+#  ggplot(aes(x = Gamma, y = level)) +
+#  stat_halfeye(.width = .95) +
+#  geom_vline(xintercept = 0, color = "grey") +
+#  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
 
-NGOs that are financially transparent, are supported by few donors, and are under crackdown receive the second largest share of the market--they are topped by firms which are transparent and under crackdown, but are supported by numerous donors. This would contradict the hypothesis, assuming I did this correctly.
+# Save plot
+#ggsave(
+#  "contrasts_hypothesis05c.png",
+#  path = here::here("analysis", "output", "figures"),
+#  width = 12,
+#  height = 6,
+#  units = "in"
+#)
+
+```
+
+[Answer]
+
+
+# Hypothesis 5d, Relationship with Host Government, Organizational Practices, and Issue Area
 
 > Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent and work in less contentious areas (emergency response and refugee relief) 
 
+```{r practices-contrasts-d}
+# Pull the posterior draws for government crackdown*organizational practices*issue area interaction
+
+# Reference Level = Friendly relationship with government
+# Reference Level = Emergency Response
+
+#contrasts <- tibble(
+#  financial_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
+#  accountability = draws %>% filter(level == "Accountability") %>% select(Gamma) %>% pull()
+#  )
+
+# Plot the contrasts
+#contrasts %>%
+#  pivot_longer(accountability, names_to = "level", values_to = "Gamma") %>% 
+#  ggplot(aes(x = Gamma, y = level)) +
+#  stat_halfeye(.width = .95) +
+#  geom_vline(xintercept = 0, color = "grey") +
+#  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+#ggsave(
+#  "contrasts_hypothesis05d.png",
+#  path = here::here("analysis", "output", "figures"),
+#  width = 12,
+#  height = 6,
+#  units = "in"
+#)
+
+
+```
 
 [Answer]
+
+
+# Hypothesis 5e, Relationship with Host Government, Organizational Practices, Issue Area, and Funding Sources
 
 > Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent and work in less contentious areas (emergency response and refugee relief) and are funded by numerous small donors
 
+```{r practices-contrasts-e}
+# Pull the posterior draws for government crackdown*organizational practices*issue area*funding sources interaction
+
+# Reference Level = Friendly relationship with government
+# Reference Level = Emergency Response
+# Reference Level = Funded primarily by many small private donations
+
+#contrasts <- tibble(
+#  financial_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
+#  accountability = draws %>% filter(level == "Accountability") %>% select(Gamma) %>% pull()
+#  )
+
+# Plot the contrasts
+#contrasts %>%
+#  pivot_longer(accountability, names_to = "level", values_to = "Gamma") %>% 
+#  ggplot(aes(x = Gamma, y = level)) +
+#  stat_halfeye(.width = .95) +
+#  geom_vline(xintercept = 0, color = "grey") +
+#  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+#ggsave(
+#  "contrasts_hypothesis05e.png",
+#  path = here::here("analysis", "output", "figures"),
+#  width = 12,
+#  height = 6,
+#  units = "in"
+#)
+
+```
+
+
 [Answer]
 
-> Donors should be no more or less likely to donate to NGOs that are accountable and hold regular third party audits [Mechanism: Donors don't necessarily seek assurance through third-party programs/audits and charity watchdogs, but rather through word of mouth, personal scrutiny and local networks]
 
-Market share:
-
-Accountability = 0.566631341
-No Accountability = 0.433368659
-
-The difference is large enough to suggest that accountability increases donors likelihood to donate, contrary to the hypothesis.
 ## Model fit table
 
 ```{r model-fit}
