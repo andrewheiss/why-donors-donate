@@ -639,31 +639,47 @@ Contrary to our hypothesis, donors showed decreased willingness to donate to NGO
 # Pull the posterior draws for organization*government crackdown interaction
 
 # Reference Level = Friendly relationship with government
-#  contrasts <- tibble(
-#    under_crackdown = draws %>% filter(level == "Under crackdown") %>% select(Gamma) %>% pull(),
-#    criticized = draws %>% filter(level == "Criticized") %>% select(Gamma) %>% pull()
-#    )
+intib <- interactions_2b %>% filter(i >= 14) %>% select(i, Gamma)
 
+contrasts_int <- tibble(
+  amnesty_criticized = intib %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  greenpeace_criticized = intib %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  oxfam_criticized = intib %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  red_cross_criticized = intib %>% filter(i == 17) %>% pull(),
+  amnesty_crackdown = intib %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  greenpeace_crackdown = intib %>% filter(i == 19) %>% select(Gamma) %>% pull(),
+  oxfam_crackdown = intib %>% filter(i == 20) %>% select(Gamma) %>% pull(),
+  red_cross_crackdown = intib %>% filter(i == 21)%>% select(Gamma) %>% pull()
+) %>% 
+  mutate(
+    oxfam_amnesty_criticized = oxfam_criticized - amnesty_criticized,
+    oxfam_greenpeace_criticized = oxfam_criticized - greenpeace_criticized,
+    red_cross_amnesty_criticized = red_cross_criticized - amnesty_criticized,
+    red_cross_greenpeace_criticized = red_cross_criticized - greenpeace_criticized,
+    oxfam_amnesty_crackdown = oxfam_crackdown - amnesty_crackdown,
+    oxfam_greenpeace_crackdown = oxfam_crackdown - greenpeace_crackdown,
+    red_cross_amnesty_crackdown = red_cross_crackdown - amnesty_crackdown,
+    red_cross_greenpeace_crackdown = red_cross_crackdown - greenpeace_crackdown
+  )
 # Plot the contrasts
-# contrasts %>%
-#  pivot_longer(under_crackdown:criticized, names_to = "level", values_to = "Gamma") %>% 
-#  ggplot(aes(x = Gamma, y = level)) +
-#  stat_halfeye(.width = .95) +
-#  geom_vline(xintercept = 0, color = "grey") +
-#  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+contrasts_int %>%
+  pivot_longer(oxfam_amnesty_criticized:red_cross_greenpeace_crackdown, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
 
 # Save plot
-# ggsave(
-#  "contrasts_hypothesis02b.png",
-#  path = here::here("analysis", "output", "figures"),
-#  width = 12,
-#  height = 6,
-#  units = "in"
-# )
+ggsave(
+  "contrasts_hypothesis02b.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+ )
 ```
 
 [Answer]
-
 
 ### Hypothesis 3, Issue Area
 
