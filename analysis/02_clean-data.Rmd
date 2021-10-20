@@ -875,15 +875,12 @@ dummy_X <- array(
 )
 
 # Load the interactions and join to the design.
-interactions_design <- dummy_design %>% 
-  left_join(
-    read_csv(here::here("data", "derived_data", "interactions.csv")) %>%
-    select(-`...1`) %>%
-    rename(
-      version = question_set,
-      task = question,
-      alt = choice
-    )
+interactions_design <- read_csv(here::here("data", "derived_data", "interactions.csv")) %>%
+  select(-`...1`) %>%
+  rename(
+    version = question_set,
+    task = question,
+    alt = choice
   )
 
 # Create the arrays for a design with a brand intercept and interactions.
@@ -911,7 +908,7 @@ for (n in 1:dim(dummy_X)[1]) {
     interactions_X_s <- interactions_X_n %>%
       filter(task == s) %>%
       mutate(org1 = 0) %>%
-      select(org1, org2:nottransp_smalldonors_refugees_crackdown)
+      select(org1, org2:transp_smalldonors_refugees_crackdown)
     for (p in 1:(dim(dummy_X)[3]-1)) {
       # Filter for task s and alt p orgs.
       dummy_X_p <- dummy_X_n %>%

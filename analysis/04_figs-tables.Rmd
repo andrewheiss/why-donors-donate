@@ -38,6 +38,7 @@ results <- read_rds(here("data", "derived_data", "final_data.rds"))
 
 # Load draws
 intercept <- 1                            # Intercept-only
+interactions <- 1                         # Include interactions with the intercept-only model?
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
@@ -53,6 +54,12 @@ if (intercept == 1) {
     here::here("analysis", "output", "posterior_draws", "intercept.rds")
   ) %>% 
     mutate(model = "Intercept only")
+}
+if (intercept == 1 & interactions == 1) {
+  draws <- read_rds(
+    here::here("analysis", "output", "posterior_draws", "interactions.rds")
+  ) %>% 
+    mutate(model = "Intercept and interactions")
 }
 if (public_affairs == 1) {
   draws <- read_rds(
@@ -177,6 +184,15 @@ level_labels <- c(
   str_c("Relationship with host government: ", c("Criticized", "Under crackdown"))
 )
 
+if (intercept == 1 & interactions == 1) {
+  interaction_labels <- c(
+    # Hypothesis 2b.
+    str_c("Interaction: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"), " Criticized"),
+    str_c("Interaction: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"), " Crackdown")
+  )
+  level_labels <- c(level_labels, interaction_labels)
+}
+
 level_lookup <- tibble(levels = level_labels) %>% 
   separate(levels, c("attribute", "level"), sep = ": ") %>% 
   mutate(levels_long = paste0(attribute, ": ", level),
@@ -215,8 +231,8 @@ draws <- draws %>%
   left_join(level_lookup, by = "i")
 
 if (intercept != 1) {
-draws <- draws %>% 
-  left_join(covariate_lookup, by = "j")
+  draws <- draws %>% 
+    left_join(covariate_lookup, by = "j")
 }
 ```
 
@@ -393,6 +409,7 @@ if (intercept != 1) {
 
 # Save plot
 if (intercept == 1) file_name <- paste("marginal-posteriors_intercept.png")
+if (intercept == 1 & interactions == 1) file_name <- paste("marginal-posteriors_interactions.png")
 if (public_affairs == 1) file_name <- paste("marginal-posteriors_public-affairs.png")
 if (political_ideology == 1) file_name <- paste("marginal-posteriors_political-ideology.png")
 if (social_views == 1) file_name <- paste("marginal-posteriors_social-views.png")
