@@ -59,15 +59,15 @@ final_data <- read_rds(here::here("data", "derived_data", "final_data.rds"))
 X <- read_rds(here::here("data", "derived_data", "final_design.rds"))
 if (interactions == 1) X <- read_rds(here::here("data", "derived_data", "final_interactions.rds"))
 
-# # ##############################
-# X_new <- array(NA, dim = c(dim(X)[1:3], 19)) # 13 + interactions
-# for (r in 1:dim(X)[1]) {
-#   for (s in 1:dim(X)[2]) {
-#     X_new[r,s,,] <- X[r,s,,c(1:13, 42:47)] # 13 + interactions
-#   }
-# }
-# X <- X_new
-# # ##############################
+# ##############################
+X_new <- array(NA, dim = c(dim(X)[1:3], 19)) # 13 + interactions
+for (r in 1:dim(X)[1]) {
+  for (s in 1:dim(X)[2]) {
+    X_new[r,s,,] <- X[r,s,,c(1:13, 22:27)] # 13 + interactions
+  }
+}
+X <- X_new
+# ##############################
 
 # Restructure choice data Y
 Y <- final_data %>%
@@ -172,7 +172,8 @@ data <- list(
 
   Gamma_mean = 0,      # Mean of population-level means
   Gamma_scale = 1,     # Scale of population-level means
-  Omega_shape = 5,     # Shape of population-level scale
+  # Omega_shape = 5,     # Shape of population-level scale
+  Omega_shape = 1,     # Shape of population-level scale
   tau_mean = 0,        # Mean of population-level scale
   tau_scale = 10,      # Scale of population-level scale
 
@@ -192,7 +193,7 @@ fit <- stan(
 )
 run <- list(data = data, fit = fit)
 if (intercept == 1 & interactions == 0) write_rds(run, here::here("analysis", "output", "model_runs", "intercept.rds"))
-if (intercept == 1 & interactions == 1) write_rds(run, here::here("analysis", "output", "model_runs", "interactions.rds"))
+if (intercept == 1 & interactions == 1) write_rds(run, here::here("analysis", "output", "model_runs", "interactions_3b.rds"))
 if (public_affairs == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_affairs.rds"))
 if (political_ideology == 1) write_rds(run, here::here("analysis", "output", "model_runs", "political_ideology.rds"))
 if (social_views == 1) write_rds(run, here::here("analysis", "output", "model_runs", "social_views.rds"))
@@ -337,7 +338,7 @@ write_rds(model_fit, here::here("analysis", "output", "tables", "model_fit.rds")
 
 ```{r extract-draws, eval=FALSE}
 intercept <- 1                            # Intercept-only
-interactions <- 1                         # Include interactions with the intercept-only model?
+interactions <- 0                         # Include interactions with the intercept-only model?
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
@@ -349,7 +350,7 @@ public_political_social_charity <- 0      # + Charity and voluntarism
 public_political_social_charity_demo <- 0 # + Demographics
 
 # Load and extract data and model output
-if (intercept == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept.rds"))
+if (intercept == 1 & interactions == 0) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept.rds"))
 if (intercept == 1 & interactions == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "interactions.rds"))
 if (public_affairs == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
 if (political_ideology == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
@@ -374,7 +375,7 @@ draws <- fit %>%
   )
 
 # Save draws
-if (intercept == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept.rds"))
+if (intercept == 1 & interactions == 0) write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept.rds"))
 if (intercept == 1 & interactions == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "interactions.rds"))
 if (public_affairs == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_affairs.rds"))
 if (political_ideology == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "political_ideology.rds"))
