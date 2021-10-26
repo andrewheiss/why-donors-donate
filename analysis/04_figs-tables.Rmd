@@ -188,7 +188,33 @@ if (intercept == 1 & interactions == 1) {
   interaction_labels <- c(
     # Hypothesis 2b.
     str_c("Interaction: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"), " Criticized"),
-    str_c("Interaction: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"), " Crackdown")
+    str_c("Interaction: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross"), " Crackdown"),
+    # Hypothesis 3b.
+    str_c("Interaction: ", c("Environment", "Human rights", "Refugee relief"), " Criticized"),
+    str_c("Interaction: ", c("Environment", "Human rights", "Refugee relief"), " Crackdown"),
+    # Hypothesis 4b.
+    str_c("Interaction: ", c("Handful of wealthy private donors", "Government grants"), " Criticized"),
+    str_c("Interaction: ", c("Handful of wealthy private donors", "Government grants"), " Crackdown"),
+    # Hypothesis 4c.
+    str_c("Interaction: Emergency ", c("Wealthy private donors", "Government grants"), " Crackdown"),
+    str_c("Interaction: Environment ", c("Wealthy private donors", "Government grants"), " Crackdown"),
+    str_c("Interaction: Human rights ", c("Wealthy private donors", "Government grants"), " Crackdown"),
+    str_c("Interaction: Refugee relief ", c("Wealthy private donors", "Government grants"), " Crackdown"),
+    # Hypothesis 5b.
+    str_c("Interaction: Financial transparency", c(" Criticized", " Crackdown")),
+    # Hypothesis 5c.
+    str_c("Interaction: Financial transparency ", c("Small private donors", "Wealthy private donors", "Government grants"), " Criticized"),
+    str_c("Interaction: Financial transparency ", c("Small private donors", "Wealthy private donors", "Government grants"), " Crackdown"),
+    # Hypothesis 5d.
+    str_c("Interaction: Financial transparency Emergency", c(" Criticized", " Crackdown")),
+    str_c("Interaction: Financial transparency Environment", c(" Criticized", " Crackdown")),
+    str_c("Interaction: Financial transparency Human rights", c(" Criticized", " Crackdown")),
+    str_c("Interaction: Financial transparency Refugee relief", c(" Criticized", " Crackdown")),
+    # Hypothesis 5e.
+    str_c("Interaction: Financial transparency Small private donoros Emergency", c(" Criticized", " Crackdown")),
+    str_c("Interaction: Financial transparency Small private donoros Environment", c(" Criticized", " Crackdown")),
+    str_c("Interaction: Financial transparency Small private donoros Human rights", c(" Criticized", " Crackdown")),
+    str_c("Interaction: Financial transparency Small private donoros Refugee relief", c(" Criticized", " Crackdown"))
   )
   level_labels <- c(level_labels, interaction_labels)
 }
