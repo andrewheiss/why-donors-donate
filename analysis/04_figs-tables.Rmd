@@ -576,12 +576,22 @@ ggsave(
 
 Another approach to address the hypotheses is to plot contrasts.
 
+```{r}
+# Read in interaction draws for contrasts
+
+intib <- read_rds(
+    here::here("analysis", "output", "posterior_draws", "interactions.rds")
+  )
+```
+
+
 ### Hypothesis 1, Branding
 
 > Donors will be more likely to donate to Oxfam and Red Cross compared to Amnesty International and Greenpeace [Mechanism: awareness of need and contentiousness of issue area]
 
 ```{r branding-contrasts}
 # Pull the posterior draws for the organizations and compute contrasts
+
 contrasts <- tibble(
   amnesty = draws %>% filter(level == "Amnesty International") %>% select(Gamma) %>% pull(),
   greenpeace = draws %>% filter(level == "Greenpeace") %>% select(Gamma) %>% pull(),
@@ -613,7 +623,6 @@ ggsave(
 )
 ```
 
-
 Donors are indeed more likely to donate to Red Cross compared to Amnesty International and Greenpeace. However, compared to Amnesty International and Greenpeace, donors are less likely to donate to Oxfam. In fact, there is a negligible difference between donors likelihood to donate to Oxfam and Amnesty International.
 
 
@@ -629,6 +638,7 @@ Donors are indeed more likely to donate to Red Cross compared to Amnesty Interna
 # Pull the posterior draws for government crackdown
 
 # Reference Level = Friendly relationship with government
+
 contrasts <- tibble(
   under_crackdown = draws %>% filter(level == "Under crackdown") %>% select(Gamma) %>% pull(),
   criticized = draws %>% filter(level == "Criticized") %>% select(Gamma) %>% pull()
@@ -652,7 +662,6 @@ ggsave(
 )
 ```
 
-
 Contrary to our hypothesis, donors showed decreased willingness to donate to NGOs that are facing government crackdown or criticism. This decreased likelihood to donate is also greater for NGOs under crackdown compared to those under criticism.
 
 
@@ -661,18 +670,15 @@ Contrary to our hypothesis, donors showed decreased willingness to donate to NGO
 > Donors will show increased willingness to donate to Oxfam and Red Cross when they are facing government crackdown or criticism compared to when Amnesty or Greenpeace is facing crackdown.
 
 ```{r crackdown-contrasts-b}
-
 # Pull the posterior draws for organization*government crackdown interaction
 
 # Reference Level = Friendly relationship with government
-intib <- read_rds(
-    here::here("analysis", "output", "posterior_draws", "interactions.rds")
-  )
+
 contrasts_int <- tibble(
   amnesty_criticized = intib %>% filter(i == 14) %>% select(Gamma) %>% pull(),
   greenpeace_criticized = intib %>% filter(i == 15) %>% select(Gamma) %>% pull(),
   oxfam_criticized = intib %>% filter(i == 16) %>% select(Gamma) %>% pull(),
-  red_cross_criticized = intib %>% filter(i == 17) %>% pull(),
+  red_cross_criticized = intib %>% filter(i == 17)%>% select(Gamma) %>% pull(),
   amnesty_crackdown = intib %>% filter(i == 18) %>% select(Gamma) %>% pull(),
   greenpeace_crackdown = intib %>% filter(i == 19) %>% select(Gamma) %>% pull(),
   oxfam_crackdown = intib %>% filter(i == 20) %>% select(Gamma) %>% pull(),
@@ -706,7 +712,8 @@ ggsave(
  )
 ```
 
-[Answer]
+These data don't support our hypothesis; the Red Cross brand has an insignificant impact on likelihood to donate compared to both Greenpeace and Amnesty. While the contrasts for Oxfam are closer to being statistically significant, the effect is working in the other direction--Greenpeace and Amnesty both induce increased likelihood to donate on behalf of donors.
+
 
 ### Hypothesis 3, Issue Area
 
@@ -720,6 +727,7 @@ ggsave(
 # Pull the posterior draws for issue area
 
 # Reference Level = Emergency Response
+
 contrasts <- tibble(
   environment = draws %>% filter(level == "Environment") %>% select(Gamma) %>% pull(),
   human_rights = draws %>% filter(level == "Human rights") %>% select(Gamma) %>% pull(),
@@ -757,6 +765,7 @@ Donors appear to be sensitive to NGO issue area when they are considering to don
 
 # Reference Level = Friendly relationship with government
 # Reference Level = Emergency Response
+
 contrasts_int <- tibble(
   criticized_environment = intib %>% filter(i == 22) %>% select(Gamma) %>% pull(),
   criticized_humanrights = intib %>% filter(i == 23) %>% select(Gamma) %>% pull(),
@@ -770,7 +779,7 @@ contrasts_int <- tibble(
   criticized_refugee_humanrights = criticized_refugee - criticized_humanrights,
   crackdown_refugee_environment = crackdown_refugee - crackdown_environment,
   crackdown_refugee_humanrights = crackdown_refugee - crackdown_humanrights
-  )
+)
 # Plot the contrasts
 contrasts_int %>%
   pivot_longer(criticized_refugee_environment:crackdown_refugee_humanrights, names_to = "level", values_to = "Gamma") %>% 
@@ -789,7 +798,7 @@ ggsave(
 )
 ```
 
-[Answer]
+The generated contrasts don't provides results which are statistically significant. 0 is found within all intervals.
 
 
 ### Hypothesis 4, Funding Sources
@@ -803,6 +812,7 @@ ggsave(
 # Pull the posterior draws for funding sources
 
 # Reference Level = Funded primarily by many small private donations
+
 contrasts <- tibble(
   few_wealthy_private_donors = draws %>% filter(level == "Handful of wealthy private donors") %>% select(Gamma) %>% pull(),
   government_grants = draws %>% filter(level == "Government grants") %>% select(Gamma) %>% pull()
@@ -839,19 +849,16 @@ As stated in the hypothesis, donors show increased willingness to donate to NGOs
 
 # Reference Level = Friendly relationship with government
 # Reference Level = Funded primarily by many small private donations
+
 contrasts_int <- tibble(
   criticized_wealthydonors = intib %>% filter(i == 28) %>% select(Gamma) %>% pull(),
   criticized_grants = intib %>% filter(i == 29) %>% select(Gamma) %>% pull(),
   crackdown_wealthydonors = intib %>% filter(i == 30) %>% select(Gamma) %>% pull(),
   crackdown_grants = intib %>% filter(i == 31) %>% select(Gamma) %>% pull(),
-) %>% 
-  mutate(
-  criticized_wealthydonors_grants = criticized_wealthydonors - criticized_grants,
-  crackdown_wealthydonors_grants = crackdown_wealthydonors - crackdown_grants,
-  )
+)
 # Plot the contrasts
 contrasts_int %>%
-  pivot_longer(criticized_wealthydonors_grants:crackdown_wealthydonors_grants, names_to = "level", values_to = "Gamma") %>% 
+  pivot_longer(criticized_wealthydonors:crackdown_grants, names_to = "level", values_to = "Gamma") %>% 
   ggplot(aes(x = Gamma, y = level)) +
   stat_halfeye(.width = .95) +
   geom_vline(xintercept = 0, color = "grey") +
@@ -868,7 +875,7 @@ ggsave(
 
 ```
 
-[Answer]
+The marginal posteriors for these contrasts are strange, but still tell us that the interaction between funding sources and government relationship produce no significant effects.
 
 
 # Hypothesis 4c, Relationship with Host Government, Funding Sources, and Issue Area
@@ -876,35 +883,50 @@ ggsave(
 > Donors will show increased willingness to donate to NGOs that are facing government crackdown and are funded primarily by numerous small private donors and work in less contentious areas (emergency response and refugee relief) 
 
 ```{r funding-contrasts-c}
-# Pull the posterior draws for funding sources*government crackdown*issue area interaction
+# Pull the posterior draws for issue area*government crackdown*funding sources interaction
 
 # Reference Level = Funded primarily by many small private donations
 # Reference Level = Friendly relationship with government
-#contrasts <- tibble(
-#  few_wealthy_private_donors = draws %>% filter(level == "Handful of wealthy private donors") %>% select(Gamma) %>% pull(),
-#  government_grants = draws %>% filter(level == "Government grants") %>% select(Gamma) %>% pull()
-#  )
+
+contrasts_int <- tibble(
+  emergency_crackdown_wealthydonors = intib %>% filter(i == 32) %>% select(Gamma) %>% pull(),
+  emergency_crackdown_grants = intib %>% filter(i == 33) %>% select(Gamma) %>% pull(),
+  environment_crackdown_wealthydonors = intib %>% filter(i == 34) %>% select(Gamma) %>% pull(),
+  environment_crackdown_grants = intib %>% filter(i == 35) %>% select(Gamma) %>% pull(),
+  humanrights_crackdown_wealthydonors = intib %>% filter(i == 36) %>% select(Gamma) %>% pull(),
+  humanrights_crackdown_grants = intib %>% filter(i == 37) %>% select(Gamma) %>% pull(),
+  refugee_crackdown_wealthydonors = intib %>% filter(i == 38) %>% select(Gamma) %>% pull(),
+  refugee_crackdown_grants = intib %>% filter(i == 39) %>% select(Gamma) %>% pull(),
+) %>% 
+  mutate(
+  emergency_humanrights_wealthydonors = emergency_crackdown_wealthydonors - humanrights_crackdown_wealthydonors ,
+  emergency_environment_wealthydonors = emergency_crackdown_wealthydonors - environment_crackdown_wealthydonors,
+  emergency_grants_wealthydonors = emergency_crackdown_wealthydonors - emergency_crackdown_grants,
+  refugee_humanrights_wealthydonors = refugee_crackdown_wealthydonors - humanrights_crackdown_wealthydonors,
+  refugee_environment_wealthydonors = refugee_crackdown_wealthydonors - environment_crackdown_wealthydonors,
+  refugee_grants_wealthydonors = refugee_crackdown_grants - refugee_crackdown_wealthydonors
+  )
 
 # Plot the contrasts
-#contrasts %>%
-#  pivot_longer(few_wealthy_private_donors:government_grants, names_to = "level", values_to = "Gamma") %>% 
-#  ggplot(aes(x = Gamma, y = level)) +
-#  stat_halfeye(.width = .95) +
-#  geom_vline(xintercept = 0, color = "grey") +
-#  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+contrasts_int %>%
+  pivot_longer(emergency_humanrights_wealthydonors:refugee_grants_wealthydonors, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
 
 # Save plot
-#ggsave(
-#  "contrasts_hypothesis04c.png",
-#  path = here::here("analysis", "output", "figures"),
-#  width = 12,
-#  height = 6,
-#  units = "in"
-#)
+ggsave(
+  "contrasts_hypothesis04c.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
 
 ```
 
-[Answer]
+Once again, we see some interesting distributions, but no results significant enough to confirm our hypothesis.
 
 
 ### Hypothesis 5, Organizational Practices
@@ -946,21 +968,24 @@ ggsave(
 Donors show an increased likelihood to donate to NGOs that are financially transparent, as hypothesized.
 
 
-# Hypothesis 5b, Organizational Practices
+# Hypothesis 5b, Relationship with Host Government, Organizational Practices
 
-> Donors should be no more or less likely to donate to NGOs that are accountable and hold regular third party audits [Mechanism: Donors don't necessarily seek assurance through third-party programs/audits and charity watchdogs, but rather through word of mouth, personal scrutiny and local networks]
+> Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent
 
 ```{r practices-contrasts-b}
-# Pull the posterior draws for organizational practices
 
-contrasts <- tibble(
-  financial_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
-  accountability = draws %>% filter(level == "Accountability") %>% select(Gamma) %>% pull()
+# Pull the posterior draws for organizational practices*government crackdown interaction
+
+# Reference Level = Friendly relationship with government
+
+contrasts_int <- tibble(
+  financial_transparency_criticized = intib %>% filter(i == 40) %>% select(Gamma) %>% pull(),
+  financial_transparency_crackdown = intib %>% filter(i == 41) %>% select(Gamma) %>% pull(),
   )
 
 # Plot the contrasts
-contrasts %>%
-  pivot_longer(accountability, names_to = "level", values_to = "Gamma") %>% 
+contrasts_int %>%
+  pivot_longer(financial_transparency_criticized:financial_transparency_crackdown, names_to = "level", values_to = "Gamma") %>% 
   ggplot(aes(x = Gamma, y = level)) +
   stat_halfeye(.width = .95) +
   geom_vline(xintercept = 0, color = "grey") +
@@ -985,36 +1010,48 @@ Donors show a similar increase in willingness to donate to accountable NGOs in c
 > Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent and are funded primarily by numerous small private donors
 
 ```{r practices-contrasts-c}
-# Pull the posterior draws for government crackdown*organizational practices*funding sources interaction
+# Pull the posterior draws for organizational practices*funding sources*government crackdown interaction
 
 # Reference Level = Friendly relationship with government
 # Reference Level = Funded primarily by many small private donations
+# All interactions include financial transparency
 
-#contrasts <- tibble(
-#  financial_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
-#  accountability = draws %>% filter(level == "Accountability") %>% select(Gamma) %>% pull()
-#  )
+contrasts_int <- tibble(
+  fin_smalldonors_criticized = intib %>% filter(i == 42) %>% select(Gamma) %>% pull(),
+  fin_wealthydonors_criticized = intib %>% filter(i == 43) %>% select(Gamma) %>% pull(),
+  fin_grants_criticized = intib %>% filter(i == 44) %>% select(Gamma) %>% pull(),
+  fin_smalldonors_crackdown = intib %>% filter(i == 45) %>% select(Gamma) %>% pull(),
+  fin_wealthydonors_crackdown = intib %>% filter(i == 46) %>% select(Gamma) %>% pull(),
+  fin_grants_crackdown = intib %>% filter(i == 47) %>% select(Gamma) %>% pull(),
+  ) %>%
+  mutate(
+  fin_smalldonors_wealthydonors_criticized = fin_smalldonors_criticized - fin_wealthydonors_criticized,
+  fin_smalldonors_grants_criticized = fin_smalldonors_criticized - fin_grants_criticized,
+  fin_smalldonors_wealthydonors_crackdown = fin_smalldonors_crackdown - fin_wealthydonors_crackdown,
+  fin_smalldonors_grants_crackdown = fin_smalldonors_crackdown - fin_grants_crackdown
+  )
+
 
 # Plot the contrasts
-#contrasts %>%
-#  pivot_longer(accountability, names_to = "level", values_to = "Gamma") %>% 
-#  ggplot(aes(x = Gamma, y = level)) +
-#  stat_halfeye(.width = .95) +
-#  geom_vline(xintercept = 0, color = "grey") +
-#  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+contrasts_int %>%
+  pivot_longer(fin_smalldonors_wealthydonors_criticized:fin_smalldonors_grants_crackdown, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
 
 # Save plot
-#ggsave(
-#  "contrasts_hypothesis05c.png",
-#  path = here::here("analysis", "output", "figures"),
-#  width = 12,
-#  height = 6,
-#  units = "in"
-#)
+ggsave(
+  "contrasts_hypothesis05c.png",#
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
 
 ```
 
-[Answer]
+These intervals are massive; 0 is well within them, leaving us with insufficient evidence to confirm the hypothesis.
 
 
 # Hypothesis 5d, Relationship with Host Government, Organizational Practices, and Issue Area
@@ -1022,37 +1059,57 @@ Donors show a similar increase in willingness to donate to accountable NGOs in c
 > Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent and work in less contentious areas (emergency response and refugee relief) 
 
 ```{r practices-contrasts-d}
-# Pull the posterior draws for government crackdown*organizational practices*issue area interaction
+
+# Pull the posterior draws for organizational practices*issue area*government crackdown interaction
 
 # Reference Level = Friendly relationship with government
 # Reference Level = Emergency Response
+# All interactions include financial transparency
 
-#contrasts <- tibble(
-#  financial_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
-#  accountability = draws %>% filter(level == "Accountability") %>% select(Gamma) %>% pull()
-#  )
+contrasts_int <- tibble(
+  fin_emergency_criticized = intib %>% filter(i == 48) %>% select(Gamma) %>% pull(),
+  fin_emergency_crackdown = intib %>% filter(i == 49) %>% select(Gamma) %>% pull(),
+  fin_environment_criticized = intib %>% filter(i == 50) %>% select(Gamma) %>% pull(),
+  fin_environment_crackdown = intib %>% filter(i == 51) %>% select(Gamma) %>% pull(),
+  fin_humanrights_criticized = intib %>% filter(i == 52) %>% select(Gamma) %>% pull(),
+  fin_humanrights_crackdown = intib %>% filter(i == 53) %>% select(Gamma) %>% pull(),
+  fin_refugee_criticized = intib %>% filter(i == 54) %>% select(Gamma) %>% pull(),
+  fin_refugee_crackdown = intib %>% filter(i == 55) %>% select(Gamma) %>% pull()
+  ) %>%
+  mutate(
+  fin_emergency_environment_criticized = fin_emergency_criticized - fin_environment_criticized,
+  fin_emergency_humanrights_criticized = fin_emergency_criticized - fin_humanrights_criticized,
+  fin_emergency_environment_crackdown = fin_emergency_crackdown - fin_environment_crackdown,
+  fin_emergency_humanright_crackdown = fin_emergency_crackdown - fin_humanrights_crackdown,
+  fin_refugee_environment_criticized = fin_refugee_criticized - fin_environment_criticized,
+  fin_refugee_humanright_criticized = fin_refugee_criticized - fin_humanrights_criticized,
+  fin_refugee_environment_crackdown = fin_refugee_crackdown - fin_environment_crackdown,
+  fin_refugee_humanright_crackdown = fin_refugee_crackdown - fin_humanrights_crackdown
+
+  )
+
 
 # Plot the contrasts
-#contrasts %>%
-#  pivot_longer(accountability, names_to = "level", values_to = "Gamma") %>% 
-#  ggplot(aes(x = Gamma, y = level)) +
-#  stat_halfeye(.width = .95) +
-#  geom_vline(xintercept = 0, color = "grey") +
-#  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+contrasts_int %>%
+  pivot_longer(fin_emergency_environment_criticized:fin_refugee_humanright_crackdown, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
 
 # Save plot
-#ggsave(
-#  "contrasts_hypothesis05d.png",
-#  path = here::here("analysis", "output", "figures"),
-#  width = 12,
-#  height = 6,
-#  units = "in"
-#)
+ggsave(
+  "contrasts_hypothesis05d.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
 
 
 ```
 
-[Answer]
+The contrasts don't support the hypothesis, however, there is an interesting difference between emergency_environment_crackdown and emergency_environment_criticized.
 
 
 # Hypothesis 5e, Relationship with Host Government, Organizational Practices, Issue Area, and Funding Sources
@@ -1060,38 +1117,88 @@ Donors show a similar increase in willingness to donate to accountable NGOs in c
 > Donors will show increased willingness to donate to NGOs that are criticized by the government/under government crackdown when they are also financially transparent and work in less contentious areas (emergency response and refugee relief) and are funded by numerous small donors
 
 ```{r practices-contrasts-e}
-# Pull the posterior draws for government crackdown*organizational practices*issue area*funding sources interaction
+# Pull the posterior draws for organizational practices*funding*issue area*government crackdown interaction
 
 # Reference Level = Friendly relationship with government
 # Reference Level = Emergency Response
-# Reference Level = Funded primarily by many small private donations
+# All interactions include small donors
+# All interactions include financial transparency
 
-#contrasts <- tibble(
-#  financial_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
-#  accountability = draws %>% filter(level == "Accountability") %>% select(Gamma) %>% pull()
-#  )
+contrasts_int <- tibble(
+  fin_sd_emergency_criticized = intib %>% filter(i == 56) %>% select(Gamma) %>% pull(),
+  fin_sd_emergency_crackdown = intib %>% filter(i == 57) %>% select(Gamma) %>% pull(),
+  fin_sd_environment_criticized = intib %>% filter(i == 58) %>% select(Gamma) %>% pull(),
+  fin_sd_environment_crackdown = intib %>% filter(i == 59) %>% select(Gamma) %>% pull(),
+  fin_sd_humanrights_criticized = intib %>% filter(i == 60) %>% select(Gamma) %>% pull(),
+  fin_sd_humanrights_crackdown = intib %>% filter(i == 61) %>% select(Gamma) %>% pull(),
+  fin_sd_refugee_criticized = intib %>% filter(i == 62) %>% select(Gamma) %>% pull(),
+  fin_sd_refugee_crackdown = intib %>% filter(i == 63) %>% select(Gamma) %>% pull()
+  ) %>%
+  mutate(
+  fin_sd_emergency_environment_criticized = fin_sd_emergency_criticized - fin_sd_environment_criticized,
+  fin_sd_emergency_humanrights_criticized = fin_sd_emergency_criticized - fin_sd_humanrights_criticized,
+  fin_sd_emergency_environment_crackdown = fin_sd_emergency_crackdown - fin_sd_environment_crackdown,
+  fin_sd_emergency_humanright_crackdown = fin_sd_emergency_crackdown - fin_sd_humanrights_crackdown,
+  fin_sd_refugee_environment_criticized = fin_sd_refugee_criticized - fin_sd_environment_criticized,
+  fin_sd_refugee_humanright_criticized = fin_sd_refugee_criticized - fin_sd_humanrights_criticized,
+  fin_sd_refugee_environment_crackdown = fin_sd_refugee_crackdown - fin_sd_environment_crackdown,
+  fin_sd_refugee_humanright_crackdown = fin_sd_refugee_crackdown - fin_sd_humanrights_crackdown
 
+  )
 # Plot the contrasts
-#contrasts %>%
-#  pivot_longer(accountability, names_to = "level", values_to = "Gamma") %>% 
-#  ggplot(aes(x = Gamma, y = level)) +
-#  stat_halfeye(.width = .95) +
-#  geom_vline(xintercept = 0, color = "grey") +
-#  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+contrasts_int %>%
+  pivot_longer(fin_sd_emergency_environment_criticized:fin_sd_refugee_humanright_crackdown, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
 
 # Save plot
-#ggsave(
-#  "contrasts_hypothesis05e.png",
-#  path = here::here("analysis", "output", "figures"),
-#  width = 12,
-#  height = 6,
-#  units = "in"
-#)
+ggsave(
+  "contrasts_hypothesis05e.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
 
 ```
 
+These marginal posteriors don't support our hypothesis, but again show an interesting difference between emergency_environment_criticized and emergency_environment_crackdown.
 
-[Answer]
+
+# Hypothesis 5f, Organizational Practices
+
+> Donors should be no more or less likely to donate to NGOs that are accountable and hold regular third party audits [Mechanism: Donors don't necessarily seek assurance through third-party programs/audits and charity watchdogs, but rather through word of mouth, personal scrutiny and local networks]
+
+```{r practices-contrasts-b}
+# Pull the posterior draws for organizational practices
+
+contrasts <- tibble(
+  financial_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
+  accountability = draws %>% filter(level == "Accountability") %>% select(Gamma) %>% pull()
+  )
+
+# Plot the contrasts
+contrasts %>%
+  pivot_longer(accountability, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+ggsave(
+  "contrasts_hypothesis05f.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
+
+```
+
+Donors show a similar increase in willingness to donate to accountable NGOs in comparison to NGOs that are financially transparent. However, this is contrary to what was hypothesized--we predicted that donor's willingness to donate wouldn't be affected by accountability practices.
 
 
 ## Model fit table
