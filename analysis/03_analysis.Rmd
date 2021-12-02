@@ -15,7 +15,6 @@ editor_options:
 
 ```{r load-packages, warning=FALSE, message=FALSE}
 library(tidyverse)
-library(donorheuristics)
 library(fastDummies)
 library(rstan)
 library(bayesplot)
