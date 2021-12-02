@@ -582,6 +582,23 @@ Another approach to address the hypotheses is to plot contrasts.
 intib <- read_rds(
     here::here("analysis", "output", "posterior_draws", "interactions.rds")
   )
+
+# Storing intercept draws in a different tibble for easier use; emergency response, no financial transparency, no accountability, many private donors and friendly relationship with government are all reference levels for their respective groups, and thus are not found in the tibble.
+dtib <- tibble(
+  amnesty = draws %>% filter(i == 1) %>% select(Gamma) %>% pull(),
+  greenpeace = draws %>% filter(i == 2) %>% select(Gamma) %>% pull(),
+  oxfam = draws %>% filter(i == 3) %>% select(Gamma) %>% pull(),
+  red_cross = draws %>% filter(i == 4)%>% select(Gamma) %>% pull(),
+  environment = draws %>% filter(i == 5) %>% select(Gamma) %>% pull(),
+  human_rights = draws %>% filter(i == 6) %>% select(Gamma) %>% pull(),
+  refugee_relief = draws %>% filter(i == 7) %>% select(Gamma) %>% pull(),
+  fin_transparency = draws %>% filter(i == 8)%>% select(Gamma) %>% pull(),
+  accountability = draws %>% filter(i == 9) %>% select(Gamma) %>% pull(),
+  few_wealthy_private_donors = draws %>% filter(i == 10) %>% select(Gamma) %>% pull(),
+  government_grants = draws %>% filter(i == 11) %>% select(Gamma) %>% pull(),
+  criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
+  crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull()
+)
 ```
 
 
@@ -685,14 +702,14 @@ contrasts_int <- tibble(
   red_cross_crackdown = intib %>% filter(i == 21)%>% select(Gamma) %>% pull()
 ) %>% 
   mutate(
-    oxfam_amnesty_criticized = oxfam_criticized - amnesty_criticized,
-    oxfam_greenpeace_criticized = oxfam_criticized - greenpeace_criticized,
-    red_cross_amnesty_criticized = red_cross_criticized - amnesty_criticized,
-    red_cross_greenpeace_criticized = red_cross_criticized - greenpeace_criticized,
-    oxfam_amnesty_crackdown = oxfam_crackdown - amnesty_crackdown,
-    oxfam_greenpeace_crackdown = oxfam_crackdown - greenpeace_crackdown,
-    red_cross_amnesty_crackdown = red_cross_crackdown - amnesty_crackdown,
-    red_cross_greenpeace_crackdown = red_cross_crackdown - greenpeace_crackdown
+    oxfam_amnesty_criticized = ((dtib$oxfam + oxfam_criticized) - (dtib$amnesty + amnesty_criticized) + dtib$criticized),
+    oxfam_greenpeace_criticized = ((dtib$oxfam + oxfam_criticized) - (dtib$greenpeace + greenpeace_criticized) + dtib$criticized),
+    red_cross_amnesty_criticized = ((dtib$red_cross + red_cross_criticized) - (dtib$amnesty + amnesty_criticized) + dtib$criticized),
+    red_cross_greenpeace_criticized = ((dtib$red_cross + red_cross_criticized) - (dtib$greenpeace + greenpeace_criticized) + dtib$criticized),
+    oxfam_amnesty_crackdown = ((dtib$oxfam + oxfam_crackdown) - (dtib$amnesty + amnesty_crackdown) + dtib$crackdown),
+    oxfam_greenpeace_crackdown = ((dtib$oxfam + oxfam_crackdown) - (dtib$greenpeace + greenpeace_crackdown) + dtib$crackdown),
+    red_cross_amnesty_crackdown = ((dtib$red_cross + red_cross_crackdown) - (dtib$amnesty + amnesty_crackdown) + dtib$crackdown),
+    red_cross_greenpeace_crackdown = ((dtib$red_cross + red_cross_crackdown) - (dtib$greenpeace + greenpeace_crackdown) + dtib$crackdown)
   )
 # Plot the contrasts
 contrasts_int %>%
@@ -705,6 +722,49 @@ contrasts_int %>%
 # Save plot
 ggsave(
   "contrasts_hypothesis02b.png",
+  path = here::here("analysis", "output", "figures"),
+  width = 12,
+  height = 6,
+  units = "in"
+ )
+```
+
+```{r crackdown-contrasts-b-alt}
+# Pull the posterior draws for organization*government crackdown interaction
+
+# Reference Level = Friendly relationship with government
+
+contrasts_int <- tibble(
+  amnesty_criticized = intib %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  greenpeace_criticized = intib %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  oxfam_criticized = intib %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  red_cross_criticized = intib %>% filter(i == 17)%>% select(Gamma) %>% pull(),
+  amnesty_crackdown = intib %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  greenpeace_crackdown = intib %>% filter(i == 19) %>% select(Gamma) %>% pull(),
+  oxfam_crackdown = intib %>% filter(i == 20) %>% select(Gamma) %>% pull(),
+  red_cross_crackdown = intib %>% filter(i == 21)%>% select(Gamma) %>% pull()
+) %>% 
+  mutate(
+    oxfam_amnesty_criticized = (dtib$oxfam + oxfam_criticized) - (dtib$amnesty + amnesty_criticized),
+    oxfam_greenpeace_criticized = (dtib$oxfam + oxfam_criticized) - (dtib$greenpeace + greenpeace_criticized),
+    red_cross_amnesty_criticized = (dtib$red_cross + red_cross_criticized) - (dtib$amnesty + amnesty_criticized),
+    red_cross_greenpeace_criticized = (dtib$red_cross + red_cross_criticized) - (dtib$greenpeace + greenpeace_criticized),
+    oxfam_amnesty_crackdown = (dtib$oxfam + oxfam_crackdown) - (dtib$amnesty + amnesty_crackdown),
+    oxfam_greenpeace_crackdown = (dtib$oxfam + oxfam_crackdown) - (dtib$greenpeace + greenpeace_crackdown),
+    red_cross_amnesty_crackdown = (dtib$red_cross + red_cross_crackdown) - (dtib$amnesty + amnesty_crackdown),
+    red_cross_greenpeace_crackdown = (dtib$red_cross + red_cross_crackdown) - (dtib$greenpeace + greenpeace_crackdown)
+  )
+# Plot the contrasts
+contrasts_int %>%
+  pivot_longer(oxfam_amnesty_criticized:red_cross_greenpeace_crackdown, names_to = "level", values_to = "Gamma") %>% 
+  ggplot(aes(x = Gamma, y = level)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
+
+# Save plot
+ggsave(
+  "contrasts_hypothesis02b_alt.png",
   path = here::here("analysis", "output", "figures"),
   width = 12,
   height = 6,
