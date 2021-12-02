@@ -27,6 +27,7 @@ data/private_data/*
 # Other folders
 admin/*
 analysis/output/model_runs/*
+analysis/output/posterior_draws/*
 private/*
 readings/*
 submissions/*
