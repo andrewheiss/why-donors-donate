@@ -579,28 +579,10 @@ ggsave(
 Another approach to address the hypotheses is to plot contrasts.
 
 ```{r}
-# Read in interaction draws for contrasts
-intib <- read_rds(
-    here::here("analysis", "output", "posterior_draws", "interactions.rds")
-  )
-
-# Storing intercept draws in a different tibble for easier use; emergency response, no financial transparency, no accountability, many private donors and friendly relationship with government are all reference levels for their respective groups, and thus are not found in the tibble.
-dtib <- tibble(
-  amnesty = draws %>% filter(i == 1) %>% select(Gamma) %>% pull(),
-  greenpeace = draws %>% filter(i == 2) %>% select(Gamma) %>% pull(),
-  oxfam = draws %>% filter(i == 3) %>% select(Gamma) %>% pull(),
-  red_cross = draws %>% filter(i == 4)%>% select(Gamma) %>% pull(),
-  environment = draws %>% filter(i == 5) %>% select(Gamma) %>% pull(),
-  human_rights = draws %>% filter(i == 6) %>% select(Gamma) %>% pull(),
-  refugee_relief = draws %>% filter(i == 7) %>% select(Gamma) %>% pull(),
-  fin_transparency = draws %>% filter(i == 8)%>% select(Gamma) %>% pull(),
-  accountability = draws %>% filter(i == 9) %>% select(Gamma) %>% pull(),
-  few_wealthy_private_donors = draws %>% filter(i == 10) %>% select(Gamma) %>% pull(),
-  government_grants = draws %>% filter(i == 11) %>% select(Gamma) %>% pull(),
-  criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
-  crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull()
-)
+#storing intercept draws for easier reference
+draws_intercepts <- draws
 ```
+
 
 ### Hypothesis 1, Branding
 
@@ -682,30 +664,51 @@ Contrary to our hypothesis, donors showed decreased willingness to donate to NGO
 
 ```{r crackdown-contrasts-b}
 # Overwrite draws with the appropriate interaction data
-draws <- here::here("analysis", "output", "posterior_draws", "interactions_2b.rds")
+
+draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_2b.rds"))
 
 # Pull the posterior draws for organization*government crackdown interaction
 # Reference Level = Friendly relationship with government
 
 contrasts_int <- tibble(
-  amnesty_criticized = intib %>% filter(i == 14) %>% select(Gamma) %>% pull(),
-  greenpeace_criticized = intib %>% filter(i == 15) %>% select(Gamma) %>% pull(),
-  oxfam_criticized = intib %>% filter(i == 16) %>% select(Gamma) %>% pull(),
-  red_cross_criticized = intib %>% filter(i == 17)%>% select(Gamma) %>% pull(),
-  amnesty_crackdown = intib %>% filter(i == 18) %>% select(Gamma) %>% pull(),
-  greenpeace_crackdown = intib %>% filter(i == 19) %>% select(Gamma) %>% pull(),
-  oxfam_crackdown = intib %>% filter(i == 20) %>% select(Gamma) %>% pull(),
-  red_cross_crackdown = intib %>% filter(i == 21)%>% select(Gamma) %>% pull()
+  amnesty = draws %>% filter(i == 1) %>% select(Gamma) %>% pull(),
+  greenpeace = draws %>% filter(i == 2) %>% select(Gamma) %>% pull(),
+  oxfam = draws %>% filter(i == 3) %>% select(Gamma) %>% pull(),
+  red_cross = draws %>% filter(i == 4)%>% select(Gamma) %>% pull(),
+  environment = draws %>% filter(i == 5) %>% select(Gamma) %>% pull(),
+  human_rights = draws %>% filter(i == 6) %>% select(Gamma) %>% pull(),
+  refugee_relief = draws %>% filter(i == 7) %>% select(Gamma) %>% pull(),
+  fin_transparency = draws %>% filter(i == 8)%>% select(Gamma) %>% pull(),
+  accountability = draws %>% filter(i == 9) %>% select(Gamma) %>% pull(),
+  few_wealthy_private_donors = draws %>% filter(i == 10) %>% select(Gamma) %>% pull(),
+  government_grants = draws %>% filter(i == 11) %>% select(Gamma) %>% pull(),
+  criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
+  crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull(),
+  amnesty_criticized = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  greenpeace_criticized = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  oxfam_criticized = draws %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  red_cross_criticized = draws %>% filter(i == 17)%>% select(Gamma) %>% pull(),
+  amnesty_crackdown = draws %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  greenpeace_crackdown = draws %>% filter(i == 19) %>% select(Gamma) %>% pull(),
+  oxfam_crackdown = draws %>% filter(i == 20) %>% select(Gamma) %>% pull(),
+  red_cross_crackdown = draws %>% filter(i == 21)%>% select(Gamma) %>% pull()
 ) %>% 
   mutate(
-    oxfam_amnesty_criticized = ((dtib$oxfam + oxfam_criticized) - (dtib$amnesty + amnesty_criticized) + dtib$criticized),
-    oxfam_greenpeace_criticized = ((dtib$oxfam + oxfam_criticized) - (dtib$greenpeace + greenpeace_criticized) + dtib$criticized),
-    red_cross_amnesty_criticized = ((dtib$red_cross + red_cross_criticized) - (dtib$amnesty + amnesty_criticized) + dtib$criticized),
-    red_cross_greenpeace_criticized = ((dtib$red_cross + red_cross_criticized) - (dtib$greenpeace + greenpeace_criticized) + dtib$criticized),
-    oxfam_amnesty_crackdown = ((dtib$oxfam + oxfam_crackdown) - (dtib$amnesty + amnesty_crackdown) + dtib$crackdown),
-    oxfam_greenpeace_crackdown = ((dtib$oxfam + oxfam_crackdown) - (dtib$greenpeace + greenpeace_crackdown) + dtib$crackdown),
-    red_cross_amnesty_crackdown = ((dtib$red_cross + red_cross_crackdown) - (dtib$amnesty + amnesty_crackdown) + dtib$crackdown),
-    red_cross_greenpeace_crackdown = ((dtib$red_cross + red_cross_crackdown) - (dtib$greenpeace + greenpeace_crackdown) + dtib$crackdown)
+    oxfam_amnesty_criticized = (oxfam + criticized + oxfam_criticized) - (amnesty + criticized + amnesty_criticized),
+    
+    oxfam_greenpeace_criticized = (oxfam + criticized + oxfam_criticized) - (greenpeace + criticized + greenpeace_criticized),
+    
+    red_cross_amnesty_criticized = (red_cross + criticized + red_cross_criticized) - (amnesty + criticized + amnesty_criticized),
+    
+    red_cross_greenpeace_criticized = (red_cross + criticized + red_cross_criticized) - (greenpeace + criticized + greenpeace_criticized),
+    
+    oxfam_amnesty_crackdown = (oxfam + crackdown + oxfam_crackdown) - (amnesty + crackdown +  amnesty_crackdown),
+    
+    oxfam_greenpeace_crackdown = (oxfam + crackdown + oxfam_crackdown) - (greenpeace + crackdown +  greenpeace_crackdown),
+    
+    red_cross_amnesty_crackdown = (red_cross + crackdown + red_cross_crackdown) - (amnesty + crackdown +  amnesty_crackdown),
+    
+    red_cross_greenpeace_crackdown = (red_cross + crackdown + red_cross_crackdown) - (greenpeace + crackdown + greenpeace_crackdown)
   )
 
 # Plot the contrasts
@@ -726,51 +729,6 @@ ggsave(
  )
 ```
 
-```{r crackdown-contrasts-b-alt}
-# Overwrite draws with the appropriate interaction data
-draws <- here::here("analysis", "output", "posterior_draws", "interactions_2b.rds")
-
-# Pull the posterior draws for organization*government crackdown interaction
-# Reference Level = Friendly relationship with government
-
-contrasts_int <- tibble(
-  amnesty_criticized = intib %>% filter(i == 14) %>% select(Gamma) %>% pull(),
-  greenpeace_criticized = intib %>% filter(i == 15) %>% select(Gamma) %>% pull(),
-  oxfam_criticized = intib %>% filter(i == 16) %>% select(Gamma) %>% pull(),
-  red_cross_criticized = intib %>% filter(i == 17)%>% select(Gamma) %>% pull(),
-  amnesty_crackdown = intib %>% filter(i == 18) %>% select(Gamma) %>% pull(),
-  greenpeace_crackdown = intib %>% filter(i == 19) %>% select(Gamma) %>% pull(),
-  oxfam_crackdown = intib %>% filter(i == 20) %>% select(Gamma) %>% pull(),
-  red_cross_crackdown = intib %>% filter(i == 21)%>% select(Gamma) %>% pull()
-) %>% 
-  mutate(
-    oxfam_amnesty_criticized = (dtib$oxfam + oxfam_criticized) - (dtib$amnesty + amnesty_criticized),
-    oxfam_greenpeace_criticized = (dtib$oxfam + oxfam_criticized) - (dtib$greenpeace + greenpeace_criticized),
-    red_cross_amnesty_criticized = (dtib$red_cross + red_cross_criticized) - (dtib$amnesty + amnesty_criticized),
-    red_cross_greenpeace_criticized = (dtib$red_cross + red_cross_criticized) - (dtib$greenpeace + greenpeace_criticized),
-    oxfam_amnesty_crackdown = (dtib$oxfam + oxfam_crackdown) - (dtib$amnesty + amnesty_crackdown),
-    oxfam_greenpeace_crackdown = (dtib$oxfam + oxfam_crackdown) - (dtib$greenpeace + greenpeace_crackdown),
-    red_cross_amnesty_crackdown = (dtib$red_cross + red_cross_crackdown) - (dtib$amnesty + amnesty_crackdown),
-    red_cross_greenpeace_crackdown = (dtib$red_cross + red_cross_crackdown) - (dtib$greenpeace + greenpeace_crackdown)
-  )
-
-# Plot the contrasts
-contrasts_int %>%
-  pivot_longer(oxfam_amnesty_criticized:red_cross_greenpeace_crackdown, names_to = "level", values_to = "Gamma") %>% 
-  ggplot(aes(x = Gamma, y = level)) +
-  stat_halfeye(.width = .95) +
-  geom_vline(xintercept = 0, color = "grey") +
-  labs(y = "Difference in Attribute Levels", x = "Difference in Gammas")
-
-# Save plot
-ggsave(
-  "contrasts_hypothesis02b_alt.png",
-  path = here::here("analysis", "output", "figures"),
-  width = 12,
-  height = 6,
-  units = "in"
- )
-```
 
 These data don't support our hypothesis; the Red Cross brand has an insignificant impact on likelihood to donate compared to both Greenpeace and Amnesty. While the contrasts for Oxfam are closer to being statistically significant, the effect is working in the other direction--Greenpeace and Amnesty both induce increased likelihood to donate on behalf of donors.
 
@@ -783,7 +741,7 @@ These data don't support our hypothesis; the Red Cross brand has an insignifican
 ```{r issue-contrasts-a}
 # Pull the posterior draws for issue area
 # Reference Level = Emergency Response
-
+draws <- draws_intercepts
 contrasts <- tibble(
   environment = draws %>% filter(level == "Environment") %>% select(Gamma) %>% pull(),
   human_rights = draws %>% filter(level == "Human rights") %>% select(Gamma) %>% pull(),
@@ -816,25 +774,33 @@ Donors appear to be sensitive to NGO issue area when they are considering to don
 
 ```{r issue-contrasts-b}
 # Overwrite draws with the appropriate interaction data
-draws <- here::here("analysis", "output", "posterior_draws", "interactions_3b.rds")
+draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_3b.rds"))
 
 # Pull the posterior draws for government crackdown*issue area interaction
 # Reference Level = Friendly relationship with government
 # Reference Level = Emergency Response
 
 contrasts_int <- tibble(
-  criticized_environment = intib %>% filter(i == 22) %>% select(Gamma) %>% pull(),
-  criticized_humanrights = intib %>% filter(i == 23) %>% select(Gamma) %>% pull(),
-  criticized_refugee = intib %>% filter(i == 24) %>% select(Gamma) %>% pull(),
-  crackdown_environment = intib %>% filter(i == 25) %>% select(Gamma) %>% pull(),
-  crackdown_humanrights = intib %>% filter(i == 26) %>% select(Gamma) %>% pull(),
-  crackdown_refugee = intib %>% filter(i == 27) %>% select(Gamma) %>% pull(),
+  environment = draws %>% filter(i == 5) %>% select(Gamma) %>% pull(),
+  human_rights = draws %>% filter(i == 6) %>% select(Gamma) %>% pull(),
+  refugee_relief = draws %>% filter(i == 7) %>% select(Gamma) %>% pull(),
+  criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
+  crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull(),
+  criticized_environment = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  criticized_humanrights = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  criticized_refugee = draws %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  crackdown_environment = draws %>% filter(i == 17) %>% select(Gamma) %>% pull(),
+  crackdown_humanrights = draws %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  crackdown_refugee = draws %>% filter(i == 19) %>% select(Gamma) %>% pull(),
 ) %>% 
   mutate(
-  criticized_refugee_environment = criticized_refugee - criticized_environment,
-  criticized_refugee_humanrights = criticized_refugee - criticized_humanrights,
-  crackdown_refugee_environment = crackdown_refugee - crackdown_environment,
-  crackdown_refugee_humanrights = crackdown_refugee - crackdown_humanrights
+  criticized_refugee_environment = (criticized + refugee_relief + criticized_refugee) - (criticized + environment + criticized_environment),
+  
+  criticized_refugee_humanrights = (criticized + refugee_relief + criticized_refugee) - (criticized + human_rights + criticized_humanrights),
+  
+  crackdown_refugee_environment = (crackdown + refugee_relief + crackdown_refugee - crackdown + environment + crackdown_environment),
+  
+  crackdown_refugee_humanrights = (crackdown + refugee_relief + crackdown_refugee - crackdown + human_rights + crackdown_humanrights)
 )
 
 # Plot the contrasts
@@ -866,7 +832,7 @@ The generated contrasts don't provides results which are statistically significa
 ```{r funding-contrasts-a}
 # Pull the posterior draws for funding sources
 # Reference Level = Funded primarily by many small private donations
-
+draws <- draws_intercepts
 contrasts <- tibble(
   few_wealthy_private_donors = draws %>% filter(level == "Handful of wealthy private donors") %>% select(Gamma) %>% pull(),
   government_grants = draws %>% filter(level == "Government grants") %>% select(Gamma) %>% pull()
@@ -899,17 +865,29 @@ As stated in the hypothesis, donors show increased willingness to donate to NGOs
 
 ```{r funding-contrasts-b}
 # Overwrite draws with the appropriate interaction data
-draws <- here::here("analysis", "output", "posterior_draws", "interactions_4b.rds")
+draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_4b.rds"))
 
 # Pull the posterior draws for government crackdown*funding sources interaction
 # Reference Level = Friendly relationship with government
 # Reference Level = Funded primarily by many small private donations
 
 contrasts_int <- tibble(
-  criticized_wealthydonors = intib %>% filter(i == 28) %>% select(Gamma) %>% pull(),
-  criticized_grants = intib %>% filter(i == 29) %>% select(Gamma) %>% pull(),
-  crackdown_wealthydonors = intib %>% filter(i == 30) %>% select(Gamma) %>% pull(),
-  crackdown_grants = intib %>% filter(i == 31) %>% select(Gamma) %>% pull(),
+  few_wealthy_private_donors = draws %>% filter(i == 10) %>% select(Gamma) %>% pull(),
+  government_grants = draws %>% filter(i == 11) %>% select(Gamma) %>% pull(),
+  criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
+  crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull(),
+  criticized_wealthydonors = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  criticized_grants = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  crackdown_wealthydonors = draws %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  crackdown_grants = draws %>% filter(i == 17) %>% select(Gamma) %>% pull(),
+) %>% mutate(
+  criticized_wealthydonors = (criticized + few_wealthy_private_donors + criticized_wealthydonors) - criticized,
+  
+  criticized_grants = (criticized + government_grants + criticized_grants) - criticized,
+  
+  crackdown_wealthydonors = (crackdown + few_wealthy_private_donors + crackdown_wealthydonors) - crackdown,
+  
+  crackdown_grants = (crackdown + government_grants + crackdown_grants) - crackdown
 )
 
 # Plot the contrasts
@@ -939,34 +917,51 @@ The marginal posteriors for these contrasts are strange, but still tell us that 
 
 ```{r funding-contrasts-c}
 # Overwrite draws with the appropriate interaction data
-draws <- here::here("analysis", "output", "posterior_draws", "interactions_4c.rds")
+draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_4c.rds"))
 
 # Pull the posterior draws for issue area*government crackdown*funding sources interaction
 # Reference Level = Funded primarily by many small private donations
 # Reference Level = Friendly relationship with government
 
 contrasts_int <- tibble(
-  emergency_crackdown_wealthydonors = intib %>% filter(i == 32) %>% select(Gamma) %>% pull(),
-  emergency_crackdown_grants = intib %>% filter(i == 33) %>% select(Gamma) %>% pull(),
-  environment_crackdown_wealthydonors = intib %>% filter(i == 34) %>% select(Gamma) %>% pull(),
-  environment_crackdown_grants = intib %>% filter(i == 35) %>% select(Gamma) %>% pull(),
-  humanrights_crackdown_wealthydonors = intib %>% filter(i == 36) %>% select(Gamma) %>% pull(),
-  humanrights_crackdown_grants = intib %>% filter(i == 37) %>% select(Gamma) %>% pull(),
-  refugee_crackdown_wealthydonors = intib %>% filter(i == 38) %>% select(Gamma) %>% pull(),
-  refugee_crackdown_grants = intib %>% filter(i == 39) %>% select(Gamma) %>% pull(),
+  environment = draws %>% filter(i == 5) %>% select(Gamma) %>% pull(),
+  human_rights = draws %>% filter(i == 6) %>% select(Gamma) %>% pull(),
+  refugee_relief = draws %>% filter(i == 7) %>% select(Gamma) %>% pull(),
+  few_wealthy_private_donors = draws %>% filter(i == 10) %>% select(Gamma) %>% pull(),
+  government_grants = draws %>% filter(i == 11) %>% select(Gamma) %>% pull(),
+  criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
+  crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull(),
+  emergency_crackdown_wealthydonors = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  emergency_crackdown_grants = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  environment_crackdown_wealthydonors = draws %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  environment_crackdown_grants = draws %>% filter(i == 17) %>% select(Gamma) %>% pull(),
+  humanrights_crackdown_wealthydonors = draws %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  humanrights_crackdown_grants = draws %>% filter(i == 19) %>% select(Gamma) %>% pull(),
+  refugee_crackdown_wealthydonors = draws %>% filter(i == 20) %>% select(Gamma) %>% pull(),
+  refugee_crackdown_grants = draws %>% filter(i == 21) %>% select(Gamma) %>% pull(),
 ) %>% 
   mutate(
-  emergency_humanrights_wealthydonors = emergency_crackdown_wealthydonors - humanrights_crackdown_wealthydonors ,
-  emergency_environment_wealthydonors = emergency_crackdown_wealthydonors - environment_crackdown_wealthydonors,
-  emergency_grants_wealthydonors = emergency_crackdown_wealthydonors - emergency_crackdown_grants,
-  refugee_humanrights_wealthydonors = refugee_crackdown_wealthydonors - humanrights_crackdown_wealthydonors,
-  refugee_environment_wealthydonors = refugee_crackdown_wealthydonors - environment_crackdown_wealthydonors,
-  refugee_grants_wealthydonors = refugee_crackdown_grants - refugee_crackdown_wealthydonors
+  emergency_humanrights_wealthydonors = (crackdown + emergency_crackdown_wealthydonors) - (crackdown + few_wealthy_private_donors + human_rights + humanrights_crackdown_wealthydonors),
+  
+  emergency_humanrights_grants = (crackdown + emergency_crackdown_grants) - (crackdown + government_grants + human_rights + humanrights_crackdown_grants),
+  
+  emergency_environment_wealthydonors = (crackdown + emergency_crackdown_wealthydonors) - (crackdown + few_wealthy_private_donors + environment + environment_crackdown_wealthydonors),
+  
+  emergency_environment_grants = (crackdown + emergency_crackdown_grants) - (crackdown + government_grants + environment + environment_crackdown_wealthydonors),
+                                    
+  refugee_humanrights_wealthydonors = (crackdown + refugee_relief + refugee_crackdown_wealthydonors) - (crackdown + few_wealthy_private_donors + human_rights + humanrights_crackdown_wealthydonors),
+  
+  refugee_humanrights_grants = (crackdown + refugee_relief + refugee_crackdown_grants) - (crackdown + government_grants +  human_rights + humanrights_crackdown_grants),
+    
+  refugee_environment_wealthydonors = (crackdown + refugee_relief + refugee_crackdown_wealthydonors) - (crackdown + few_wealthy_private_donors + environment + environment_crackdown_wealthydonors),
+
+  refugee_environment_grants = (crackdown + refugee_relief + refugee_crackdown_grants) - (crackdown + government_grants + environment + environment_crackdown_grants),
+  
   )
 
 # Plot the contrasts
 contrasts_int %>%
-  pivot_longer(emergency_humanrights_wealthydonors:refugee_grants_wealthydonors, names_to = "level", values_to = "Gamma") %>% 
+  pivot_longer(emergency_humanrights_wealthydonors:refugee_environment_grants, names_to = "level", values_to = "Gamma") %>% 
   ggplot(aes(x = Gamma, y = level)) +
   stat_halfeye(.width = .95) +
   geom_vline(xintercept = 0, color = "grey") +
@@ -993,11 +988,12 @@ Once again, we see some interesting distributions, but no results significant en
 
 ```{r practices-contrasts-a}
 # Pull the posterior draws for organizational practices
-
+draws <- draws_intercepts
 contrasts <- tibble(
   financial_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
   accountability = draws %>% filter(level == "Accountability") %>% select(Gamma) %>% pull()
-  )
+)
+
 
 # Plot the contrasts
 contrasts %>%
@@ -1026,14 +1022,20 @@ Donors show an increased likelihood to donate to NGOs that are financially trans
 
 ```{r practices-contrasts-b}
 # Overwrite draws with the appropriate interaction data
-draws <- here::here("analysis", "output", "posterior_draws", "interactions_5b.rds")
+draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_5b.rds"))
 
 # Pull the posterior draws for organizational practices*government crackdown interaction
 # Reference Level = Friendly relationship with government
 
 contrasts_int <- tibble(
-  financial_transparency_criticized = intib %>% filter(i == 40) %>% select(Gamma) %>% pull(),
-  financial_transparency_crackdown = intib %>% filter(i == 41) %>% select(Gamma) %>% pull(),
+  fin_transparency = draws %>% filter(i == 8)%>% select(Gamma) %>% pull(),
+  criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
+  crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull(),
+  financial_transparency_criticized = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  financial_transparency_crackdown = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  ) %>% mutate(
+    financial_transparency_criticized = fin_transparency + criticized + financial_transparency_criticized,
+    financial_transparency_crackdown = fin_transparency + crackdown + financial_transparency_crackdown
   )
 
 # Plot the contrasts
@@ -1063,7 +1065,7 @@ Donors show a similar increase in willingness to donate to accountable NGOs in c
 
 ```{r practices-contrasts-c}
 # Overwrite draws with the appropriate interaction data
-draws <- here::here("analysis", "output", "posterior_draws", "interactions_5c.rds")
+draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_5c.rds"))
 
 # Pull the posterior draws for organizational practices*funding sources*government crackdown interaction
 # Reference Level = Friendly relationship with government
@@ -1071,18 +1073,26 @@ draws <- here::here("analysis", "output", "posterior_draws", "interactions_5c.rd
 # All interactions include financial transparency
 
 contrasts_int <- tibble(
-  fin_smalldonors_criticized = intib %>% filter(i == 42) %>% select(Gamma) %>% pull(),
-  fin_wealthydonors_criticized = intib %>% filter(i == 43) %>% select(Gamma) %>% pull(),
-  fin_grants_criticized = intib %>% filter(i == 44) %>% select(Gamma) %>% pull(),
-  fin_smalldonors_crackdown = intib %>% filter(i == 45) %>% select(Gamma) %>% pull(),
-  fin_wealthydonors_crackdown = intib %>% filter(i == 46) %>% select(Gamma) %>% pull(),
-  fin_grants_crackdown = intib %>% filter(i == 47) %>% select(Gamma) %>% pull(),
+  fin_transparency = draws %>% filter(i == 8)%>% select(Gamma) %>% pull(),
+  few_wealthy_private_donors = draws %>% filter(i == 10) %>% select(Gamma) %>% pull(),
+  government_grants = draws %>% filter(i == 11) %>% select(Gamma) %>% pull(),
+  criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
+  crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull(),
+  fin_smalldonors_criticized = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  fin_wealthydonors_criticized = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  fin_grants_criticized = draws %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  fin_smalldonors_crackdown = draws %>% filter(i == 17) %>% select(Gamma) %>% pull(),
+  fin_wealthydonors_crackdown = draws %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  fin_grants_crackdown = draws %>% filter(i == 19) %>% select(Gamma) %>% pull(),
   ) %>%
   mutate(
-  fin_smalldonors_wealthydonors_criticized = fin_smalldonors_criticized - fin_wealthydonors_criticized,
-  fin_smalldonors_grants_criticized = fin_smalldonors_criticized - fin_grants_criticized,
-  fin_smalldonors_wealthydonors_crackdown = fin_smalldonors_crackdown - fin_wealthydonors_crackdown,
-  fin_smalldonors_grants_crackdown = fin_smalldonors_crackdown - fin_grants_crackdown
+  fin_smalldonors_wealthydonors_criticized = (fin_transparency + criticized + fin_smalldonors_criticized) - (fin_transparency + criticized + few_wealthy_private_donors + fin_wealthydonors_criticized),
+  
+  fin_smalldonors_grants_criticized = (fin_transparency + criticized + fin_smalldonors_criticized) -  (fin_transparency + criticized + government_grants + fin_grants_criticized),
+  
+  fin_smalldonors_wealthydonors_crackdown = (fin_transparency + crackdown + fin_smalldonors_crackdown) - (fin_transparency + crackdown + few_wealthy_private_donors + fin_wealthydonors_crackdown),
+  
+  fin_smalldonors_grants_crackdown = (fin_transparency + crackdown + fin_smalldonors_crackdown) - (fin_transparency + crackdown + government_grants + fin_grants_crackdown)
   )
 
 # Plot the contrasts
@@ -1111,7 +1121,7 @@ These intervals are massive; 0 is well within them, leaving us with insufficient
 
 ```{r practices-contrasts-d}
 # Overwrite draws with the appropriate interaction data
-draws <- here::here("analysis", "output", "posterior_draws", "interactions_5d.rds")
+draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_5d.rds"))
 
 # Pull the posterior draws for organizational practices*issue area*government crackdown interaction
 # Reference Level = Friendly relationship with government
@@ -1119,24 +1129,37 @@ draws <- here::here("analysis", "output", "posterior_draws", "interactions_5d.rd
 # All interactions include financial transparency
 
 contrasts_int <- tibble(
-  fin_emergency_criticized = intib %>% filter(i == 48) %>% select(Gamma) %>% pull(),
-  fin_emergency_crackdown = intib %>% filter(i == 49) %>% select(Gamma) %>% pull(),
-  fin_environment_criticized = intib %>% filter(i == 50) %>% select(Gamma) %>% pull(),
-  fin_environment_crackdown = intib %>% filter(i == 51) %>% select(Gamma) %>% pull(),
-  fin_humanrights_criticized = intib %>% filter(i == 52) %>% select(Gamma) %>% pull(),
-  fin_humanrights_crackdown = intib %>% filter(i == 53) %>% select(Gamma) %>% pull(),
-  fin_refugee_criticized = intib %>% filter(i == 54) %>% select(Gamma) %>% pull(),
-  fin_refugee_crackdown = intib %>% filter(i == 55) %>% select(Gamma) %>% pull()
+  fin_transparency = draws %>% filter(i == 8)%>% select(Gamma) %>% pull(),
+  criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
+  crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull(),
+  environment = draws %>% filter(i == 5) %>% select(Gamma) %>% pull(),
+  human_rights = draws %>% filter(i == 6) %>% select(Gamma) %>% pull(),
+  refugee_relief = draws %>% filter(i == 7) %>% select(Gamma) %>% pull(),
+  fin_emergency_criticized = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  fin_emergency_crackdown = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  fin_environment_criticized = draws %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  fin_environment_crackdown = draws %>% filter(i == 17) %>% select(Gamma) %>% pull(),
+  fin_humanrights_criticized = draws %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  fin_humanrights_crackdown = draws %>% filter(i == 19) %>% select(Gamma) %>% pull(),
+  fin_refugee_criticized = draws %>% filter(i == 20) %>% select(Gamma) %>% pull(),
+  fin_refugee_crackdown = draws %>% filter(i == 21) %>% select(Gamma) %>% pull()
   ) %>%
   mutate(
-  fin_emergency_environment_criticized = fin_emergency_criticized - fin_environment_criticized,
-  fin_emergency_humanrights_criticized = fin_emergency_criticized - fin_humanrights_criticized,
-  fin_emergency_environment_crackdown = fin_emergency_crackdown - fin_environment_crackdown,
-  fin_emergency_humanright_crackdown = fin_emergency_crackdown - fin_humanrights_crackdown,
-  fin_refugee_environment_criticized = fin_refugee_criticized - fin_environment_criticized,
-  fin_refugee_humanright_criticized = fin_refugee_criticized - fin_humanrights_criticized,
-  fin_refugee_environment_crackdown = fin_refugee_crackdown - fin_environment_crackdown,
-  fin_refugee_humanright_crackdown = fin_refugee_crackdown - fin_humanrights_crackdown
+  fin_emergency_environment_criticized = (fin_transparency + criticized + fin_emergency_criticized) - (fin_transparency + criticized + environment + fin_environment_criticized),
+  
+  fin_emergency_humanrights_criticized = (fin_transparency + criticized + fin_emergency_criticized) - fin_transparency + criticized + human_rights + fin_humanrights_criticized,
+  
+  fin_emergency_environment_crackdown = (fin_transparency + crackdown + fin_emergency_crackdown) - (fin_transparency + crackdown + environment + fin_environment_crackdown),
+  
+  fin_emergency_humanright_crackdown = (fin_transparency + crackdown + fin_emergency_crackdown) - (fin_transparency + crackdown + human_rights + fin_humanrights_crackdown),
+  
+  fin_refugee_environment_criticized = (fin_transparency + criticized + fin_refugee_criticized) - (fin_transparency + criticized + environment + fin_environment_criticized),
+  
+  fin_refugee_humanright_criticized = (fin_transparency + criticized + fin_refugee_criticized) - (fin_transparency + criticized + human_rights + fin_humanrights_criticized),
+  
+  fin_refugee_environment_crackdown = (fin_transparency + crackdown + fin_refugee_crackdown) - (fin_transparency + crackdown + environment + fin_environment_crackdown),
+  
+  fin_refugee_humanright_crackdown = (fin_transparency + crackdown + fin_refugee_crackdown) - (fin_transparency + crackdown + human_rights + fin_humanrights_crackdown)
 )
 
 # Plot the contrasts
@@ -1165,7 +1188,7 @@ The contrasts don't support the hypothesis, however, there is an interesting dif
 
 ```{r practices-contrasts-e}
 # Overwrite draws with the appropriate interaction data
-draws <- here::here("analysis", "output", "posterior_draws", "interactions_5e.rds")
+draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_5e.rds"))
 
 # Pull the posterior draws for organizational practices*funding*issue area*government crackdown interaction
 # Reference Level = Friendly relationship with government
@@ -1174,25 +1197,39 @@ draws <- here::here("analysis", "output", "posterior_draws", "interactions_5e.rd
 # All interactions include financial transparency
 
 contrasts_int <- tibble(
-  fin_sd_emergency_criticized = intib %>% filter(i == 56) %>% select(Gamma) %>% pull(),
-  fin_sd_emergency_crackdown = intib %>% filter(i == 57) %>% select(Gamma) %>% pull(),
-  fin_sd_environment_criticized = intib %>% filter(i == 58) %>% select(Gamma) %>% pull(),
-  fin_sd_environment_crackdown = intib %>% filter(i == 59) %>% select(Gamma) %>% pull(),
-  fin_sd_humanrights_criticized = intib %>% filter(i == 60) %>% select(Gamma) %>% pull(),
-  fin_sd_humanrights_crackdown = intib %>% filter(i == 61) %>% select(Gamma) %>% pull(),
-  fin_sd_refugee_criticized = intib %>% filter(i == 62) %>% select(Gamma) %>% pull(),
-  fin_sd_refugee_crackdown = intib %>% filter(i == 63) %>% select(Gamma) %>% pull()
-  ) %>%
-  mutate(
-  fin_sd_emergency_environment_criticized = fin_sd_emergency_criticized - fin_sd_environment_criticized,
-  fin_sd_emergency_humanrights_criticized = fin_sd_emergency_criticized - fin_sd_humanrights_criticized,
-  fin_sd_emergency_environment_crackdown = fin_sd_emergency_crackdown - fin_sd_environment_crackdown,
-  fin_sd_emergency_humanright_crackdown = fin_sd_emergency_crackdown - fin_sd_humanrights_crackdown,
-  fin_sd_refugee_environment_criticized = fin_sd_refugee_criticized - fin_sd_environment_criticized,
-  fin_sd_refugee_humanright_criticized = fin_sd_refugee_criticized - fin_sd_humanrights_criticized,
-  fin_sd_refugee_environment_crackdown = fin_sd_refugee_crackdown - fin_sd_environment_crackdown,
-  fin_sd_refugee_humanright_crackdown = fin_sd_refugee_crackdown - fin_sd_humanrights_crackdown
-)
+  environment = draws %>% filter(i == 5) %>% select(Gamma) %>% pull(),
+  human_rights = draws %>% filter(i == 6) %>% select(Gamma) %>% pull(),
+  refugee_relief = draws %>% filter(i == 7) %>% select(Gamma) %>% pull(),
+  fin_transparency = draws %>% filter(i == 8)%>% select(Gamma) %>% pull(),
+  few_wealthy_private_donors = draws %>% filter(i == 10) %>% select(Gamma) %>% pull(),
+  government_grants = draws %>% filter(i == 11) %>% select(Gamma) %>% pull(),
+  criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
+  crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull(),
+  fin_sd_emergency_criticized = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  fin_sd_emergency_crackdown = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  fin_sd_environment_criticized = draws %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  fin_sd_environment_crackdown = draws %>% filter(i == 17) %>% select(Gamma) %>% pull(),
+  fin_sd_humanrights_criticized = draws %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  fin_sd_humanrights_crackdown = draws %>% filter(i == 19) %>% select(Gamma) %>% pull(),
+  fin_sd_refugee_criticized = draws %>% filter(i == 20) %>% select(Gamma) %>% pull(),
+  fin_sd_refugee_crackdown = draws %>% filter(i == 21) %>% select(Gamma) %>% pull()
+  ) %>% mutate(
+  fin_sd_emergency_environment_criticized = (fin_transparency + criticized + fin_sd_emergency_criticized) - (fin_transparency + criticized + environment +  fin_sd_environment_criticized),
+  
+  fin_sd_emergency_humanrights_criticized = (fin_transparency + criticized + fin_sd_emergency_criticized) - (fin_transparency + criticized + human_rights +  fin_sd_humanrights_criticized),
+  
+  fin_sd_emergency_environment_crackdown = (fin_transparency + crackdown + fin_sd_emergency_crackdown) - (fin_transparency + crackdown + environment +  fin_sd_environment_crackdown),
+  
+  fin_sd_emergency_humanright_crackdown = (fin_transparency + crackdown + fin_sd_emergency_crackdown) - (fin_transparency + crackdown + human_rights + fin_sd_humanrights_crackdown),
+  
+  fin_sd_refugee_environment_criticized = (fin_transparency + criticized + refugee_relief +  fin_sd_refugee_criticized) - (fin_transparency + criticized + environment +  fin_sd_environment_criticized),
+  
+  fin_sd_refugee_humanright_criticized = (fin_transparency + criticized + refugee_relief +  fin_sd_refugee_criticized) - (fin_transparency + criticized + human_rights +  fin_sd_humanrights_criticized),
+  
+  fin_sd_refugee_environment_crackdown = (fin_transparency + crackdown + refugee_relief + fin_sd_refugee_crackdown) - (fin_transparency + crackdown + environment + fin_sd_environment_crackdown),
+  
+  fin_sd_refugee_humanright_crackdown = (fin_transparency + crackdown + refugee_relief + fin_sd_refugee_crackdown) - (fin_transparency + crackdown + human_rights + fin_sd_humanrights_crackdown
+))
 
 # Plot the contrasts
 contrasts_int %>%
@@ -1220,6 +1257,7 @@ These marginal posteriors don't support our hypothesis, but again show an intere
 
 ```{r practices-contrasts-b}
 # Pull the posterior draws for organizational practices
+draws <- draws_intercepts
 contrasts <- tibble(
   financial_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
   accountability = draws %>% filter(level == "Accountability") %>% select(Gamma) %>% pull()
