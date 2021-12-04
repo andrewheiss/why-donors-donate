@@ -590,6 +590,8 @@ draws_intercepts <- draws
 
 ```{r branding-contrasts}
 # Pull the posterior draws for the organizations and compute contrasts
+draws_intercepts <- draws
+
 contrasts <- tibble(
   amnesty = draws %>% filter(level == "Amnesty International") %>% select(Gamma) %>% pull(),
   greenpeace = draws %>% filter(level == "Greenpeace") %>% select(Gamma) %>% pull(),
@@ -632,6 +634,7 @@ Donors are indeed more likely to donate to Red Cross compared to Amnesty Interna
 ```{r crackdown-contrasts-a}
 # Pull the posterior draws for government crackdown
 # Reference Level = Friendly relationship with government
+draws_intercepts <- draws
 
 contrasts <- tibble(
   under_crackdown = draws %>% filter(level == "Under crackdown") %>% select(Gamma) %>% pull(),
@@ -729,8 +732,7 @@ ggsave(
  )
 ```
 
-
-These data don't support our hypothesis; the Red Cross brand has an insignificant impact on likelihood to donate compared to both Greenpeace and Amnesty. While the contrasts for Oxfam are closer to being statistically significant, the effect is working in the other direction--Greenpeace and Amnesty both induce increased likelihood to donate on behalf of donors.
+Although donors show significantly more willingness to donate to Red Cross when they are criticized or under crackdown from the host government, donors are less likely to donate to Oxfam under the same conditions. The only contrast which isn't statistically significant is the difference between Oxfam and Amnesty when both are under crackdown. All other contrasts do not contain 0 within their credibility interval.
 
 ### Hypothesis 3, Issue Area
 
@@ -742,6 +744,7 @@ These data don't support our hypothesis; the Red Cross brand has an insignifican
 # Pull the posterior draws for issue area
 # Reference Level = Emergency Response
 draws <- draws_intercepts
+
 contrasts <- tibble(
   environment = draws %>% filter(level == "Environment") %>% select(Gamma) %>% pull(),
   human_rights = draws %>% filter(level == "Human rights") %>% select(Gamma) %>% pull(),
@@ -794,18 +797,26 @@ contrasts_int <- tibble(
   crackdown_refugee = draws %>% filter(i == 19) %>% select(Gamma) %>% pull(),
 ) %>% 
   mutate(
+    criticized_emergency_environment = (criticized) - (criticized + environment + criticized_environment),
+  
+  criticized_emergency_humanrights = (criticized) - (criticized + human_rights + criticized_humanrights),
+  
+  crackdown_emergency_environment = (crackdown) - (crackdown + environment + crackdown_environment),
+  
+  crackdown_emergency_humanrights = (crackdown) - (crackdown + human_rights + crackdown_humanrights),
+  
   criticized_refugee_environment = (criticized + refugee_relief + criticized_refugee) - (criticized + environment + criticized_environment),
   
   criticized_refugee_humanrights = (criticized + refugee_relief + criticized_refugee) - (criticized + human_rights + criticized_humanrights),
   
-  crackdown_refugee_environment = (crackdown + refugee_relief + crackdown_refugee - crackdown + environment + crackdown_environment),
+  crackdown_refugee_environment = (crackdown + refugee_relief + crackdown_refugee) - (crackdown + environment + crackdown_environment),
   
-  crackdown_refugee_humanrights = (crackdown + refugee_relief + crackdown_refugee - crackdown + human_rights + crackdown_humanrights)
+  crackdown_refugee_humanrights = (crackdown + refugee_relief + crackdown_refugee) - (crackdown + human_rights + crackdown_humanrights)
 )
 
 # Plot the contrasts
 contrasts_int %>%
-  pivot_longer(criticized_refugee_environment:crackdown_refugee_humanrights, names_to = "level", values_to = "Gamma") %>% 
+  pivot_longer(criticized_emergency_environment:crackdown_refugee_humanrights, names_to = "level", values_to = "Gamma") %>% 
   ggplot(aes(x = Gamma, y = level)) +
   stat_halfeye(.width = .95) +
   geom_vline(xintercept = 0, color = "grey") +
@@ -821,7 +832,7 @@ ggsave(
 )
 ```
 
-The generated contrasts don't provides results which are statistically significant. 0 is found within all intervals.
+Per our hypothesis, we expected to see the contrasts of the posterior distributions to be positive. However, only the contrasts between emergency response and the more contentious issue areas (environment and human rights) were positive, while contrasts between refugee relief and the more contentious issue areas were negative. Looking at all the contrasts, crackdown_refugee_environment, criticized_refugee_environment, and crackdown_emergency_humanrights contained 0 within their credibility interval.
 
 ### Hypothesis 4, Funding Sources
 
@@ -881,13 +892,13 @@ contrasts_int <- tibble(
   crackdown_wealthydonors = draws %>% filter(i == 16) %>% select(Gamma) %>% pull(),
   crackdown_grants = draws %>% filter(i == 17) %>% select(Gamma) %>% pull(),
 ) %>% mutate(
-  criticized_wealthydonors = (criticized + few_wealthy_private_donors + criticized_wealthydonors) - criticized,
+  criticized_wealthydonors = (criticized) - (criticized + few_wealthy_private_donors + criticized_wealthydonors),
   
-  criticized_grants = (criticized + government_grants + criticized_grants) - criticized,
+  criticized_grants = (criticized) - (criticized + government_grants + criticized_grants),
   
-  crackdown_wealthydonors = (crackdown + few_wealthy_private_donors + crackdown_wealthydonors) - crackdown,
+  crackdown_wealthydonors = (crackdown) - (crackdown + few_wealthy_private_donors + crackdown_wealthydonors),
   
-  crackdown_grants = (crackdown + government_grants + crackdown_grants) - crackdown
+  crackdown_grants = crackdown - (crackdown + government_grants + crackdown_grants)
 )
 
 # Plot the contrasts
@@ -909,7 +920,7 @@ ggsave(
 
 ```
 
-The marginal posteriors for these contrasts are strange, but still tell us that the interaction between funding sources and government relationship produce no significant effects.
+All of the contrasts are positive and none of them contain 0 within their credibility interval, which supports our hypothesis that donors are more willing to donate to organizations supported by many small private donors and are under criticism or crackdown.
 
 #### Hypothesis 4c, Relationship with Host Government, Funding Sources, and Issue Area
 
@@ -918,6 +929,9 @@ The marginal posteriors for these contrasts are strange, but still tell us that 
 ```{r funding-contrasts-c}
 # Overwrite draws with the appropriate interaction data
 draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_4c.rds"))
+# Draws for lower order interactions
+draws_4b <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_4b.rds"))
+draws_3b <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_3b.rds"))
 
 # Pull the posterior draws for issue area*government crackdown*funding sources interaction
 # Reference Level = Funded primarily by many small private donations
@@ -929,8 +943,12 @@ contrasts_int <- tibble(
   refugee_relief = draws %>% filter(i == 7) %>% select(Gamma) %>% pull(),
   few_wealthy_private_donors = draws %>% filter(i == 10) %>% select(Gamma) %>% pull(),
   government_grants = draws %>% filter(i == 11) %>% select(Gamma) %>% pull(),
-  criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
   crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull(),
+  crackdown_environment = draws_3b %>% filter(i == 17) %>% select(Gamma) %>% pull(),
+  crackdown_humanrights = draws_3b %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  crackdown_refugee = draws_3b %>% filter(i == 19) %>% select(Gamma) %>% pull(),
+  crackdown_wealthydonors = draws_4b %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  crackdown_grants = draws_4b %>% filter(i == 17) %>% select(Gamma) %>% pull(),
   emergency_crackdown_wealthydonors = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
   emergency_crackdown_grants = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
   environment_crackdown_wealthydonors = draws %>% filter(i == 16) %>% select(Gamma) %>% pull(),
@@ -941,22 +959,21 @@ contrasts_int <- tibble(
   refugee_crackdown_grants = draws %>% filter(i == 21) %>% select(Gamma) %>% pull(),
 ) %>% 
   mutate(
-  emergency_humanrights_wealthydonors = (crackdown + emergency_crackdown_wealthydonors) - (crackdown + few_wealthy_private_donors + human_rights + humanrights_crackdown_wealthydonors),
-  
-  emergency_humanrights_grants = (crackdown + emergency_crackdown_grants) - (crackdown + government_grants + human_rights + humanrights_crackdown_grants),
-  
-  emergency_environment_wealthydonors = (crackdown + emergency_crackdown_wealthydonors) - (crackdown + few_wealthy_private_donors + environment + environment_crackdown_wealthydonors),
-  
-  emergency_environment_grants = (crackdown + emergency_crackdown_grants) - (crackdown + government_grants + environment + environment_crackdown_wealthydonors),
-                                    
-  refugee_humanrights_wealthydonors = (crackdown + refugee_relief + refugee_crackdown_wealthydonors) - (crackdown + few_wealthy_private_donors + human_rights + humanrights_crackdown_wealthydonors),
-  
-  refugee_humanrights_grants = (crackdown + refugee_relief + refugee_crackdown_grants) - (crackdown + government_grants +  human_rights + humanrights_crackdown_grants),
-    
-  refugee_environment_wealthydonors = (crackdown + refugee_relief + refugee_crackdown_wealthydonors) - (crackdown + few_wealthy_private_donors + environment + environment_crackdown_wealthydonors),
+  emergency_humanrights_wealthydonors = (crackdown) - (crackdown + few_wealthy_private_donors + human_rights + crackdown_humanrights + crackdown_wealthydonors + humanrights_crackdown_wealthydonors),
 
-  refugee_environment_grants = (crackdown + refugee_relief + refugee_crackdown_grants) - (crackdown + government_grants + environment + environment_crackdown_grants),
+  emergency_humanrights_grants = (crackdown) - (crackdown + government_grants + human_rights + crackdown_humanrights + crackdown_grants + humanrights_crackdown_grants),
+
+  emergency_environment_wealthydonors = (crackdown) - (crackdown + few_wealthy_private_donors + environment + crackdown_environment + crackdown_wealthydonors + environment_crackdown_wealthydonors),
   
+  emergency_environment_grants = (crackdown) - (crackdown + government_grants + environment + crackdown_environment + crackdown_grants + environment_crackdown_grants),
+                                    
+  refugee_humanrights_wealthydonors = (crackdown + refugee_relief + crackdown_refugee) - (crackdown + few_wealthy_private_donors + human_rights + crackdown_humanrights + crackdown_wealthydonors + humanrights_crackdown_wealthydonors),
+
+  refugee_humanrights_grants = (crackdown + refugee_relief + crackdown_refugee) - (crackdown + government_grants + human_rights + crackdown_humanrights + crackdown_grants + humanrights_crackdown_grants),
+
+  refugee_environment_wealthydonors = (crackdown + refugee_relief + crackdown_refugee) - (crackdown + few_wealthy_private_donors + environment + crackdown_environment + crackdown_wealthydonors + environment_crackdown_wealthydonors),
+
+  refugee_environment_grants = (crackdown + refugee_relief + crackdown_refugee) - (crackdown + government_grants + environment + crackdown_environment + crackdown_grants + environment_crackdown_grants),
   )
 
 # Plot the contrasts
@@ -978,7 +995,7 @@ ggsave(
 
 ```
 
-Once again, we see some interesting distributions, but no results significant enough to confirm our hypothesis.
+Contrast is most likely improperly coded, gammas are all over the place, so no conclusions can be made regarding the hypothesis
 
 ### Hypothesis 5, Organizational Practices
 
@@ -990,14 +1007,14 @@ Once again, we see some interesting distributions, but no results significant en
 # Pull the posterior draws for organizational practices
 draws <- draws_intercepts
 contrasts <- tibble(
-  financial_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
+  fin_transparency = draws %>% filter(level == "Financial transparency") %>% select(Gamma) %>% pull(),
   accountability = draws %>% filter(level == "Accountability") %>% select(Gamma) %>% pull()
 )
 
 
 # Plot the contrasts
 contrasts %>%
-  pivot_longer(financial_transparency, names_to = "level", values_to = "Gamma") %>% 
+  pivot_longer(fin_transparency, names_to = "level", values_to = "Gamma") %>% 
   ggplot(aes(x = Gamma, y = level)) +
   stat_halfeye(.width = .95) +
   geom_vline(xintercept = 0, color = "grey") +
@@ -1031,11 +1048,11 @@ contrasts_int <- tibble(
   fin_transparency = draws %>% filter(i == 8)%>% select(Gamma) %>% pull(),
   criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
   crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull(),
-  financial_transparency_criticized = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
-  financial_transparency_crackdown = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  fin_transparency_criticized = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  fin_transparency_crackdown = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
   ) %>% mutate(
-    financial_transparency_criticized = fin_transparency + criticized + financial_transparency_criticized,
-    financial_transparency_crackdown = fin_transparency + crackdown + financial_transparency_crackdown
+    fin_transparency_criticized = (fin_transparency + criticized + fin_transparency_criticized) - (criticized),
+    fin_transparency_crackdown = (fin_transparency + crackdown + fin_transparency_crackdown) - (crackdown)
   )
 
 # Plot the contrasts
@@ -1057,7 +1074,7 @@ ggsave(
 
 ```
 
-Donors show a similar increase in willingness to donate to accountable NGOs in comparison to NGOs that are financially transparent. However, this is contrary to what was hypothesized--we predicted that donor's willingness to donate wouldn't be affected by accountability practices.
+The contrasts for hypothesis 5b provide evidence that donors are more willing to donate to organizations which are criticized or under crackdown and are also financially transparent.
 
 #### Hypothesis 5c, Relationship with Host Government, Organizational Practices, and Funding Sources
 
@@ -1066,6 +1083,9 @@ Donors show a similar increase in willingness to donate to accountable NGOs in c
 ```{r practices-contrasts-c}
 # Overwrite draws with the appropriate interaction data
 draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_5c.rds"))
+# Lower order interaction draws
+draws_5b <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_5b.rds"))
+draws_4b <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_4b.rds"))
 
 # Pull the posterior draws for organizational practices*funding sources*government crackdown interaction
 # Reference Level = Friendly relationship with government
@@ -1078,6 +1098,12 @@ contrasts_int <- tibble(
   government_grants = draws %>% filter(i == 11) %>% select(Gamma) %>% pull(),
   criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
   crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull(),
+  criticized_wealthydonors = draws_4b %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  criticized_grants = draws_4b %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  crackdown_wealthydonors = draws_4b %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  crackdown_grants = draws_4b %>% filter(i == 17) %>% select(Gamma) %>% pull(),
+  fin_transparency_criticized = draws_5b %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  fin_transparency_crackdown = draws_5b %>% filter(i == 15) %>% select(Gamma) %>% pull(),
   fin_smalldonors_criticized = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
   fin_wealthydonors_criticized = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
   fin_grants_criticized = draws %>% filter(i == 16) %>% select(Gamma) %>% pull(),
@@ -1086,18 +1112,27 @@ contrasts_int <- tibble(
   fin_grants_crackdown = draws %>% filter(i == 19) %>% select(Gamma) %>% pull(),
   ) %>%
   mutate(
-  fin_smalldonors_wealthydonors_criticized = (fin_transparency + criticized + fin_smalldonors_criticized) - (fin_transparency + criticized + few_wealthy_private_donors + fin_wealthydonors_criticized),
+  fin_smalldonors_wealthydonors_criticized = (fin_transparency + criticized + fin_transparency_criticized + fin_smalldonors_criticized) - (fin_transparency + criticized + few_wealthy_private_donors + criticized_wealthydonors + fin_transparency_criticized + fin_wealthydonors_criticized),
   
-  fin_smalldonors_grants_criticized = (fin_transparency + criticized + fin_smalldonors_criticized) -  (fin_transparency + criticized + government_grants + fin_grants_criticized),
+  fin_smalldonors_grants_criticized = (fin_transparency + criticized + fin_transparency_criticized + fin_smalldonors_criticized) -  (fin_transparency + criticized + government_grants + criticized_grants + fin_transparency_criticized + fin_grants_criticized),
   
-  fin_smalldonors_wealthydonors_crackdown = (fin_transparency + crackdown + fin_smalldonors_crackdown) - (fin_transparency + crackdown + few_wealthy_private_donors + fin_wealthydonors_crackdown),
+  fin_smalldonors_wealthydonors_crackdown = (fin_transparency + crackdown + fin_transparency_crackdown + fin_smalldonors_crackdown) - (fin_transparency + crackdown + few_wealthy_private_donors + crackdown_wealthydonors + fin_transparency_crackdown + fin_wealthydonors_crackdown),
   
-  fin_smalldonors_grants_crackdown = (fin_transparency + crackdown + fin_smalldonors_crackdown) - (fin_transparency + crackdown + government_grants + fin_grants_crackdown)
+  fin_smalldonors_grants_crackdown = (fin_transparency + crackdown + fin_transparency_crackdown + fin_smalldonors_crackdown) - (fin_transparency + crackdown + government_grants + crackdown_grants + fin_transparency_crackdown + fin_grants_crackdown),
+
+# additional contrasts to compare financial transparency to no transparency    
+  not_fin_smalldonors_wealthydonors_criticized = (fin_transparency + criticized + fin_transparency_criticized + fin_smalldonors_criticized) - (criticized + few_wealthy_private_donors + criticized_wealthydonors),
+  
+  not_fin_smalldonors_grants_criticized = (fin_transparency + criticized + fin_transparency_criticized + fin_smalldonors_criticized) -  (criticized + government_grants + criticized_grants),
+  
+  not_fin_smalldonors_wealthydonors_crackdown = (fin_transparency + crackdown + fin_transparency_crackdown + fin_smalldonors_crackdown) - (crackdown + few_wealthy_private_donors + crackdown_wealthydonors),
+  
+  not_fin_smalldonors_grants_crackdown = (fin_transparency + crackdown + fin_transparency_crackdown + fin_smalldonors_crackdown) - (crackdown + government_grants + fin_transparency_crackdown + fin_grants_crackdown)
   )
 
 # Plot the contrasts
 contrasts_int %>%
-  pivot_longer(fin_smalldonors_wealthydonors_criticized:fin_smalldonors_grants_crackdown, names_to = "level", values_to = "Gamma") %>% 
+  pivot_longer(fin_smalldonors_wealthydonors_criticized:not_fin_smalldonors_grants_crackdown, names_to = "level", values_to = "Gamma") %>% 
   ggplot(aes(x = Gamma, y = level)) +
   stat_halfeye(.width = .95) +
   geom_vline(xintercept = 0, color = "grey") +
@@ -1113,7 +1148,7 @@ ggsave(
 )
 ```
 
-These intervals are massive; 0 is well within them, leaving us with insufficient evidence to confirm the hypothesis.
+Only fin_smalldonors_grants_crackdown contains 0 within its credibility interval. Since all other contrasts are positive and do not contain 0 within their credibility intervals, there is evidence supporting that donors are more willing to donate to NGOs that are criticized by the government/under government crackdown, are financially transparent, and are funded primarily by numerous small private donors.
 
 #### Hypothesis 5d, Relationship with Host Government, Organizational Practices, and Issue Area
 
@@ -1122,6 +1157,9 @@ These intervals are massive; 0 is well within them, leaving us with insufficient
 ```{r practices-contrasts-d}
 # Overwrite draws with the appropriate interaction data
 draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_5d.rds"))
+# Lower-order interactions
+draws_5b <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_5b.rds"))
+draws_3b <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_3b.rds"))
 
 # Pull the posterior draws for organizational practices*issue area*government crackdown interaction
 # Reference Level = Friendly relationship with government
@@ -1135,6 +1173,14 @@ contrasts_int <- tibble(
   environment = draws %>% filter(i == 5) %>% select(Gamma) %>% pull(),
   human_rights = draws %>% filter(i == 6) %>% select(Gamma) %>% pull(),
   refugee_relief = draws %>% filter(i == 7) %>% select(Gamma) %>% pull(),
+  criticized_environment = draws_3b %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  criticized_humanrights = draws_3b %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  criticized_refugee = draws_3b %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  crackdown_environment = draws_3b %>% filter(i == 17) %>% select(Gamma) %>% pull(),
+  crackdown_humanrights = draws_3b %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  crackdown_refugee = draws_3b %>% filter(i == 19) %>% select(Gamma) %>% pull(),
+  fin_transparency_criticized = draws_5b %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  fin_transparency_crackdown = draws_5b %>% filter(i == 15) %>% select(Gamma) %>% pull(),
   fin_emergency_criticized = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
   fin_emergency_crackdown = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
   fin_environment_criticized = draws %>% filter(i == 16) %>% select(Gamma) %>% pull(),
@@ -1145,21 +1191,21 @@ contrasts_int <- tibble(
   fin_refugee_crackdown = draws %>% filter(i == 21) %>% select(Gamma) %>% pull()
   ) %>%
   mutate(
-  fin_emergency_environment_criticized = (fin_transparency + criticized + fin_emergency_criticized) - (fin_transparency + criticized + environment + fin_environment_criticized),
+  fin_emergency_environment_criticized = (fin_transparency + criticized + fin_transparency_criticized + fin_emergency_criticized) - (fin_transparency + criticized + environment + fin_transparency_criticized + criticized_environment + fin_environment_criticized),
   
-  fin_emergency_humanrights_criticized = (fin_transparency + criticized + fin_emergency_criticized) - fin_transparency + criticized + human_rights + fin_humanrights_criticized,
+  fin_emergency_humanrights_criticized = (fin_transparency + criticized + fin_transparency_criticized + fin_emergency_criticized) - (fin_transparency + criticized + human_rights + fin_transparency_criticized + criticized_humanrights + fin_humanrights_criticized),
   
-  fin_emergency_environment_crackdown = (fin_transparency + crackdown + fin_emergency_crackdown) - (fin_transparency + crackdown + environment + fin_environment_crackdown),
+  fin_emergency_environment_crackdown = (fin_transparency + crackdown + fin_transparency_crackdown + fin_emergency_crackdown) - (fin_transparency + crackdown + environment + fin_transparency_crackdown + crackdown_environment + fin_environment_crackdown),
   
-  fin_emergency_humanright_crackdown = (fin_transparency + crackdown + fin_emergency_crackdown) - (fin_transparency + crackdown + human_rights + fin_humanrights_crackdown),
+  fin_emergency_humanright_crackdown = (fin_transparency + crackdown + fin_transparency_crackdown + fin_emergency_crackdown) - (fin_transparency + crackdown + human_rights + fin_transparency_crackdown + crackdown_humanrights + fin_humanrights_crackdown),
   
-  fin_refugee_environment_criticized = (fin_transparency + criticized + fin_refugee_criticized) - (fin_transparency + criticized + environment + fin_environment_criticized),
+  fin_refugee_environment_criticized = (fin_transparency + criticized + fin_transparency_criticized + criticized_refugee + fin_refugee_criticized) - (fin_transparency + criticized + environment + fin_transparency_criticized + criticized_environment + fin_environment_criticized),
   
-  fin_refugee_humanright_criticized = (fin_transparency + criticized + fin_refugee_criticized) - (fin_transparency + criticized + human_rights + fin_humanrights_criticized),
+  fin_refugee_humanright_criticized = (fin_transparency + criticized + fin_transparency_criticized + criticized_refugee + fin_refugee_criticized) - (fin_transparency + criticized + human_rights + fin_transparency_criticized + criticized_humanrights + fin_humanrights_criticized),
   
-  fin_refugee_environment_crackdown = (fin_transparency + crackdown + fin_refugee_crackdown) - (fin_transparency + crackdown + environment + fin_environment_crackdown),
+  fin_refugee_environment_crackdown = (fin_transparency + crackdown + fin_transparency_crackdown + crackdown_refugee + fin_refugee_crackdown) - (fin_transparency + crackdown + environment + crackdown_environment + fin_transparency_crackdown + fin_environment_crackdown),
   
-  fin_refugee_humanright_crackdown = (fin_transparency + crackdown + fin_refugee_crackdown) - (fin_transparency + crackdown + human_rights + fin_humanrights_crackdown)
+  fin_refugee_humanright_crackdown = (fin_transparency + crackdown + fin_transparency_crackdown + crackdown_refugee + fin_refugee_crackdown) - (fin_transparency + crackdown + human_rights + fin_transparency_crackdown + crackdown_humanrights + fin_humanrights_crackdown)
 )
 
 # Plot the contrasts
@@ -1180,7 +1226,7 @@ ggsave(
 )
 ```
 
-The contrasts don't support the hypothesis, however, there is an interesting difference between emergency_environment_crackdown and emergency_environment_criticized.
+The contrasts don't seem to be properly calculated, so no conclusion at this time.
 
 #### Hypothesis 5e, Relationship with Host Government, Organizational Practices, Issue Area, and Funding Sources
 
@@ -1189,7 +1235,11 @@ The contrasts don't support the hypothesis, however, there is an interesting dif
 ```{r practices-contrasts-e}
 # Overwrite draws with the appropriate interaction data
 draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_5e.rds"))
-
+# Lower-order interactions
+draws_5b <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_5b.rds"))
+draws_3b <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_3b.rds"))
+draws_5c <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_5c.rds"))
+draws_5d <- read_rds(here::here("data", "raw_data", "posterior_draws", "interactions_5d.rds"))
 # Pull the posterior draws for organizational practices*funding*issue area*government crackdown interaction
 # Reference Level = Friendly relationship with government
 # Reference Level = Emergency Response
@@ -1205,6 +1255,28 @@ contrasts_int <- tibble(
   government_grants = draws %>% filter(i == 11) %>% select(Gamma) %>% pull(),
   criticized = draws %>% filter(i == 12)%>% select(Gamma) %>% pull(),
   crackdown = draws %>% filter(i == 13) %>% select(Gamma) %>% pull(),
+  criticized_environment = draws_3b %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  criticized_humanrights = draws_3b %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  criticized_refugee = draws_3b %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  crackdown_environment = draws_3b %>% filter(i == 17) %>% select(Gamma) %>% pull(),
+  crackdown_humanrights = draws_3b %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  crackdown_refugee = draws_3b %>% filter(i == 19) %>% select(Gamma) %>% pull(),
+  fin_transparency_criticized = draws_5b %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  fin_transparency_crackdown = draws_5b %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  fin_emergency_criticized = draws_5d %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  fin_emergency_crackdown = draws_5d %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  fin_environment_criticized = draws_5d %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  fin_environment_crackdown = draws_5d %>% filter(i == 17) %>% select(Gamma) %>% pull(),
+  fin_humanrights_criticized = draws_5d %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  fin_humanrights_crackdown = draws_5d %>% filter(i == 19) %>% select(Gamma) %>% pull(),
+  fin_refugee_criticized = draws_5d %>% filter(i == 20) %>% select(Gamma) %>% pull(),
+  fin_refugee_crackdown = draws_5d %>% filter(i == 21) %>% select(Gamma) %>% pull(),
+  fin_smalldonors_criticized = draws_5c %>% filter(i == 14) %>% select(Gamma) %>% pull(),
+  fin_wealthydonors_criticized = draws_5c %>% filter(i == 15) %>% select(Gamma) %>% pull(),
+  fin_grants_criticized = draws_5c %>% filter(i == 16) %>% select(Gamma) %>% pull(),
+  fin_smalldonors_crackdown = draws_5c %>% filter(i == 17) %>% select(Gamma) %>% pull(),
+  fin_wealthydonors_crackdown = draws_5c %>% filter(i == 18) %>% select(Gamma) %>% pull(),
+  fin_grants_crackdown = draws_5c %>% filter(i == 19) %>% select(Gamma) %>% pull(),
   fin_sd_emergency_criticized = draws %>% filter(i == 14) %>% select(Gamma) %>% pull(),
   fin_sd_emergency_crackdown = draws %>% filter(i == 15) %>% select(Gamma) %>% pull(),
   fin_sd_environment_criticized = draws %>% filter(i == 16) %>% select(Gamma) %>% pull(),
@@ -1214,26 +1286,26 @@ contrasts_int <- tibble(
   fin_sd_refugee_criticized = draws %>% filter(i == 20) %>% select(Gamma) %>% pull(),
   fin_sd_refugee_crackdown = draws %>% filter(i == 21) %>% select(Gamma) %>% pull()
   ) %>% mutate(
-  fin_sd_emergency_environment_criticized = (fin_transparency + criticized + fin_sd_emergency_criticized) - (fin_transparency + criticized + environment +  fin_sd_environment_criticized),
+  fin_sd_emergency_environment_criticized = (fin_transparency + criticized + fin_transparency_criticized + fin_smalldonors_criticized + fin_emergency_criticized + fin_sd_emergency_criticized) - (fin_transparency + criticized + environment + criticized_environment + fin_transparency_criticized + fin_smalldonors_criticized + fin_environment_criticized + fin_sd_environment_criticized),
   
-  fin_sd_emergency_humanrights_criticized = (fin_transparency + criticized + fin_sd_emergency_criticized) - (fin_transparency + criticized + human_rights +  fin_sd_humanrights_criticized),
+  fin_sd_emergency_humanrights_criticized = (fin_transparency + criticized + fin_transparency_criticized + fin_smalldonors_criticized + fin_emergency_criticized + fin_sd_emergency_criticized) - (fin_transparency + criticized + human_rights + criticized_humanrights + fin_transparency_criticized + fin_smalldonors_criticized + fin_humanrights_criticized + fin_sd_humanrights_criticized) ,
   
-  fin_sd_emergency_environment_crackdown = (fin_transparency + crackdown + fin_sd_emergency_crackdown) - (fin_transparency + crackdown + environment +  fin_sd_environment_crackdown),
+  fin_sd_emergency_environment_crackdown = (fin_transparency + crackdown + fin_transparency_crackdown + fin_smalldonors_crackdown + fin_emergency_crackdown + fin_sd_emergency_crackdown) - (fin_transparency + crackdown + environment + crackdown_environment + fin_transparency_crackdown + fin_smalldonors_crackdown + fin_environment_crackdown + fin_sd_environment_crackdown),
   
-  fin_sd_emergency_humanright_crackdown = (fin_transparency + crackdown + fin_sd_emergency_crackdown) - (fin_transparency + crackdown + human_rights + fin_sd_humanrights_crackdown),
+  fin_sd_emergency_humanrights_crackdown = (fin_transparency + crackdown + fin_transparency_crackdown + fin_smalldonors_crackdown + fin_emergency_crackdown + fin_sd_emergency_crackdown) - (fin_transparency + crackdown + human_rights + crackdown_humanrights + fin_transparency_crackdown + fin_smalldonors_crackdown + fin_humanrights_crackdown + fin_sd_humanrights_crackdown) ,
   
-  fin_sd_refugee_environment_criticized = (fin_transparency + criticized + refugee_relief +  fin_sd_refugee_criticized) - (fin_transparency + criticized + environment +  fin_sd_environment_criticized),
+  fin_sd_refugee_environment_criticized = (fin_transparency + criticized + refugee_relief + fin_transparency_criticized + criticized_refugee + fin_smalldonors_criticized + fin_refugee_criticized + fin_sd_refugee_criticized) - (fin_transparency + criticized + environment + criticized_environment + fin_transparency_criticized + fin_smalldonors_criticized + fin_environment_criticized + fin_sd_environment_criticized) ,
   
-  fin_sd_refugee_humanright_criticized = (fin_transparency + criticized + refugee_relief +  fin_sd_refugee_criticized) - (fin_transparency + criticized + human_rights +  fin_sd_humanrights_criticized),
+  fin_sd_refugee_humanrights_criticized = (fin_transparency + criticized + refugee_relief + fin_transparency_criticized + criticized_refugee + fin_smalldonors_criticized + fin_refugee_criticized + fin_sd_refugee_criticized) - (fin_transparency + criticized + human_rights + criticized_humanrights + fin_transparency_criticized + fin_smalldonors_criticized + fin_humanrights_criticized + fin_sd_humanrights_criticized) ,
   
-  fin_sd_refugee_environment_crackdown = (fin_transparency + crackdown + refugee_relief + fin_sd_refugee_crackdown) - (fin_transparency + crackdown + environment + fin_sd_environment_crackdown),
+  fin_sd_refugee_environment_crackdown = (fin_transparency + crackdown + refugee_relief + fin_transparency_crackdown + crackdown_refugee + fin_smalldonors_crackdown + fin_refugee_crackdown + fin_sd_refugee_crackdown) - (fin_transparency + crackdown + environment + crackdown_environment + fin_transparency_crackdown + fin_smalldonors_crackdown + fin_environment_crackdown + fin_sd_environment_crackdown) ,
   
-  fin_sd_refugee_humanright_crackdown = (fin_transparency + crackdown + refugee_relief + fin_sd_refugee_crackdown) - (fin_transparency + crackdown + human_rights + fin_sd_humanrights_crackdown
-))
+  fin_sd_refugee_humanrights_crackdown = (fin_transparency + crackdown + refugee_relief + fin_transparency_crackdown + crackdown_refugee + fin_smalldonors_crackdown + fin_refugee_crackdown + fin_sd_refugee_crackdown) - (fin_transparency + crackdown + human_rights + crackdown_humanrights + fin_transparency_crackdown + fin_smalldonors_crackdown + fin_humanrights_crackdown + fin_sd_humanrights_crackdown),
+  )
 
 # Plot the contrasts
 contrasts_int %>%
-  pivot_longer(fin_sd_emergency_environment_criticized:fin_sd_refugee_humanright_crackdown, names_to = "level", values_to = "Gamma") %>% 
+  pivot_longer(fin_sd_emergency_environment_criticized:fin_sd_refugee_humanrights_crackdown, names_to = "level", values_to = "Gamma") %>% 
   ggplot(aes(x = Gamma, y = level)) +
   stat_halfeye(.width = .95) +
   geom_vline(xintercept = 0, color = "grey") +
@@ -1249,7 +1321,7 @@ ggsave(
 )
 ```
 
-These marginal posteriors don't support our hypothesis, but again show an interesting difference between emergency_environment_criticized and emergency_environment_crackdown.
+These contrasts don't provide conclusive results, need fixing.
 
 #### Hypothesis 5f, Organizational Practices
 
