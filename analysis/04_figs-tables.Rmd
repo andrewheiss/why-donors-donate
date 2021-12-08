@@ -53,19 +53,19 @@ public_political_social_charity_demo <- 0 # + Demographics
 
 if (intercept == 1 & interactions == 0) {
   draws <- read_rds(
-    here::here("analysis", "output", "posterior_draws", "intercept.rds")
+    here::here("data", "raw_data", "posterior_draws", "intercept.rds")
   ) %>% 
     mutate(model = "Intercept only")
 }
 if (intercept == 1 & interactions == 1) {
   draws <- read_rds(
-    here::here("analysis", "output", "posterior_draws", "interactions.rds")
+    here::here("data", "raw_data", "posterior_draws", "interactions.rds")
   ) %>% 
     mutate(model = "Intercept and interactions")
 }
 if (public_affairs == 1) {
   draws <- read_rds(
-    here::here("analysis", "output", "posterior_draws", "public_affairs.rds")
+    here::here("data", "raw_data", "posterior_draws", "public_affairs.rds")
   ) %>% 
     mutate(model = "Public affairs")
   covariates <- results %>%
@@ -75,7 +75,7 @@ if (public_affairs == 1) {
 }
 if (political_ideology == 1) {
   draws <- read_rds(
-    here::here("analysis", "output", "posterior_draws", "political_ideology.rds")
+    here::here("data", "raw_data", "posterior_draws", "political_ideology.rds")
   ) %>% 
     mutate(model = "Political ideology")
   covariates <- results %>%
@@ -85,7 +85,7 @@ if (political_ideology == 1) {
 }
 if (social_views == 1) {
   draws <- read_rds(
-    here::here("analysis", "output", "posterior_draws", "social_views.rds")
+    here::here("data", "raw_data", "posterior_draws", "social_views.rds")
   ) %>% 
     mutate(model = "Social views")
   covariates <- results %>%
@@ -95,7 +95,7 @@ if (social_views == 1) {
 }
 if (charity_voluntarism == 1) {
   draws <- read_rds(
-    here::here("analysis", "output", "posterior_draws", "charity_voluntarism.rds")
+    here::here("data", "raw_data", "posterior_draws", "charity_voluntarism.rds")
   ) %>% 
     mutate(model = "Charity and voluntarism")
   covariates <- results %>%
@@ -105,7 +105,7 @@ if (charity_voluntarism == 1) {
 }
 if (demographics == 1) {
   draws <- read_rds(
-    here::here("analysis", "output", "posterior_draws", "demographics.rds")
+    here::here("data", "raw_data", "posterior_draws", "demographics.rds")
   ) %>% 
     mutate(model = "Demographics")
   covariates <- results %>%
@@ -115,7 +115,7 @@ if (demographics == 1) {
 }
 if (public_political == 1) {
   draws <- read_rds(
-    here::here("analysis", "output", "posterior_draws", "public_political.rds")
+    here::here("data", "raw_data", "posterior_draws", "public_political.rds")
   ) %>% 
     mutate(model = "Public affairs and political ideology")
   covariates <- results %>%
@@ -126,7 +126,7 @@ if (public_political == 1) {
 }
 if (public_political_social == 1) {
   draws <- read_rds(
-    here::here("analysis", "output", "posterior_draws", "public_political_social.rds")
+    here::here("data", "raw_data", "posterior_draws", "public_political_social.rds")
   ) %>% 
     mutate(model = "Public affairs, political ideology, and social views")
   covariates <- results %>%
@@ -138,7 +138,7 @@ if (public_political_social == 1) {
 }
 if (public_political_social_charity == 1) {
   draws <- read_rds(
-    here::here("analysis", "output", "posterior_draws", "public_political_social_charity.rds")
+    here::here("data", "raw_data", "posterior_draws", "public_political_social_charity.rds")
   ) %>% 
     mutate(
       model = "Public affairs, political ideology, social views, charity and voluntarism"

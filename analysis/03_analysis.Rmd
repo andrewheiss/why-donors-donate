@@ -235,17 +235,17 @@ fit <- stan(
   seed = 1234
 )
 run <- list(data = data, fit = fit)
-if (intercept == 1 & interactions == 0) write_rds(run, here::here("analysis", "output", "model_runs", "intercept.rds"))
-if (intercept == 1 & interactions == 1) write_rds(run, here::here("analysis", "output", "model_runs", "interactions_5e.rds"))
-if (public_affairs == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_affairs.rds"))
-if (political_ideology == 1) write_rds(run, here::here("analysis", "output", "model_runs", "political_ideology.rds"))
-if (social_views == 1) write_rds(run, here::here("analysis", "output", "model_runs", "social_views.rds"))
-if (charity_voluntarism == 1) write_rds(run, here::here("analysis", "output", "model_runs", "charity_voluntarism.rds"))
-if (demographics == 1) write_rds(run, here::here("analysis", "output", "model_runs", "demographics.rds"))
-if (public_political == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political.rds"))
-if (public_political_social == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political_social.rds"))
-if (public_political_social_charity == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political_social_charity.rds"))
-if (public_political_social_charity_demo == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
+if (intercept == 1 & interactions == 0) write_rds(run, here::here("data", "raw_data", "model_runs", "intercept.rds"))
+if (intercept == 1 & interactions == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "interactions_5e.rds"))
+if (public_affairs == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "public_affairs.rds"))
+if (political_ideology == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "political_ideology.rds"))
+if (social_views == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "social_views.rds"))
+if (charity_voluntarism == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "charity_voluntarism.rds"))
+if (demographics == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "demographics.rds"))
+if (public_political == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "public_political.rds"))
+if (public_political_social == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "public_political_social.rds"))
+if (public_political_social_charity == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "public_political_social_charity.rds"))
+if (public_political_social_charity_demo == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "public_political_social_charity_demo.rds"))
 ```
 
 The model is calibrated using a non-centered parameterization of a hierarchical multinomial logit model. Each model passed diagnostics checks, including the absence of divergent transitions, as part of model calibration.
@@ -326,16 +326,16 @@ The following analysis follows specifying the model we'd like to evaluate. Note 
 
 ```{r load-data-output, warning=FALSE, message=FALSE, eval=FALSE}
 # Load all model output
-intercept_run <- read_rds(here::here("analysis", "output", "model_runs", "intercept.rds"))
-public_affairs_run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
-political_ideology_run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
-social_views_run <- read_rds(here::here("analysis", "output", "model_runs", "social_views.rds"))
-charity_voluntarism_run <- read_rds(here::here("analysis", "output", "model_runs", "charity_voluntarism.rds"))
-demographics_run <- read_rds(here::here("analysis", "output", "model_runs", "demographics.rds"))
-public_political_run <- read_rds(here::here("analysis", "output", "model_runs", "public_political.rds"))
-public_political_social_run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social.rds"))
-public_political_social_charity_run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity.rds"))
-public_political_social_charity_demo_run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
+intercept_run <- read_rds(here::here("data", "raw_data", "model_runs", "intercept.rds"))
+public_affairs_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_affairs.rds"))
+political_ideology_run <- read_rds(here::here("data", "raw_data", "model_runs", "political_ideology.rds"))
+social_views_run <- read_rds(here::here("data", "raw_data", "model_runs", "social_views.rds"))
+charity_voluntarism_run <- read_rds(here::here("data", "raw_data", "model_runs", "charity_voluntarism.rds"))
+demographics_run <- read_rds(here::here("data", "raw_data", "model_runs", "demographics.rds"))
+public_political_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political.rds"))
+public_political_social_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social.rds"))
+public_political_social_charity_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social_charity.rds"))
+public_political_social_charity_demo_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social_charity_demo.rds"))
 ```
 
 ## Compute and save model fit
@@ -393,17 +393,17 @@ public_political_social_charity <- 0      # + Charity and voluntarism
 public_political_social_charity_demo <- 0 # + Demographics
 
 # Load and extract data and model output
-if (intercept == 1 & interactions == 0) run <- read_rds(here::here("analysis", "output", "model_runs", "intercept.rds"))
-if (intercept == 1 & interactions == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "interactions_5d.rds"))
-if (public_affairs == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_affairs.rds"))
-if (political_ideology == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "political_ideology.rds"))
-if (social_views == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "social_views.rds"))
-if (charity_voluntarism == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "charity_voluntarism.rds"))
-if (demographics == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "demographics.rds"))
-if (public_political == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political.rds"))
-if (public_political_social == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social.rds"))
-if (public_political_social_charity == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity.rds"))
-if (public_political_social_charity_demo == 1) run <- read_rds(here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
+if (intercept == 1 & interactions == 0) run <- read_rds(here::here("data", "raw_data", "model_runs", "intercept.rds"))
+if (intercept == 1 & interactions == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "interactions_5d.rds"))
+if (public_affairs == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "public_affairs.rds"))
+if (political_ideology == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "political_ideology.rds"))
+if (social_views == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "social_views.rds"))
+if (charity_voluntarism == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "charity_voluntarism.rds"))
+if (demographics == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "demographics.rds"))
+if (public_political == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political.rds"))
+if (public_political_social == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social.rds"))
+if (public_political_social_charity == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social_charity.rds"))
+if (public_political_social_charity_demo == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social_charity_demo.rds"))
 data <- run$data
 fit <- run$fit
 
@@ -418,17 +418,17 @@ draws <- fit %>%
   )
 
 # Save draws
-if (intercept == 1 & interactions == 0) write_rds(draws, here::here("analysis", "output", "posterior_draws", "intercept.rds"))
-if (intercept == 1 & interactions == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "interactions_5d.rds"))
-if (public_affairs == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_affairs.rds"))
-if (political_ideology == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "political_ideology.rds"))
-if (social_views == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "social_views.rds"))
-if (charity_voluntarism == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "charity_voluntarism.rds"))
-if (demographics == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "demographics.rds"))
-if (public_political == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_political.rds"))
-if (public_political_social == 1)  write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_political_social.rds"))
-if (public_political_social_charity == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_political_social_charity.rds"))
-if (public_political_social_charity_demo == 1) write_rds(draws, here::here("analysis", "output", "posterior_draws", "public_political_social_charity_demo.rds"))
+if (intercept == 1 & interactions == 0) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "intercept.rds"))
+if (intercept == 1 & interactions == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "interactions_5d.rds"))
+if (public_affairs == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_affairs.rds"))
+if (political_ideology == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "political_ideology.rds"))
+if (social_views == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "social_views.rds"))
+if (charity_voluntarism == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "charity_voluntarism.rds"))
+if (demographics == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "demographics.rds"))
+if (public_political == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_political.rds"))
+if (public_political_social == 1)  write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_political_social.rds"))
+if (public_political_social_charity == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_political_social_charity.rds"))
+if (public_political_social_charity_demo == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_political_social_charity_demo.rds"))
 ```
 
 
