@@ -43,7 +43,7 @@ After selecting the model we'd like to run, model calibration proceeds as follow
 
 ```{r model-calibration, eval=FALSE}
 intercept <- 0                            # Intercept-only
-interactions <- 0                         # Include interactions with the intercept-only model?
+interactions <- 0                         # Include interactions with the intercept-only model
 public_affairs <- 1                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
@@ -58,16 +58,6 @@ public_political_social_charity_demo <- 0 # + Demographics
 final_data <- read_rds(here::here("data", "derived_data", "final_data.rds"))
 X <- read_rds(here::here("data", "derived_data", "final_design.rds"))
 if (interactions == 1) X <- read_rds(here::here("data", "derived_data", "final_interactions.rds"))
-
-# # ##############################
-# X_new <- array(NA, dim = c(dim(X)[1:3], 21)) # 13 + interactions
-# for (r in 1:dim(X)[1]) {
-#   for (s in 1:dim(X)[2]) {
-#     X_new[r,s,,] <- X[r,s,,c(1:13, 56:63)] # 13 + interactions
-#   }
-# }
-# X <- X_new
-# # ##############################
 
 # Restructure choice data Y
 Y <- final_data %>%
@@ -160,52 +150,24 @@ Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
   bind_cols(as_tibble(out$x[,-1])) %>%
   as.matrix()
 
-# ####################################################################################
-# # if (intercept == 0) {
-#   # OLD...
-#   # Replace factor labels with levels
-#   Z_old <- Z %>%
-#   # Z <- Z %>%
-#     mutate_if(is.factor, as.integer) %>%
-#     mutate_if(is.integer, as.factor)
-#   
-#   # Pad the variables names with _
-#   # colnames(Z) <- str_c(colnames(Z), "_")
-#   colnames(Z_old) <- str_c(colnames(Z_old), "_")
-#   
-#   # Use the output of lm to get a dummy-coded version of the covariate matrix Z
-#   # Z$y <- matrix(rnorm(nrow(Z)), ncol = 1)
-#   # out <- lm(y ~ ., Z, x = TRUE)
-#   Z_old$y <- matrix(rnorm(nrow(Z_old)), ncol = 1)
-#   out <- lm(y ~ ., Z_old, x = TRUE)
-#   
-#   # Save out Z as a matrix, including an intercept
-#   Z_old <- tibble(intercept = rep(1, dim(X)[1])) %>%
-#   # Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
-#     bind_cols(as_tibble(out$x[,-1])) %>%
-#     as.matrix()
-#   
-#   # NEW...
-#   # Replace factor labels with levels and NAs with 0s
-#   Z_new <- Z %>%
-#     mutate_if(is.factor, as.integer) %>%
-#     mutate_if(is.integer, as.factor) %>% 
-#     replace(is.na(.), 0) %>% 
-#     # Use dummy_cols() to get a dummy-coded version of factors
-#     dummy_cols(
-#       remove_first_dummy = TRUE,
-#       remove_selected_columns = TRUE
-#     ) %>% 
-#     # Include an intercept, sort columns numerically, save as matrix
-#     bind_cols(tibble(intercept = rep(1, dim(X)[1]))) %>% 
-#     relocate(intercept, sort(colnames(.))) %>% 
-#     as.matrix()
-# # }
-# 
-# 
-# 
-# 
-# ####################################################################################
+if (intercept == 0) {
+  # Replace factor labels with levels
+  Z <- Z %>%
+    mutate_if(is.factor, as.integer) %>%
+    mutate_if(is.integer, as.factor)
+
+  # Pad the variables names with _
+  colnames(Z) <- str_c(colnames(Z), "_")
+
+  # Use the output of lm to get a dummy-coded version of the covariate matrix Z
+  Z$y <- matrix(rnorm(nrow(Z)), ncol = 1)
+  out <- lm(y ~ ., Z, x = TRUE)
+
+  # Save out Z as a matrix, including an intercept
+  Z <- tibble(intercept = rep(1, dim(X)[1])) %>%
+    bind_cols(as_tibble(out$x[,-1])) %>%
+    as.matrix()
+}
 
 # Specify the data for calibration in a list
 data <- list(
@@ -381,7 +343,7 @@ write_rds(model_fit, here::here("analysis", "output", "tables", "model_fit.rds")
 
 ```{r extract-draws, eval=FALSE}
 intercept <- 1                            # Intercept-only
-interactions <- 1                         # Include interactions with the intercept-only model?
+interactions <- 1                         # Include interactions with the intercept-only model
 public_affairs <- 0                       # Public affairs
 political_ideology <- 0                   # Political ideology
 social_views <- 0                         # Social views
