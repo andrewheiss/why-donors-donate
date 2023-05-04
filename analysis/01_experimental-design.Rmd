@@ -45,7 +45,7 @@ for(i in 4:ncol(dummy_design)) {
 # Rename the variables.
 colnames(dummy_design)[4:9] <- c("org", "issue", "transp", "account", "fund", "gov_rel")
 
-# Use dummy_cols() to get a index-coded version of all the attribute levels.
+# Use dummy_cols() to get a dummy-coded version of all the attribute levels
 dummy_design <- dummy_cols(
   dummy_design,
   select_columns = c("org", "issue", "transp", "account", "fund", "gov_rel"),
@@ -53,7 +53,7 @@ dummy_design <- dummy_cols(
   remove_selected_columns = TRUE
 )
 
-# Rename the index variables.
+# Rename the index variables
 colnames(dummy_design)[4:15] <- c(
   str_c("org", 2:4), str_c("issue", 2:4), str_c("transp", 2),
   str_c("account", 2), str_c("fund", 2:3), str_c("gov_rel", 2:3)
@@ -64,11 +64,11 @@ write.csv(dummy_design, here("data", "derived_data", "dummy_design.csv"))
 ```
 
 
-# Interactions
+# Dummy-coded interactions
 
 We have a number of hypotheses referencing specific interactions. To answer these hypotheses, we need to specific each of the needed interactions.
 
-```{r interactions, warning=FALSE, message=FALSE}
+```{r dummy-interactions, warning=FALSE, message=FALSE}
 # Convert the attributes in design into factors
 interactions <- as.data.frame(design)
 for(i in 4:ncol(interactions)) {
@@ -78,7 +78,7 @@ for(i in 4:ncol(interactions)) {
 # Rename the variables.
 colnames(interactions)[4:9] <- c("org", "issue", "transp", "account", "fund", "gov_rel")
 
-# Use dummy_cols() to get a dummy-coded version of all the attribute levels.
+# Use dummy_cols() to get a dummy-coded version of all the attribute levels
 interactions <- dummy_cols(
   interactions, 
   select_columns = c("org", "issue", "transp", "account", "fund", "gov_rel"),
@@ -86,13 +86,13 @@ interactions <- dummy_cols(
   remove_selected_columns = TRUE
 )
 
-# Rename the dummy-coded variables.
+# Rename the dummy-coded variables
 colnames(interactions)[4:21] <- c(
   str_c("org", 1:4), str_c("issue", 1:4), str_c("transp", 1:2), 
   str_c("account", 1:2), str_c("fund", 1:3), str_c("gov_rel", 1:3)
 )
 
-# Build out all the necessary interactions.
+# Build out all the necessary interactions
 interactions <- interactions %>% 
   as_tibble() %>% 
   mutate(
@@ -190,7 +190,169 @@ interactions <- interactions %>%
   select(-contains("1"))
 
 # Save interact-coded design output
-write.csv(interactions, here("data", "derived_data", "interactions.csv"))
+write.csv(interactions, here("data", "derived_data", "dummy_interactions.csv"))
+```
+
+
+# Index-code the design
+
+Now we prepare the experimental design for use in estimating the model by keeping each level of each attribute, which are all discrete. An index-coded design has no reference levels.
+
+```{r index-design, warning=FALSE, message=FALSE}
+# Convert the attributes in design into factors
+index_design <- as.data.frame(design)
+for(i in 4:ncol(index_design)) {
+  index_design[,i] <- as.factor(index_design[,i])
+}
+
+# Rename the variables.
+colnames(index_design)[4:9] <- c("org", "issue", "transp", "account", "fund", "gov_rel")
+
+# Use dummy_cols() to get an index-coded version of all the attribute levels
+index_design <- dummy_cols(
+  index_design,
+  select_columns = c("org", "issue", "transp", "account", "fund", "gov_rel"),
+  remove_first_dummy = FALSE,
+  remove_selected_columns = TRUE
+)
+
+# Rename the index-coded variables
+colnames(index_design)[4:21] <- c(
+  str_c("org", 1:4), str_c("issue", 1:4), str_c("transp", 1:2), 
+  str_c("account", 1:2), str_c("fund", 1:3), str_c("gov_rel", 1:3)
+)
+
+# Save index-coded design output
+write.csv(index_design, here("data", "derived_data", "index_design.csv"))
+```
+
+
+# Index-coded interactions
+
+We have a number of hypotheses referencing specific interactions. To answer these hypotheses, we need to specific each of the needed interactions.
+
+```{r index-interactions, warning=FALSE, message=FALSE}
+# Convert the attributes in design into factors
+interactions <- as.data.frame(design)
+for(i in 4:ncol(interactions)) {
+  interactions[,i] <- as.factor(interactions[,i])
+}
+
+# Rename the variables
+colnames(interactions)[4:9] <- c("org", "issue", "transp", "account", "fund", "gov_rel")
+
+# Use dummy_cols() to get an index-coded version of all the attribute levels
+interactions <- dummy_cols(
+  interactions, 
+  select_columns = c("org", "issue", "transp", "account", "fund", "gov_rel"),
+  remove_first_dummy = FALSE,
+  remove_selected_columns = TRUE
+)
+
+# Rename the index-coded variables
+colnames(interactions)[4:21] <- c(
+  str_c("org", 1:4), str_c("issue", 1:4), str_c("transp", 1:2), 
+  str_c("account", 1:2), str_c("fund", 1:3), str_c("gov_rel", 1:3)
+)
+
+# Build out all the necessary interactions
+interactions <- interactions %>% 
+  as_tibble() %>% 
+  mutate(
+    # Hypothesis 2b.
+    amnesty_criticized = org1 * gov_rel2,
+    greenpeace_criticized = org2 * gov_rel2,
+    oxfam_criticized = org3 * gov_rel2,
+    redcross_criticized = org4 * gov_rel2,
+    amnesty_crackdown = org1 * gov_rel3,
+    greenpeace_crackdown = org2 * gov_rel3,
+    oxfam_crackdown = org3 * gov_rel3,
+    redcross_crackdown = org4 * gov_rel3,
+    # Hypothesis 3b.
+    emergency_criticized = issue1 * gov_rel2,
+    environment_criticized = issue2 * gov_rel2,
+    humanrights_criticized = issue3 * gov_rel2,
+    refugees_criticized = issue4 * gov_rel2,
+    emergency_crackdown = issue1 * gov_rel3,
+    environment_crackdown = issue2 * gov_rel3,
+    humanrights_crackdown = issue3 * gov_rel3,
+    refugees_crackdown = issue4 * gov_rel3,
+    # Hypothesis 4b.
+    smalldonors_criticized = fund1 * gov_rel2,
+    wealthydonors_criticized = fund2 * gov_rel2,
+    govgrants_criticized = fund3 * gov_rel2,
+    smalldonors_crackdown = fund1 * gov_rel3,
+    wealthydonors_crackdown = fund2 * gov_rel3,
+    govgrants_crackdown = fund3 * gov_rel3,
+    # Hypothesis 4c.
+    emergency_smalldonors_crackdown = issue1 * fund1 * gov_rel3,
+    emergency_wealthydonors_crackdown = issue1 * fund2 * gov_rel3, # ??????
+    emergency_govgrants_crackdown = issue1 * fund3 * gov_rel3,     # ??????
+    environment_smalldonors_crackdown = issue2 * fund1 * gov_rel3,
+    environment_wealthydonors_crackdown = issue2 * fund2 * gov_rel3,
+    environment_govgrants_crackdown = issue2 * fund3 * gov_rel3,
+    humanrights_smalldonors_crackdown = issue3 * fund1 * gov_rel3,
+    humanrights_wealthydonors_crackdown = issue3 * fund2 * gov_rel3,
+    humanrights_govgrants_crackdown = issue3 * fund3 * gov_rel3,
+    refugees_smalldonors_crackdown = issue4 * fund1 * gov_rel3,
+    refugees_wealthydonors_crackdown = issue4 * fund2 * gov_rel3,
+    refugees_govgrants_crackdown = issue4 * fund3 * gov_rel3,
+    # Hypothesis 5b.
+    nottransp_criticized = transp1 * gov_rel2,
+    transp_criticized = transp2 * gov_rel2,
+    nottransp_crackdown = transp1 * gov_rel3,
+    transp_crackdown = transp2 * gov_rel3,
+    # Hypothesis 5c.
+    nottransp_smalldonors_criticized = transp1 * fund1 * gov_rel2,
+    transp_smalldonors_criticized = transp2 * fund1 * gov_rel2,
+    nottransp_wealthydonors_criticized = transp1 * fund2 * gov_rel2,
+    transp_wealthydonors_criticized = transp2 * fund2 * gov_rel2,
+    nottransp_govgrants_criticized = transp1 * fund3 * gov_rel2,
+    transp_govgrants_criticized = transp2 * fund3 * gov_rel2,
+    nottransp_smalldonors_crackdown = transp1 * fund1 * gov_rel3,
+    transp_smalldonors_crackdown = transp2 * fund1 * gov_rel3,
+    nottransp_wealthydonors_crackdown = transp1 * fund2 * gov_rel3,
+    transp_wealthydonors_crackdown = transp2 * fund2 * gov_rel3,
+    nottransp_govgrants_crackdown = transp1 * fund3 * gov_rel3,
+    transp_govgrants_crackdown = transp2 * fund3 * gov_rel3,
+    # Hypothesis 5d.
+    nottransp_emergency_criticized = transp1 * issue1 * gov_rel2,
+    transp_emergency_criticized = transp2 * issue1 * gov_rel2,
+    nottransp_emergency_crackdown = transp1 * issue1 * gov_rel3,
+    transp_emergency_crackdown = transp2 * issue1 * gov_rel3,
+    nottransp_environment_criticized = transp1 * issue2 * gov_rel2,
+    transp_environment_criticized = transp2 * issue2 * gov_rel2,
+    nottransp_environment_crackdown = transp1 * issue2 * gov_rel3,
+    transp_environment_crackdown = transp2 * issue2 * gov_rel3,
+    nottransp_humanrights_criticized = transp1 * issue3 * gov_rel2,
+    transp_humanrights_criticized = transp2 * issue3 * gov_rel2,
+    nottransp_humanrights_crackdown = transp1 * issue3 * gov_rel3,
+    transp_humanrights_crackdown = transp2 * issue3 * gov_rel3,
+    nottransp_refugees_criticized = transp1 * issue4 * gov_rel2,
+    transp_refugees_criticized = transp2 * issue4 * gov_rel2,
+    nottransp_refugees_crackdown = transp1 * issue4 * gov_rel3,
+    transp_refugees_crackdown = transp2 * issue4 * gov_rel3,
+    # Hypothesis 5e.
+    nottransp_smalldonors_emergency_criticized = transp1 * fund1 * issue1 * gov_rel2,
+    transp_smalldonors_emergency_criticized = transp2 * fund1 * issue1 * gov_rel2,
+    nottransp_smalldonors_emergency_crackdown = transp1 * fund1 * issue1 * gov_rel3,
+    transp_smalldonors_emergency_crackdown = transp2 * fund1 * issue1 * gov_rel3,
+    nottransp_smalldonors_environment_criticized = transp1 * fund1 * issue2 * gov_rel2,
+    transp_smalldonors_environment_criticized = transp2 * fund1 * issue2 * gov_rel2,
+    nottransp_smalldonors_environment_crackdown = transp1 * fund1 * issue2 * gov_rel3,
+    transp_smalldonors_environment_crackdown = transp2 * fund1 * issue2 * gov_rel3,
+    nottransp_smalldonors_humanrights_criticized = transp1 * fund1 * issue3 * gov_rel2,
+    transp_smalldonors_humanrights_criticized = transp2 * fund1 * issue3 * gov_rel2,
+    nottransp_smalldonors_humanrights_crackdown = transp1 * fund1 * issue3 * gov_rel3,
+    transp_smalldonors_humanrights_crackdown = transp2 * fund1 * issue3 * gov_rel3,
+    nottransp_smalldonors_refugees_criticized = transp1 * fund1 * issue4 * gov_rel2,
+    transp_smalldonors_refugees_criticized = transp2 * fund1 * issue4 * gov_rel2,
+    nottransp_smalldonors_refugees_crackdown = transp1 * fund1 * issue4 * gov_rel3,
+    transp_smalldonors_refugees_crackdown = transp2 * fund1 * issue4 * gov_rel3
+  )
+
+# Save interact-coded design output
+write.csv(interactions, here("data", "derived_data", "index_interactions.csv"))
 ```
 
 
