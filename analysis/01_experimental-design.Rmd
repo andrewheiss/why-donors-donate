@@ -367,125 +367,143 @@ for(i in 4:ncol(interactions)) {
   interactions[,i] <- as.factor(interactions[,i])
 }
 
-# Rename the variables
-colnames(interactions)[4:9] <- c("org", "issue", "transp", "account", "fund", "gov_rel")
+# # Rename the variables
+# colnames(interactions)[4:9] <- c("org", "issue", "transp", "account", "fund", "gov_rel")
+# 
+# # Use dummy_cols() to get an index-coded version of all the attribute levels
+# interactions <- dummy_cols(
+#   interactions, 
+#   select_columns = c("org", "issue", "transp", "account", "fund", "gov_rel"),
+#   remove_first_dummy = FALSE,
+#   remove_selected_columns = TRUE
+# )
+# 
+# # Rename the index-coded variables
+# colnames(interactions)[4:21] <- c(
+#   str_c("org", 1:4), str_c("issue", 1:4), str_c("transp", 1:2), 
+#   str_c("account", 1:2), str_c("fund", 1:3), str_c("gov_rel", 1:3)
+# )
+#
+# org1 = amnesty
+# org2 = greenpeace
+# org3 = oxfam
+# org4 = redcross
+# gov_rel1 = friendly
+# gov_rel2 = criticized
+# gov_rel3 = crackdown
 
-# Use dummy_cols() to get an index-coded version of all the attribute levels
-interactions <- dummy_cols(
-  interactions, 
-  select_columns = c("org", "issue", "transp", "account", "fund", "gov_rel"),
-  remove_first_dummy = FALSE,
-  remove_selected_columns = TRUE
-)
 
-# Rename the index-coded variables
-colnames(interactions)[4:21] <- c(
-  str_c("org", 1:4), str_c("issue", 1:4), str_c("transp", 1:2), 
-  str_c("account", 1:2), str_c("fund", 1:3), str_c("gov_rel", 1:3)
-)
+
+
 
 # Build out all the necessary interactions...
 # ...by multiplying together the needed index-coded levels.
-
+interactions <- interactions %>% 
+  as_tibble() %>% 
+  mutate(
+    h2b_1 = ifelse(Organization ==3|Organization==4, 1, 0), # 1 if org is oxfam or redcross
+    h2b_2 = ifelse(`Relationship with host government` == 2|`Relationship with host government` == 3, 1, 0), # 1 if gov_rel is criticized or crackdown
+    h2b_3 = h2b_1*h2b_2 # interaction term
+    )
 
 
 
 
 # Build out all the necessary interactions
-interactions <- interactions %>% 
-  as_tibble() %>% 
-  mutate(
-    # Hypothesis 2b.
-    amnesty_criticized = org1 * gov_rel2,
-    greenpeace_criticized = org2 * gov_rel2,
-    oxfam_criticized = org3 * gov_rel2,
-    redcross_criticized = org4 * gov_rel2,
-    amnesty_crackdown = org1 * gov_rel3,
-    greenpeace_crackdown = org2 * gov_rel3,
-    oxfam_crackdown = org3 * gov_rel3,
-    redcross_crackdown = org4 * gov_rel3,
-    # Hypothesis 3b.
-    emergency_criticized = issue1 * gov_rel2,
-    environment_criticized = issue2 * gov_rel2,
-    humanrights_criticized = issue3 * gov_rel2,
-    refugees_criticized = issue4 * gov_rel2,
-    emergency_crackdown = issue1 * gov_rel3,
-    environment_crackdown = issue2 * gov_rel3,
-    humanrights_crackdown = issue3 * gov_rel3,
-    refugees_crackdown = issue4 * gov_rel3,
-    # Hypothesis 4b.
-    smalldonors_criticized = fund1 * gov_rel2,
-    wealthydonors_criticized = fund2 * gov_rel2,
-    govgrants_criticized = fund3 * gov_rel2,
-    smalldonors_crackdown = fund1 * gov_rel3,
-    wealthydonors_crackdown = fund2 * gov_rel3,
-    govgrants_crackdown = fund3 * gov_rel3,
-    # Hypothesis 4c.
-    emergency_smalldonors_crackdown = issue1 * fund1 * gov_rel3,
-    emergency_wealthydonors_crackdown = issue1 * fund2 * gov_rel3, # ??????
-    emergency_govgrants_crackdown = issue1 * fund3 * gov_rel3,     # ??????
-    environment_smalldonors_crackdown = issue2 * fund1 * gov_rel3,
-    environment_wealthydonors_crackdown = issue2 * fund2 * gov_rel3,
-    environment_govgrants_crackdown = issue2 * fund3 * gov_rel3,
-    humanrights_smalldonors_crackdown = issue3 * fund1 * gov_rel3,
-    humanrights_wealthydonors_crackdown = issue3 * fund2 * gov_rel3,
-    humanrights_govgrants_crackdown = issue3 * fund3 * gov_rel3,
-    refugees_smalldonors_crackdown = issue4 * fund1 * gov_rel3,
-    refugees_wealthydonors_crackdown = issue4 * fund2 * gov_rel3,
-    refugees_govgrants_crackdown = issue4 * fund3 * gov_rel3,
-    # Hypothesis 5b.
-    nottransp_criticized = transp1 * gov_rel2,
-    transp_criticized = transp2 * gov_rel2,
-    nottransp_crackdown = transp1 * gov_rel3,
-    transp_crackdown = transp2 * gov_rel3,
-    # Hypothesis 5c.
-    nottransp_smalldonors_criticized = transp1 * fund1 * gov_rel2,
-    transp_smalldonors_criticized = transp2 * fund1 * gov_rel2,
-    nottransp_wealthydonors_criticized = transp1 * fund2 * gov_rel2,
-    transp_wealthydonors_criticized = transp2 * fund2 * gov_rel2,
-    nottransp_govgrants_criticized = transp1 * fund3 * gov_rel2,
-    transp_govgrants_criticized = transp2 * fund3 * gov_rel2,
-    nottransp_smalldonors_crackdown = transp1 * fund1 * gov_rel3,
-    transp_smalldonors_crackdown = transp2 * fund1 * gov_rel3,
-    nottransp_wealthydonors_crackdown = transp1 * fund2 * gov_rel3,
-    transp_wealthydonors_crackdown = transp2 * fund2 * gov_rel3,
-    nottransp_govgrants_crackdown = transp1 * fund3 * gov_rel3,
-    transp_govgrants_crackdown = transp2 * fund3 * gov_rel3,
-    # Hypothesis 5d.
-    nottransp_emergency_criticized = transp1 * issue1 * gov_rel2,
-    transp_emergency_criticized = transp2 * issue1 * gov_rel2,
-    nottransp_emergency_crackdown = transp1 * issue1 * gov_rel3,
-    transp_emergency_crackdown = transp2 * issue1 * gov_rel3,
-    nottransp_environment_criticized = transp1 * issue2 * gov_rel2,
-    transp_environment_criticized = transp2 * issue2 * gov_rel2,
-    nottransp_environment_crackdown = transp1 * issue2 * gov_rel3,
-    transp_environment_crackdown = transp2 * issue2 * gov_rel3,
-    nottransp_humanrights_criticized = transp1 * issue3 * gov_rel2,
-    transp_humanrights_criticized = transp2 * issue3 * gov_rel2,
-    nottransp_humanrights_crackdown = transp1 * issue3 * gov_rel3,
-    transp_humanrights_crackdown = transp2 * issue3 * gov_rel3,
-    nottransp_refugees_criticized = transp1 * issue4 * gov_rel2,
-    transp_refugees_criticized = transp2 * issue4 * gov_rel2,
-    nottransp_refugees_crackdown = transp1 * issue4 * gov_rel3,
-    transp_refugees_crackdown = transp2 * issue4 * gov_rel3,
-    # Hypothesis 5e.
-    nottransp_smalldonors_emergency_criticized = transp1 * fund1 * issue1 * gov_rel2,
-    transp_smalldonors_emergency_criticized = transp2 * fund1 * issue1 * gov_rel2,
-    nottransp_smalldonors_emergency_crackdown = transp1 * fund1 * issue1 * gov_rel3,
-    transp_smalldonors_emergency_crackdown = transp2 * fund1 * issue1 * gov_rel3,
-    nottransp_smalldonors_environment_criticized = transp1 * fund1 * issue2 * gov_rel2,
-    transp_smalldonors_environment_criticized = transp2 * fund1 * issue2 * gov_rel2,
-    nottransp_smalldonors_environment_crackdown = transp1 * fund1 * issue2 * gov_rel3,
-    transp_smalldonors_environment_crackdown = transp2 * fund1 * issue2 * gov_rel3,
-    nottransp_smalldonors_humanrights_criticized = transp1 * fund1 * issue3 * gov_rel2,
-    transp_smalldonors_humanrights_criticized = transp2 * fund1 * issue3 * gov_rel2,
-    nottransp_smalldonors_humanrights_crackdown = transp1 * fund1 * issue3 * gov_rel3,
-    transp_smalldonors_humanrights_crackdown = transp2 * fund1 * issue3 * gov_rel3,
-    nottransp_smalldonors_refugees_criticized = transp1 * fund1 * issue4 * gov_rel2,
-    transp_smalldonors_refugees_criticized = transp2 * fund1 * issue4 * gov_rel2,
-    nottransp_smalldonors_refugees_crackdown = transp1 * fund1 * issue4 * gov_rel3,
-    transp_smalldonors_refugees_crackdown = transp2 * fund1 * issue4 * gov_rel3
-  )
+# interactions <- interactions %>% 
+#   as_tibble() %>% 
+#   mutate(
+#     # Hypothesis 2b.
+#     amnesty_criticized = org1 * gov_rel2,
+#     greenpeace_criticized = org2 * gov_rel2,
+#     oxfam_criticized = org3 * gov_rel2,
+#     redcross_criticized = org4 * gov_rel2,
+#     amnesty_crackdown = org1 * gov_rel3,
+#     greenpeace_crackdown = org2 * gov_rel3,
+#     oxfam_crackdown = org3 * gov_rel3,
+#     redcross_crackdown = org4 * gov_rel3,
+#     # Hypothesis 3b.
+#     emergency_criticized = issue1 * gov_rel2,
+#     environment_criticized = issue2 * gov_rel2,
+#     humanrights_criticized = issue3 * gov_rel2,
+#     refugees_criticized = issue4 * gov_rel2,
+#     emergency_crackdown = issue1 * gov_rel3,
+#     environment_crackdown = issue2 * gov_rel3,
+#     humanrights_crackdown = issue3 * gov_rel3,
+#     refugees_crackdown = issue4 * gov_rel3,
+#     # Hypothesis 4b.
+#     smalldonors_criticized = fund1 * gov_rel2,
+#     wealthydonors_criticized = fund2 * gov_rel2,
+#     govgrants_criticized = fund3 * gov_rel2,
+#     smalldonors_crackdown = fund1 * gov_rel3,
+#     wealthydonors_crackdown = fund2 * gov_rel3,
+#     govgrants_crackdown = fund3 * gov_rel3,
+#     # Hypothesis 4c.
+#     emergency_smalldonors_crackdown = issue1 * fund1 * gov_rel3,
+#     emergency_wealthydonors_crackdown = issue1 * fund2 * gov_rel3, # ??????
+#     emergency_govgrants_crackdown = issue1 * fund3 * gov_rel3,     # ??????
+#     environment_smalldonors_crackdown = issue2 * fund1 * gov_rel3,
+#     environment_wealthydonors_crackdown = issue2 * fund2 * gov_rel3,
+#     environment_govgrants_crackdown = issue2 * fund3 * gov_rel3,
+#     humanrights_smalldonors_crackdown = issue3 * fund1 * gov_rel3,
+#     humanrights_wealthydonors_crackdown = issue3 * fund2 * gov_rel3,
+#     humanrights_govgrants_crackdown = issue3 * fund3 * gov_rel3,
+#     refugees_smalldonors_crackdown = issue4 * fund1 * gov_rel3,
+#     refugees_wealthydonors_crackdown = issue4 * fund2 * gov_rel3,
+#     refugees_govgrants_crackdown = issue4 * fund3 * gov_rel3,
+#     # Hypothesis 5b.
+#     nottransp_criticized = transp1 * gov_rel2,
+#     transp_criticized = transp2 * gov_rel2,
+#     nottransp_crackdown = transp1 * gov_rel3,
+#     transp_crackdown = transp2 * gov_rel3,
+#     # Hypothesis 5c.
+#     nottransp_smalldonors_criticized = transp1 * fund1 * gov_rel2,
+#     transp_smalldonors_criticized = transp2 * fund1 * gov_rel2,
+#     nottransp_wealthydonors_criticized = transp1 * fund2 * gov_rel2,
+#     transp_wealthydonors_criticized = transp2 * fund2 * gov_rel2,
+#     nottransp_govgrants_criticized = transp1 * fund3 * gov_rel2,
+#     transp_govgrants_criticized = transp2 * fund3 * gov_rel2,
+#     nottransp_smalldonors_crackdown = transp1 * fund1 * gov_rel3,
+#     transp_smalldonors_crackdown = transp2 * fund1 * gov_rel3,
+#     nottransp_wealthydonors_crackdown = transp1 * fund2 * gov_rel3,
+#     transp_wealthydonors_crackdown = transp2 * fund2 * gov_rel3,
+#     nottransp_govgrants_crackdown = transp1 * fund3 * gov_rel3,
+#     transp_govgrants_crackdown = transp2 * fund3 * gov_rel3,
+#     # Hypothesis 5d.
+#     nottransp_emergency_criticized = transp1 * issue1 * gov_rel2,
+#     transp_emergency_criticized = transp2 * issue1 * gov_rel2,
+#     nottransp_emergency_crackdown = transp1 * issue1 * gov_rel3,
+#     transp_emergency_crackdown = transp2 * issue1 * gov_rel3,
+#     nottransp_environment_criticized = transp1 * issue2 * gov_rel2,
+#     transp_environment_criticized = transp2 * issue2 * gov_rel2,
+#     nottransp_environment_crackdown = transp1 * issue2 * gov_rel3,
+#     transp_environment_crackdown = transp2 * issue2 * gov_rel3,
+#     nottransp_humanrights_criticized = transp1 * issue3 * gov_rel2,
+#     transp_humanrights_criticized = transp2 * issue3 * gov_rel2,
+#     nottransp_humanrights_crackdown = transp1 * issue3 * gov_rel3,
+#     transp_humanrights_crackdown = transp2 * issue3 * gov_rel3,
+#     nottransp_refugees_criticized = transp1 * issue4 * gov_rel2,
+#     transp_refugees_criticized = transp2 * issue4 * gov_rel2,
+#     nottransp_refugees_crackdown = transp1 * issue4 * gov_rel3,
+#     transp_refugees_crackdown = transp2 * issue4 * gov_rel3,
+#     # Hypothesis 5e.
+#     nottransp_smalldonors_emergency_criticized = transp1 * fund1 * issue1 * gov_rel2,
+#     transp_smalldonors_emergency_criticized = transp2 * fund1 * issue1 * gov_rel2,
+#     nottransp_smalldonors_emergency_crackdown = transp1 * fund1 * issue1 * gov_rel3,
+#     transp_smalldonors_emergency_crackdown = transp2 * fund1 * issue1 * gov_rel3,
+#     nottransp_smalldonors_environment_criticized = transp1 * fund1 * issue2 * gov_rel2,
+#     transp_smalldonors_environment_criticized = transp2 * fund1 * issue2 * gov_rel2,
+#     nottransp_smalldonors_environment_crackdown = transp1 * fund1 * issue2 * gov_rel3,
+#     transp_smalldonors_environment_crackdown = transp2 * fund1 * issue2 * gov_rel3,
+#     nottransp_smalldonors_humanrights_criticized = transp1 * fund1 * issue3 * gov_rel2,
+#     transp_smalldonors_humanrights_criticized = transp2 * fund1 * issue3 * gov_rel2,
+#     nottransp_smalldonors_humanrights_crackdown = transp1 * fund1 * issue3 * gov_rel3,
+#     transp_smalldonors_humanrights_crackdown = transp2 * fund1 * issue3 * gov_rel3,
+#     nottransp_smalldonors_refugees_criticized = transp1 * fund1 * issue4 * gov_rel2,
+#     transp_smalldonors_refugees_criticized = transp2 * fund1 * issue4 * gov_rel2,
+#     nottransp_smalldonors_refugees_crackdown = transp1 * fund1 * issue4 * gov_rel3,
+#     transp_smalldonors_refugees_crackdown = transp2 * fund1 * issue4 * gov_rel3
+#   )
 
 # Save interact-coded design output
 write.csv(interactions, here("data", "derived_data", "aggregate_interactions.csv"))
