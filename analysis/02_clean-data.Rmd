@@ -912,7 +912,8 @@ if (dummy_coded == 1) {
       interactions_X_s <- interactions_X_n %>%
         filter(task == s) %>%
         mutate(org1 = 0) %>%
-        select(org1, org2:transp_smalldonors_refugees_crackdown) # NOTE DIMENSIONS OF INTERACTIONS HARD-CODED.
+        # select(org1, org2:transp_smalldonors_refugees_crackdown) # HARD-CODED
+        select(org1, which(names(interactions_X_n) == "org2"):ncol(interactions_X_n))
       for (p in 1:(dim(dummy_X)[3]-1)) {
         # Filter for task s and alt p orgs.
         dummy_X_p <- dummy_X_n %>%
@@ -986,7 +987,8 @@ if (index_coded == 1) {
         select(org1:gov_rel3)
       interactions_X_s <- interactions_X_n %>%
         filter(task == s) %>%
-        select(org1:transp_smalldonors_refugees_crackdown) # NOTE DIMENSIONS OF INTERACTIONS HARD-CODED.
+        # select(org1:transp_smalldonors_refugees_crackdown) # HARD-CODED
+        select(which(names(interactions_X_n) == "org1"):ncol(interactions_X_n))
       # Save modified design, including outside option.
       index_X[n, s,,] <- rbind(index_X_s, rep(0, ncol(index_X_s))) %>% as.matrix()
       index_interactions_X[n, s,,] <- rbind(interactions_X_s, rep(0, ncol(interactions_X_s))) %>% as.matrix()
