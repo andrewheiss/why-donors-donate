@@ -764,6 +764,66 @@ write_rds(dummy_X, here("data", "derived_data", "final_data_mnl_dummy.rds"))
 write_rds(dummy_Y, here("data", "derived_data", "final_outcome_mnl_dummy.rds"))
 
 
+# Interactions
+dummy_design <- read_csv(here::here("data", "derived_data", "dummy_interactions.csv")) %>%
+  select(-`...1`) %>%
+  rename(
+    version = question_set,
+    task = question,
+    alt = choice
+  )
+
+# Outcomes for mnl, can probably be used for indexed as well
+Y_mnl = data %>%
+  select(id, version, contains("Q4.")) %>% # Selecting NGO choice questions
+  pivot_longer(Q4.1:Q4.12) %>%
+  group_by(id) %>%
+  mutate(task = row_number()) %>%
+  ungroup() %>%
+  rename(alt = value)
+
+
+# Attributes for mnl
+# Definitely a better way to do this but my brain hurts
+# Just doing hypothesis 2b for now
+dummy_X_mnl = tibble(
+  id = rep(Y_mnl$id, each=4),
+  version = rep(Y_mnl$version, each = 4),
+  task = rep(Y_mnl$task, each = 4),
+  alt = rep(1:4, times=nrow(Y_mnl))) %>%
+  left_join(dummy_design) %>%
+  mutate(org1 = ifelse(org2+org3+org4 == 0, 1, 0)) %>%
+  mutate(across(org2:org1, ~ replace_na(.x, 0))) %>%
+  select(id:alt, org1, org2:redcross_crackdown)
+
+
+dummy_X <- array(
+  data = NA,
+  dim = c(
+    nrow(Y_mnl), # Number of respondents multiplied by choice tasks per respondent
+    (max(dummy_design$alt) + 1),  # Number of choices
+    (ncol(dummy_X_mnl) - 3 + 1)  # Number of (estimable) attribute levels, why plus 1>
+  ))
+
+# Look at me hardcoding like a champ
+for (i in 1:4) {
+  for(j in 1:13){
+    vector1 = dummy_X_mnl %>%
+      filter(alt ==i) %>%
+      select(org1:redcross_crackdown) %>%
+      select(j) %>%
+      pull()
+
+    dummy_X[1:12192,i, j] = vector1
+  }
+}
+
+dummy_Y = Y_mnl %>% select(alt) %>% pull()
+
+write_rds(dummy_X, here("data", "derived_data", "final_data_interaction_mnl_dummy.rds"))
+write_rds(dummy_Y, here("data", "derived_data", "final_outcome_mnl_dummy.rds"))
+
+
 # Index Coded Variables ---------------------------------------------------
 
 index_design <- read_csv(here::here("data", "derived_data", "index_design.csv")) %>%
@@ -797,3 +857,133 @@ dummy_X_mnl = tibble(
   select(id:alt, org1, org2:gov_rel3)
 
 
+
+# Aggregate-coded Interactions --------------------------------------------
+
+
+# Hypotheses only, no controls for individual attributes
+# This one takes forever to run, am going to try a dummy coded version
+agg_design <- read_csv(here::here("data", "derived_data", "aggregate_interactions_exact.csv")) %>%
+  select(-`...1`) %>%
+  rename(
+    version = question_set,
+    task = question,
+    alt = choice
+  ) %>%
+  select(version:alt, h1_high:h5e_low)
+
+# Outcomes for mnl, can probably be used for indexed as well
+Y_mnl = data %>%
+  select(id, version, contains("Q4.")) %>% # Selecting NGO choice questions
+  pivot_longer(Q4.1:Q4.12) %>%
+  group_by(id) %>%
+  mutate(task = row_number()) %>%
+  ungroup() %>%
+  rename(alt = value)
+
+
+# Attributes for mnl
+# Definitely a better way to do this but my brain hurts
+agg_X_mnl = tibble(
+  id = rep(Y_mnl$id, each=4),
+  version = rep(Y_mnl$version, each = 4),
+  task = rep(Y_mnl$task, each = 4),
+  alt = rep(1:4, times=nrow(Y_mnl))) %>%
+  left_join(agg_design) %>%
+  mutate(across(h1_high:h5e_low, ~ replace_na(.x, 0))) %>%
+  distinct()
+
+
+agg_X <- array(
+  data = NA,
+  dim = c(
+    nrow(Y_mnl), # Number of respondents multiplied by choice tasks per respondent
+    (max(agg_design$alt) + 1),  # Number of choices
+    (ncol(agg_design) - 3)  # Number of (estimable) attribute levels, why plus 1>
+  ))
+
+# Look at me hardcoding like a champ
+for (i in 1:4) {
+  for(j in 1:(ncol(agg_design) - 3)){
+    vector1 = agg_X_mnl %>%
+      filter(alt ==i) %>%
+      select(h1_high:h5e_low) %>%
+      select(j) %>%
+      pull()
+
+    agg_X[1:12192,i, j] = vector1
+  }
+}
+
+# agg_Y = Y_mnl %>% select(alt) %>% pull()
+
+write_rds(agg_X, here("data", "derived_data", "final_data_mnl_aggregate.rds"))
+# same outcome can be used for all
+
+
+
+# Aggregate-Dummy Interaction ---------------------------------------------
+
+
+# Dummy coded aggregate interactions
+# Remove individual main effects, remove all "low" groups except for h2b and h3b
+# Those hypotheses actually have 3 groups
+agg_design <- read_csv(here::here("data", "derived_data", "aggregate_interactions_exact.csv")) %>%
+  select(-`...1`) %>%
+  rename(
+    version = question_set,
+    task = question,
+    alt = choice
+  ) %>%
+  select(version:alt, h1_high:h5e_low) %>%
+  select(-c("h2a_low", "h3a_low", "h4a_low", "h5a_low",
+            "h4b_low", "h5b_low", "h4c_low", "h5c_low",
+            "h5d_low", "h5e_low"))
+
+# Outcomes for mnl, can probably be used for indexed as well
+Y_mnl = data %>%
+  select(id, version, contains("Q4.")) %>% # Selecting NGO choice questions
+  pivot_longer(Q4.1:Q4.12) %>%
+  group_by(id) %>%
+  mutate(task = row_number()) %>%
+  ungroup() %>%
+  rename(alt = value)
+
+
+# Attributes for mnl
+# Definitely a better way to do this but my brain hurts
+agg_X_mnl = tibble(
+  id = rep(Y_mnl$id, each=4),
+  version = rep(Y_mnl$version, each = 4),
+  task = rep(Y_mnl$task, each = 4),
+  alt = rep(1:4, times=nrow(Y_mnl))) %>%
+  left_join(agg_design) %>%
+  mutate(across(h1_high:h5e_high, ~ replace_na(.x, 0))) %>%
+  distinct()
+
+
+agg_X <- array(
+  data = NA,
+  dim = c(
+    nrow(Y_mnl), # Number of respondents multiplied by choice tasks per respondent
+    (max(agg_design$alt) + 1),  # Number of choices
+    (ncol(agg_design) - 3)  # Number of (estimable) attribute levels, why plus 1>
+  ))
+
+# Look at me hardcoding like a champ
+for (i in 1:4) {
+  for(j in 1:(ncol(agg_design) - 3)){
+    vector1 = agg_X_mnl %>%
+      filter(alt ==i) %>%
+      select(h1_high:h5e_high) %>%
+      select(j) %>%
+      pull()
+
+    agg_X[1:12192,i, j] = vector1
+  }
+}
+
+# agg_Y = Y_mnl %>% select(alt) %>% pull()
+
+write_rds(agg_X, here("data", "derived_data", "final_data_mnl_dummy_aggregate.rds"))
+# same outcome can be used for all

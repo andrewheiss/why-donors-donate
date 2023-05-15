@@ -367,23 +367,23 @@ for(i in 4:ncol(interactions)) {
   interactions[,i] <- as.factor(interactions[,i])
 }
 
-# # Rename the variables
-# colnames(interactions)[4:9] <- c("org", "issue", "transp", "account", "fund", "gov_rel")
-# 
-# # Use dummy_cols() to get an index-coded version of all the attribute levels
-# interactions <- dummy_cols(
-#   interactions, 
-#   select_columns = c("org", "issue", "transp", "account", "fund", "gov_rel"),
-#   remove_first_dummy = FALSE,
-#   remove_selected_columns = TRUE
-# )
-# 
-# # Rename the index-coded variables
-# colnames(interactions)[4:21] <- c(
-#   str_c("org", 1:4), str_c("issue", 1:4), str_c("transp", 1:2), 
-#   str_c("account", 1:2), str_c("fund", 1:3), str_c("gov_rel", 1:3)
-# )
-#
+# Rename the variables
+colnames(interactions)[4:9] <- c("org", "issue", "transp", "account", "fund", "gov_rel")
+
+# Use dummy_cols() to get an index-coded version of all the attribute levels
+interactions <- dummy_cols(
+  interactions,
+  select_columns = c("org", "issue", "transp", "account", "fund", "gov_rel"),
+  remove_first_dummy = FALSE,
+  remove_selected_columns = TRUE
+)
+
+# Rename the index-coded variables
+colnames(interactions)[4:21] <- c(
+  str_c("org", 1:4), str_c("issue", 1:4), str_c("transp", 1:2),
+  str_c("account", 1:2), str_c("fund", 1:3), str_c("gov_rel", 1:3)
+)
+
 # org1 = amnesty
 # org2 = greenpeace
 # org3 = oxfam
@@ -391,20 +391,59 @@ for(i in 4:ncol(interactions)) {
 # gov_rel1 = friendly
 # gov_rel2 = criticized
 # gov_rel3 = crackdown
-
-
+# issue1 = emergency
+# issue2 = environment
+# issue3 = human rights
+# issue4 = refugee
+# transp1 = not transparent
+# transp2 = transparent
+# account1 = not accountable
+# account2 = accountable
+# fund1 = smalldonors
+# fund2 = wealthydonors
+# fund3 = gov grants
+#
 
 
 
 # Build out all the necessary interactions...
 # ...by multiplying together the needed index-coded levels.
-interactions <- interactions %>% 
+# Sticking exactly to the hypotheses
+interactions_exact <- interactions %>% 
   as_tibble() %>% 
+  rowwise() %>% 
   mutate(
-    h2b_1 = ifelse(Organization ==3|Organization==4, 1, 0), # 1 if org is oxfam or redcross
-    h2b_2 = ifelse(`Relationship with host government` == 2|`Relationship with host government` == 3, 1, 0), # 1 if gov_rel is criticized or crackdown
-    h2b_3 = h2b_1*h2b_2 # interaction term
-    )
+    # Main Effects
+    h1_high = sum(org3, org4), # oxfam and red cross
+    h1_low = sum(org1, org2), # amnesty and greenpeace
+    h2a_high = sum(gov_rel2,gov_rel3), # criticized and crackdown
+    h2a_low = gov_rel1, # friendly
+    h3a_high = sum(issue1, issue4), # emergency and refugee
+    h3a_low = sum(issue2, issue3), # environment and human rights
+    h4a_high = fund1, # small donors
+    h4a_low = sum(fund2, fund3), # wealthy donors and gov grants
+    h5a_high = transp2, # transparent
+    h5a_low = transp1, # not transparent
+    # First Order Interactions
+    h2b_high = h1_high*h2a_high, #  oxfam and red cross * criticized and crackdown
+    h2b_low = h1_low*gov_rel3, # amnesty and greenpeace * criticized
+    h3b_high = h2a_high*h3a_high, # criticized and crackdown * emergency and refugee
+    h3b_low = h2a_high*h3a_low, # criticized and crackdown * environment and human rights
+    h4b_high = gov_rel3*fund1, # crackdown * small donors
+    h4b_low = sum(gov_rel1, gov_rel2)*h4a_high, # not crackdown * not small donors
+    h5b_high = h2a_high*h5a_high, # criticized and crackdown * transparent
+    h5b_low = h5a_low + h2a_low*h5a_high, # not transparent + friendly * transparent + 
+    # Second Order Interactions
+    h4c_high = gov_rel3*h4a_high*h3a_high, # crackdown * small donors * emergency and refugee
+    h4c_low = ifelse(h4c_high==1, 0, 1), # everything else
+    h5c_high = h2a_high*h5a_high*h4a_high, # criticized and crackdown * transparent * small donors
+    h5c_low = ifelse(h5c_high==1, 0, 1), # everything else
+    h5d_high = h2a_high*h5a_high*h3a_high, # criticized and crackdown * transparent * emergency and refugee
+    h5d_low = ifelse(h5d_high==1, 0, 1), # everything else
+    # Third Order Interaction
+    h5e_high = h2a_high*h5a_high*h3a_high*h4a_high, # criticized and crackdown * transparent * emergency and refugee * small donors
+    h5e_low = ifelse(h5e_high==1, 0, 1)) %>% 
+  ungroup()
 
 
 
@@ -506,7 +545,8 @@ interactions <- interactions %>%
 #   )
 
 # Save interact-coded design output
-write.csv(interactions, here("data", "derived_data", "aggregate_interactions.csv"))
+# write.csv(interactions, here("data", "derived_data", "aggregate_interactions.csv"))
+write.csv(interactions_exact, here("data", "derived_data", "aggregate_interactions_exact.csv"))
 ```
 
 
