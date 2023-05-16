@@ -849,150 +849,212 @@ data <- data %>%
   )
 ```
 
-## Design matrix
+## Dummy-coded design matrix
 
-Select a dummy or index-coded version of the design.
+Transform the dummy-coded design matrix conditioned on what version each respondent was assigned to, including the brand intercept and the outside option.
 
-```{r transform-design}
-dummy_coded <- 0 # Dummy-coded design and associated interactions.
-index_coded <- 1 # Index-coded design and associated interactions.
-
-if (dummy_coded == 1) {
-  # Load the dummy design.
-  dummy_design <- read_csv(here::here("data", "derived_data", "dummy_design.csv")) %>%
-    select(-`...1`) %>%
-    rename(
-      version = question_set,
-      task = question,
-      alt = choice
-    )
-  
-  # Create the arrays for a design with a brand intercept.
-  dummy_X <- array(
-    data = NA,
-    dim = c(
-      nrow(data),                   # Number of respondents.
-      max(dummy_design$task),       # Number of choice tasks per respondent.
-      (max(dummy_design$alt) + 1),  # Number of product alternatives per choice task.
-      (ncol(dummy_design) - 3 + 1)  # Number of (estimable) attribute levels.
-    )
+```{r transform-dummy-design}
+# Load the dummy design.
+dummy_design <- read_csv(here::here("data", "derived_data", "dummy_design.csv")) %>%
+  select(-`...1`) %>%
+  rename(
+    version = question_set,
+    task = question,
+    alt = choice
   )
-  
-  # Load the dummy interactions and join to the design.
-  dummy_interactions_design <- read_csv(here::here("data", "derived_data", "dummy_interactions.csv")) %>%
-    select(-`...1`) %>%
-    rename(
-      version = question_set,
-      task = question,
-      alt = choice
-    )
-  
-  # Create the arrays for a design with a brand intercept and interactions.
-  dummy_interactions_X <- array(
-    data = NA,
-    dim = c(
-      nrow(data),                                # Number of respondents.
-      max(dummy_interactions_design$task),       # Number of choice tasks per respondent.
-      (max(dummy_interactions_design$alt) + 1),  # Number of product alternatives per choice task.
-      (ncol(dummy_interactions_design) - 3 + 1)  # Number of (estimable) attribute levels.
-    )
+
+# Create the arrays for a design with a brand intercept.
+dummy_X <- array(
+  data = NA,
+  dim = c(
+    nrow(data),                   # Number of respondents.
+    max(dummy_design$task),       # Number of choice tasks per respondent.
+    (max(dummy_design$alt) + 1),  # Number of product alternatives per choice task.
+    (ncol(dummy_design) - 3 + 1)  # Number of (estimable) attribute levels.
   )
-  
-  # Reintroduce org1 and add the outside option coded as all zeros.
-  for (n in 1:dim(dummy_X)[1]) {
-    # Filter for respondent n.
-    dummy_X_n <- dummy_design %>% filter(version == data$version[n])
-    interactions_X_n <- dummy_interactions_design %>% filter(version == data$version[n])
-    for (s in 1:dim(dummy_X)[2]) {
-      # Filter for task s and include placeholder for org1.
-      dummy_X_s <- dummy_X_n %>%
-        filter(task == s) %>%
-        mutate(org1 = 0) %>%
-        select(org1, org2:gov_rel3)
-      interactions_X_s <- interactions_X_n %>%
-        filter(task == s) %>%
-        mutate(org1 = 0) %>%
-        # select(org1, org2:transp_smalldonors_refugees_crackdown) # HARD-CODED
-        select(org1, which(names(interactions_X_n) == "org2"):ncol(interactions_X_n))
-      for (p in 1:(dim(dummy_X)[3]-1)) {
-        # Filter for task s and alt p orgs.
-        dummy_X_p <- dummy_X_n %>%
-          filter(task == s, alt == p) %>%
-          select(org2:org4) %>%
-          as_vector()
-        interactions_X_p <- interactions_X_n %>%
-          filter(task == s, alt == p) %>%
-          select(org2:org4) %>%
-          as_vector()
-        # Fill in org1 to complete org intercept.
-        dummy_X_s[p, "org1"] <- ifelse(sum(dummy_X_p) == 1, 0, 1)
-        interactions_X_s[p, "org1"] <- ifelse(sum(interactions_X_p) == 1, 0, 1)
-      }
-      # Save modified design, including outside option.
-      dummy_X[n, s,,] <- rbind(dummy_X_s, rep(0, ncol(dummy_X_s))) %>% as.matrix()
-      dummy_interactions_X[n, s,,] <- rbind(interactions_X_s, rep(0, ncol(interactions_X_s))) %>% as.matrix()
+)
+
+# Load the dummy interactions and join to the design.
+dummy_interactions_design <- read_csv(here::here("data", "derived_data", "dummy_interactions.csv")) %>%
+  select(-`...1`) %>%
+  rename(
+    version = question_set,
+    task = question,
+    alt = choice
+  )
+
+# Create the arrays for a design with a brand intercept and interactions.
+dummy_interactions_X <- array(
+  data = NA,
+  dim = c(
+    nrow(data),                                # Number of respondents.
+    max(dummy_interactions_design$task),       # Number of choice tasks per respondent.
+    (max(dummy_interactions_design$alt) + 1),  # Number of product alternatives per choice task.
+    (ncol(dummy_interactions_design) - 3 + 1)  # Number of (estimable) attribute levels.
+  )
+)
+
+# Reintroduce org1 and add the outside option coded as all zeros.
+for (n in 1:dim(dummy_X)[1]) {
+  # Filter for respondent n.
+  dummy_X_n <- dummy_design %>% filter(version == data$version[n])
+  interactions_X_n <- dummy_interactions_design %>% filter(version == data$version[n])
+  for (s in 1:dim(dummy_X)[2]) {
+    # Filter for task s and include placeholder for org1.
+    dummy_X_s <- dummy_X_n %>%
+      filter(task == s) %>%
+      mutate(org1 = 0) %>%
+      select(org1, org2:gov_rel3)
+    interactions_X_s <- interactions_X_n %>%
+      filter(task == s) %>%
+      mutate(org1 = 0) %>%
+      select(org1, which(names(interactions_X_n) == "org2"):ncol(interactions_X_n))
+    for (p in 1:(dim(dummy_X)[3]-1)) {
+      # Filter for task s and alt p orgs.
+      dummy_X_p <- dummy_X_n %>%
+        filter(task == s, alt == p) %>%
+        select(org2:org4) %>%
+        as_vector()
+      interactions_X_p <- interactions_X_n %>%
+        filter(task == s, alt == p) %>%
+        select(org2:org4) %>%
+        as_vector()
+      # Fill in org1 to complete org intercept.
+      dummy_X_s[p, "org1"] <- ifelse(sum(dummy_X_p) == 1, 0, 1)
+      interactions_X_s[p, "org1"] <- ifelse(sum(interactions_X_p) == 1, 0, 1)
     }
+    # Save modified design, including outside option.
+    dummy_X[n, s,,] <- rbind(dummy_X_s, rep(0, ncol(dummy_X_s))) %>% as.matrix()
+    dummy_interactions_X[n, s,,] <- rbind(interactions_X_s, rep(0, ncol(interactions_X_s))) %>% as.matrix()
   }
 }
-if (index_coded == 1) {
-  # Load the index-coded design.
-  index_design <- read_csv(here::here("data", "derived_data", "index_design.csv")) %>%
-    select(-`...1`) %>%
-    rename(
-      version = question_set,
-      task = question,
-      alt = choice
-    )
-  
-  # Create the arrays for the design, including a brand intercept.
-  index_X <- array(
-    data = NA,
-    dim = c(
-      nrow(data),                   # Number of respondents.
-      max(index_design$task),       # Number of choice tasks per respondent.
-      (max(index_design$alt) + 1),  # Number of product alternatives per choice task.
-      (ncol(index_design) - 3)      # Number of (estimable) attribute levels.
-    )
+```
+
+## Index-coded experimental alternative
+
+```{r transform-index-design}
+################################################################################
+# This is an experimental alternative to the dummy-coded design.
+################################################################################
+
+# Load the index-coded design.
+index_design <- read_csv(here::here("data", "derived_data", "index_design.csv")) %>%
+  select(-`...1`) %>%
+  rename(
+    version = question_set,
+    task = question,
+    alt = choice
   )
-  
-  # Load the index-coded interactions and join to the design.
-  index_interactions_design <- read_csv(here::here("data", "derived_data", "index_interactions.csv")) %>%
-    select(-`...1`) %>%
-    rename(
-      version = question_set,
-      task = question,
-      alt = choice
-    )
-  
-  # Create the arrays for a design, including a brand intercept and interactions.
-  index_interactions_X <- array(
-    data = NA,
-    dim = c(
-      nrow(data),                                # Number of respondents.
-      max(index_interactions_design$task),       # Number of choice tasks per respondent.
-      (max(index_interactions_design$alt) + 1),  # Number of product alternatives per choice task.
-      (ncol(index_interactions_design) - 3)      # Number of (estimable) attribute levels.
-    )
+
+# Create the arrays for the design, including a brand intercept.
+index_X <- array(
+  data = NA,
+  dim = c(
+    nrow(data),                   # Number of respondents.
+    max(index_design$task),       # Number of choice tasks per respondent.
+    (max(index_design$alt) + 1),  # Number of product alternatives per choice task.
+    (ncol(index_design) - 3)      # Number of (estimable) attribute levels.
   )
-  
-  # Add the outside option coded as all zeros (org1 and former reference levels already included).
-  for (n in 1:dim(index_X)[1]) {
-    # Filter for respondent n.
-    index_X_n <- index_design %>% filter(version == data$version[n])
-    interactions_X_n <- index_interactions_design %>% filter(version == data$version[n])
-    for (s in 1:dim(index_X)[2]) {
-      # Filter for task s.
-      index_X_s <- index_X_n %>%
-        filter(task == s) %>%
-        select(org1:gov_rel3)
-      interactions_X_s <- interactions_X_n %>%
-        filter(task == s) %>%
-        # select(org1:transp_smalldonors_refugees_crackdown) # HARD-CODED
-        select(which(names(interactions_X_n) == "org1"):ncol(interactions_X_n))
-      # Save modified design, including outside option.
-      index_X[n, s,,] <- rbind(index_X_s, rep(0, ncol(index_X_s))) %>% as.matrix()
-      index_interactions_X[n, s,,] <- rbind(interactions_X_s, rep(0, ncol(interactions_X_s))) %>% as.matrix()
-    }
+)
+
+# Load the index-coded interactions and join to the design.
+index_interactions_design <- read_csv(here::here("data", "derived_data", "index_interactions.csv")) %>%
+  select(-`...1`) %>%
+  rename(
+    version = question_set,
+    task = question,
+    alt = choice
+  )
+
+# Create the arrays for a design, including a brand intercept and interactions.
+index_interactions_X <- array(
+  data = NA,
+  dim = c(
+    nrow(data),                                # Number of respondents.
+    max(index_interactions_design$task),       # Number of choice tasks per respondent.
+    (max(index_interactions_design$alt) + 1),  # Number of product alternatives per choice task.
+    (ncol(index_interactions_design) - 3)      # Number of (estimable) attribute levels.
+  )
+)
+
+# Add the outside option coded as all zeros (org1 and former reference levels already included).
+for (n in 1:dim(index_X)[1]) {
+  # Filter for respondent n.
+  index_X_n <- index_design %>% filter(version == data$version[n])
+  interactions_X_n <- index_interactions_design %>% filter(version == data$version[n])
+  for (s in 1:dim(index_X)[2]) {
+    # Filter for task s.
+    index_X_s <- index_X_n %>%
+      filter(task == s) %>%
+      select(org1:gov_rel3)
+    interactions_X_s <- interactions_X_n %>%
+      filter(task == s) %>%
+      select(which(names(interactions_X_n) == "org1"):ncol(interactions_X_n))
+    # Save modified design, including outside option.
+    index_X[n, s,,] <- rbind(index_X_s, rep(0, ncol(index_X_s))) %>% as.matrix()
+    index_interactions_X[n, s,,] <- rbind(interactions_X_s, rep(0, ncol(interactions_X_s))) %>% as.matrix()
+  }
+}
+```
+
+## Flat MNL designs experimental alternative
+
+```{r transform-flat-designs}
+################################################################################
+# This is an experimental designs for a flat MNL.
+# We already have the data structured. We just need to collapse respondent
+# repeat observations into an observation dimension.
+################################################################################
+
+# Create the arrays for a design with a brand intercept.
+flat_dummy_X <- array(
+  data = NA,
+  dim = c(
+    nrow(data) * max(dummy_design$task), # Number of observations.
+    (max(dummy_design$alt) + 1),         # Number of product alternatives per observation.
+    (ncol(dummy_design) - 3 + 1)         # Number of (estimable) attribute levels.
+  )
+)
+
+# Create the arrays for a design with a brand intercept and interactions.
+flat_dummy_interactions_X <- array(
+  data = NA,
+  dim = c(
+    nrow(data) * max(dummy_interactions_design$task), # Number of respondents.
+    (max(dummy_interactions_design$alt) + 1),         # Number of product alternatives per observation.
+    (ncol(dummy_interactions_design) - 3 + 1)         # Number of (estimable) attribute levels.
+  )
+)
+
+# Create the arrays for the design, including a brand intercept.
+flat_index_X <- array(
+  data = NA,
+  dim = c(
+    nrow(data) * max(index_design$task), # Number of observations.
+    (max(index_design$alt) + 1),         # Number of product alternatives per observation.
+    (ncol(index_design) - 3)             # Number of (estimable) attribute levels.
+  )
+)
+
+# Create the arrays for a design, including a brand intercept and interactions.
+flat_index_interactions_X <- array(
+  data = NA,
+  dim = c(
+    nrow(data) * max(index_interactions_design$task), # Number of respondents.
+    (max(index_interactions_design$alt) + 1),         # Number of product alternatives per observation.
+    (ncol(index_interactions_design) - 3)             # Number of (estimable) attribute levels.
+  )
+)
+
+# Restructure design matrices.
+n <- 0
+for (r in 1:dim(dummy_X)[1]) {
+  for (s in 1:dim(dummy_X)[2]) {
+    n <- n + 1
+    flat_dummy_X[n,,] <- dummy_X[r, s,,]
+    flat_dummy_interactions_X[n,,] <- dummy_interactions_X[r, s,,]
+    flat_index_X[n,,] <- index_X[r, s,,]
+    flat_index_interactions_X[n,,] <- index_interactions_X[r, s,,]
   }
 }
 ```
@@ -1001,15 +1063,25 @@ if (index_coded == 1) {
 # Save clean data with transformations
 
 ```{r save-clean-data}
-write_rds(data, here("data", "derived_data", "final_data.rds"))
-if (dummy_coded == 1) {
-  write_rds(dummy_X, here("data", "derived_data", "final_design.rds"))
-  write_rds(dummy_interactions_X, here("data", "derived_data", "final_interactions.rds"))
-}
-if (index_coded == 1) {
-  write_rds(index_X, here("data", "derived_data", "final_design.rds"))
-  write_rds(index_interactions_X, here("data", "derived_data", "final_interactions.rds"))
-}
+write_rds(data, here("data", "derived_data", "data.rds"))
+write_rds(dummy_X, here("data", "derived_data", "hmnl_dummy_design.rds"))
+write_rds(dummy_interactions_X, here("data", "derived_data", "hmnl_dummy_interactions.rds"))
+
+################################################################################
+# Save the experimental alternative to the dummy-coded design.
+################################################################################
+
+write_rds(index_X, here("data", "derived_data", "hmnl_index_design.rds"))
+write_rds(index_interactions_X, here("data", "derived_data", "hmnl_index_interactions.rds"))
+
+################################################################################
+# Save the experimental designs for a flat MNL.
+################################################################################
+
+write_rds(flat_dummy_X, here("data", "derived_data", "mnl_dummy_design.rds"))
+write_rds(flat_dummy_interactions_X, here("data", "derived_data", "mnl_dummy_interactions.rds"))
+write_rds(flat_index_X, here("data", "derived_data", "mnl_index_design.rds"))
+write_rds(flat_index_interactions_X, here("data", "derived_data", "mnl_index_interactions.rds"))
 ```
 
 <!-- select(-c("732d72a6-25a3-4194-8416-461acae30837.1.1_CBCONJOINT":"revision_CBCONJOINT")) -->
