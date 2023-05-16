@@ -1,7 +1,16 @@
 # Preamble ----------------------------------------------------------------
 # Load packages
 library(tidyverse)
+library(fastDummies)
 library(rstan)
+library(bayesplot)
+library(tidybayes)
+library(loo)
+library(ggridges)
+library(ggraph)
+library(ggdag)
+library(here)
+
 
 # Set Stan options
 options(mc.cores = parallel::detectCores())
@@ -115,7 +124,11 @@ public_political_social_charity_demo <- 0 # Public affairs + Political ideology 
 #   bind_cols(as_tibble(out$x[,-1])) %>%
 #   as.matrix()
 
-X = read_rds(here::here("data", "derived_data", "final_data_mnl_dummy.rds"))
+# Accidentally overwrote the dummy data, whoops
+# X = read_rds(here::here("data", "derived_data", "final_data_mnl_dummy.rds"))
+# X = read_rds(here::here("data", "derived_data", "final_data_mnl_dummy_aggregate.rds"))
+X = read_rds(here::here("data", "derived_data", "final_data_interaction_mnl_dummy.rds"))
+
 Y = read_rds(here::here("data", "derived_data", "final_outcome_mnl_dummy.rds"))
 
 # Model Calibration -------------------------------------------------------
@@ -144,8 +157,9 @@ fit <- stan(
   seed = 42
 )
 run <- list(data = data, fit = fit)
-write_rds(run, here::here("analysis", "output", "model_runs", "mnl_dummy_intercept.rds"))
-
+# write_rds(run, here::here("analysis", "output", "model_runs", "mnl_dummy_intercept.rds"))
+# write_rds(run, here::here("analysis", "output", "model_runs", "mnl_aggregate_dummy.rds"))
+write_rds(run, here::here("analysis", "output", "model_runs", "mnl_interaction_dummy.rds"))
 
 # Follow naming convention: mnl-intercept.rds (for example). What models to run:
 # - Dummy-coded mnl-intercept. Compare contrasts to main effect hypotheses.
@@ -165,3 +179,19 @@ write_rds(run, here::here("analysis", "output", "model_runs", "mnl_dummy_interce
 # if (public_political_social_charity == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political_social_charity.rds"))
 # if (public_political_social_charity_demo == 1) write_rds(run, here::here("analysis", "output", "model_runs", "public_political_social_charity_demo.rds"))
 
+
+# Extract Draws
+dummy_run = read_rds(here::here("analysis", "output", "model_runs", "mnl_aggregate_dummy.rds"))
+
+
+data <- dummy_run$data
+fit <- dummy_run$fit
+
+# Extract posterior draws
+draws <- fit %>%
+  spread_draws(beta[l]) %>%
+  ungroup() %>%
+  filter(.iteration > 500)
+
+# write_rds(draws, here::here("data", "raw_data", "posterior_draws", "mnl_dummy_intercept_draws.rds"))
+write_rds(draws, here::here("data", "raw_data", "posterior_draws", "mnl_aggregate_dummy_draws.rds"))
