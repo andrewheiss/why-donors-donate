@@ -37,11 +37,11 @@ rstan_options(auto_write = TRUE)
 ```
 
 
-# Model calibration
+# HMNL model calibration
 
-After selecting the model we'd like to run, model calibration proceeds as follows. Note that model calibration is run in a separate R script given how long it takes to run each model.
+After selecting the model we'd like to run, model calibration proceeds as follows.
 
-```{r model-calibration, eval=FALSE}
+```{r hmnl-model-calibration, eval=FALSE}
 intercept <- 1                            # Intercept-only
 interactions <- 0                         # Include interactions with the intercept-only model
 public_affairs <- 0                       # Public affairs
@@ -55,12 +55,12 @@ public_political_social_charity <- 0      # + Charity and voluntarism
 public_political_social_charity_demo <- 0 # + Demographics
 
 # Load data and design
-final_data <- read_rds(here::here("data", "derived_data", "final_data.rds"))
-X <- read_rds(here::here("data", "derived_data", "final_design.rds"))
-if (interactions == 1) X <- read_rds(here::here("data", "derived_data", "final_interactions.rds"))
+data <- read_rds(here::here("data", "derived_data", "data.rds"))
+X <- read_rds(here::here("data", "derived_data", "hmnl_dummy_design.rds"))
+if (interactions == 1) X <- read_rds(here::here("data", "derived_data", "hmnl_dummy_interactions.rds"))
 
 # Restructure choice data Y
-Y <- final_data %>%
+Y <- data %>%
   select(contains("Q4")) %>%
   as.matrix()
 
@@ -69,44 +69,44 @@ if (intercept == 1) {
   Z <- matrix(data = 1, nrow = dim(X)[1], ncol = 1)
 }
 if (public_affairs == 1) {
-  Z <- final_data %>%
+  Z <- data %>%
     select(
       Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7 # Public affairs
     )
 }
 if (political_ideology == 1) {
-  Z <- final_data %>%
+  Z <- data %>%
     select(
       Q5.2 # Political ideology
     )
 }
 if (social_views == 1) {
-  Z <- final_data %>%
+  Z <- data %>%
     select(
       Q5.6, Q5.11, Q5.8, Q5.9, Q5.10 # Social views
     )
 }
 if (charity_voluntarism == 1) {
-  Z <- final_data %>%
+  Z <- data %>%
     select(
       Q2.7, Q2.8, Q2.5, Q2.6, Q2.9, Q2.10, Q5.4, Q5.5, Q5.3_1:Q5.3_10 # Charity and voluntarism
     )
 }
 if (demographics == 1) {
-  Z <- final_data %>%
+  Z <- data %>%
     select(
       Q5.12, Q5.13, Q5.14, Q5.15, Q5.16_1:Q5.16_6, Q5.17 # Demographics
     )
 }
 if (public_political == 1) {
-  Z <- final_data %>%
+  Z <- data %>%
     select(
       Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7, # Public affairs
       Q5.2                                   # Political ideology
     )
 }
 if (public_political_social == 1) {
-  Z <- final_data %>%
+  Z <- data %>%
     select(
       Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7, # Public affairs
       Q5.2,                                  # Political ideology
@@ -114,7 +114,7 @@ if (public_political_social == 1) {
     )
 }
 if (public_political_social_charity == 1) {
-  Z <- final_data %>%
+  Z <- data %>%
     select(
       Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7,                           # Public affairs
       Q5.2,                                                            # Political ideology
@@ -123,7 +123,7 @@ if (public_political_social_charity == 1) {
     )
 }
 if (public_political_social_charity_demo == 1) {
-  Z <- final_data %>%
+  Z <- data %>%
     select(
       Q2.1, Q2.2, Q2.3_1:Q2.3_7, Q2.4, Q5.7,                           # Public affairs
       Q5.2,                                                            # Political ideology
@@ -153,7 +153,7 @@ if (intercept == 0) {
 }
 
 # Specify the data for calibration in a list
-data <- list(
+data_list <- list(
   R = dim(X)[1],      # Number of respondents
   S = dim(X)[2],      # Number of choice tasks
   A = dim(X)[3],      # Number of choice alternatives
@@ -174,15 +174,14 @@ data <- list(
 # Run the model and save data and model output
 fit <- stan(
   file = here::here("src", "stan_files", "hmnl_noncentered.stan"),
-  data = data,
+  data = data_list,
   iter = 10000,
   thin = 5,
   seed = 1234
 )
-run <- list(data = data, fit = fit)
-# if (intercept == 1 & interactions == 0) write_rds(run, here::here("data", "raw_data", "model_runs", "intercept.rds"))
-if (intercept == 1 & interactions == 0) write_rds(run, here::here("data", "raw_data", "model_runs", "index_intercept.rds"))
-if (intercept == 1 & interactions == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "interactions_5e.rds"))
+run <- list(data = data_list, fit = fit)
+if (intercept == 1 & interactions == 0) write_rds(run, here::here("data", "raw_data", "model_runs", "intercept.rds"))
+if (intercept == 1 & interactions == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "interactions.rds"))
 if (public_affairs == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "public_affairs.rds"))
 if (political_ideology == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "political_ideology.rds"))
 if (social_views == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "social_views.rds"))
@@ -192,6 +191,29 @@ if (public_political == 1) write_rds(run, here::here("data", "raw_data", "model_
 if (public_political_social == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "public_political_social.rds"))
 if (public_political_social_charity == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "public_political_social_charity.rds"))
 if (public_political_social_charity_demo == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "public_political_social_charity_demo.rds"))
+
+# Extract and save posterior draws
+draws <- fit %>% 
+  spread_draws(Gamma[i, j]) %>% 
+  ungroup() %>% 
+  filter(.iteration > 500) %>% 
+  rename(
+    i = j,
+    j = i
+  )
+
+# Save draws
+if (intercept == 1 & interactions == 0) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "intercept.rds"))
+if (intercept == 1 & interactions == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "interactions.rds"))
+if (public_affairs == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_affairs.rds"))
+if (political_ideology == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "political_ideology.rds"))
+if (social_views == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "social_views.rds"))
+if (charity_voluntarism == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "charity_voluntarism.rds"))
+if (demographics == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "demographics.rds"))
+if (public_political == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_political.rds"))
+if (public_political_social == 1)  write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_political_social.rds"))
+if (public_political_social_charity == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_political_social_charity.rds"))
+if (public_political_social_charity_demo == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_political_social_charity_demo.rds"))
 ```
 
 The model is calibrated using a non-centered parameterization of a hierarchical multinomial logit model. Each model passed diagnostics checks, including the absence of divergent transitions, as part of model calibration.
@@ -264,96 +286,50 @@ generated quantities {
 ```
 
 
-# Compute model fit and extract draws
+# MNL model calibration experimental alternative
 
-The following analysis follows specifying the model we'd like to evaluate. Note that the output of the model calibration is too large to push to GitHub, but we can push the draws once we extract them.
+```{r mnl-model-calibration, eval=FALSE}
+################################################################################
+# A flat MNL is an experimental alternative for dealing with interactions.
+################################################################################
 
-## Load model output
+interactions <- 0 # Include interactions
 
-```{r load-data-output, warning=FALSE, message=FALSE, eval=FALSE}
-# Load all model output
-intercept_run <- read_rds(here::here("data", "raw_data", "model_runs", "intercept.rds"))
-public_affairs_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_affairs.rds"))
-political_ideology_run <- read_rds(here::here("data", "raw_data", "model_runs", "political_ideology.rds"))
-social_views_run <- read_rds(here::here("data", "raw_data", "model_runs", "social_views.rds"))
-charity_voluntarism_run <- read_rds(here::here("data", "raw_data", "model_runs", "charity_voluntarism.rds"))
-demographics_run <- read_rds(here::here("data", "raw_data", "model_runs", "demographics.rds"))
-public_political_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political.rds"))
-public_political_social_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social.rds"))
-public_political_social_charity_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social_charity.rds"))
-public_political_social_charity_demo_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social_charity_demo.rds"))
-```
+# Load data and design
+data <- read_rds(here::here("data", "derived_data", "data.rds"))
+X <- read_rds(here::here("data", "derived_data", "mnl_dummy_design.rds"))
+if (interactions == 1) X <- read_rds(here::here("data", "derived_data", "mnl_dummy_interactions.rds"))
 
-## Compute and save model fit
+# Restructure choice data Y
+Y <- data %>%
+  select(contains("Q4")) %>%
+  pivot_longer(contains("Q4"), names_to = "values") %>%
+  select(value) %>%
+  as.matrix() %>%
+  as.vector()
 
-```{r compute-fit, eval=FALSE}
-# Compute fit using PSIS-LOO
-intercept_loo <- loo(intercept_run$fit, save_psis = TRUE)
-public_affairs_loo <- loo(public_affairs_run$fit, save_psis = TRUE)
-political_ideology_loo <- loo(political_ideology_run$fit, save_psis = TRUE)
-social_views_loo <- loo(social_views_run$fit, save_psis = TRUE)
-charity_voluntarism_loo <- loo(charity_voluntarism_run$fit, save_psis = TRUE)
-demographics_loo <- loo(demographics_run$fit, save_psis = TRUE)
-public_political_loo <- loo(public_political_run$fit, save_psis = TRUE)
-public_political_social_loo <- loo(public_political_social_run$fit, save_psis = TRUE)
-public_political_social_charity_loo <- loo(public_political_social_charity_run$fit, save_psis = TRUE)
-public_political_social_charity_demo_loo <- loo(public_political_social_charity_demo_run$fit, save_psis = TRUE)
+# Specify the data for calibration in a list
+data_list <- list(
+  N = dim(X)[1],      # Number of observations
+  A = dim(X)[2],      # Number of choice alternatives
+  L = dim(X)[3],      # Number of (estimable) attribute levels
+  Y = Y,              # Vector of observations
+  X = X               # Array of observation-level covariates.
+)
 
-# Compare model fit
-loo_compare(intercept_loo, public_affairs_loo, political_ideology_loo, social_views_loo, charity_voluntarism_loo, demographics_loo, public_political_loo, public_political_social_loo, public_political_social_charity_loo, public_political_social_charity_demo_loo)
-```
+# Run the model and save data and model output
+fit <- stan(
+  file = here::here("src", "stan_files", "mnl.stan"),
+  data = data_list,
+  iter = 10000,
+  thin = 5,
+  seed = 1234
+)
+run <- list(data = data_list, fit = fit)
+write_rds(run, here::here("data", "raw_data", "model_runs", "mnl.rds"))
+if (interactions == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "mnl_interactions.rds"))
 
-```{r save-fit, eval=FALSE}
-# Create data frame
-model_fit <- tibble(model = rep(NA, 10), elpd_loo = rep(NA, 10))
-
-# Extract PSIS-LOO fit
-model_fit$model[1] <- "intercept"; model_fit$loo[1] <- intercept_loo$elpd_loo
-model_fit$model[2] <- "public_affairs"; model_fit$loo[2] <- public_affairs_loo$elpd_loo
-model_fit$model[3] <- "political_ideology"; model_fit$loo[3] <- political_ideology_loo$elpd_loo
-model_fit$model[4] <- "social_views"; model_fit$loo[4] <- social_views_loo$elpd_loo
-model_fit$model[5] <- "charity_voluntarism"; model_fit$loo[5] <- charity_voluntarism_loo$elpd_loo
-model_fit$model[6] <- "demographics"; model_fit$loo[6] <- demographics_loo$elpd_loo
-model_fit$model[7] <- "public_political"; model_fit$loo[7] <- public_political_loo$elpd_loo
-model_fit$model[8] <- "public_political_social"; model_fit$loo[8] <- public_political_social_loo$elpd_loo
-model_fit$model[9] <- "public_political_social_charity"; model_fit$loo[9] <- public_political_social_charity_loo$elpd_loo
-model_fit$model[10] <- "public_political_social_charity_demo"; model_fit$loo[10] <- public_political_social_charity_demo_loo$elpd_loo
-
-# Save model output
-write_rds(model_fit, here::here("analysis", "output", "tables", "model_fit.rds"))
-```
-
-## Load model fit objects and extract and save draws
-
-```{r extract-draws, eval=FALSE}
-intercept <- 1                            # Intercept-only
-interactions <- 1                         # Include interactions with the intercept-only model
-public_affairs <- 0                       # Public affairs
-political_ideology <- 0                   # Political ideology
-social_views <- 0                         # Social views
-charity_voluntarism <- 0                  # Charity and voluntarism
-demographics <- 0                         # Demographics
-public_political <- 0                     # Public affairs + Political ideology
-public_political_social <- 0              # + Social views
-public_political_social_charity <- 0      # + Charity and voluntarism
-public_political_social_charity_demo <- 0 # + Demographics
-
-# Load and extract data and model output
-if (intercept == 1 & interactions == 0) run <- read_rds(here::here("data", "raw_data", "model_runs", "intercept.rds"))
-if (intercept == 1 & interactions == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "interactions_5d.rds"))
-if (public_affairs == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "public_affairs.rds"))
-if (political_ideology == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "political_ideology.rds"))
-if (social_views == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "social_views.rds"))
-if (charity_voluntarism == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "charity_voluntarism.rds"))
-if (demographics == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "demographics.rds"))
-if (public_political == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political.rds"))
-if (public_political_social == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social.rds"))
-if (public_political_social_charity == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social_charity.rds"))
-if (public_political_social_charity_demo == 1) run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social_charity_demo.rds"))
-data <- run$data
-fit <- run$fit
-
-# Extract posterior draws
+# Extract and save posterior draws
 draws <- fit %>% 
   spread_draws(Gamma[i, j]) %>% 
   ungroup() %>% 
@@ -364,17 +340,49 @@ draws <- fit %>%
   )
 
 # Save draws
-if (intercept == 1 & interactions == 0) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "intercept.rds"))
-if (intercept == 1 & interactions == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "interactions_5d.rds"))
-if (public_affairs == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_affairs.rds"))
-if (political_ideology == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "political_ideology.rds"))
-if (social_views == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "social_views.rds"))
-if (charity_voluntarism == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "charity_voluntarism.rds"))
-if (demographics == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "demographics.rds"))
-if (public_political == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_political.rds"))
-if (public_political_social == 1)  write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_political_social.rds"))
-if (public_political_social_charity == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_political_social_charity.rds"))
-if (public_political_social_charity_demo == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "public_political_social_charity_demo.rds"))
+write_rds(draws, here::here("data", "raw_data", "posterior_draws", "mnl.rds"))
+if (interactions == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "mnl_interactions.rds"))
+```
+
+The model is calibrated using a multinomial logit model. Each model passed diagnostics checks, including the absence of divergent transitions, as part of model calibration.
+
+```{stan mnl, output.var="mnl", eval=FALSE}
+// Index values, observations, and covariates.
+data {
+  int<lower = 1> N;                  // Number of observations.
+  int<lower = 2> A;                  // Number of choice alternatives.
+  int<lower = 1> L;                  // Number of (estimable) attribute levels.
+
+  int<lower = 1, upper = A> Y[N];    // Vector of observations.
+  matrix[A, L] X[N];                 // Array of observation-level covariates.
+}
+
+// Parameters for the multinomial logit.
+parameters {
+  vector[L] beta;                    // Vector of aggregate beta coefficients.
+}
+
+// Multinomial logit model.
+model {
+  // Standard normal prior for beta.
+  beta ~ normal(0, 5);
+
+  // Multinomial logit.
+  for (n in 1:N) {
+    Y[n] ~ categorical_logit(X[n] * beta);
+  }
+}
+
+// Quantities conditioned on parameter draws.
+generated quantities {
+  // vector[N] Y_new;   // Vector of predicted choices.
+  vector[N] log_lik; // Log likelihood to estimate loo.
+
+  // Multinomial logit draws and log likelihood per observation.
+  for (n in 1:N) {
+    log_lik[n] = categorical_logit_lpmf(Y[n] | X[n] * beta);
+  }
+}
 ```
 
 

@@ -5,7 +5,7 @@ data {
   int<lower = 1> L;                  // Number of (estimable) attribute levels.
 
   int<lower = 1, upper = A> Y[N];    // Vector of observations.
-  matrix[A, L] X[N];                 // Matrix of observation-level covariates.
+  matrix[A, L] X[N];                 // Array of observation-level covariates.
 }
 
 // Parameters for the multinomial logit.
@@ -31,7 +31,7 @@ generated quantities {
 
   // Multinomial logit draws and log likelihood per observation.
   for (n in 1:N) {
-    // Y_new[n] = categorical_logit_rng(X[n] * beta);
     log_lik[n] = categorical_logit_lpmf(Y[n] | X[n] * beta);
   }
 }
+
