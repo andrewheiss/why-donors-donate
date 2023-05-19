@@ -297,7 +297,8 @@ interactions <- 0 # Include interactions
 
 # Load data and design
 data <- read_rds(here::here("data", "derived_data", "data.rds"))
-X <- read_rds(here::here("data", "derived_data", "mnl_dummy_design.rds"))
+# X <- read_rds(here::here("data", "derived_data", "mnl_dummy_design.rds"))
+X <- read_rds(here::here("data", "derived_data", "mnl_index_design.rds"))
 if (interactions == 1) X <- read_rds(here::here("data", "derived_data", "mnl_dummy_interactions.rds"))
 
 # Restructure choice data Y
@@ -326,21 +327,19 @@ fit <- stan(
   seed = 1234
 )
 run <- list(data = data_list, fit = fit)
-write_rds(run, here::here("data", "raw_data", "model_runs", "mnl.rds"))
+# write_rds(run, here::here("data", "raw_data", "model_runs", "mnl.rds"))
+write_rds(run, here::here("data", "raw_data", "model_runs", "mnl_index.rds"))
 if (interactions == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "mnl_interactions.rds"))
 
 # Extract and save posterior draws
 draws <- fit %>% 
-  spread_draws(Gamma[i, j]) %>% 
+  spread_draws(beta[l]) %>% 
   ungroup() %>% 
-  filter(.iteration > 500) %>% 
-  rename(
-    i = j,
-    j = i
-  )
+  filter(.iteration > 500)
 
 # Save draws
-write_rds(draws, here::here("data", "raw_data", "posterior_draws", "mnl.rds"))
+# write_rds(draws, here::here("data", "raw_data", "posterior_draws", "mnl.rds"))
+write_rds(draws, here::here("data", "raw_data", "posterior_draws", "mnl_index.rds"))
 if (interactions == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "mnl_interactions.rds"))
 ```
 
