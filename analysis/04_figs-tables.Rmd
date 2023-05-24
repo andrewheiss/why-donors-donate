@@ -11,7 +11,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Load packages, data, and draws
+# Load packages and data
 
 ```{r setup, warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -37,7 +37,197 @@ set.seed(1234)
 
 # Load data
 results <- read_rds(here("data", "derived_data", "final_data.rds"))
+```
 
+
+# Causal pathway
+
+Our theory and hypotheses are laid out in the causal pathway below. Organizational factors (**O**, or organizational practices like financial disclosure and accountability practices; **I**, or issue area; and **F**, or funding) all influence the decision to donate (**D**). Structural factors like an NGO's relationship with its host government (**G**) also influence donation behavior, but the relationship itself is shaped by both funding and issue area. 
+
+```{r causal-dag, fig.width=13/3, fig.height=2}
+node_colors <- tribble(
+  ~name, ~type,
+  "D", "Outcome",
+  "I", "Organizational factor",
+  "F", "Organizational factor",
+  "O", "Organizational factor",
+  "G", "Structural factor"
+) %>% 
+  mutate(type = fct_inorder(type))
+
+# Set up DAG structure
+theory_dag <- dagify(D ~ I + F + O + G,
+                     G ~ I + F,
+                     outcome = "D",
+                     exposure = "C") %>% 
+  tidy_dagitty(layout = "dh", seed = 1234) 
+
+# Add node types/colors to DAG data
+theory_dag$data <- theory_dag$data %>% 
+  left_join(node_colors, by = "name")
+
+# Make DAG plot
+plot_dag <- ggplot(theory_dag, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_point(size = 6, mapping = aes(color = type)) +
+  geom_dag_edges(start_cap = circle(4, "mm"),
+                 end_cap = circle(4, "mm")) +
+  geom_dag_text(size = pts(6), family = "Roboto Condensed", fontface = "bold") +
+  scale_color_manual(values = c(clrs$blue, clrs$red, clrs$orange), name = NULL) +
+  theme_ngo() +
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.title = element_blank(),
+        axis.text = element_blank())
+
+# Show and save plot
+plot_dag
+ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.pdf"),
+       width = 13/3, height = 2, units = "in", device = cairo_pdf)
+ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.png"),
+       width = 13/3, height = 2, units = "in", type = "cairo", dpi = 300)
+```
+
+
+# Sample details
+
+```{r}
+vars_to_summarize <- tribble(
+  ~category, ~variable, ~clean_name,
+  "Demographics", "Q5.12", "Gender",
+  "Demographics", "Q5.17", "Age",
+  "Demographics", "Q5.13", "Marital status",
+  "Demographics", "Q5.14", "Education",
+  "Demographics", "Q5.15", "Income",
+  "Attitudes toward charity", "Q2.5", "Frequency of donating to charity",
+  "Attitudes toward charity", "Q2.6", "Amount of donations to charity last year",
+  "Attitudes toward charity", "Q2.7_f", "Importance of trusting charities",
+  "Attitudes toward charity", "Q2.8_f", "Level of trust in charities",
+  "Attitudes toward charity", "Q2.10", "Frequency of volunteering",
+  "Politics, ideology, and religion", "Q2.1", "Frequency of following national news",
+  "Politics, ideology, and religion", "Q5.7", "Traveled to a developing country",
+  "Politics, ideology, and religion", "Q5.1", "Voted in last election",
+  "Politics, ideology, and religion", "Q5.6_f", "Trust in political institutions and the state",
+  "Politics, ideology, and religion", "Q5.2_f", "Political ideology",
+  "Politics, ideology, and religion", "Q5.4", "Involvement in activist causes",
+  "Politics, ideology, and religion", "Q5.8", "Frequency of attending religious services",
+  "Politics, ideology, and religion", "Q5.9", "Importance of religion"
+)
+
+summarize_factor <- function(x) {
+  output <- table(x) %>% 
+    as_tibble() %>% 
+    magrittr::set_colnames(., c("level", "count")) %>% 
+    mutate(level = factor(level, levels = levels(x), ordered = TRUE)) %>%
+    mutate(prop = count / sum(count),
+           nice_prop = scales::percent(prop))
+  
+  return(list(output))
+}
+
+participant_summary <- results %>% 
+  select(one_of(vars_to_summarize$variable)) %>% 
+  summarize_all(summarize_factor) %>% 
+  pivot_longer(cols = everything(), names_to = "variable", values_to = "details") %>% 
+  left_join(vars_to_summarize, by = "variable") %>% 
+  unnest(details) %>% 
+  mutate(level = as.character(level)) %>% 
+  mutate(level = case_when(
+    variable == "Q2.7_f" & level == "1" ~ "1 (not important)",
+    variable == "Q2.7_f" & level == "7" ~ "7 (important)",
+    variable == "Q2.8_f" & level == "1" ~ "1 (no trust)",
+    variable == "Q2.8_f" & level == "7" ~ "7 (complete trust)",
+    variable == "Q5.6_f" & level == "1" ~ "1 (no trust)",
+    variable == "Q5.6_f" & level == "7" ~ "7 (complete trust)",
+    variable == "Q5.2_f" & level == "1" ~ "1 (extremely liberal)",
+    variable == "Q5.2_f" & level == "7" ~ "7 (extremely conservative)",
+    variable == "Q5.15" & level == "Less than median" ~ "Less than 2017 national median ($61,372)",
+    variable == "Q5.17" & level == "Less than median" ~ "Less than 2017 national median (36)",
+    TRUE ~ level
+  )) %>% 
+  mutate(clean_name_shrunk = ifelse(clean_name == lag(clean_name), "", clean_name),
+         clean_name_shrunk = ifelse(is.na(clean_name_shrunk), 
+                                    clean_name[1], 
+                                    clean_name_shrunk),
+         category_shrunk = ifelse(category == lag(category), "", category),
+         category_shrunk = ifelse(is.na(category_shrunk), 
+                                    category[1], 
+                                    category_shrunk))
+```
+
+```{r results="asis"}
+participant_summary %>% 
+  select(" " = category_shrunk, "  " = clean_name_shrunk, 
+         "Response" = level, "N" = count, "%" = nice_prop) %>% 
+  pandoc.table.return(caption = 'Summary of individual respondent characteristics {#tbl:sample-details}',
+                      justify = "lllcc") %T>%
+  cat() %>%
+  cat(file = here("analysis", "output", "tables", "tbl-sample-details.md"))
+```
+
+
+# Compute model fit
+
+## Load model output
+
+```{r load-data-output, warning=FALSE, message=FALSE, eval=FALSE}
+# Load all model output
+intercept_run <- read_rds(here::here("data", "raw_data", "model_runs", "intercept.rds"))
+public_affairs_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_affairs.rds"))
+political_ideology_run <- read_rds(here::here("data", "raw_data", "model_runs", "political_ideology.rds"))
+social_views_run <- read_rds(here::here("data", "raw_data", "model_runs", "social_views.rds"))
+charity_voluntarism_run <- read_rds(here::here("data", "raw_data", "model_runs", "charity_voluntarism.rds"))
+demographics_run <- read_rds(here::here("data", "raw_data", "model_runs", "demographics.rds"))
+public_political_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political.rds"))
+public_political_social_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social.rds"))
+public_political_social_charity_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social_charity.rds"))
+public_political_social_charity_demo_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social_charity_demo.rds"))
+```
+
+## Compute and save model fit
+
+```{r compute-fit, eval=FALSE}
+# Compute fit using PSIS-LOO
+intercept_loo <- loo(intercept_run$fit, save_psis = TRUE)
+public_affairs_loo <- loo(public_affairs_run$fit, save_psis = TRUE)
+political_ideology_loo <- loo(political_ideology_run$fit, save_psis = TRUE)
+social_views_loo <- loo(social_views_run$fit, save_psis = TRUE)
+charity_voluntarism_loo <- loo(charity_voluntarism_run$fit, save_psis = TRUE)
+demographics_loo <- loo(demographics_run$fit, save_psis = TRUE)
+public_political_loo <- loo(public_political_run$fit, save_psis = TRUE)
+public_political_social_loo <- loo(public_political_social_run$fit, save_psis = TRUE)
+public_political_social_charity_loo <- loo(public_political_social_charity_run$fit, save_psis = TRUE)
+public_political_social_charity_demo_loo <- loo(public_political_social_charity_demo_run$fit, save_psis = TRUE)
+
+# Compare model fit
+loo_compare(intercept_loo, public_affairs_loo, political_ideology_loo, social_views_loo, charity_voluntarism_loo, demographics_loo, public_political_loo, public_political_social_loo, public_political_social_charity_loo, public_political_social_charity_demo_loo)
+```
+
+```{r save-fit, eval=FALSE}
+# Create data frame
+model_fit <- tibble(model = rep(NA, 10), elpd_loo = rep(NA, 10))
+
+# Extract PSIS-LOO fit
+model_fit$model[1] <- "intercept"; model_fit$loo[1] <- intercept_loo$elpd_loo
+model_fit$model[2] <- "public_affairs"; model_fit$loo[2] <- public_affairs_loo$elpd_loo
+model_fit$model[3] <- "political_ideology"; model_fit$loo[3] <- political_ideology_loo$elpd_loo
+model_fit$model[4] <- "social_views"; model_fit$loo[4] <- social_views_loo$elpd_loo
+model_fit$model[5] <- "charity_voluntarism"; model_fit$loo[5] <- charity_voluntarism_loo$elpd_loo
+model_fit$model[6] <- "demographics"; model_fit$loo[6] <- demographics_loo$elpd_loo
+model_fit$model[7] <- "public_political"; model_fit$loo[7] <- public_political_loo$elpd_loo
+model_fit$model[8] <- "public_political_social"; model_fit$loo[8] <- public_political_social_loo$elpd_loo
+model_fit$model[9] <- "public_political_social_charity"; model_fit$loo[9] <- public_political_social_charity_loo$elpd_loo
+model_fit$model[10] <- "public_political_social_charity_demo"; model_fit$loo[10] <- public_political_social_charity_demo_loo$elpd_loo
+
+# Save model output
+write_rds(model_fit, here::here("analysis", "output", "tables", "model_fit.rds"))
+```
+
+
+# Results
+
+## Load draws
+
+```{r hmnl-draws}
 # Load draws
 intercept <- 1                            # Intercept-only
 interactions <- 0                         # Include interactions with the intercept-only model
@@ -274,7 +464,7 @@ if (intercept != 1) {
 }
 ```
 
-```{r}
+```{r diff-function}
 diff_cols <- function(col1, col2) {
   posterior_diffs <- draws %>% 
     filter(attribute %in% c({{col1}}, {{col2}})) %>% 
@@ -295,192 +485,6 @@ diff_cols <- function(col1, col2) {
               phrase = phrase))
 }
 ```
-
-
-# Compute model fit
-
-## Load model output
-
-```{r load-data-output, warning=FALSE, message=FALSE, eval=FALSE}
-# Load all model output
-intercept_run <- read_rds(here::here("data", "raw_data", "model_runs", "intercept.rds"))
-public_affairs_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_affairs.rds"))
-political_ideology_run <- read_rds(here::here("data", "raw_data", "model_runs", "political_ideology.rds"))
-social_views_run <- read_rds(here::here("data", "raw_data", "model_runs", "social_views.rds"))
-charity_voluntarism_run <- read_rds(here::here("data", "raw_data", "model_runs", "charity_voluntarism.rds"))
-demographics_run <- read_rds(here::here("data", "raw_data", "model_runs", "demographics.rds"))
-public_political_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political.rds"))
-public_political_social_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social.rds"))
-public_political_social_charity_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social_charity.rds"))
-public_political_social_charity_demo_run <- read_rds(here::here("data", "raw_data", "model_runs", "public_political_social_charity_demo.rds"))
-```
-
-## Compute and save model fit
-
-```{r compute-fit, eval=FALSE}
-# Compute fit using PSIS-LOO
-intercept_loo <- loo(intercept_run$fit, save_psis = TRUE)
-public_affairs_loo <- loo(public_affairs_run$fit, save_psis = TRUE)
-political_ideology_loo <- loo(political_ideology_run$fit, save_psis = TRUE)
-social_views_loo <- loo(social_views_run$fit, save_psis = TRUE)
-charity_voluntarism_loo <- loo(charity_voluntarism_run$fit, save_psis = TRUE)
-demographics_loo <- loo(demographics_run$fit, save_psis = TRUE)
-public_political_loo <- loo(public_political_run$fit, save_psis = TRUE)
-public_political_social_loo <- loo(public_political_social_run$fit, save_psis = TRUE)
-public_political_social_charity_loo <- loo(public_political_social_charity_run$fit, save_psis = TRUE)
-public_political_social_charity_demo_loo <- loo(public_political_social_charity_demo_run$fit, save_psis = TRUE)
-
-# Compare model fit
-loo_compare(intercept_loo, public_affairs_loo, political_ideology_loo, social_views_loo, charity_voluntarism_loo, demographics_loo, public_political_loo, public_political_social_loo, public_political_social_charity_loo, public_political_social_charity_demo_loo)
-```
-
-```{r save-fit, eval=FALSE}
-# Create data frame
-model_fit <- tibble(model = rep(NA, 10), elpd_loo = rep(NA, 10))
-
-# Extract PSIS-LOO fit
-model_fit$model[1] <- "intercept"; model_fit$loo[1] <- intercept_loo$elpd_loo
-model_fit$model[2] <- "public_affairs"; model_fit$loo[2] <- public_affairs_loo$elpd_loo
-model_fit$model[3] <- "political_ideology"; model_fit$loo[3] <- political_ideology_loo$elpd_loo
-model_fit$model[4] <- "social_views"; model_fit$loo[4] <- social_views_loo$elpd_loo
-model_fit$model[5] <- "charity_voluntarism"; model_fit$loo[5] <- charity_voluntarism_loo$elpd_loo
-model_fit$model[6] <- "demographics"; model_fit$loo[6] <- demographics_loo$elpd_loo
-model_fit$model[7] <- "public_political"; model_fit$loo[7] <- public_political_loo$elpd_loo
-model_fit$model[8] <- "public_political_social"; model_fit$loo[8] <- public_political_social_loo$elpd_loo
-model_fit$model[9] <- "public_political_social_charity"; model_fit$loo[9] <- public_political_social_charity_loo$elpd_loo
-model_fit$model[10] <- "public_political_social_charity_demo"; model_fit$loo[10] <- public_political_social_charity_demo_loo$elpd_loo
-
-# Save model output
-write_rds(model_fit, here::here("analysis", "output", "tables", "model_fit.rds"))
-```
-
-
-# Causal pathway
-
-Our theory and hypotheses are laid out in the causal pathway below. Organizational factors (**O**, or organizational practices like financial disclosure and accountability practices; **I**, or issue area; and **F**, or funding) all influence the decision to donate (**D**). Structural factors like an NGO's relationship with its host government (**G**) also influence donation behavior, but the relationship itself is shaped by both funding and issue area. 
-
-```{r causal-dag, fig.width=13/3, fig.height=2}
-node_colors <- tribble(
-  ~name, ~type,
-  "D", "Outcome",
-  "I", "Organizational factor",
-  "F", "Organizational factor",
-  "O", "Organizational factor",
-  "G", "Structural factor"
-) %>% 
-  mutate(type = fct_inorder(type))
-
-# Set up DAG structure
-theory_dag <- dagify(D ~ I + F + O + G,
-                     G ~ I + F,
-                     outcome = "D",
-                     exposure = "C") %>% 
-  tidy_dagitty(layout = "dh", seed = 1234) 
-
-# Add node types/colors to DAG data
-theory_dag$data <- theory_dag$data %>% 
-  left_join(node_colors, by = "name")
-
-# Make DAG plot
-plot_dag <- ggplot(theory_dag, aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_dag_point(size = 6, mapping = aes(color = type)) +
-  geom_dag_edges(start_cap = circle(4, "mm"),
-                 end_cap = circle(4, "mm")) +
-  geom_dag_text(size = pts(6), family = "Roboto Condensed", fontface = "bold") +
-  scale_color_manual(values = c(clrs$blue, clrs$red, clrs$orange), name = NULL) +
-  theme_ngo() +
-  theme(panel.grid = element_blank(),
-        panel.border = element_blank(),
-        axis.title = element_blank(),
-        axis.text = element_blank())
-
-# Show and save plot
-plot_dag
-ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.pdf"),
-       width = 13/3, height = 2, units = "in", device = cairo_pdf)
-ggsave(plot_dag, filename = here("analysis", "output", "figures", "causal-path.png"),
-       width = 13/3, height = 2, units = "in", type = "cairo", dpi = 300)
-```
-
-
-# Sample details
-
-```{r}
-vars_to_summarize <- tribble(
-  ~category, ~variable, ~clean_name,
-  "Demographics", "Q5.12", "Gender",
-  "Demographics", "Q5.17", "Age",
-  "Demographics", "Q5.13", "Marital status",
-  "Demographics", "Q5.14", "Education",
-  "Demographics", "Q5.15", "Income",
-  "Attitudes toward charity", "Q2.5", "Frequency of donating to charity",
-  "Attitudes toward charity", "Q2.6", "Amount of donations to charity last year",
-  "Attitudes toward charity", "Q2.7_f", "Importance of trusting charities",
-  "Attitudes toward charity", "Q2.8_f", "Level of trust in charities",
-  "Attitudes toward charity", "Q2.10", "Frequency of volunteering",
-  "Politics, ideology, and religion", "Q2.1", "Frequency of following national news",
-  "Politics, ideology, and religion", "Q5.7", "Traveled to a developing country",
-  "Politics, ideology, and religion", "Q5.1", "Voted in last election",
-  "Politics, ideology, and religion", "Q5.6_f", "Trust in political institutions and the state",
-  "Politics, ideology, and religion", "Q5.2_f", "Political ideology",
-  "Politics, ideology, and religion", "Q5.4", "Involvement in activist causes",
-  "Politics, ideology, and religion", "Q5.8", "Frequency of attending religious services",
-  "Politics, ideology, and religion", "Q5.9", "Importance of religion"
-)
-
-summarize_factor <- function(x) {
-  output <- table(x) %>% 
-    as_tibble() %>% 
-    magrittr::set_colnames(., c("level", "count")) %>% 
-    mutate(level = factor(level, levels = levels(x), ordered = TRUE)) %>%
-    mutate(prop = count / sum(count),
-           nice_prop = scales::percent(prop))
-  
-  return(list(output))
-}
-
-participant_summary <- results %>% 
-  select(one_of(vars_to_summarize$variable)) %>% 
-  summarize_all(summarize_factor) %>% 
-  pivot_longer(cols = everything(), names_to = "variable", values_to = "details") %>% 
-  left_join(vars_to_summarize, by = "variable") %>% 
-  unnest(details) %>% 
-  mutate(level = as.character(level)) %>% 
-  mutate(level = case_when(
-    variable == "Q2.7_f" & level == "1" ~ "1 (not important)",
-    variable == "Q2.7_f" & level == "7" ~ "7 (important)",
-    variable == "Q2.8_f" & level == "1" ~ "1 (no trust)",
-    variable == "Q2.8_f" & level == "7" ~ "7 (complete trust)",
-    variable == "Q5.6_f" & level == "1" ~ "1 (no trust)",
-    variable == "Q5.6_f" & level == "7" ~ "7 (complete trust)",
-    variable == "Q5.2_f" & level == "1" ~ "1 (extremely liberal)",
-    variable == "Q5.2_f" & level == "7" ~ "7 (extremely conservative)",
-    variable == "Q5.15" & level == "Less than median" ~ "Less than 2017 national median ($61,372)",
-    variable == "Q5.17" & level == "Less than median" ~ "Less than 2017 national median (36)",
-    TRUE ~ level
-  )) %>% 
-  mutate(clean_name_shrunk = ifelse(clean_name == lag(clean_name), "", clean_name),
-         clean_name_shrunk = ifelse(is.na(clean_name_shrunk), 
-                                    clean_name[1], 
-                                    clean_name_shrunk),
-         category_shrunk = ifelse(category == lag(category), "", category),
-         category_shrunk = ifelse(is.na(category_shrunk), 
-                                    category[1], 
-                                    category_shrunk))
-```
-
-```{r results="asis"}
-participant_summary %>% 
-  select(" " = category_shrunk, "  " = clean_name_shrunk, 
-         "Response" = level, "N" = count, "%" = nice_prop) %>% 
-  pandoc.table.return(caption = 'Summary of individual respondent characteristics {#tbl:sample-details}',
-                      justify = "lllcc") %T>%
-  cat() %>%
-  cat(file = here("analysis", "output", "tables", "tbl-sample-details.md"))
-```
-
-
-# Results
 
 ## Plot marginals
 
@@ -641,6 +645,78 @@ ggsave(
   units = "in"
 )
 ```
+
+## Plot MNL draws, experimental alternative
+
+```{r plot-mnl-marginals}
+################################################################################
+# A flat MNL is an experimental alternative for dealing with interactions.
+################################################################################
+
+mnl_dummy_draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "mnl.rds"))
+mnl_index_draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "mnl_index.rds"))
+
+# Name levels labels
+dummy_level_labels <- c(
+  str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
+  str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief")),
+  str_c("Organizational practices: ", c("Financial transparency", "Accountability")),
+  str_c("Funding sources: ", c("Handful of wealthy private donors", "Government grants")),
+  str_c("Relationship with host government: ", c("Criticized", "Under crackdown"))
+)
+
+dummy_level_lookup <- tibble(levels = dummy_level_labels) %>%
+  separate(levels, c("attribute", "level"), sep = ": ") %>%
+  mutate(levels_long = paste0(attribute, ": ", level),
+         i = 1:n()) %>%
+  mutate_at(vars(attribute, level, levels_long), list(fct_inorder))
+
+# Name levels labels (index-coded)
+index_level_labels <- c(
+  str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
+  str_c("Issue area: ", c("Emergency response", "Environment", "Human rights", "Refugee relief")),
+  str_c("Organizational practices: ", c("Financial transparency", "Accountability")),
+  str_c("Funding sources: ", c("Many small private donations", "Handful of wealthy private donors", "Government grants")),
+  str_c("Relationship with host government: ", c("Friendly", "Criticized", "Under crackdown"))
+)
+
+index_level_lookup <- tibble(levels = index_level_labels) %>%
+  separate(levels, c("attribute", "level"), sep = ": ") %>%
+  mutate(levels_long = paste0(attribute, ": ", level),
+         i = 1:n()) %>%
+  mutate_at(vars(attribute, level, levels_long), list(fct_inorder))
+
+# Join level and covariate labels to draws
+mnl_dummy_draws <- mnl_dummy_draws %>%
+  rename(i = l) %>%
+  left_join(dummy_level_lookup, by = "i")
+
+mnl_index_draws <- mnl_index_draws %>%
+  rename(i = l) %>%
+  left_join(index_level_lookup, by = "i")
+
+# Plot marginals.
+mnl_dummy_draws %>%
+  ggplot(aes(x = beta, y = levels_long)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Attribute Levels")
+
+ggsave(
+  "marginal-posteriors_mnl-intercept.png",
+  path = here::here("analysis", "output", "figures"),
+  width = width_length[1],
+  height = width_length[2],
+  units = "in"
+)
+
+mnl_index_draws %>%
+  ggplot(aes(x = beta, y = levels_long)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Attribute Levels")
+```
+
 
 ## Plot contrasts
 
