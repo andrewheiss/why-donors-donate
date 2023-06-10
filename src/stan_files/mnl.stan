@@ -16,7 +16,8 @@ parameters {
 // Multinomial logit model.
 model {
   // Standard normal prior for beta.
-  beta ~ normal(0, 5);
+  // beta ~ normal(0, 5);
+  beta ~ normal(0, 1);
 
   // Multinomial logit.
   for (n in 1:N) {
