@@ -328,7 +328,7 @@ fit <- stan(
 )
 run <- list(data = data_list, fit = fit)
 # write_rds(run, here::here("data", "raw_data", "model_runs", "mnl.rds"))
-write_rds(run, here::here("data", "raw_data", "model_runs", "mnl_index.rds"))
+write_rds(run, here::here("data", "raw_data", "model_runs", "mnl_index_02.rds"))
 if (interactions == 1) write_rds(run, here::here("data", "raw_data", "model_runs", "mnl_interactions.rds"))
 
 # Extract and save posterior draws
@@ -339,7 +339,7 @@ draws <- fit %>%
 
 # Save draws
 # write_rds(draws, here::here("data", "raw_data", "posterior_draws", "mnl.rds"))
-write_rds(draws, here::here("data", "raw_data", "posterior_draws", "mnl_index.rds"))
+write_rds(draws, here::here("data", "raw_data", "posterior_draws", "mnl_index_02.rds"))
 if (interactions == 1) write_rds(draws, here::here("data", "raw_data", "posterior_draws", "mnl_interactions.rds"))
 ```
 

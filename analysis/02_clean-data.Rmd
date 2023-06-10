@@ -946,15 +946,15 @@ index_design <- read_csv(here::here("data", "derived_data", "index_design.csv"))
     alt = choice
   )
 
-# Create the arrays for the design, including a brand intercept and the outside option coded as an indicator.
+# Create the arrays for the design, including a brand intercept.
 index_X <- array(
   data = NA,
   dim = c(
     nrow(data),                   # Number of respondents.
     max(index_design$task),       # Number of choice tasks per respondent.
     (max(index_design$alt) + 1),  # Number of product alternatives per choice task.
-    # (ncol(index_design) - 3)      # Number of (estimable) attribute levels.
-    (ncol(index_design) - 3 + 1)  # Number of (estimable) attribute levels.
+    (ncol(index_design) - 3)      # Number of (estimable) attribute levels.
+    # (ncol(index_design) - 3 + 1)  # Number of (estimable) attribute levels. OUTSIDE GOOD DUMMY.
   )
 )
 
@@ -967,20 +967,19 @@ index_interactions_design <- read_csv(here::here("data", "derived_data", "index_
     alt = choice
   )
 
-# Create the arrays for a design, including a brand intercept, 
-# interactions, and the outside option coded as an indicator.
+# Create the arrays for a design, including interactions.
 index_interactions_X <- array(
   data = NA,
   dim = c(
     nrow(data),                                # Number of respondents.
     max(index_interactions_design$task),       # Number of choice tasks per respondent.
     (max(index_interactions_design$alt) + 1),  # Number of product alternatives per choice task.
-    # (ncol(index_interactions_design) - 3)      # Number of (estimable) attribute levels.
-    (ncol(index_interactions_design) - 3 + 1)  # Number of (estimable) attribute levels.
+    (ncol(index_interactions_design) - 3)      # Number of (estimable) attribute levels.
+    # (ncol(index_interactions_design) - 3 + 1)  # Number of (estimable) attribute levels. OUTSIDE GOOD DUMMY.
   )
 )
 
-# Add the outside option coded as an indicator (org1 and former reference levels already included).
+# Add the outside option (org1 and former reference levels already included).
 for (n in 1:dim(index_X)[1]) {
   # Filter for respondent n.
   index_X_n <- index_design %>% filter(version == data$version[n])
@@ -989,18 +988,23 @@ for (n in 1:dim(index_X)[1]) {
     # Filter for task s.
     index_X_s <- index_X_n %>%
       filter(task == s) %>%
-      mutate(out = 0) %>% # Add out column
-      select(out, org1:gov_rel3)
+      select(org1:gov_rel3)
+      # ADD OutSIDE GOOD DUMMY COLUMN  
+      # mutate(out = 0) %>% 
+      # select(out, org1:gov_rel3)
     interactions_X_s <- interactions_X_n %>%
       filter(task == s) %>%
-      mutate(out = 0) %>% # Add out column
-      select(out, which(names(interactions_X_n) == "org1"):ncol(interactions_X_n))
+      select(which(names(interactions_X_n) == "org1"):ncol(interactions_X_n))
+      # ADD OutSIDE GOOD DUMMY COLUMN
+      # mutate(out = 0) %>% 
+      # select(out, which(names(interactions_X_n) == "org1"):ncol(interactions_X_n))
     # Save modified design, including outside option.
-    # index_X[n, s,,] <- rbind(index_X_s, rep(0, ncol(index_X_s))) %>% as.matrix()
-    # index_interactions_X[n, s,,] <- rbind(interactions_X_s, rep(0, ncol(interactions_X_s))) %>% as.matrix()
-    index_X[n, s,,] <- rbind(index_X_s, c(1, rep(0, ncol(index_X_s) - 1))) %>% as.matrix()
-    index_interactions_X[n, s,,] <- rbind(interactions_X_s, c(1, rep(0, ncol(interactions_X_s) - 1))) %>% 
-      as.matrix()
+    index_X[n, s,,] <- rbind(index_X_s, rep(0, ncol(index_X_s))) %>% as.matrix()
+    index_interactions_X[n, s,,] <- rbind(interactions_X_s, rep(0, ncol(interactions_X_s))) %>% as.matrix()
+    # OUTSIDE GOOD DUMMY.
+    # index_X[n, s,,] <- rbind(index_X_s, c(1, rep(0, ncol(index_X_s) - 1))) %>% as.matrix()
+    # index_interactions_X[n, s,,] <- rbind(interactions_X_s, c(1, rep(0, ncol(interactions_X_s) - 1))) %>% 
+    #   as.matrix()
   }
 }
 ```
@@ -1034,26 +1038,25 @@ flat_dummy_interactions_X <- array(
   )
 )
 
-# Create the arrays for the design, including a brand intercept and the outside option coded as an indicator.
+# Create the arrays for the design.
 flat_index_X <- array(
   data = NA,
   dim = c(
     nrow(data) * max(index_design$task), # Number of observations.
     (max(index_design$alt) + 1),         # Number of product alternatives per observation.
-    # (ncol(index_design) - 3)             # Number of (estimable) attribute levels.
-    (ncol(index_design) - 3 + 1)         # Number of (estimable) attribute levels.
+    (ncol(index_design) - 3)             # Number of (estimable) attribute levels.
+    # (ncol(index_design) - 3 + 1)         # Number of (estimable) attribute levels. OUTSIDE GOOD DUMMY.
   )
 )
 
-# Create the arrays for a design, including a brand intercept, 
-# interactions, and the outside option coded as an indicator.
+# Create the arrays for a design, including interactions.
 flat_index_interactions_X <- array(
   data = NA,
   dim = c(
     nrow(data) * max(index_interactions_design$task), # Number of respondents.
     (max(index_interactions_design$alt) + 1),         # Number of product alternatives per observation.
-    # (ncol(index_interactions_design) - 3)             # Number of (estimable) attribute levels.
-    (ncol(index_interactions_design) - 3 + 1)         # Number of (estimable) attribute levels.
+    (ncol(index_interactions_design) - 3)             # Number of (estimable) attribute levels.
+    # (ncol(index_interactions_design) - 3 + 1)         # Number of (estimable) attribute levels. OUTSIDE GOOD DUMMY.
   )
 )
 
