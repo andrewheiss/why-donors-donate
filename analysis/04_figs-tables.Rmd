@@ -36,7 +36,7 @@ source(here("analysis", "options.R"))
 set.seed(1234)
 
 # Load data
-results <- read_rds(here("data", "derived_data", "final_data.rds"))
+results <- read_rds(here("data", "derived_data", "data.rds"))
 ```
 
 
@@ -655,6 +655,7 @@ ggsave(
 
 mnl_dummy_draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "mnl.rds"))
 mnl_index_draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "mnl_index.rds"))
+mnl_index_02_draws <- read_rds(here::here("data", "raw_data", "posterior_draws", "mnl_index_02.rds"))
 
 # Name levels labels
 dummy_level_labels <- c(
@@ -695,6 +696,10 @@ mnl_index_draws <- mnl_index_draws %>%
   rename(i = l) %>%
   left_join(index_level_lookup, by = "i")
 
+mnl_index_02_draws <- mnl_index_02_draws %>%
+  rename(i = l) %>%
+  left_join(index_level_lookup, by = "i")
+
 # Plot marginals.
 mnl_dummy_draws %>%
   ggplot(aes(x = beta, y = levels_long)) +
@@ -711,6 +716,12 @@ ggsave(
 )
 
 mnl_index_draws %>%
+  ggplot(aes(x = beta, y = levels_long)) +
+  stat_halfeye(.width = .95) +
+  geom_vline(xintercept = 0, color = "grey") +
+  labs(y = "Attribute Levels")
+
+mnl_index_02_draws %>%
   ggplot(aes(x = beta, y = levels_long)) +
   stat_halfeye(.width = .95) +
   geom_vline(xintercept = 0, color = "grey") +
