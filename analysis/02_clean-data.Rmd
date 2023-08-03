@@ -1074,10 +1074,58 @@ for (r in 1:dim(dummy_X)[1]) {
 ```
 
 
+# Tidy joined data
+
+Creating a tidy version of the joined data -- the cleaned data and the dummy-coded design.
+
+```{r tidy-joined-data}
+# Create a data frame with one row per respondent choice and a list-column for the design.
+tidy_dummy_X <- tibble(
+  id = rep(1:dim(dummy_X)[1], dim(dummy_X)[2]) %>% sort(),
+  choice = rep(1:dim(dummy_X)[2], dim(dummy_X)[1]),
+  X = vector(mode = "list", length = dim(dummy_X)[1] * dim(dummy_X)[2])
+)
+ind <- 0
+for (i in 1:dim(dummy_X)[1]) {
+  for (j in 1:dim(dummy_X)[2]) {
+    ind = ind + 1
+    tidy_dummy_X$X[[ind]] = dummy_X[i,j,,]
+  }
+}
+
+# test_id = 425; test_choice = 9
+# test_01 <- tidy_dummy_X |> 
+#   filter(id == test_id, choice == test_choice) |> 
+#   select(X) |> unnest(cols = c(X)) |> as.matrix()
+# sum(test_01 != dummy_X[test_id,test_choice,,])
+
+# Unnest each design matrix X.
+tidy_dummy_X <- tidy_dummy_X %>%
+  unnest(X) %>% 
+  mutate(alt = rep(1:dim(dummy_X)[3], dim(dummy_X)[1] * dim(dummy_X)[2])) %>%
+  relocate(alt, .after = choice)
+
+# Pivot the data by choice and create a unique id for each row and join.
+tidy_data <- tidy_dummy_X %>%
+  left_join(
+    data %>%
+      pivot_longer(cols = contains("Q4"), names_to = "choice", values_to = "Y") %>%
+      # select(id, choice, Y) |>
+      separate(choice, into = c("temp", "choice")) %>%
+      mutate(choice = as.integer(choice)) %>%
+      select(-temp),
+    by = c("id", "choice")) %>%
+  relocate(Y, .after = alt)
+
+tidy_data
+```
+
+
 # Save clean data with transformations
 
 ```{r save-clean-data}
 write_rds(data, here("data", "derived_data", "data.rds"))
+write_rds(tidy_data, here("data", "derived_data", "tidy_data.rds"))
 write_rds(dummy_X, here("data", "derived_data", "hmnl_dummy_design.rds"))
 write_rds(dummy_interactions_X, here("data", "derived_data", "hmnl_dummy_interactions.rds"))
 
