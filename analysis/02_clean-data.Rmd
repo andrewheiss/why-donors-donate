@@ -1117,6 +1117,15 @@ tidy_data <- tidy_dummy_X %>%
     by = c("id", "choice")) %>%
   relocate(Y, .after = alt)
 
+# # If I could rename the 13 X columns
+# dummy_level_labels <- c(
+#   str_c("Organization: ", c("Amnesty International", "Greenpeace", "Oxfam", "Red Cross")),
+#   str_c("Issue area: ", c("Environment", "Human rights", "Refugee relief")),
+#   str_c("Organizational practices: ", c("Financial transparency", "Accountability")),
+#   str_c("Funding sources: ", c("Handful of wealthy private donors", "Government grants")),
+#   str_c("Relationship with host government: ", c("Criticized", "Under crackdown"))
+# )
+
 tidy_data
 ```
 
