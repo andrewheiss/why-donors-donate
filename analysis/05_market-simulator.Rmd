@@ -18,7 +18,7 @@ library(shiny)
 ```{r load-data, message=FALSE}
 # Gammas of the "everything" model
 gammas <- read_rds(
-    here::here('analysis', 'output', 'posterior_draws', 'public_political_social_charity_demo.rds')
+    here::here('data', 'raw_data', 'posterior_draws', 'public_political_social_charity_demo.rds')
   ) %>% 
   group_by(i, j) %>% 
   summarize(gamma_mean = mean(Gamma)) %>% 

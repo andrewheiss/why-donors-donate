@@ -22,12 +22,11 @@ manuscript/submissions/*
 
 # Original output
 data/private_data/*
-#data/raw_data/posterior_draws/*
+data/raw_data/model_runs/*
+data/raw_data/posterior_draws/*
 
 # Other folders
 admin/*
-analysis/output/model_runs/*
-analysis/output/posterior_draws/*
 private/*
 readings/*
 submissions/*
